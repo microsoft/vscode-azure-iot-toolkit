@@ -1,0 +1,105 @@
+{
+  "name": "azure-iot-toolkit",
+  "displayName": "Azure IoT Toolkit",
+  "description": "Send messages to Azure IoT Hub, monitor device-to-cloud messages",
+  "version": "0.0.1",
+  "publisher": "formulahendry",
+  "engines": {
+    "vscode": "^1.0.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:azure-iot-explorer.sendD2CMessage",
+    "onCommand:azure-iot-explorer.startMonitoringMessage"
+  ],
+  "main": "./out/src/extension",
+  "contributes": {
+    "commands": [
+      {
+        "command": "azure-iot-explorer.sendD2CMessage",
+        "title": "Send message to IoT Hub"
+      },
+      {
+        "command": "azure-iot-explorer.startMonitoringMessage",
+        "title": "Start monitoring"
+      },
+      {
+        "command": "azure-iot-explorer.stopMonitoringMessage",
+        "title": "Stop monitoring"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "azure-iot-explorer.sendD2CMessage",
+        "key": "ctrl+alt+f9"
+      },
+      {
+        "command": "azure-iot-explorer.startMonitoringMessage",
+        "key": "ctrl+alt+f10"
+      },
+      {
+        "command": "azure-iot-explorer.stopMonitoringMessage",
+        "key": "ctrl+alt+f11"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "azure-iot-explorer.sendD2CMessage",
+          "group": "azure-iot-explorer"
+        },
+        {
+          "command": "azure-iot-explorer.startMonitoringMessage",
+          "group": "azure-iot-explorer"
+        },
+        {
+          "command": "azure-iot-explorer.stopMonitoringMessage",
+          "group": "azure-iot-explorer"
+        }
+      ]
+    },
+    "configuration": {
+      "type": "object",
+      "title": "Azure IoT Explorer configuration",
+      "properties": {
+        "azure-iot-explorer.deviceConnectionString": {
+          "type": "string",
+          "default": "<<insert your Device Connection String>>",
+          "description": "Device Connection String"
+        },
+        "azure-iot-explorer.iotHubConnectionString": {
+          "type": "string",
+          "default": "<<insert your IoT Hub Connection String>>",
+          "description": "IoT Hub Connection String"
+        },
+        "azure-iot-explorer.consumerGroup": {
+          "type": "string",
+          "default": "$Default",
+          "description": "IoT Hub Consumer Group"
+        },
+        "azure-iot-explorer.enableAppInsights": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to enable AppInsights to track anonymous telemetry data."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "node ./node_modules/vscode/bin/compile",
+    "compile": "node ./node_modules/vscode/bin/compile -watch -p ./",
+    "postinstall": "node ./node_modules/vscode/bin/install"
+  },
+  "devDependencies": {
+    "typescript": "^1.8.5",
+    "vscode": "^0.11.0"
+  },
+  "dependencies": {
+    "applicationinsights": "^0.16.0",
+    "azure-event-hubs": "^0.0.4",
+    "azure-iot-device": "^1.0.16",
+    "azure-iot-device-http": "^1.0.16"
+  }
+}
