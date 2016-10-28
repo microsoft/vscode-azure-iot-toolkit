@@ -7,6 +7,6 @@ export class Utility {
     }
 
     static getConfiguration(): vscode.WorkspaceConfiguration {
-        return vscode.workspace.getConfiguration('azure-iot-explorer');
+        return vscode.workspace.getConfiguration('azure-iot-toolkit');
     }
 }

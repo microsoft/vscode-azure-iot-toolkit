@@ -1,4 +1,4 @@
-# Code Runner
+# Azure IoT Toolkit
 
 Toolkit makes Azure IoT Development easier
 
@@ -37,21 +37,21 @@ Toolkit makes Azure IoT Development easier
 To set the Device Connection String which is used to send device-to-cloud message:
 ```json
 {
-    "azure-iot-explorer.deviceConnectionString": "HostName=<my-hub>.azure-devices.net;DeviceId=<known-device-id>;SharedAccessKey=<known-device-key>"
+    "azure-iot-toolkit.deviceConnectionString": "HostName=<my-hub>.azure-devices.net;DeviceId=<known-device-id>;SharedAccessKey=<known-device-key>"
 }
 ```
 
 To set the IoT Hub Connection String to monitor device-to-cloud message:
 ```json
 {
-    "azure-iot-explorer.iotHubConnectionString": "HostName=<my-hub>.azure-devices.net;SharedAccessKeyName=<my-policy>;SharedAccessKey=<my-policy-key>"
+    "azure-iot-toolkit.iotHubConnectionString": "HostName=<my-hub>.azure-devices.net;SharedAccessKeyName=<my-policy>;SharedAccessKey=<my-policy-key>"
 }
 ```
 
 To set the IoT Hub Consumer Group (default is "$Default"):
 ```json
 {
-    "azure-iot-explorer.consumerGroup": "$Default"
+    "azure-iot-toolkit.consumerGroup": "$Default"
 }
 ```
 
@@ -59,7 +59,7 @@ To set the IoT Hub Consumer Group (default is "$Default"):
 By default, anonymous telemetry data collection is turned on to understand user behavior to improve this extension. To disable it, update the settings.json as below:
 ```json
 {
-    "azure-iot-explorer.enableAppInsights": false
+    "azure-iot-toolkit.enableAppInsights": false
 }
 ```
 

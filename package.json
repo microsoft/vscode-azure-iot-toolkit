@@ -28,52 +28,52 @@
     "url": "https://github.com/formulahendry/vscode-azure-iot-toolkit.git"
   },
   "activationEvents": [
-    "onCommand:azure-iot-explorer.sendD2CMessage",
-    "onCommand:azure-iot-explorer.startMonitoringMessage"
+    "onCommand:azure-iot-toolkit.sendD2CMessage",
+    "onCommand:azure-iot-toolkit.startMonitoringMessage"
   ],
   "main": "./out/src/extension",
   "contributes": {
     "commands": [
       {
-        "command": "azure-iot-explorer.sendD2CMessage",
+        "command": "azure-iot-toolkit.sendD2CMessage",
         "title": "Send message to IoT Hub"
       },
       {
-        "command": "azure-iot-explorer.startMonitoringMessage",
+        "command": "azure-iot-toolkit.startMonitoringMessage",
         "title": "Start monitoring"
       },
       {
-        "command": "azure-iot-explorer.stopMonitoringMessage",
+        "command": "azure-iot-toolkit.stopMonitoringMessage",
         "title": "Stop monitoring"
       }
     ],
     "keybindings": [
       {
-        "command": "azure-iot-explorer.sendD2CMessage",
+        "command": "azure-iot-toolkit.sendD2CMessage",
         "key": "ctrl+alt+f9"
       },
       {
-        "command": "azure-iot-explorer.startMonitoringMessage",
+        "command": "azure-iot-toolkit.startMonitoringMessage",
         "key": "ctrl+alt+f10"
       },
       {
-        "command": "azure-iot-explorer.stopMonitoringMessage",
+        "command": "azure-iot-toolkit.stopMonitoringMessage",
         "key": "ctrl+alt+f11"
       }
     ],
     "menus": {
       "editor/context": [
         {
-          "command": "azure-iot-explorer.sendD2CMessage",
-          "group": "azure-iot-explorer"
+          "command": "azure-iot-toolkit.sendD2CMessage",
+          "group": "azure-iot-toolkit"
         },
         {
-          "command": "azure-iot-explorer.startMonitoringMessage",
-          "group": "azure-iot-explorer"
+          "command": "azure-iot-toolkit.startMonitoringMessage",
+          "group": "azure-iot-toolkit"
         },
         {
-          "command": "azure-iot-explorer.stopMonitoringMessage",
-          "group": "azure-iot-explorer"
+          "command": "azure-iot-toolkit.stopMonitoringMessage",
+          "group": "azure-iot-toolkit"
         }
       ]
     },
@@ -81,22 +81,22 @@
       "type": "object",
       "title": "Azure IoT Explorer configuration",
       "properties": {
-        "azure-iot-explorer.deviceConnectionString": {
+        "azure-iot-toolkit.deviceConnectionString": {
           "type": "string",
           "default": "<<insert your Device Connection String>>",
           "description": "Device Connection String"
         },
-        "azure-iot-explorer.iotHubConnectionString": {
+        "azure-iot-toolkit.iotHubConnectionString": {
           "type": "string",
           "default": "<<insert your IoT Hub Connection String>>",
           "description": "IoT Hub Connection String"
         },
-        "azure-iot-explorer.consumerGroup": {
+        "azure-iot-toolkit.consumerGroup": {
           "type": "string",
           "default": "$Default",
           "description": "IoT Hub Consumer Group"
         },
-        "azure-iot-explorer.enableAppInsights": {
+        "azure-iot-toolkit.enableAppInsights": {
           "type": "boolean",
           "default": true,
           "description": "Whether to enable AppInsights to track anonymous telemetry data."
