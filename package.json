@@ -4,12 +4,29 @@
   "description": "Send messages to Azure IoT Hub, monitor device-to-cloud messages",
   "version": "0.0.1",
   "publisher": "formulahendry",
+  "icon": "images/logo.png",
   "engines": {
     "vscode": "^1.0.0"
   },
   "categories": [
     "Other"
   ],
+  "keywords": [
+    "azure",
+    "iot",
+    "device",
+    "manage",
+    "cloud"
+  ],
+  "bugs": {
+    "url": "https://github.com/formulahendry/vscode-azure-iot-toolkit/issues",
+    "email": "formulahendry@gmail.com"
+  },
+  "homepage": "https://github.com/formulahendry/vscode-azure-iot-toolkit/blob/master/README.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/formulahendry/vscode-azure-iot-toolkit.git"
+  },
   "activationEvents": [
     "onCommand:azure-iot-explorer.sendD2CMessage",
     "onCommand:azure-iot-explorer.startMonitoringMessage"

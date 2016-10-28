@@ -1,65 +1,75 @@
-# azure-iot-toolkit README
+# Code Runner
 
-This is the README for your extension "azure-iot-toolkit". After writing up a brief description, we recommend including the following sections.
+Toolkit makes Azure IoT Development easier
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+[*] Send messages to Azure IoT Hub (device-to-cloud message)
 
-For example if there is an image subfolder under your extension project workspace:
+[*] Monitor device-to-cloud messages
 
-\!\[feature X\]\(images/feature-x.png\)
+[ ] Send messages from Azure IoT Hub to device (cloud-to-device message)
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+[ ] Device management (List, Create, Update, Delete)
 
-## Requirements
+[ ] And more...
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+## Commands
 
-## Extension Settings
+| Command | Keyboard Shortcuts | Menu Contexts |
+| -- | -- | -- |
+| Send message to IoT Hub | Ctrl+Alt+F9 | editor/context |
+| Start monitoring | Ctrl+Alt+F10 | editor/context |
+| Stop monitoring | Ctrl+Alt+F11 | editor/context |
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+## Usages
 
-For example:
+* Send messages to Azure IoT Hub
 
-This extension contributes the following settings:
+![Usage](images/send.gif)
 
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
+* Monitor device-to-cloud messages
 
-## Known Issues
+![Usage](images/monitor.gif)
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+## Configuration
 
-## Release Notes
+To set the Device Connection String which is used to send device-to-cloud message:
+```json
+{
+    "azure-iot-explorer.deviceConnectionString": "HostName=<my-hub>.azure-devices.net;DeviceId=<known-device-id>;SharedAccessKey=<known-device-key>"
+}
+```
 
-Users appreciate release notes as you update your extension.
+To set the IoT Hub Connection String to monitor device-to-cloud message:
+```json
+{
+    "azure-iot-explorer.iotHubConnectionString": "HostName=<my-hub>.azure-devices.net;SharedAccessKeyName=<my-policy>;SharedAccessKey=<my-policy-key>"
+}
+```
 
-### 1.0.0
+To set the IoT Hub Consumer Group (default is "$Default"):
+```json
+{
+    "azure-iot-explorer.consumerGroup": "$Default"
+}
+```
 
-Initial release of ...
+## Telemetry data
+By default, anonymous telemetry data collection is turned on to understand user behavior to improve this extension. To disable it, update the settings.json as below:
+```json
+{
+    "azure-iot-explorer.enableAppInsights": false
+}
+```
 
-### 1.0.1
+## Change Log
+### 0.0.1
+* Send messages to Azure IoT Hub
+* Monitor device-to-cloud messages
 
-Fixed issue #.
+## Issues
+Submit the [issues](https://github.com/formulahendry/vscode-azure-iot-toolkit/issues) if you find any bug or have any suggestion.
 
-### 1.1.0
-
-Added features X, Y, and Z.
-
------------------------------------------------------------------------------------------------------------
-
-## Working with Markdown
-
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on OSX or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on OSX or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (OSX) to see a list of Markdown snippets
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+## Contribution
+Fork the [repo](https://github.com/formulahendry/vscode-azure-iot-toolkit) and submit pull requests.

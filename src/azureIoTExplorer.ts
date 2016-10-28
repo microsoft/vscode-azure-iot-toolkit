@@ -8,7 +8,7 @@ export class AzureIoTExplorer {
     
 
     constructor() {
-        let outputChannel = vscode.window.createOutputChannel('Azure IoT Explorer');
+        let outputChannel = vscode.window.createOutputChannel('Azure IoT Toolkit');
         let appInsightsClient = new AppInsightsClient();
         this._messageExplorer = new MessageExplorer(outputChannel, appInsightsClient);
     }
