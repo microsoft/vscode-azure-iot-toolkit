@@ -17,9 +17,24 @@ export function activate(context: vscode.ExtensionContext) {
         azureIoTExplorer.stopMonitoringMessage();
     });
 
+    let listDevice = vscode.commands.registerCommand('azure-iot-toolkit.listDevice', () => {
+        azureIoTExplorer.listDevice();
+    });
+
+    let createDevice = vscode.commands.registerCommand('azure-iot-toolkit.createDevice', () => {
+        azureIoTExplorer.createDevice();
+    });
+
+    let deleteDevice = vscode.commands.registerCommand('azure-iot-toolkit.deleteDevice', () => {
+        azureIoTExplorer.deleteDevice();
+    });
+
     context.subscriptions.push(sendD2CMessage);
     context.subscriptions.push(startMonitoringMessage);
     context.subscriptions.push(stopMonitoringMessage);
+    context.subscriptions.push(listDevice);
+    context.subscriptions.push(createDevice);
+    context.subscriptions.push(deleteDevice);
 }
 
 export function deactivate() {

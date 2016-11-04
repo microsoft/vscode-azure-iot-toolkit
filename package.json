@@ -1,8 +1,8 @@
 {
   "name": "azure-iot-toolkit",
   "displayName": "Azure IoT Toolkit",
-  "description": "Send messages to Azure IoT Hub, monitor device-to-cloud messages",
-  "version": "0.0.1",
+  "description": "Send messages to Azure IoT Hub, monitor device-to-cloud messages, IoT Device Management",
+  "version": "0.0.2",
   "publisher": "formulahendry",
   "icon": "images/logo.png",
   "engines": {
@@ -15,7 +15,7 @@
     "azure",
     "iot",
     "device",
-    "manage",
+    "explorer",
     "cloud"
   ],
   "bugs": {
@@ -29,7 +29,9 @@
   },
   "activationEvents": [
     "onCommand:azure-iot-toolkit.sendD2CMessage",
-    "onCommand:azure-iot-toolkit.startMonitoringMessage"
+    "onCommand:azure-iot-toolkit.startMonitoringMessage",
+    "onCommand:azure-iot-toolkit.listDevice",
+    "onCommand:azure-iot-toolkit.createDevice"
   ],
   "main": "./out/src/extension",
   "contributes": {
@@ -45,6 +47,18 @@
       {
         "command": "azure-iot-toolkit.stopMonitoringMessage",
         "title": "Stop monitoring"
+      },
+      {
+        "command": "azure-iot-toolkit.listDevice",
+        "title": "List device"
+      },
+      {
+        "command": "azure-iot-toolkit.createDevice",
+        "title": "Create device"
+      },
+      {
+        "command": "azure-iot-toolkit.deleteDevice",
+        "title": "Delete device"
       }
     ],
     "keybindings": [
@@ -59,6 +73,18 @@
       {
         "command": "azure-iot-toolkit.stopMonitoringMessage",
         "key": "ctrl+alt+f11"
+      },
+      {
+        "command": "azure-iot-toolkit.listDevice",
+        "key": "ctrl+alt+f1"
+      },
+      {
+        "command": "azure-iot-toolkit.createDevice",
+        "key": "ctrl+alt+f2"
+      },
+      {
+        "command": "azure-iot-toolkit.deleteDevice",
+        "key": "ctrl+alt+f3"
       }
     ],
     "menus": {
@@ -73,6 +99,18 @@
         },
         {
           "command": "azure-iot-toolkit.stopMonitoringMessage",
+          "group": "azure-iot-toolkit"
+        },
+        {
+          "command": "azure-iot-toolkit.listDevice",
+          "group": "azure-iot-toolkit"
+        },
+        {
+          "command": "azure-iot-toolkit.createDevice",
+          "group": "azure-iot-toolkit"
+        },
+        {
+          "command": "azure-iot-toolkit.deleteDevice",
           "group": "azure-iot-toolkit"
         }
       ]
@@ -117,6 +155,7 @@
     "applicationinsights": "^0.16.0",
     "azure-event-hubs": "^0.0.4",
     "azure-iot-device": "^1.0.16",
-    "azure-iot-device-http": "^1.0.16"
+    "azure-iot-device-http": "^1.0.16",
+    "azure-iothub": "^1.0.18"
   }
 }

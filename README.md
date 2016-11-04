@@ -10,7 +10,7 @@ Toolkit makes Azure IoT Development easier
 
 [ ] Send messages from Azure IoT Hub to device (cloud-to-device message)
 
-[ ] Device management (List, Create, Update, Delete)
+[*] Device management (List, Create, Delete)
 
 [ ] And more...
 
@@ -21,16 +21,24 @@ Toolkit makes Azure IoT Development easier
 | Send message to IoT Hub | Ctrl+Alt+F9 | editor/context |
 | Start monitoring | Ctrl+Alt+F10 | editor/context |
 | Stop monitoring | Ctrl+Alt+F11 | editor/context |
+| List device | Ctrl+Alt+F1 | editor/context |
+| Create device | Ctrl+Alt+F2 | editor/context |
+| Delete device | Ctrl+Alt+F3 | editor/context |
 
 ## Usages
 
 * Send messages to Azure IoT Hub
 
-![Usage](images/send.gif)
+![Send](images/send.gif)
 
 * Monitor device-to-cloud messages
 
-![Usage](images/monitor.gif)
+![Monitor](images/monitor.gif)
+
+* Device management (List, Create, Delete)
+
+![Device](images/device.gif)
+
 
 ## Configuration
 
@@ -64,6 +72,9 @@ By default, anonymous telemetry data collection is turned on to understand user 
 ```
 
 ## Change Log
+### 0.0.2
+* Device management (List, Create, Delete)
+
 ### 0.0.1
 * Send messages to Azure IoT Hub
 * Monitor device-to-cloud messages
