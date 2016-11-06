@@ -44,11 +44,12 @@ Toolkit makes Azure IoT Development easier
 
 * Discover Ethernet, USB serial, WiFi devices
   1. Install [device-discovery-cli](https://github.com/Azure/device-discovery-cli):
-    ```javascript
+
+    ```
     $ npm install --global device-discovery-cli
     ```
   2. Discover devices in VS Code:
-  
+
   ![Device](images/discover.gif)
 
 ## Configuration
