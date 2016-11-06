@@ -12,33 +12,44 @@ Toolkit makes Azure IoT Development easier
 
 [*] Device management (List, Create, Delete)
 
+[*] Discover devices connected via Ethernet, USB serial and WiFi
+
 [ ] And more...
 
 ## Commands
 
 | Command | Keyboard Shortcuts | Menu Contexts |
-| -- | -- | -- |
+| --- | --- | --- |
 | Send message to IoT Hub | Ctrl+Alt+F9 | editor/context |
 | Start monitoring | Ctrl+Alt+F10 | editor/context |
 | Stop monitoring | Ctrl+Alt+F11 | editor/context |
 | List device | Ctrl+Alt+F1 | editor/context |
 | Create device | Ctrl+Alt+F2 | editor/context |
 | Delete device | Ctrl+Alt+F3 | editor/context |
+| Discover device | Ctrl+Alt+F6 | editor/context |
 
 ## Usages
 
 * Send messages to Azure IoT Hub
 
-![Send](images/send.gif)
+  ![Send](images/send.gif)
 
 * Monitor device-to-cloud messages
 
-![Monitor](images/monitor.gif)
+  ![Monitor](images/monitor.gif)
 
 * Device management (List, Create, Delete)
 
-![Device](images/device.gif)
+  ![Device](images/device.gif)
 
+* Discover Ethernet, USB serial, WiFi devices
+  1. Install [device-discovery-cli](https://github.com/Azure/device-discovery-cli):
+    ```javascript
+    $ npm install --global device-discovery-cli
+    ```
+  2. Discover devices in VS Code:
+  
+  ![Device](images/discover.gif)
 
 ## Configuration
 
@@ -72,6 +83,9 @@ By default, anonymous telemetry data collection is turned on to understand user 
 ```
 
 ## Change Log
+### 0.0.3
+* Discover Ethernet, USB serial, WiFi devices
+
 ### 0.0.2
 * Device management (List, Create, Delete)
 

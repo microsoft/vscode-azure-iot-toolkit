@@ -29,12 +29,17 @@ export function activate(context: vscode.ExtensionContext) {
         azureIoTExplorer.deleteDevice();
     });
 
+    let discoverDevice = vscode.commands.registerCommand('azure-iot-toolkit.discoverDevice', () => {
+        azureIoTExplorer.discoverDevice();
+    });
+
     context.subscriptions.push(sendD2CMessage);
     context.subscriptions.push(startMonitoringMessage);
     context.subscriptions.push(stopMonitoringMessage);
     context.subscriptions.push(listDevice);
     context.subscriptions.push(createDevice);
     context.subscriptions.push(deleteDevice);
+    context.subscriptions.push(discoverDevice);
 }
 
 export function deactivate() {

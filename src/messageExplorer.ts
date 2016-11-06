@@ -29,7 +29,7 @@ export class MessageExplorer extends BaseExplorer {
                     client.sendEvent(new Message(JSON.stringify(message)), this.sendEventDone(true, client, label));
                 }
                 catch (e) {
-                    this.output(label, e);
+                    this.outputLine(label, e);
                 }
             }
         });
@@ -47,14 +47,14 @@ export class MessageExplorer extends BaseExplorer {
         try {
             this._eventHubClient = EventHubClient.fromConnectionString(iotHubConnectionString);
             this._outputChannel.show();
-            this.output(label, 'Start monitoring...');
+            this.outputLine(label, 'Start monitoring...');
             this._appInsightsClient.sendEvent('D2C.startMonitoring')
             this._eventHubClient.open()
                 .then(this._eventHubClient.getPartitionIds.bind(this._eventHubClient))
                 .then((partitionIds) => {
                     return partitionIds.map((partitionId) => {
                         return this._eventHubClient.createReceiver(consumerGroup, partitionId, { 'startAfterTime': Date.now() }).then((receiver) => {
-                            this.output(label, `Created partition receiver [${partitionId}] for consumerGroup [${consumerGroup}]`);
+                            this.outputLine(label, `Created partition receiver [${partitionId}] for consumerGroup [${consumerGroup}]`);
                             receiver.on('errorReceived', this.printError(this._outputChannel, label, this._eventHubClient));
                             receiver.on('message', this.printMessage(this._outputChannel, label));
                         });
@@ -63,13 +63,13 @@ export class MessageExplorer extends BaseExplorer {
                 .catch(this.printError(this._outputChannel, label, this._eventHubClient));
         }
         catch (e) {
-            this.output(label, e);
+            this.outputLine(label, e);
         }
     }
 
     public stopMonitoringMessage(): void {
         if (this._eventHubClient) {
-            this.output('Monitor', 'Stop monitoring...');
+            this.outputLine('Monitor', 'Stop monitoring...');
             this._appInsightsClient.sendEvent('D2C.stopMonitoring')
             this._eventHubClient.close();
         }
@@ -77,16 +77,16 @@ export class MessageExplorer extends BaseExplorer {
 
     private sendEventDone(close: boolean, client: Client, label: string) {
         this._outputChannel.show();
-        this.output(label, 'Sending message to IoT Hub...');
+        this.outputLine(label, 'Sending message to IoT Hub...');
 
         return (err, result) => {
             if (err) {
-                this.output(label, 'Failed to send message to IoT Hub');
-                this.output(label, err.toString());
+                this.outputLine(label, 'Failed to send message to IoT Hub');
+                this.outputLine(label, err.toString());
                 this._appInsightsClient.sendEvent('D2C.Send', { Result: 'Fail' })
             }
             if (result) {
-                this.output(label, '[Success] Message sent to IoT Hub');
+                this.outputLine(label, '[Success] Message sent to IoT Hub');
                 this._appInsightsClient.sendEvent('D2C.Send', { Result: 'Success' })
             }
             if (close) {
@@ -97,8 +97,8 @@ export class MessageExplorer extends BaseExplorer {
 
     private printError(outputChannel: vscode.OutputChannel, label: string, eventHubClient) {
         return (err) => {
-            this.output(label, err.message);
-            this.output(label, 'Stop monitoring...');
+            this.outputLine(label, err.message);
+            this.outputLine(label, 'Stop monitoring...');
             if (eventHubClient) {
                 eventHubClient.close();
             }
@@ -107,8 +107,8 @@ export class MessageExplorer extends BaseExplorer {
 
     private printMessage(outputChannel: vscode.OutputChannel, label: string) {
         return (message) => {
-            this.output(label, 'Message received: ');
-            this.output(label, JSON.stringify(message.body));
+            this.outputLine(label, 'Message received: ');
+            this.outputLine(label, JSON.stringify(message.body));
         };
     };
 }

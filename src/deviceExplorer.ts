@@ -19,15 +19,16 @@ export class DeviceExplorer extends BaseExplorer {
 
         let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
         this._outputChannel.show();
-        this.output(label, 'Querying devices...')
+        this.outputLine(label, 'Querying devices...')
+        this._appInsightsClient.sendEvent(`${label}.List`);
         registry.list((err, deviceList) => {
-            this.output(label, `${deviceList.length} device(s) found`)
+            this.outputLine(label, `${deviceList.length} device(s) found`)
             if (deviceList.length > 0) {
-                this.output(label, '<Device Id>: <Primary Key>')
+                this.outputLine(label, '<Device Id>: <Primary Key>')
             }
             deviceList.forEach((device) => {
                 var key = device.authentication ? device.authentication.SymmetricKey.primaryKey : '<no primary key>';
-                this.output(label, `${device.deviceId}: ${key}`)
+                this.outputLine(label, `${device.deviceId}: ${key}`)
             });
         });
     }
@@ -46,8 +47,8 @@ export class DeviceExplorer extends BaseExplorer {
                     deviceId: deviceId
                 };
                 this._outputChannel.show();
-                this.output(label, `Creating device '${device.deviceId}'`);
-                registry.create(device, this.done('create', label));
+                this.outputLine(label, `Creating device '${device.deviceId}'`);
+                registry.create(device, this.done('Create', label));
             }
         });
     }
@@ -63,8 +64,8 @@ export class DeviceExplorer extends BaseExplorer {
         vscode.window.showInputBox({ prompt: 'Enter device id to delete' }).then((deviceId: string) => {
             if (deviceId !== undefined) {
                 this._outputChannel.show();
-                this.output(label, `Deleting device ${deviceId}`);
-                registry.delete(deviceId, this.done('delete', label));
+                this.outputLine(label, `Deleting device ${deviceId}`);
+                registry.delete(deviceId, this.done('Delete', label));
             }
         });
     }
@@ -72,17 +73,19 @@ export class DeviceExplorer extends BaseExplorer {
     private done(op: string, label: string) {
         return (err, deviceInfo, res) => {
             if (err) {
-                this.output(label, `[${op}] error: ${err.toString()}`);
+                this._appInsightsClient.sendEvent(`${label}.${op}`, { Result: 'Fail' })
+                this.outputLine(label, `[${op}] error: ${err.toString()}`);
             }
             if (res) {
-                let result = '[fail]';
+                let result = 'Fail';
                 if (res.statusCode < 300) {
-                    result = '[success]';
+                    result = 'Success';
                 }
-                this.output(label, `[${op}]${result} status: ${res.statusCode} ${res.statusMessage}`);
+                this._appInsightsClient.sendEvent(`${label}.${op}`, { Result: result })
+                this.outputLine(label, `[${op}][${result}] status: ${res.statusCode} ${res.statusMessage}`);
             }
             if (deviceInfo) {
-                this.output(label, `[${op}] device info: ${JSON.stringify(deviceInfo)}`);
+                this.outputLine(label, `[${op}] device info: ${JSON.stringify(deviceInfo)}`);
             }
         };
     }

@@ -12,6 +12,10 @@ export class BaseExplorer {
     }
 
     output(label: string, message: string): void {
+        this._outputChannel.append(`[${label}] ${message}`);
+    }
+
+    outputLine(label: string, message: string): void {
         this._outputChannel.appendLine(`[${label}] ${message}`);
     }
 }
