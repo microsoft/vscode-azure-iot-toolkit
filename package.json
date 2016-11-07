@@ -2,7 +2,7 @@
   "name": "azure-iot-toolkit",
   "displayName": "Azure IoT Toolkit",
   "description": "Iteract with Azure IoT Hub; IoT Device Management; Discover Ethernet, USB serial, WiFi connected devices",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "publisher": "formulahendry",
   "icon": "images/logo.png",
   "engines": {

@@ -26,7 +26,7 @@ Toolkit makes Azure IoT Development easier
 | List device | Ctrl+Alt+F1 | editor/context |
 | Create device | Ctrl+Alt+F2 | editor/context |
 | Delete device | Ctrl+Alt+F3 | editor/context |
-| Discover device | Ctrl+Alt+F6 | editor/context |
+| Discover connected device | Ctrl+Alt+F6 | editor/context |
 
 ## Usages
 
@@ -84,6 +84,9 @@ By default, anonymous telemetry data collection is turned on to understand user 
 ```
 
 ## Change Log
+### 0.0.4
+* Add instruction if device-discovery-cli is not installed 
+
 ### 0.0.3
 * Discover Ethernet, USB serial, WiFi devices
 
