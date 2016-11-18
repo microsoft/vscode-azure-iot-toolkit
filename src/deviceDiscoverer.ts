@@ -10,9 +10,11 @@ const devdisco = 'devdisco';
 
 export class DeviceDiscoverer extends BaseExplorer {
     private _deviceStatus = {};
+    private _context: vscode.ExtensionContext;
 
-    constructor(outputChannel: vscode.OutputChannel, appInsightsClient: AppInsightsClient) {
+    constructor(context: vscode.ExtensionContext, outputChannel: vscode.OutputChannel, appInsightsClient: AppInsightsClient) {
         super(outputChannel, appInsightsClient);
+        this._context = context;
     }
 
     public discoverDevice(): void {
@@ -27,9 +29,11 @@ export class DeviceDiscoverer extends BaseExplorer {
     }
 
     private deviceDiscovery(label: string, type: string): void {
-        let process = exec(`${devdisco} list --${type}`);
+        let devdiscoDir = this._context.asAbsolutePath(path.join('node_modules', 'device-discovery-cli'));
+        let process = exec(`${devdisco} list --${type}`, { cwd: devdiscoDir });
         let startTime = new Date();
         let devdiscoNotFound = false;
+        let nodeNotFound = false;
 
         process.stdout.on('data', (data) => {
             this._outputChannel.append(data);
@@ -39,7 +43,9 @@ export class DeviceDiscoverer extends BaseExplorer {
             this._outputChannel.append(data);
             if (data.indexOf(devdisco) >= 0) {
                 devdiscoNotFound = true;
-            }
+            } else if (data.indexOf('node') >= 0) {
+                nodeNotFound = true;
+            } 
         });
 
         process.on('close', (code) => {
@@ -50,6 +56,8 @@ export class DeviceDiscoverer extends BaseExplorer {
             if (devdiscoNotFound && code >= 1) {
                 this.outputLine(label, '[Note!!!] Please install device-discovery-cli with below command if not yet:');
                 this.outputLine(label, 'npm install --global device-discovery-cli');
+            } else if (nodeNotFound && code >= 1) {
+                this.outputLine(label, '[Note!!!] Please install Node.js if not yet');
             }
         });
     }

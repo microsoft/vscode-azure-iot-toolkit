@@ -3,7 +3,7 @@ import * as vscode from 'vscode';
 import { AzureIoTExplorer } from './azureIoTExplorer';
 
 export function activate(context: vscode.ExtensionContext) {
-    let azureIoTExplorer = new AzureIoTExplorer();
+    let azureIoTExplorer = new AzureIoTExplorer(context);
 
     let sendD2CMessage = vscode.commands.registerCommand('azure-iot-toolkit.sendD2CMessage', () => {
         azureIoTExplorer.sendD2CMessage();

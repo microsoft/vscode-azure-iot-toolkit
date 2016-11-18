@@ -43,7 +43,7 @@ Toolkit makes Azure IoT Development easier
   ![Device](images/device.gif)
 
 * Discover Ethernet, USB serial, WiFi devices
-  1. Install [device-discovery-cli](https://github.com/Azure/device-discovery-cli):
+  1. Install Node.js or install [device-discovery-cli](https://github.com/Azure/device-discovery-cli):
 
     ```
     $ npm install --global device-discovery-cli
@@ -84,18 +84,7 @@ By default, anonymous telemetry data collection is turned on to understand user 
 ```
 
 ## Change Log
-### 0.0.4
-* Add instruction if device-discovery-cli is not installed 
-
-### 0.0.3
-* Discover Ethernet, USB serial, WiFi devices
-
-### 0.0.2
-* Device management (List, Create, Delete)
-
-### 0.0.1
-* Send messages to Azure IoT Hub
-* Monitor device-to-cloud messages
+See Change Log [here](CHANGELOG.md)
 
 ## Issues
 Submit the [issues](https://github.com/formulahendry/vscode-azure-iot-toolkit/issues) if you find any bug or have any suggestion.
