@@ -1,3 +1,6 @@
+### 0.0.6
+* Deploy and run in remote machine
+
 ### 0.0.5
 * Include device-discovery-cli into extension
 

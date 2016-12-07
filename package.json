@@ -1,8 +1,8 @@
 {
   "name": "azure-iot-toolkit",
   "displayName": "Azure IoT Toolkit",
-  "description": "Interact with Azure IoT Hub; IoT Device Management; Discover Ethernet, USB serial, WiFi connected devices",
-  "version": "0.0.5",
+  "description": "Interact with Azure IoT Hub; IoT Device Management; Discover Ethernet, USB serial, WiFi connected devices; Deploy and run in remote machine (e.g. Raspberry Pi, Arduino)",
+  "version": "0.0.6",
   "publisher": "formulahendry",
   "icon": "images/logo.png",
   "engines": {
@@ -33,7 +33,9 @@
     "onCommand:azure-iot-toolkit.listDevice",
     "onCommand:azure-iot-toolkit.createDevice",
     "onCommand:azure-iot-toolkit.deleteDevice",
-    "onCommand:azure-iot-toolkit.discoverDevice"
+    "onCommand:azure-iot-toolkit.discoverDevice",
+    "onCommand:azure-iot-toolkit.deploy",
+    "onCommand:azure-iot-toolkit.run"
   ],
   "main": "./out/src/extension",
   "contributes": {
@@ -65,6 +67,14 @@
       {
         "command": "azure-iot-toolkit.discoverDevice",
         "title": "Discover connected device"
+      },
+      {
+        "command": "azure-iot-toolkit.deploy",
+        "title": "Deploy to remote machine"
+      },
+      {
+        "command": "azure-iot-toolkit.run",
+        "title": "Run in remote machine"
       }
     ],
     "keybindings": [
@@ -95,6 +105,14 @@
       {
         "command": "azure-iot-toolkit.discoverDevice",
         "key": "ctrl+alt+f6"
+      },
+      {
+        "command": "azure-iot-toolkit.deploy",
+        "key": "ctrl+alt+f4"
+      },
+      {
+        "command": "azure-iot-toolkit.run",
+        "key": "ctrl+alt+f5"
       }
     ],
     "menus": {
@@ -126,6 +144,14 @@
         {
           "command": "azure-iot-toolkit.discoverDevice",
           "group": "azure-iot-toolkit"
+        },
+        {
+          "command": "azure-iot-toolkit.deploy",
+          "group": "azure-iot-toolkit-2"
+        },
+        {
+          "command": "azure-iot-toolkit.run",
+          "group": "azure-iot-toolkit-2"
         }
       ]
     },
@@ -152,6 +178,36 @@
           "type": "boolean",
           "default": true,
           "description": "Whether to enable AppInsights to track anonymous telemetry data."
+        },
+        "azure-iot-toolkit.localFolder": {
+          "type": "string",
+          "default": "",
+          "description": "The folder of current machine to deploy"
+        },
+        "azure-iot-toolkit.remoteFolder": {
+          "type": "string",
+          "default": "",
+          "description": "The folder of remote machine to deploy"
+        },
+        "azure-iot-toolkit.host": {
+          "type": "string",
+          "default": "",
+          "description": "The hostname or IP address of remote machine"
+        },
+        "azure-iot-toolkit.username": {
+          "type": "string",
+          "default": "",
+          "description": "The username of remote machine"
+        },
+        "azure-iot-toolkit.password": {
+          "type": "string",
+          "default": "",
+          "description": "The password of remote machine"
+        },
+        "azure-iot-toolkit.command": {
+          "type": "string",
+          "default": "",
+          "description": "The command to run in remote machine"
         }
       }
     }
@@ -171,6 +227,8 @@
     "azure-iot-device": "^1.0.16",
     "azure-iot-device-http": "^1.0.16",
     "azure-iothub": "^1.0.18",
-    "device-discovery-cli": "^0.5.9"
+    "device-discovery-cli": "^0.5.9",
+    "scp2": "^0.5.0",
+    "simple-ssh": "^0.9.0"
   }
 }
