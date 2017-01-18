@@ -23,12 +23,8 @@ export class DeviceExplorer extends BaseExplorer {
         this._appInsightsClient.sendEvent(`${label}.List`);
         registry.list((err, deviceList) => {
             this.outputLine(label, `${deviceList.length} device(s) found`)
-            if (deviceList.length > 0) {
-                this.outputLine(label, '<Device Id>: <Primary Key>')
-            }
-            deviceList.forEach((device) => {
-                var key = device.authentication ? device.authentication.SymmetricKey.primaryKey : '<no primary key>';
-                this.outputLine(label, `${device.deviceId}: ${key}`)
+            deviceList.forEach((device, index) => {
+                this.outputLine(`${label}#${index+1}`, JSON.stringify(device))
             });
         });
     }

@@ -2,7 +2,7 @@
   "name": "azure-iot-toolkit",
   "displayName": "Azure IoT Toolkit",
   "description": "Interact with Azure IoT Hub; IoT Device Management; Discover Ethernet, USB serial, WiFi connected devices; Deploy and run in remote machine (e.g. Raspberry Pi, Arduino)",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "publisher": "formulahendry",
   "icon": "images/logo.png",
   "engines": {

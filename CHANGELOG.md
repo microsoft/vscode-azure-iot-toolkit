@@ -1,3 +1,6 @@
+### 0.0.7
+* Show detailed info when listing devices
+
 ### 0.0.6
 * Deploy and run in remote machine
 
