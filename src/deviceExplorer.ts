@@ -12,7 +12,7 @@ export class DeviceExplorer extends BaseExplorer {
 
     public listDevice(): void {
         let label = 'Device';
-        let iotHubConnectionString = Utility.getConnectionString('iotHubConnectionString', 'IoT Hub Connection String');
+        let iotHubConnectionString = Utility.getConfig('iotHubConnectionString', 'IoT Hub Connection String');
         if (!iotHubConnectionString) {
             return;
         }
@@ -31,7 +31,7 @@ export class DeviceExplorer extends BaseExplorer {
 
     public createDevice(): void {
         let label = 'Device';
-        let iotHubConnectionString = Utility.getConnectionString('iotHubConnectionString', 'IoT Hub Connection String');
+        let iotHubConnectionString = Utility.getConfig('iotHubConnectionString', 'IoT Hub Connection String');
         if (!iotHubConnectionString) {
             return;
         }
@@ -51,7 +51,7 @@ export class DeviceExplorer extends BaseExplorer {
 
     public deleteDevice(): void {
         let label = 'Device';
-        let iotHubConnectionString = Utility.getConnectionString('iotHubConnectionString', 'IoT Hub Connection String');
+        let iotHubConnectionString = Utility.getConfig('iotHubConnectionString', 'IoT Hub Connection String');
         if (!iotHubConnectionString) {
             return;
         }

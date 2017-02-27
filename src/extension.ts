@@ -9,12 +9,24 @@ export function activate(context: vscode.ExtensionContext) {
         azureIoTExplorer.sendD2CMessage();
     });
 
-    let startMonitoringMessage = vscode.commands.registerCommand('azure-iot-toolkit.startMonitoringMessage', () => {
-        azureIoTExplorer.startMonitoringMessage();
+    let startMonitorIoTHubMessage = vscode.commands.registerCommand('azure-iot-toolkit.startMonitorIoTHubMessage', () => {
+        azureIoTExplorer.startMonitorIoTHubMessage();
     });
 
-    let stopMonitoringMessage = vscode.commands.registerCommand('azure-iot-toolkit.stopMonitoringMessage', () => {
-        azureIoTExplorer.stopMonitoringMessage();
+    let stopMonitorIoTHubMessage = vscode.commands.registerCommand('azure-iot-toolkit.stopMonitorIoTHubMessage', () => {
+        azureIoTExplorer.stopMonitorIoTHubMessage();
+    });
+
+    let sendMessageToEventHub = vscode.commands.registerCommand('azure-iot-toolkit.sendMessageToEventHub', () => {
+        azureIoTExplorer.sendMessageToEventHub();
+    });
+
+    let startMonitorEventHubMessage = vscode.commands.registerCommand('azure-iot-toolkit.startMonitorEventHubMessage', () => {
+        azureIoTExplorer.startMonitorEventHubMessage();
+    });
+
+    let stopMonitorEventHubMessage = vscode.commands.registerCommand('azure-iot-toolkit.stopMonitorEventHubMessage', () => {
+        azureIoTExplorer.stopMonitorEventHubMessage();
     });
 
     let listDevice = vscode.commands.registerCommand('azure-iot-toolkit.listDevice', () => {
@@ -42,8 +54,11 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     context.subscriptions.push(sendD2CMessage);
-    context.subscriptions.push(startMonitoringMessage);
-    context.subscriptions.push(stopMonitoringMessage);
+    context.subscriptions.push(startMonitorIoTHubMessage);
+    context.subscriptions.push(stopMonitorIoTHubMessage);
+    context.subscriptions.push(sendMessageToEventHub);
+    context.subscriptions.push(startMonitorEventHubMessage);
+    context.subscriptions.push(stopMonitorEventHubMessage);
     context.subscriptions.push(listDevice);
     context.subscriptions.push(createDevice);
     context.subscriptions.push(deleteDevice);

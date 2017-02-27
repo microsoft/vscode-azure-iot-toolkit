@@ -1,13 +1,15 @@
 'use strict';
 import * as vscode from 'vscode';
-import { MessageExplorer } from './messageExplorer';
+import { IoTHubMessageExplorer } from './iotHubMessageExplorer';
+import { EventHubMessageExplorer } from './eventHubMessageExplorer';
 import { DeviceExplorer } from './deviceExplorer';
 import { DeviceDiscoverer } from './deviceDiscoverer';
 import { DeviceController } from './deviceController';
 import { AppInsightsClient } from './appInsightsClient';
 
 export class AzureIoTExplorer {
-    private _messageExplorer: MessageExplorer;
+    private _iotHubMessageExplorer: IoTHubMessageExplorer;
+    private _eventHubMessageExplorer: EventHubMessageExplorer;
     private _deviceExplorer: DeviceExplorer;
     private _deviceDiscoverer: DeviceDiscoverer;
     private _deviceController: DeviceController;
@@ -15,22 +17,35 @@ export class AzureIoTExplorer {
     constructor(context: vscode.ExtensionContext) {
         let outputChannel = vscode.window.createOutputChannel('Azure IoT Toolkit');
         let appInsightsClient = new AppInsightsClient();
-        this._messageExplorer = new MessageExplorer(outputChannel, appInsightsClient);
+        this._iotHubMessageExplorer = new IoTHubMessageExplorer(outputChannel, appInsightsClient);
+        this._eventHubMessageExplorer = new EventHubMessageExplorer(outputChannel, appInsightsClient);
         this._deviceExplorer = new DeviceExplorer(outputChannel, appInsightsClient);
         this._deviceDiscoverer = new DeviceDiscoverer(context, outputChannel, appInsightsClient);
         this._deviceController = new DeviceController(outputChannel, appInsightsClient);
     }
 
     public sendD2CMessage(): void {
-        this._messageExplorer.sendD2CMessage();
+        this._iotHubMessageExplorer.sendD2CMessage();
     }
 
-    public startMonitoringMessage(): void {
-        this._messageExplorer.startMonitoringMessage();
+    public startMonitorIoTHubMessage(): void {
+        this._iotHubMessageExplorer.startMonitorIoTHubMessage();
     }
 
-    public stopMonitoringMessage(): void {
-        this._messageExplorer.stopMonitoringMessage();
+    public stopMonitorIoTHubMessage(): void {
+        this._iotHubMessageExplorer.stopMonitorIoTHubMessage();
+    }
+
+    public sendMessageToEventHub(): void {
+        this._eventHubMessageExplorer.sendMessageToEventHub();
+    }
+
+    public startMonitorEventHubMessage(): void {
+        this._eventHubMessageExplorer.startMonitorEventHubMessage();
+    }
+
+    public stopMonitorEventHubMessage(): void {
+        this._eventHubMessageExplorer.stopMonitorEventHubMessage();
     }
 
     public listDevice(): void {

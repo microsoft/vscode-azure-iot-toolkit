@@ -29,7 +29,9 @@
   },
   "activationEvents": [
     "onCommand:azure-iot-toolkit.sendD2CMessage",
-    "onCommand:azure-iot-toolkit.startMonitoringMessage",
+    "onCommand:azure-iot-toolkit.startMonitorIoTHubMessage",
+    "onCommand:azure-iot-toolkit.sendMessageToEventHub",
+    "onCommand:azure-iot-toolkit.startMonitorEventHubMessage",
     "onCommand:azure-iot-toolkit.listDevice",
     "onCommand:azure-iot-toolkit.createDevice",
     "onCommand:azure-iot-toolkit.deleteDevice",
@@ -45,12 +47,24 @@
         "title": "Send message to IoT Hub"
       },
       {
-        "command": "azure-iot-toolkit.startMonitoringMessage",
-        "title": "Start monitoring"
+        "command": "azure-iot-toolkit.startMonitorIoTHubMessage",
+        "title": "Start monitor IoT Hub message"
       },
       {
-        "command": "azure-iot-toolkit.stopMonitoringMessage",
-        "title": "Stop monitoring"
+        "command": "azure-iot-toolkit.stopMonitorIoTHubMessage",
+        "title": "Stop monitor IoT Hub message"
+      },
+      {
+        "command": "azure-iot-toolkit.sendMessageToEventHub",
+        "title": "Send message to Event Hub"
+      },
+      {
+        "command": "azure-iot-toolkit.startMonitorEventHubMessage",
+        "title": "Start monitor Event Hub message"
+      },
+      {
+        "command": "azure-iot-toolkit.stopMonitorEventHubMessage",
+        "title": "Stop monitor Event Hub message"
       },
       {
         "command": "azure-iot-toolkit.listDevice",
@@ -83,11 +97,11 @@
         "key": "ctrl+alt+f9"
       },
       {
-        "command": "azure-iot-toolkit.startMonitoringMessage",
+        "command": "azure-iot-toolkit.startMonitorIoTHubMessage",
         "key": "ctrl+alt+f10"
       },
       {
-        "command": "azure-iot-toolkit.stopMonitoringMessage",
+        "command": "azure-iot-toolkit.stopMonitorIoTHubMessage",
         "key": "ctrl+alt+f11"
       },
       {
@@ -122,11 +136,23 @@
           "group": "azure-iot-toolkit"
         },
         {
-          "command": "azure-iot-toolkit.startMonitoringMessage",
+          "command": "azure-iot-toolkit.startMonitorIoTHubMessage",
           "group": "azure-iot-toolkit"
         },
         {
-          "command": "azure-iot-toolkit.stopMonitoringMessage",
+          "command": "azure-iot-toolkit.stopMonitorIoTHubMessage",
+          "group": "azure-iot-toolkit"
+        },
+        {
+          "command": "azure-iot-toolkit.sendMessageToEventHub",
+          "group": "azure-iot-toolkit"
+        },
+        {
+          "command": "azure-iot-toolkit.startMonitorEventHubMessage",
+          "group": "azure-iot-toolkit"
+        },
+        {
+          "command": "azure-iot-toolkit.stopMonitorEventHubMessage",
           "group": "azure-iot-toolkit"
         },
         {
@@ -169,10 +195,25 @@
           "default": "<<insert your IoT Hub Connection String>>",
           "description": "IoT Hub Connection String"
         },
-        "azure-iot-toolkit.consumerGroup": {
+        "azure-iot-toolkit.eventHubConnectionString": {
+          "type": "string",
+          "default": "<<insert your Event Hub Connection String>>",
+          "description": "Event Hub Connection String"
+        },
+        "azure-iot-toolkit.eventHubPath": {
+          "type": "string",
+          "default": "<<insert your Event Hub Path>>",
+          "description": "Event Hub Path"
+        },
+        "azure-iot-toolkit.iotHubConsumerGroup": {
           "type": "string",
           "default": "$Default",
           "description": "IoT Hub Consumer Group"
+        },
+        "azure-iot-toolkit.eventHubConsumerGroup": {
+          "type": "string",
+          "default": "$Default",
+          "description": "Event Hub Consumer Group"
         },
         "azure-iot-toolkit.enableAppInsights": {
           "type": "boolean",
@@ -213,17 +254,20 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "node ./node_modules/vscode/bin/compile",
-    "compile": "node ./node_modules/vscode/bin/compile -watch -p ./",
+    "vscode:prepublish": "tsc -p ./",
+    "compile": "tsc -watch -p ./",
     "postinstall": "node ./node_modules/vscode/bin/install"
   },
   "devDependencies": {
-    "typescript": "^1.8.5",
-    "vscode": "^0.11.0"
+    "typescript": "^2.0.3",
+    "vscode": "^1.0.0",
+    "mocha": "^2.3.3",
+    "@types/node": "^6.0.40",
+    "@types/mocha": "^2.2.32"
   },
   "dependencies": {
     "applicationinsights": "^0.16.0",
-    "azure-event-hubs": "^0.0.4",
+    "azure-event-hubs": "^0.0.6",
     "azure-iot-device": "^1.0.16",
     "azure-iot-device-http": "^1.0.16",
     "azure-iothub": "^1.0.18",

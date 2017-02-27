@@ -36,10 +36,11 @@ export class DeviceDiscoverer extends BaseExplorer {
         let nodeNotFound = false;
 
         process.stdout.on('data', (data) => {
-            this._outputChannel.append(data);
+            this._outputChannel.append(data.toString());
         });
 
         process.stderr.on('data', (data) => {
+            data = data.toString();
             this._outputChannel.append(data);
             if (data.indexOf(devdisco) >= 0) {
                 devdiscoNotFound = true;
