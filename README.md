@@ -1,20 +1,24 @@
 # Azure IoT Toolkit
 
-Toolkit makes Azure IoT Development easier
+Toolkit makes Azure IoT Development easier. For more awesome Azure IoT projects and resources, please visit https://aka.ms/azure.iot
 
 ## Features
 
-[*] Send messages to Azure IoT Hub (device-to-cloud message)
+[x] Send messages to Azure IoT Hub (device-to-cloud message)
 
-[*] Monitor device-to-cloud messages
+[x] Monitor device-to-cloud messages
+
+[x] Send messages to Azure Event Hub
+
+[x] Monitor Event Hub messages
 
 [ ] Send messages from Azure IoT Hub to device (cloud-to-device message)
 
-[*] Device management (List, Create, Delete)
+[x] Device management (List, Create, Delete)
 
-[*] Discover devices connected via Ethernet, USB serial and WiFi
+[x] Discover devices connected via Ethernet, USB serial and WiFi
 
-[*] Deploy and run in remote machine
+[x] Deploy and run in remote machine
 
 [ ] Debug in remote machines
 
@@ -25,14 +29,17 @@ Toolkit makes Azure IoT Development easier
 | Command | Keyboard Shortcuts | Menu Contexts |
 | --- | --- | --- |
 | Send message to IoT Hub | Ctrl+Alt+F9 | editor/context |
-| Start monitoring | Ctrl+Alt+F10 | editor/context |
-| Stop monitoring | Ctrl+Alt+F11 | editor/context |
+| Start monitoring IoT Hub message | Ctrl+Alt+F10 | editor/context |
+| Stop monitoring IoT Hub message | Ctrl+Alt+F11 | editor/context |
+| Send message to Event Hub | None | editor/context |
+| Start monitoring Event Hub message | None | editor/context |
+| Stop monitoring Event Hub message | None | editor/context |
 | List device | Ctrl+Alt+F1 | editor/context |
 | Create device | Ctrl+Alt+F2 | editor/context |
 | Delete device | Ctrl+Alt+F3 | editor/context |
 | Discover connected device | Ctrl+Alt+F6 | editor/context |
-| Deploy to remote machine | Ctrl+Alt+F4 | editor/context |
-| Run in remote machine | Ctrl+Alt+F5 | editor/context |
+| Deploy to remote machine | Ctrl+Alt+F4 | None |
+| Run in remote machine | Ctrl+Alt+F5 | None |
 
 ## Usages
 
@@ -43,6 +50,10 @@ Toolkit makes Azure IoT Development easier
 * Monitor device-to-cloud messages
 
   ![Monitor](images/monitor.gif)
+
+* Send/monitor messages for Azure Event Hub
+
+  ![Event Hub](images/event-hub.gif)
 
 * Device management (List, Create, Delete)
 
@@ -90,7 +101,28 @@ To set the IoT Hub Connection String to monitor device-to-cloud message:
 To set the IoT Hub Consumer Group (default is "$Default"):
 ```json
 {
-    "azure-iot-toolkit.consumerGroup": "$Default"
+    "azure-iot-toolkit.iotHubConsumerGroup": "$Default"
+}
+```
+
+To set the Event Hub Connection String:
+```json
+{
+    "azure-iot-toolkit.eventHubConnectionString": "{Event Hubs connection string}"
+}
+```
+
+To set the Event Hub Path:
+```json
+{
+    "azure-iot-toolkit.eventHubPath": "{Event Hub path/name}"
+}
+```
+
+To set the Event Hub Consumer Group (default is "$Default"):
+```json
+{
+    "azure-iot-toolkit.eventHubConsumerGroup": "$Default"
 }
 ```
 

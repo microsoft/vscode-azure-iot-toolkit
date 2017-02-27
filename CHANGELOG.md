@@ -1,3 +1,7 @@
+### 0.0.8 (2017-02-27)
+* Send messages to Azure Event Hub
+* Monitor Event Hub messages
+
 ### 0.0.7
 * Show detailed info when listing devices
 

@@ -20,7 +20,7 @@ export class EventHubMessageExplorer extends BaseExplorer {
         if (!eventHubConnectionString || !eventHubPath) {
             return;
         }
-        vscode.window.showInputBox({ prompt: `Enter message to send to  ${Constants.EventHub}` }).then((message: string) => {
+        vscode.window.showInputBox({ prompt: `Enter message to send to ${Constants.EventHub}` }).then((message: string) => {
             if (message !== undefined) {
                 let client = EventHubClient.fromConnectionString(eventHubConnectionString, eventHubPath);
                 try {
@@ -44,7 +44,6 @@ export class EventHubMessageExplorer extends BaseExplorer {
         let eventHubConnectionString = Utility.getConfig(Constants.EventHubConnectionstringKey, Constants.EventHubConnectionStringTitle);
         let eventHubPath = Utility.getConfig(Constants.EventHubPathKey, Constants.EventHubPathTitle);
         if (!eventHubConnectionString || !eventHubPath) {
-            this.outputLine(Constants.EventHubMonitorLabel, `Invalid arguments of ${Constants.EventHub}.`);
             return;
         }
         let config = Utility.getConfiguration();

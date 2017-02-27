@@ -1,8 +1,8 @@
 {
   "name": "azure-iot-toolkit",
   "displayName": "Azure IoT Toolkit",
-  "description": "Interact with Azure IoT Hub; IoT Device Management; Discover Ethernet, USB serial, WiFi connected devices; Deploy and run in remote machine (e.g. Raspberry Pi, Arduino)",
-  "version": "0.0.7",
+  "description": "Interact with Azure IoT Hub and Azure Event Hub; IoT Device Management; Discover Ethernet, USB serial, WiFi connected devices; Deploy and run in remote machine (e.g. Raspberry Pi, Arduino)",
+  "version": "0.0.8",
   "publisher": "formulahendry",
   "icon": "images/logo.png",
   "engines": {
@@ -48,11 +48,11 @@
       },
       {
         "command": "azure-iot-toolkit.startMonitorIoTHubMessage",
-        "title": "Start monitor IoT Hub message"
+        "title": "Start monitoring IoT Hub message"
       },
       {
         "command": "azure-iot-toolkit.stopMonitorIoTHubMessage",
-        "title": "Stop monitor IoT Hub message"
+        "title": "Stop monitoring IoT Hub message"
       },
       {
         "command": "azure-iot-toolkit.sendMessageToEventHub",
@@ -60,11 +60,11 @@
       },
       {
         "command": "azure-iot-toolkit.startMonitorEventHubMessage",
-        "title": "Start monitor Event Hub message"
+        "title": "Start monitoring Event Hub message"
       },
       {
         "command": "azure-iot-toolkit.stopMonitorEventHubMessage",
-        "title": "Stop monitor Event Hub message"
+        "title": "Stop monitoring Event Hub message"
       },
       {
         "command": "azure-iot-toolkit.listDevice",
@@ -132,52 +132,54 @@
     "menus": {
       "editor/context": [
         {
+          "when": "!inOutput",
           "command": "azure-iot-toolkit.sendD2CMessage",
-          "group": "azure-iot-toolkit"
+          "group": "azure-iot-toolkit-1"
         },
         {
+          "when": "!inOutput",
           "command": "azure-iot-toolkit.startMonitorIoTHubMessage",
-          "group": "azure-iot-toolkit"
+          "group": "azure-iot-toolkit-1"
         },
         {
+          "when": "inOutput",
           "command": "azure-iot-toolkit.stopMonitorIoTHubMessage",
-          "group": "azure-iot-toolkit"
+          "group": "azure-iot-toolkit@1"
         },
         {
+          "when": "!inOutput",
           "command": "azure-iot-toolkit.sendMessageToEventHub",
-          "group": "azure-iot-toolkit"
+          "group": "azure-iot-toolkit-2"
         },
         {
+          "when": "!inOutput",
           "command": "azure-iot-toolkit.startMonitorEventHubMessage",
-          "group": "azure-iot-toolkit"
+          "group": "azure-iot-toolkit-2"
         },
         {
+          "when": "inOutput",
           "command": "azure-iot-toolkit.stopMonitorEventHubMessage",
-          "group": "azure-iot-toolkit"
+          "group": "azure-iot-toolkit@2"
         },
         {
+          "when": "!inOutput",
           "command": "azure-iot-toolkit.listDevice",
-          "group": "azure-iot-toolkit"
+          "group": "azure-iot-toolkit-3@1"
         },
         {
+          "when": "!inOutput",
           "command": "azure-iot-toolkit.createDevice",
-          "group": "azure-iot-toolkit"
+          "group": "azure-iot-toolkit-3@2"
         },
         {
+          "when": "!inOutput",
           "command": "azure-iot-toolkit.deleteDevice",
-          "group": "azure-iot-toolkit"
+          "group": "azure-iot-toolkit-3@3"
         },
         {
+          "when": "!inOutput",
           "command": "azure-iot-toolkit.discoverDevice",
-          "group": "azure-iot-toolkit"
-        },
-        {
-          "command": "azure-iot-toolkit.deploy",
-          "group": "azure-iot-toolkit-2"
-        },
-        {
-          "command": "azure-iot-toolkit.run",
-          "group": "azure-iot-toolkit-2"
+          "group": "azure-iot-toolkit-3@4"
         }
       ]
     },
