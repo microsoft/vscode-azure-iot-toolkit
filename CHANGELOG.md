@@ -1,3 +1,7 @@
+### 0.0.8 (2017-02-28)
+* Show verbose info when monitoring messages
+* Output refinement for JSON object
+
 ### 0.0.8 (2017-02-27)
 * Send messages to Azure Event Hub
 * Monitor Event Hub messages

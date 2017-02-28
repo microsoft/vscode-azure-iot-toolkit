@@ -1,5 +1,6 @@
 'use strict';
 import * as vscode from 'vscode';
+import { Utility } from './utility';
 import { AppInsightsClient } from './appInsightsClient';
 import { Client as EventHubClient } from 'azure-event-hubs';
 
@@ -31,15 +32,38 @@ export class BaseExplorer {
 
     printMessage(outputChannel: vscode.OutputChannel, label: string, prefix: string) {
         return (message) => {
-            let result = message.body;
+            let config = Utility.getConfiguration();
+            let showVerboseMessage = config.get<boolean>('showVerboseMessage');
+            let result;
+            if (showVerboseMessage) {
+                result = {
+                    'partitionKey': message.partitionKey,
+                    'body': message.body,
+                    'enqueuedTimeUtc': message.enqueuedTimeUtc,
+                    'offset': message.offset,
+                    'properties': message.properties,
+                    'sequenceNumber': message.sequenceNumber,
+                    'systemProperties': message.systemProperties
+                };
+                result.body = this.tryGetStringFromCharCode(message.body);
+            } else {
+                result = this.tryGetStringFromCharCode(message.body);
+            }
+            this.outputLine(label, prefix + ':');
+            this._outputChannel.appendLine(JSON.stringify(result, null, 2));
+        };
+    };
+
+    tryGetStringFromCharCode(source) {
+        if (source instanceof Uint8Array) {
             try {
-                result = String.fromCharCode.apply(null, message.body)
+                source = String.fromCharCode.apply(null, source)
             }
             catch (e) {
             }
-            this.outputLine(label, prefix + ': ' + result);
-        };
-    };
+        }
+        return source;
+    }
 
     startMonitor(eventHubClient: EventHubClient, label: string, consumerGroup: string) {
         if (eventHubClient) {

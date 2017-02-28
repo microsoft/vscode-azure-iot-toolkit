@@ -2,7 +2,7 @@
   "name": "azure-iot-toolkit",
   "displayName": "Azure IoT Toolkit",
   "description": "Interact with Azure IoT Hub and Azure Event Hub; IoT Device Management; Discover Ethernet, USB serial, WiFi connected devices; Deploy and run in remote machine (e.g. Raspberry Pi, Arduino)",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "publisher": "formulahendry",
   "icon": "images/logo.png",
   "engines": {
@@ -216,6 +216,11 @@
           "type": "string",
           "default": "$Default",
           "description": "Event Hub Consumer Group"
+        },
+        "azure-iot-toolkit.showVerboseMessage": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to show verbose info when monitoring messages."
         },
         "azure-iot-toolkit.enableAppInsights": {
           "type": "boolean",

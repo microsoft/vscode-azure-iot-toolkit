@@ -24,7 +24,7 @@ export class DeviceExplorer extends BaseExplorer {
         registry.list((err, deviceList) => {
             this.outputLine(label, `${deviceList.length} device(s) found`)
             deviceList.forEach((device, index) => {
-                this.outputLine(`${label}#${index+1}`, JSON.stringify(device))
+                this.outputLine(`${label}#${index + 1}`, JSON.stringify(device, null, 2))
             });
         });
     }
@@ -81,7 +81,7 @@ export class DeviceExplorer extends BaseExplorer {
                 this.outputLine(label, `[${op}][${result}] status: ${res.statusCode} ${res.statusMessage}`);
             }
             if (deviceInfo) {
-                this.outputLine(label, `[${op}] device info: ${JSON.stringify(deviceInfo)}`);
+                this.outputLine(label, `[${op}] device info: ${JSON.stringify(deviceInfo, null, 2)}`);
             }
         };
     }
