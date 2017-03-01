@@ -2,10 +2,11 @@ environment:
   nodejs_version: "6"
 
 install:
+  - ps: Install-Product node $env:nodejs_version
   - npm install
   - node --version
   - npm --version
-  - tsc -v
+  - npm run version
 
 build_script:
   - npm run vscode:prepublish

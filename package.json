@@ -264,7 +264,8 @@
     "vscode:prepublish": "tsc -p ./",
     "compile": "tsc -watch -p ./",
     "postinstall": "node ./node_modules/vscode/bin/install",
-    "tslint": "tslint -t verbose src/**/*.ts"
+    "tslint": "tslint -t verbose src/**/*.ts",
+    "version": "tsc -v"
   },
   "devDependencies": {
     "@types/mocha": "^2.2.32",
@@ -279,7 +280,7 @@
     "azure-event-hubs": "^0.0.6",
     "azure-iot-device": "^1.0.16",
     "azure-iot-device-http": "^1.0.16",
-    "azure-iothub": "^1.0.18",
+    "azure-iothub": "1.0.18",
     "device-discovery-cli": "^0.5.9",
     "scp2": "^0.5.0",
     "simple-ssh": "^0.9.0"
