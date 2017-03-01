@@ -1,12 +1,12 @@
-'use strict';
-import * as vscode from 'vscode';
-import { AppInsightsClient } from './appInsightsClient';
-import { BaseExplorer } from './baseExplorer';
-import { Client as EventHubClient } from 'azure-event-hubs';
-import { clientFromConnectionString } from 'azure-iot-device-http';
-import { Constants } from './constants';
-import { Message, Client } from 'azure-iot-device';
-import { Utility } from './utility';
+"use strict";
+import { Client as EventHubClient } from "azure-event-hubs";
+import { Client, Message } from "azure-iot-device";
+import { clientFromConnectionString } from "azure-iot-device-http";
+import * as vscode from "vscode";
+import { AppInsightsClient } from "./appInsightsClient";
+import { BaseExplorer } from "./baseExplorer";
+import { Constants } from "./constants";
+import { Utility } from "./utility";
 
 export class IoTHubMessageExplorer extends BaseExplorer {
     private _eventHubClient;
@@ -26,14 +26,12 @@ export class IoTHubMessageExplorer extends BaseExplorer {
                 try {
                     let client = clientFromConnectionString(deviceConnectionString);
                     client.sendEvent(new Message(JSON.stringify(message)), this.sendEventDone(client, Constants.IoTHubMessageLabel));
-                }
-                catch (e) {
+                } catch (e) {
                     this.outputLine(Constants.IoTHubMessageLabel, e);
                 }
             }
         });
     }
-
 
     public startMonitorIoTHubMessage(): void {
         let iotHubConnectionString = Utility.getConfig(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
@@ -49,10 +47,9 @@ export class IoTHubMessageExplorer extends BaseExplorer {
             this.outputLine(Constants.IoTHubMonitorLabel, `Start monitoring ${Constants.IoTHub} ...`);
             this._appInsightsClient.sendEvent(Constants.IoTHubAIStartMonitorEvent);
             this.startMonitor(this._eventHubClient, Constants.IoTHubMonitorLabel, consumerGroup);
-        }
-        catch (e) {
+        } catch (e) {
             this.outputLine(Constants.IoTHubMonitorLabel, e);
-            this._appInsightsClient.sendEvent(Constants.IoTHubAIStartMonitorEvent, { Result: 'Exception', Message: e })
+            this._appInsightsClient.sendEvent(Constants.IoTHubAIStartMonitorEvent, { Result: "Exception", Message: e });
         }
     }
 
@@ -69,13 +66,13 @@ export class IoTHubMessageExplorer extends BaseExplorer {
             if (err) {
                 this.outputLine(label, `Failed to send message to ${Constants.IoTHub}`);
                 this.outputLine(label, err.toString());
-                this._appInsightsClient.sendEvent(Constants.IoTHubAIMessageEvent, { Result: 'Fail' })
+                this._appInsightsClient.sendEvent(Constants.IoTHubAIMessageEvent, { Result: "Fail" });
             }
             if (result) {
                 this.outputLine(label, `[Success] Message sent to ${Constants.IoTHub}`);
-                this._appInsightsClient.sendEvent(Constants.IoTHubAIMessageEvent, { Result: 'Success' })
+                this._appInsightsClient.sendEvent(Constants.IoTHubAIMessageEvent, { Result: "Success" });
             }
-            client.close((err, result) => { console.log('client close') });
+            client.close(() => { return; });
         };
     }
 }

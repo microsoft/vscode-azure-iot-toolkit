@@ -1,11 +1,11 @@
-'use strict';
-import * as vscode from 'vscode';
-import { IoTHubMessageExplorer } from './iotHubMessageExplorer';
-import { EventHubMessageExplorer } from './eventHubMessageExplorer';
-import { DeviceExplorer } from './deviceExplorer';
-import { DeviceDiscoverer } from './deviceDiscoverer';
-import { DeviceController } from './deviceController';
-import { AppInsightsClient } from './appInsightsClient';
+"use strict";
+import * as vscode from "vscode";
+import { AppInsightsClient } from "./appInsightsClient";
+import { DeviceController } from "./deviceController";
+import { DeviceDiscoverer } from "./deviceDiscoverer";
+import { DeviceExplorer } from "./deviceExplorer";
+import { EventHubMessageExplorer } from "./eventHubMessageExplorer";
+import { IoTHubMessageExplorer } from "./iotHubMessageExplorer";
 
 export class AzureIoTExplorer {
     private _iotHubMessageExplorer: IoTHubMessageExplorer;
@@ -15,7 +15,7 @@ export class AzureIoTExplorer {
     private _deviceController: DeviceController;
 
     constructor(context: vscode.ExtensionContext) {
-        let outputChannel = vscode.window.createOutputChannel('Azure IoT Toolkit');
+        let outputChannel = vscode.window.createOutputChannel("Azure IoT Toolkit");
         let appInsightsClient = new AppInsightsClient();
         this._iotHubMessageExplorer = new IoTHubMessageExplorer(outputChannel, appInsightsClient);
         this._eventHubMessageExplorer = new EventHubMessageExplorer(outputChannel, appInsightsClient);

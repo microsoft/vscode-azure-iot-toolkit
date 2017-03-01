@@ -1,4 +1,4 @@
-'user strict';
+"user strict";
 
 export class Constants {
     public static IoTHub = "IoT Hub";
@@ -10,22 +10,22 @@ export class Constants {
     public static IotHubConnectionStringTitle = "Iot Hub Connection String";
     public static IoTHubConsumerGroup = "iotHubConsumerGroup";
 
-    public static EventHubConnectionstringKey = "eventHubConnectionString";    
+    public static EventHubConnectionstringKey = "eventHubConnectionString";
     public static EventHubConnectionStringTitle = "Event Hub Connection String";
     public static EventHubPathKey = "eventHubPath";
     public static EventHubPathTitle = "Event Hub Path";
     public static EventHubConsumerGroup = "eventHubConsumerGroup";
 
     public static EventHubMonitorLabel = "EventHubMonitor";
-    public static EventHubMessageLabel = 'EventHubMessage';
+    public static EventHubMessageLabel = "EventHubMessage";
     public static IoTHubMonitorLabel = "IoTHubMonitor";
     public static IoTHubMessageLabel = "D2CMessage";
 
-    public static IoTHubAIStartMonitorEvent = 'D2C.startMonitoring';
-    public static IoTHubAIStopMonitorEvent = 'D2C.stopMonitoring';
-    public static IoTHubAIMessageEvent = 'D2C.Send';
+    public static IoTHubAIStartMonitorEvent = "D2C.startMonitoring";
+    public static IoTHubAIStopMonitorEvent = "D2C.stopMonitoring";
+    public static IoTHubAIMessageEvent = "D2C.Send";
 
-    public static EventHubAIStartMonitorEvent = 'EventHub.startMonitoring';
-    public static EventHubAIStopMonitorEvent = 'EventHub.stopMonitoring';
-    public static EventHubAIMessageEvent = 'EventHub.Send';
+    public static EventHubAIStartMonitorEvent = "EventHub.startMonitoring";
+    public static EventHubAIStopMonitorEvent = "EventHub.stopMonitoring";
+    public static EventHubAIMessageEvent = "EventHub.Send";
 }

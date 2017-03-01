@@ -1,10 +1,10 @@
-'use strict';
-import * as vscode from 'vscode';
-const scp2 = require('scp2');
-const SSH = require('simple-ssh');
-import { Utility } from './utility';
-import { AppInsightsClient } from './appInsightsClient';
-import { BaseExplorer } from './baseExplorer';
+"use strict";
+import * as vscode from "vscode";
+import scp2 = require("scp2");
+import SSH = require("simple-ssh");
+import { AppInsightsClient } from "./appInsightsClient";
+import { BaseExplorer } from "./baseExplorer";
+import { Utility } from "./utility";
 
 export class DeviceController extends BaseExplorer {
     private _localFolder: string;
@@ -13,11 +13,10 @@ export class DeviceController extends BaseExplorer {
     private _username: string;
     private _password: string;
     private _command: string;
-    private _label = 'Remote';
+    private _label = "Remote";
 
     constructor(outputChannel: vscode.OutputChannel, appInsightsClient: AppInsightsClient) {
         super(outputChannel, appInsightsClient);
-        
     }
 
     public deploy(run = false): void {
@@ -25,14 +24,14 @@ export class DeviceController extends BaseExplorer {
         this._outputChannel.show();
         this.outputLine(this._label, `Deploying from '${this._localFolder}' to '${this._remoteFolder}'`);
         let options = this.getScpOptions();
-        scp2.scp(this._localFolder, options, err => {
+        scp2.scp(this._localFolder, options, (err) => {
             if (err) {
-                this.outputLine(this._label, 'Deployment failed');
+                this.outputLine(this._label, "Deployment failed");
                 this.outputLine(this._label, err);
-                this._appInsightsClient.sendEvent(`${this._label}.deploy`, { Result: 'Fail' });
+                this._appInsightsClient.sendEvent(`${this._label}.deploy`, { Result: "Fail" });
             } else {
-                this.outputLine(this._label, 'Deployment done');
-                this._appInsightsClient.sendEvent(`${this._label}.deploy`, { Result: 'Success' });
+                this.outputLine(this._label, "Deployment done");
+                this._appInsightsClient.sendEvent(`${this._label}.deploy`, { Result: "Success" });
                 if (run) {
                     this.run();
                 }
@@ -52,30 +51,30 @@ export class DeviceController extends BaseExplorer {
 
         ssh.exec(cmd, {
             pty: true,
-            out: stdout => {
+            out: (stdout) => {
                 this.outputLine(this._label, stdout);
             },
-            err: stderr => {
+            err: (stderr) => {
                 this.outputLine(this._label, stderr);
             },
-            exit: code => {
+            exit: (code) => {
                 this.outputLine(this._label, `Exited with code=${code}`);
                 this._appInsightsClient.sendEvent(`${this._label}.run`, { Code: code.toString() });
-                if (code == 0 && callback) {
-                    callback()
+                if (code === 0 && callback) {
+                    callback();
                 }
-            }
+            },
         }).start();
     }
 
     private getConfiguration(): void {
         let config = Utility.getConfiguration();
-        this._localFolder = config.get<string>('localFolder');
-        this._remoteFolder = config.get<string>('remoteFolder');
-        this._host = config.get<string>('host');
-        this._username = config.get<string>('username');
-        this._password = config.get<string>('password');
-        this._command = config.get<string>('command');
+        this._localFolder = config.get<string>("localFolder");
+        this._remoteFolder = config.get<string>("remoteFolder");
+        this._host = config.get<string>("host");
+        this._username = config.get<string>("username");
+        this._password = config.get<string>("password");
+        this._command = config.get<string>("command");
     }
 
     private getScpOptions(): any {
@@ -83,7 +82,7 @@ export class DeviceController extends BaseExplorer {
             host: this._host,
             username: this._username,
             password: this._password,
-            path: this._remoteFolder
+            path: this._remoteFolder,
         };
     }
 
@@ -93,7 +92,7 @@ export class DeviceController extends BaseExplorer {
             user: this._username,
             pass: this._password,
             baseDir: this._remoteFolder,
-            timeout: 30000
+            timeout: 30000,
         };
     }
 }

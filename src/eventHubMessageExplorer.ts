@@ -1,11 +1,11 @@
-'use strict';
-import * as vscode from 'vscode';
-import { AppInsightsClient } from './appInsightsClient';
-import { BaseExplorer } from './baseExplorer';
-import { Client as EventHubClient, Sender as EventHubSender } from 'azure-event-hubs';
-import { Constants } from './constants';
-import { Message, Client } from 'azure-iot-device';
-import { Utility } from './utility';
+"use strict";
+import { Client as EventHubClient, Sender as EventHubSender } from "azure-event-hubs";
+import { Client, Message } from "azure-iot-device";
+import * as vscode from "vscode";
+import { AppInsightsClient } from "./appInsightsClient";
+import { BaseExplorer } from "./baseExplorer";
+import { Constants } from "./constants";
+import { Utility } from "./utility";
 
 export class EventHubMessageExplorer extends BaseExplorer {
     private _eventHubClient;
@@ -30,10 +30,9 @@ export class EventHubMessageExplorer extends BaseExplorer {
                     client.open()
                         .then(client.getPartitionIds.bind(client))
                         .then(() => client.createSender())
-                        .then((sender: EventHubSender) => { return sender.send(message) })
+                        .then((sender: EventHubSender) => { return sender.send(message); })
                         .then(this.sendToEventHubDone(client));
-                }
-                catch (e) {
+                } catch (e) {
                     this.sendToEventHubFail(client, e);
                 }
             }
@@ -55,10 +54,9 @@ export class EventHubMessageExplorer extends BaseExplorer {
             this.outputLine(Constants.EventHubMonitorLabel, `Start monitoring ${Constants.EventHub} ...`);
             this._appInsightsClient.sendEvent(Constants.EventHubAIStartMonitorEvent);
             this.startMonitor(this._eventHubClient, Constants.EventHubMonitorLabel, consumerGroup);
-        }
-        catch (e) {
+        } catch (e) {
             this.outputLine(Constants.EventHubMonitorLabel, e);
-            this._appInsightsClient.sendEvent(Constants.EventHubAIStartMonitorEvent, { Result: 'Exception', Message: e })
+            this._appInsightsClient.sendEvent(Constants.EventHubAIStartMonitorEvent, { Result: "Exception", Message: e });
         }
     }
 
@@ -70,14 +68,14 @@ export class EventHubMessageExplorer extends BaseExplorer {
     private sendToEventHubFail(client: EventHubClient, err) {
         this.outputLine(Constants.EventHubMessageLabel, `Failed to send message to ${Constants.EventHub}`);
         this.outputLine(Constants.EventHubMessageLabel, err.toString());
-        this._appInsightsClient.sendEvent(Constants.EventHubAIMessageEvent, { Result: 'Fail' });
+        this._appInsightsClient.sendEvent(Constants.EventHubAIMessageEvent, { Result: "Fail" });
         client.close();
     }
 
     private sendToEventHubDone(client: EventHubClient) {
         return () => {
             this.outputLine(Constants.EventHubMessageLabel, `[Success] Message sent to ${Constants.EventHub}`);
-            this._appInsightsClient.sendEvent(Constants.EventHubAIMessageEvent, { Result: 'Success' });
+            this._appInsightsClient.sendEvent(Constants.EventHubAIMessageEvent, { Result: "Success" });
             client.close();
         };
     }
