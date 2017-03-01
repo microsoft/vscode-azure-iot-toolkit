@@ -1,0 +1,14 @@
+environment:
+  nodejs_version: "6"
+
+install:
+  - npm install
+  - node --version
+  - npm --version
+  - tsc -v
+
+build_script:
+  - npm run vscode:prepublish
+
+test_script:
+  - npm run tslint
