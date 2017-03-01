@@ -1,5 +1,7 @@
 # Azure IoT Toolkit
 
+[![Marketplace Version](https://vsmarketplacebadge.apphb.com/version/formulahendry.azure-iot-toolkit.svg)](https://marketplace.visualstudio.com/items?itemName=formulahendry.azure-iot-toolkit) [![Installs](https://vsmarketplacebadge.apphb.com/installs/formulahendry.azure-iot-toolkit.svg)](https://marketplace.visualstudio.com/items?itemName=formulahendry.azure-iot-toolkit) [![Rating](https://vsmarketplacebadge.apphb.com/rating/formulahendry.azure-iot-toolkit.svg)](https://marketplace.visualstudio.com/items?itemName=formulahendry.azure-iot-toolkit) [![Build Status](https://travis-ci.org/formulahendry/vscode-azure-iot-toolkit.svg?branch=master)](https://travis-ci.org/formulahendry/vscode-azure-iot-toolkit)
+
 Toolkit makes Azure IoT Development easier. For more awesome Azure IoT projects and resources, please visit https://aka.ms/azure.iot
 
 ## Features
