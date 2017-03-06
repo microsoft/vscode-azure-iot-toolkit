@@ -33,7 +33,7 @@ export class SnippetManager extends BaseExplorer {
                             editBuilder.replace(new vscode.Range(document.positionAt(offset),
                                 document.positionAt(offset + connectionStringKeyWithAngleBracket.length)),
                                 connectionStringValue);
-                        })
+                        });
                         offset = text.indexOf(connectionStringKeyWithAngleBracket, offset + 1);
                     }
                 }
