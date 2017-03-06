@@ -1,4 +1,7 @@
-### 0.0.8 (2017-02-28)
+### 0.0.10 (2017-03-06)
+* JavaScript code snippet to send/monitor D2C message
+
+### 0.0.9 (2017-02-28)
 * Show verbose info when monitoring messages
 * Output refinement for JSON object
 

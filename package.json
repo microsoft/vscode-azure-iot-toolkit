@@ -1,15 +1,17 @@
 {
   "name": "azure-iot-toolkit",
   "displayName": "Azure IoT Toolkit",
-  "description": "Interact with Azure IoT Hub and Azure Event Hub; IoT Device Management; Discover Ethernet, USB serial, WiFi connected devices; Deploy and run in remote machine (e.g. Raspberry Pi, Arduino)",
-  "version": "0.0.9",
+  "description": "Interact with Azure IoT Hub and Azure Event Hub; IoT Device Management; IoT Hub Code Snippets; Discover Ethernet, USB serial, WiFi connected devices; Deploy and run in remote machine (e.g. Raspberry Pi, Arduino)",
+  "version": "0.0.10",
   "publisher": "formulahendry",
   "icon": "images/logo.png",
   "engines": {
     "vscode": "^1.0.0"
   },
   "categories": [
-    "Other"
+    "Other",
+    "Languages",
+    "Snippets"
   ],
   "keywords": [
     "azure",
@@ -28,16 +30,7 @@
     "url": "https://github.com/formulahendry/vscode-azure-iot-toolkit.git"
   },
   "activationEvents": [
-    "onCommand:azure-iot-toolkit.sendD2CMessage",
-    "onCommand:azure-iot-toolkit.startMonitorIoTHubMessage",
-    "onCommand:azure-iot-toolkit.sendMessageToEventHub",
-    "onCommand:azure-iot-toolkit.startMonitorEventHubMessage",
-    "onCommand:azure-iot-toolkit.listDevice",
-    "onCommand:azure-iot-toolkit.createDevice",
-    "onCommand:azure-iot-toolkit.deleteDevice",
-    "onCommand:azure-iot-toolkit.discoverDevice",
-    "onCommand:azure-iot-toolkit.deploy",
-    "onCommand:azure-iot-toolkit.run"
+    "*"
   ],
   "main": "./out/src/extension",
   "contributes": {
@@ -258,7 +251,13 @@
           "description": "The command to run in remote machine"
         }
       }
-    }
+    },
+    "snippets": [
+      {
+        "language": "javascript",
+        "path": "./snippets/javascript.json"
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "tsc -p ./",

@@ -53,6 +53,8 @@ export function activate(context: vscode.ExtensionContext) {
         azureIoTExplorer.run();
     });
 
+    vscode.workspace.onDidChangeTextDocument((event) => azureIoTExplorer.replaceConnectionString(event));
+
     context.subscriptions.push(sendD2CMessage);
     context.subscriptions.push(startMonitorIoTHubMessage);
     context.subscriptions.push(stopMonitorIoTHubMessage);

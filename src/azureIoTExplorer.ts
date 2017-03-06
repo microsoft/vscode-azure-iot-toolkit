@@ -6,6 +6,7 @@ import { DeviceDiscoverer } from "./deviceDiscoverer";
 import { DeviceExplorer } from "./deviceExplorer";
 import { EventHubMessageExplorer } from "./eventHubMessageExplorer";
 import { IoTHubMessageExplorer } from "./iotHubMessageExplorer";
+import { SnippetManager } from "./snippetManager";
 
 export class AzureIoTExplorer {
     private _iotHubMessageExplorer: IoTHubMessageExplorer;
@@ -13,6 +14,7 @@ export class AzureIoTExplorer {
     private _deviceExplorer: DeviceExplorer;
     private _deviceDiscoverer: DeviceDiscoverer;
     private _deviceController: DeviceController;
+    private _snippetManager: SnippetManager;
 
     constructor(context: vscode.ExtensionContext) {
         let outputChannel = vscode.window.createOutputChannel("Azure IoT Toolkit");
@@ -22,6 +24,7 @@ export class AzureIoTExplorer {
         this._deviceExplorer = new DeviceExplorer(outputChannel, appInsightsClient);
         this._deviceDiscoverer = new DeviceDiscoverer(context, outputChannel, appInsightsClient);
         this._deviceController = new DeviceController(outputChannel, appInsightsClient);
+        this._snippetManager = new SnippetManager(outputChannel, appInsightsClient);
     }
 
     public sendD2CMessage(): void {
@@ -70,5 +73,9 @@ export class AzureIoTExplorer {
 
     public run(): void {
         this._deviceController.run();
+    }
+
+    public replaceConnectionString(event: vscode.TextDocumentChangeEvent): void {
+        this._snippetManager.replaceConnectionString(event);
     }
 }
