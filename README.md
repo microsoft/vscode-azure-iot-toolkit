@@ -49,43 +49,44 @@ Toolkit makes Azure IoT Development easier. For more awesome Azure IoT projects 
 
 * Send messages to Azure IoT Hub
 
-  ![Send](images/send.gif)
+![Send](images/send.gif)
 
 * Monitor device-to-cloud messages
 
-  ![Monitor](images/monitor.gif)
+![Monitor](images/monitor.gif)
 
 * Code Snippets
 
-  ![Snippet](images/snippet.gif)
+| Trigger | Content |
+| ---- | ---- |
+| iotSendD2CMessage | Send D2C message to IoT Hub |
+| iotMonitorD2CMessage | Monitor D2C message for IoT Hub |
 
-    | Trigger | Content |
-    | ---- | ---- |
-    | iotSendD2CMessage | Send D2C message to IoT Hub |
-    | iotMonitorD2CMessage | Monitor D2C message for IoT Hub |
-    > After code snippet is created, you need to install corresponding npm package (e.g. [azure-iot-device-mqtt](https://www.npmjs.com/package/azure-iot-device-mqtt)) to run the code snippet.
-    > If you want to 'Run Code' directly, you need to install [Code Runner](https://marketplace.visualstudio.com/items?itemName=formulahendry.code-runner).
+![Snippet](images/snippet.gif)
+
+> After code snippet is created, you need to install corresponding npm package (e.g. [azure-iot-device-mqtt](https://www.npmjs.com/package/azure-iot-device-mqtt)) to run the code snippet.
+> If you want to 'Run Code' directly, you need to install [Code Runner](https://marketplace.visualstudio.com/items?itemName=formulahendry.code-runner).
 
 * Send/monitor messages for Azure Event Hub
 
-  ![Event Hub](images/event-hub.gif)
+![Event Hub](images/event-hub.gif)
 
 * Device management (List, Create, Delete)
 
-  ![Device](images/device.gif)
+![Device](images/device.gif)
 
 * Deploy and run in remote machine
 
-  ![Remote](images/remote.gif)
+| Config | description |
+| ---- | ---- |
+| azure-iot-toolkit.localFolder | The folder of current machine to deploy |
+| azure-iot-toolkit.remoteFolder | The folder of remote machine to deploy |
+| azure-iot-toolkit.host | The hostname or IP address of remote machine |
+| azure-iot-toolkit.username | The username of remote machine |
+| azure-iot-toolkit.password | The password of remote machine |
+| azure-iot-toolkit.command | The command to run in remote machine |
 
-    | Config | description |
-    | ---- | ---- |
-    | azure-iot-toolkit.localFolder | The folder of current machine to deploy |
-    | azure-iot-toolkit.remoteFolder | The folder of remote machine to deploy |
-    | azure-iot-toolkit.host | The hostname or IP address of remote machine |
-    | azure-iot-toolkit.username | The username of remote machine |
-    | azure-iot-toolkit.password | The password of remote machine |
-    | azure-iot-toolkit.command | The command to run in remote machine |
+![Remote](images/remote.gif)
 
 * Discover Ethernet, USB serial, WiFi devices
   1. Install Node.js or install [device-discovery-cli](https://github.com/Azure/device-discovery-cli):
@@ -95,7 +96,7 @@ Toolkit makes Azure IoT Development easier. For more awesome Azure IoT projects 
     ```
   2. Discover devices in VS Code:
 
-  ![Device](images/discover.gif)
+![Device](images/discover.gif)
 
 ## Configuration
 
