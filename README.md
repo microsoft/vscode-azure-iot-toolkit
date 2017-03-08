@@ -61,6 +61,8 @@ Toolkit makes Azure IoT Development easier. For more awesome Azure IoT projects 
 | ---- | ---- |
 | iotSendD2CMessage | Send D2C message to IoT Hub |
 | iotMonitorD2CMessage | Monitor D2C message for IoT Hub |
+| iotSendC2DMessage | Send C2D message to device |
+| iotMonitorC2DMessage | Monitor C2D message from IoT Hub |
 
 ![Snippet](images/snippet.gif)
 
