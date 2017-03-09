@@ -23,9 +23,11 @@ export class IoTHubMessageExplorer extends BaseExplorer {
 
         vscode.window.showInputBox({ prompt: `Enter message to send to ${Constants.IoTHub}` }).then((message: string) => {
             if (message !== undefined) {
+                this._outputChannel.show();
                 try {
                     let client = clientFromConnectionString(deviceConnectionString);
-                    client.sendEvent(new Message(JSON.stringify(message)), this.sendEventDone(client, Constants.IoTHubMessageLabel));
+                    client.sendEvent(new Message(JSON.stringify(message)),
+                        this.sendEventDone(client, Constants.IoTHubMessageLabel, Constants.IoTHub, Constants.IoTHubAIMessageEvent));
                 } catch (e) {
                     this.outputLine(Constants.IoTHubMessageLabel, e);
                 }
@@ -56,23 +58,5 @@ export class IoTHubMessageExplorer extends BaseExplorer {
     public stopMonitorIoTHubMessage(): void {
         this.stopMonoitor(this._eventHubClient, Constants.IoTHubMonitorLabel, Constants.IoTHubAIStopMonitorEvent);
         this._eventHubClient = null;
-    }
-
-    private sendEventDone(client: Client, label: string) {
-        this._outputChannel.show();
-        this.outputLine(label, `Sending message to ${Constants.IoTHub} ...`);
-
-        return (err, result) => {
-            if (err) {
-                this.outputLine(label, `Failed to send message to ${Constants.IoTHub}`);
-                this.outputLine(label, err.toString());
-                this._appInsightsClient.sendEvent(Constants.IoTHubAIMessageEvent, { Result: "Fail" });
-            }
-            if (result) {
-                this.outputLine(label, `[Success] Message sent to ${Constants.IoTHub}`);
-                this._appInsightsClient.sendEvent(Constants.IoTHubAIMessageEvent, { Result: "Success" });
-            }
-            client.close(() => { return; });
-        };
     }
 }

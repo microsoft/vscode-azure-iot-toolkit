@@ -30,58 +30,80 @@
     "url": "https://github.com/formulahendry/vscode-azure-iot-toolkit.git"
   },
   "activationEvents": [
-    "*"
+    "*",
+    "onCommand:azure-iot-toolkit.sendD2CMessage",
+    "onCommand:azure-iot-toolkit.startMonitorIoTHubMessage",
+    "onCommand:azure-iot-toolkit.sendMessageToEventHub",
+    "onCommand:azure-iot-toolkit.startMonitorEventHubMessage",
+    "onCommand:azure-iot-toolkit.listDevice",
+    "onCommand:azure-iot-toolkit.createDevice",
+    "onCommand:azure-iot-toolkit.deleteDevice",
+    "onCommand:azure-iot-toolkit.discoverDevice",
+    "onCommand:azure-iot-toolkit.deploy",
+    "onCommand:azure-iot-toolkit.run"
   ],
   "main": "./out/src/extension",
   "contributes": {
     "commands": [
       {
         "command": "azure-iot-toolkit.sendD2CMessage",
-        "title": "Send message to IoT Hub"
+        "title": "IoT: Send message to IoT Hub"
       },
       {
         "command": "azure-iot-toolkit.startMonitorIoTHubMessage",
-        "title": "Start monitoring IoT Hub message"
+        "title": "IoT: Start monitoring IoT Hub message"
       },
       {
         "command": "azure-iot-toolkit.stopMonitorIoTHubMessage",
-        "title": "Stop monitoring IoT Hub message"
+        "title": "IoT: Stop monitoring IoT Hub message"
+      },
+      {
+        "command": "azure-iot-toolkit.sendC2DMessage",
+        "title": "IoT: Send C2D message to device"
+      },
+      {
+        "command": "azure-iot-toolkit.startMonitorC2DMessage",
+        "title": "IoT: Start monitoring C2D message"
+      },
+      {
+        "command": "azure-iot-toolkit.stopMonitorC2DMessage",
+        "title": "IoT: Stop monitoring C2D message"
       },
       {
         "command": "azure-iot-toolkit.sendMessageToEventHub",
-        "title": "Send message to Event Hub"
+        "title": "IoT: Send message to Event Hub"
       },
       {
         "command": "azure-iot-toolkit.startMonitorEventHubMessage",
-        "title": "Start monitoring Event Hub message"
+        "title": "IoT: Start monitoring Event Hub message"
       },
       {
         "command": "azure-iot-toolkit.stopMonitorEventHubMessage",
-        "title": "Stop monitoring Event Hub message"
+        "title": "IoT: Stop monitoring Event Hub message"
       },
       {
         "command": "azure-iot-toolkit.listDevice",
-        "title": "List device"
+        "title": "IoT: List device"
       },
       {
         "command": "azure-iot-toolkit.createDevice",
-        "title": "Create device"
+        "title": "IoT: Create device"
       },
       {
         "command": "azure-iot-toolkit.deleteDevice",
-        "title": "Delete device"
+        "title": "IoT: Delete device"
       },
       {
         "command": "azure-iot-toolkit.discoverDevice",
-        "title": "Discover connected device"
+        "title": "IoT: Discover connected device"
       },
       {
         "command": "azure-iot-toolkit.deploy",
-        "title": "Deploy to remote machine"
+        "title": "IoT: Deploy to remote machine"
       },
       {
         "command": "azure-iot-toolkit.run",
-        "title": "Run in remote machine"
+        "title": "IoT: Run in remote machine"
       }
     ],
     "keybindings": [
@@ -279,6 +301,7 @@
     "azure-event-hubs": "^0.0.6",
     "azure-iot-device": "^1.0.16",
     "azure-iot-device-http": "^1.0.16",
+    "azure-iot-device-mqtt": "^1.1.7",
     "azure-iothub": "1.0.18",
     "device-discovery-cli": "^0.5.9",
     "scp2": "^0.5.0",

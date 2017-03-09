@@ -72,13 +72,30 @@ export class BaseExplorer {
     }
 
     protected stopMonoitor(eventHubClient: EventHubClient, label: string, aiEvent: string) {
+        this._appInsightsClient.sendEvent(aiEvent);
         if (eventHubClient) {
             this.outputLine(label, "Stop monitoring ...");
-            this._appInsightsClient.sendEvent(aiEvent);
             eventHubClient.close();
         } else {
             this.outputLine(label, "No monitor job running.");
         }
+    }
+
+    protected sendEventDone(client, label: string, target: string, aiEventName: string) {
+        this.outputLine(label, `Sending message to ${target} ...`);
+
+        return (err, result) => {
+            if (err) {
+                this.outputLine(label, `Failed to send message to ${target}`);
+                this.outputLine(label, err.toString());
+                this._appInsightsClient.sendEvent(aiEventName, { Result: "Fail" });
+            }
+            if (result) {
+                this.outputLine(label, `[Success] Message sent to ${target}`);
+                this._appInsightsClient.sendEvent(aiEventName, { Result: "Success" });
+            }
+            client.close(() => { return; });
+        };
     }
 
     private tryGetStringFromCharCode(source) {
