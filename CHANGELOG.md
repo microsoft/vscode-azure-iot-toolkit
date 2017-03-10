@@ -1,3 +1,7 @@
+### 0.0.11 (2017-03-10)
+* Send/monitor C2D message
+* Code snippet for C2D message
+
 ### 0.0.10 (2017-03-06)
 * JavaScript code snippet to send/monitor D2C message
 
