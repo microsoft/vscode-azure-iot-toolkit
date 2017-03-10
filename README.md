@@ -16,7 +16,7 @@ Toolkit makes Azure IoT Development easier. For more awesome Azure IoT projects 
 
 [x] Monitor Event Hub messages
 
-[ ] Send messages from Azure IoT Hub to device (cloud-to-device message)
+[x] Send/monitor messages from Azure IoT Hub to device (cloud-to-device message)
 
 [x] Device management (List, Create, Delete)
 
@@ -32,18 +32,21 @@ Toolkit makes Azure IoT Development easier. For more awesome Azure IoT projects 
 
 | Command | Keyboard Shortcuts | Menu Contexts |
 | --- | --- | --- |
-| Send message to IoT Hub | Ctrl+Alt+F9 | editor/context |
-| Start monitoring IoT Hub message | Ctrl+Alt+F10 | editor/context |
-| Stop monitoring IoT Hub message | Ctrl+Alt+F11 | editor/context |
-| Send message to Event Hub | None | editor/context |
-| Start monitoring Event Hub message | None | editor/context |
-| Stop monitoring Event Hub message | None | editor/context |
-| List device | Ctrl+Alt+F1 | editor/context |
-| Create device | Ctrl+Alt+F2 | editor/context |
-| Delete device | Ctrl+Alt+F3 | editor/context |
-| Discover connected device | Ctrl+Alt+F6 | editor/context |
-| Deploy to remote machine | Ctrl+Alt+F4 | None |
-| Run in remote machine | Ctrl+Alt+F5 | None |
+| IoT: Send message to IoT Hub | Ctrl+Alt+F9 | editor/context |
+| IoT: Start monitoring IoT Hub message | Ctrl+Alt+F10 | editor/context |
+| IoT: Stop monitoring IoT Hub message | Ctrl+Alt+F11 | editor/context (in output panel) |
+| IoT: Send C2D message to device | None | None |
+| IoT: Start monitoring C2D message | None | None |
+| IoT: Stop monitoring C2D message | None | editor/context (in output panel) |
+| IoT: Send message to Event Hub | None | editor/context |
+| IoT: Start monitoring Event Hub message | None | editor/context |
+| IoT: Stop monitoring Event Hub message | None | editor/context (in output panel) |
+| IoT: List device | Ctrl+Alt+F1 | editor/context |
+| IoT: Create device | Ctrl+Alt+F2 | editor/context |
+| IoT: Delete device | Ctrl+Alt+F3 | editor/context |
+| IoT: Discover connected device | Ctrl+Alt+F6 | editor/context |
+| IoT: Deploy to remote machine | Ctrl+Alt+F4 | None |
+| IoT: Run in remote machine | Ctrl+Alt+F5 | None |
 
 ## Usages
 
@@ -68,6 +71,11 @@ Toolkit makes Azure IoT Development easier. For more awesome Azure IoT projects 
 
 > After code snippet is created, you need to install corresponding npm package (e.g. [azure-iot-device-mqtt](https://www.npmjs.com/package/azure-iot-device-mqtt)) to run the code snippet.
 > If you want to 'Run Code' directly, you need to install [Code Runner](https://marketplace.visualstudio.com/items?itemName=formulahendry.code-runner).
+
+* Send/monitor C2D messages for Azure IoT Hub
+
+![C2D](images/c2d.gif)
+
 
 * Send/monitor messages for Azure Event Hub
 
@@ -102,14 +110,14 @@ Toolkit makes Azure IoT Development easier. For more awesome Azure IoT projects 
 
 ## Configuration
 
-To set the Device Connection String which is used to send device-to-cloud message:
+To set the Device Connection String which is used to send device-to-cloud message or other functions as a device simulator:
 ```json
 {
     "azure-iot-toolkit.deviceConnectionString": "HostName=<my-hub>.azure-devices.net;DeviceId=<known-device-id>;SharedAccessKey=<known-device-key>"
 }
 ```
 
-To set the IoT Hub Connection String to monitor device-to-cloud message:
+To set the IoT Hub Connection String to monitor device-to-cloud message or other functions as a service simulator:
 ```json
 {
     "azure-iot-toolkit.iotHubConnectionString": "HostName=<my-hub>.azure-devices.net;SharedAccessKeyName=<my-policy>;SharedAccessKey=<my-policy-key>"

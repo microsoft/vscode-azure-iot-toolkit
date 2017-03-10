@@ -10,8 +10,8 @@ import { Utility } from "./utility";
 export class EventHubMessageExplorer extends BaseExplorer {
     private _eventHubClient;
 
-    constructor(outputChannel: vscode.OutputChannel, appInsightsClient: AppInsightsClient) {
-        super(outputChannel, appInsightsClient);
+    constructor(outputChannel: vscode.OutputChannel) {
+        super(outputChannel);
     }
 
     public sendMessageToEventHub(): void {
@@ -52,11 +52,11 @@ export class EventHubMessageExplorer extends BaseExplorer {
             let receiveAfterTime = Date.now() - 5000;
             this._outputChannel.show();
             this.outputLine(Constants.EventHubMonitorLabel, `Start monitoring ${Constants.EventHub} ...`);
-            this._appInsightsClient.sendEvent(Constants.EventHubAIStartMonitorEvent);
+            AppInsightsClient.sendEvent(Constants.EventHubAIStartMonitorEvent);
             this.startMonitor(this._eventHubClient, Constants.EventHubMonitorLabel, consumerGroup);
         } catch (e) {
             this.outputLine(Constants.EventHubMonitorLabel, e);
-            this._appInsightsClient.sendEvent(Constants.EventHubAIStartMonitorEvent, { Result: "Exception", Message: e });
+            AppInsightsClient.sendEvent(Constants.EventHubAIStartMonitorEvent, { Result: "Exception", Message: e });
         }
     }
 
@@ -68,14 +68,14 @@ export class EventHubMessageExplorer extends BaseExplorer {
     private sendToEventHubFail(client: EventHubClient, err) {
         this.outputLine(Constants.EventHubMessageLabel, `Failed to send message to ${Constants.EventHub}`);
         this.outputLine(Constants.EventHubMessageLabel, err.toString());
-        this._appInsightsClient.sendEvent(Constants.EventHubAIMessageEvent, { Result: "Fail" });
+        AppInsightsClient.sendEvent(Constants.EventHubAIMessageEvent, { Result: "Fail" });
         client.close();
     }
 
     private sendToEventHubDone(client: EventHubClient) {
         return () => {
             this.outputLine(Constants.EventHubMessageLabel, `[Success] Message sent to ${Constants.EventHub}`);
-            this._appInsightsClient.sendEvent(Constants.EventHubAIMessageEvent, { Result: "Success" });
+            AppInsightsClient.sendEvent(Constants.EventHubAIMessageEvent, { Result: "Success" });
             client.close();
         };
     }

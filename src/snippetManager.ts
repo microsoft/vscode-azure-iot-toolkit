@@ -8,8 +8,8 @@ import { Utility } from "./utility";
 export class SnippetManager extends BaseExplorer {
     private connectionStringKeys = [Constants.DeviceConnectionStringKey, Constants.IotHubConnectionStringKey];
 
-    constructor(outputChannel: vscode.OutputChannel, appInsightsClient: AppInsightsClient) {
-        super(outputChannel, appInsightsClient);
+    constructor(outputChannel: vscode.OutputChannel) {
+        super(outputChannel);
     }
 
     public replaceConnectionString(event: vscode.TextDocumentChangeEvent): void {
@@ -33,6 +33,7 @@ export class SnippetManager extends BaseExplorer {
                             editBuilder.replace(new vscode.Range(document.positionAt(offset),
                                 document.positionAt(offset + connectionStringKeyWithAngleBracket.length)),
                                 connectionStringValue);
+                            AppInsightsClient.sendEvent(`ReplaceConnectionString`, { Type: connectionStringKey });
                         });
                         offset = text.indexOf(connectionStringKeyWithAngleBracket, offset + 1);
                     }

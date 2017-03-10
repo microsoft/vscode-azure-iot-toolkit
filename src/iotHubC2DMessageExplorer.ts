@@ -11,8 +11,8 @@ import { Utility } from "./utility";
 export class IotHubC2DMessageExplorer extends BaseExplorer {
     private _deviceClient: Client;
 
-    constructor(outputChannel: vscode.OutputChannel, appInsightsClient: AppInsightsClient) {
-        super(outputChannel, appInsightsClient);
+    constructor(outputChannel: vscode.OutputChannel) {
+        super(outputChannel);
     }
 
     public sendC2DMessage(): void {
@@ -51,12 +51,13 @@ export class IotHubC2DMessageExplorer extends BaseExplorer {
         if (!deviceConnectionString) {
             return;
         }
+        this._outputChannel.show();
         this._deviceClient = clientFromConnectionString(deviceConnectionString);
         this._deviceClient.open(this.connectCallback);
     }
 
     public stopMonitorC2DMessage(): void {
-        this._appInsightsClient.sendEvent(Constants.IoTHubAIStopMonitorC2DEvent);
+        AppInsightsClient.sendEvent(Constants.IoTHubAIStopMonitorC2DEvent);
         if (this._deviceClient) {
             this.outputLine(Constants.IoTHubC2DMessageMonitorLabel, "Stop monitoring ...");
             this._deviceClient.close(() => { return; });
@@ -69,9 +70,10 @@ export class IotHubC2DMessageExplorer extends BaseExplorer {
     private connectCallback = (err) => {
         if (err) {
             this.outputLine(Constants.IoTHubC2DMessageMonitorLabel, err);
+            AppInsightsClient.sendEvent(Constants.IoTHubAIStartMonitorC2DEvent, { Result: "Exception", Message: err });
         } else {
             this.outputLine(Constants.IoTHubC2DMessageMonitorLabel, "Start monitoring C2D message ...");
-            this._appInsightsClient.sendEvent(Constants.IoTHubAIStartMonitorC2DEvent);
+            AppInsightsClient.sendEvent(Constants.IoTHubAIStartMonitorC2DEvent);
             this._deviceClient.on("message", (msg) => {
                 this.outputLine(Constants.IoTHubC2DMessageMonitorLabel, "Message Received: " + msg.getData());
                 this._deviceClient.complete(msg, this.printResult);

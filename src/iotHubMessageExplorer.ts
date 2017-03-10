@@ -1,7 +1,7 @@
 "use strict";
 import { Client as EventHubClient } from "azure-event-hubs";
 import { Client, Message } from "azure-iot-device";
-import { clientFromConnectionString } from "azure-iot-device-http";
+import { clientFromConnectionString } from "azure-iot-device-mqtt";
 import * as vscode from "vscode";
 import { AppInsightsClient } from "./appInsightsClient";
 import { BaseExplorer } from "./baseExplorer";
@@ -11,8 +11,8 @@ import { Utility } from "./utility";
 export class IoTHubMessageExplorer extends BaseExplorer {
     private _eventHubClient;
 
-    constructor(outputChannel: vscode.OutputChannel, appInsightsClient: AppInsightsClient) {
-        super(outputChannel, appInsightsClient);
+    constructor(outputChannel: vscode.OutputChannel) {
+        super(outputChannel);
     }
 
     public sendD2CMessage(): void {
@@ -47,11 +47,11 @@ export class IoTHubMessageExplorer extends BaseExplorer {
             this._eventHubClient = EventHubClient.fromConnectionString(iotHubConnectionString);
             this._outputChannel.show();
             this.outputLine(Constants.IoTHubMonitorLabel, `Start monitoring ${Constants.IoTHub} ...`);
-            this._appInsightsClient.sendEvent(Constants.IoTHubAIStartMonitorEvent);
+            AppInsightsClient.sendEvent(Constants.IoTHubAIStartMonitorEvent);
             this.startMonitor(this._eventHubClient, Constants.IoTHubMonitorLabel, consumerGroup);
         } catch (e) {
             this.outputLine(Constants.IoTHubMonitorLabel, e);
-            this._appInsightsClient.sendEvent(Constants.IoTHubAIStartMonitorEvent, { Result: "Exception", Message: e });
+            AppInsightsClient.sendEvent(Constants.IoTHubAIStartMonitorEvent, { Result: "Exception", Message: e });
         }
     }
 

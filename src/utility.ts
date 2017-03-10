@@ -1,5 +1,6 @@
 "use strict";
 import * as vscode from "vscode";
+import { AppInsightsClient } from "./appInsightsClient";
 
 export class Utility {
     public static getConfiguration(): vscode.WorkspaceConfiguration {
@@ -10,7 +11,9 @@ export class Utility {
         let config = Utility.getConfiguration();
         let value = config.get<string>(id);
         if (!value || value.startsWith("<<insert")) {
-            vscode.window.showErrorMessage(`Please set your ${name} in settings.json`);
+            vscode.window.showErrorMessage(`Please set your ${name} (${id}) in User Settings`);
+            vscode.commands.executeCommand("workbench.action.openGlobalSettings");
+            AppInsightsClient.sendEvent("OpenSettings");
             return null;
         }
         return value;

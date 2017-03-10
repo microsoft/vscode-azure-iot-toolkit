@@ -21,13 +21,13 @@ export class AzureIoTExplorer {
     constructor(context: vscode.ExtensionContext) {
         let outputChannel = vscode.window.createOutputChannel("Azure IoT Toolkit");
         let appInsightsClient = new AppInsightsClient();
-        this._iotHubC2DMessageExplorer = new IotHubC2DMessageExplorer(outputChannel, appInsightsClient);
-        this._iotHubMessageExplorer = new IoTHubMessageExplorer(outputChannel, appInsightsClient);
-        this._eventHubMessageExplorer = new EventHubMessageExplorer(outputChannel, appInsightsClient);
-        this._deviceExplorer = new DeviceExplorer(outputChannel, appInsightsClient);
-        this._deviceDiscoverer = new DeviceDiscoverer(context, outputChannel, appInsightsClient);
-        this._deviceController = new DeviceController(outputChannel, appInsightsClient);
-        this._snippetManager = new SnippetManager(outputChannel, appInsightsClient);
+        this._iotHubC2DMessageExplorer = new IotHubC2DMessageExplorer(outputChannel);
+        this._iotHubMessageExplorer = new IoTHubMessageExplorer(outputChannel);
+        this._eventHubMessageExplorer = new EventHubMessageExplorer(outputChannel);
+        this._deviceExplorer = new DeviceExplorer(outputChannel);
+        this._deviceDiscoverer = new DeviceDiscoverer(context, outputChannel);
+        this._deviceController = new DeviceController(outputChannel);
+        this._snippetManager = new SnippetManager(outputChannel);
     }
 
     public sendD2CMessage(): void {

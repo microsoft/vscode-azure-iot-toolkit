@@ -8,9 +8,8 @@ export class BaseExplorer {
     protected _outputChannel: vscode.OutputChannel;
     protected _appInsightsClient: AppInsightsClient;
 
-    constructor(outputChannel: vscode.OutputChannel, appInsightsClient: AppInsightsClient) {
+    constructor(outputChannel: vscode.OutputChannel) {
         this._outputChannel = outputChannel;
-        this._appInsightsClient = appInsightsClient;
     }
 
     protected output(label: string, message: string): void {
@@ -72,7 +71,7 @@ export class BaseExplorer {
     }
 
     protected stopMonoitor(eventHubClient: EventHubClient, label: string, aiEvent: string) {
-        this._appInsightsClient.sendEvent(aiEvent);
+        AppInsightsClient.sendEvent(aiEvent);
         if (eventHubClient) {
             this.outputLine(label, "Stop monitoring ...");
             eventHubClient.close();
@@ -88,11 +87,11 @@ export class BaseExplorer {
             if (err) {
                 this.outputLine(label, `Failed to send message to ${target}`);
                 this.outputLine(label, err.toString());
-                this._appInsightsClient.sendEvent(aiEventName, { Result: "Fail" });
+                AppInsightsClient.sendEvent(aiEventName, { Result: "Fail" });
             }
             if (result) {
                 this.outputLine(label, `[Success] Message sent to ${target}`);
-                this._appInsightsClient.sendEvent(aiEventName, { Result: "Success" });
+                AppInsightsClient.sendEvent(aiEventName, { Result: "Success" });
             }
             client.close(() => { return; });
         };

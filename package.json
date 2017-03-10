@@ -2,7 +2,7 @@
   "name": "azure-iot-toolkit",
   "displayName": "Azure IoT Toolkit",
   "description": "Interact with Azure IoT Hub and Azure Event Hub; IoT Device Management; IoT Hub Code Snippets; Discover Ethernet, USB serial, WiFi connected devices; Deploy and run in remote machine (e.g. Raspberry Pi, Arduino)",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "publisher": "formulahendry",
   "icon": "logo.png",
   "engines": {
@@ -33,6 +33,8 @@
     "*",
     "onCommand:azure-iot-toolkit.sendD2CMessage",
     "onCommand:azure-iot-toolkit.startMonitorIoTHubMessage",
+    "onCommand:azure-iot-toolkit.sendC2DMessage",
+    "onCommand:azure-iot-toolkit.startMonitorC2DMessage",
     "onCommand:azure-iot-toolkit.sendMessageToEventHub",
     "onCommand:azure-iot-toolkit.startMonitorEventHubMessage",
     "onCommand:azure-iot-toolkit.listDevice",
@@ -162,6 +164,11 @@
           "group": "azure-iot-toolkit@1"
         },
         {
+          "when": "inOutput",
+          "command": "azure-iot-toolkit.stopMonitorC2DMessage",
+          "group": "azure-iot-toolkit@2"
+        },
+        {
           "when": "!inOutput",
           "command": "azure-iot-toolkit.sendMessageToEventHub",
           "group": "azure-iot-toolkit-2"
@@ -174,7 +181,7 @@
         {
           "when": "inOutput",
           "command": "azure-iot-toolkit.stopMonitorEventHubMessage",
-          "group": "azure-iot-toolkit@2"
+          "group": "azure-iot-toolkit@3"
         },
         {
           "when": "!inOutput",
@@ -299,8 +306,7 @@
   "dependencies": {
     "applicationinsights": "^0.16.0",
     "azure-event-hubs": "^0.0.6",
-    "azure-iot-device": "^1.0.16",
-    "azure-iot-device-http": "^1.0.16",
+    "azure-iot-device": "^1.1.7",
     "azure-iot-device-mqtt": "^1.1.7",
     "azure-iothub": "1.0.18",
     "device-discovery-cli": "^0.5.9",

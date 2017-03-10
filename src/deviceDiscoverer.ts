@@ -12,8 +12,8 @@ export class DeviceDiscoverer extends BaseExplorer {
     private _deviceStatus = {};
     private _context: vscode.ExtensionContext;
 
-    constructor(context: vscode.ExtensionContext, outputChannel: vscode.OutputChannel, appInsightsClient: AppInsightsClient) {
-        super(outputChannel, appInsightsClient);
+    constructor(context: vscode.ExtensionContext, outputChannel: vscode.OutputChannel) {
+        super(outputChannel);
         this._context = context;
     }
 
@@ -52,7 +52,7 @@ export class DeviceDiscoverer extends BaseExplorer {
         process.on("close", (code) => {
             let endTime = new Date();
             let elapsedTime = (endTime.getTime() - startTime.getTime()) / 1000;
-            this._appInsightsClient.sendEvent(`${label}.${type}`, { Code: code.toString() });
+            AppInsightsClient.sendEvent(`${label}.${type}`, { Code: code.toString() });
             this.outputLine(label, "Finished with exit code=" + code + " in " + elapsedTime + " seconds");
             if (devdiscoNotFound && code >= 1) {
                 this.outputLine(label, "[Note!!!] Please install device-discovery-cli with below command if not yet:");

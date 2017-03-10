@@ -15,8 +15,8 @@ export class DeviceController extends BaseExplorer {
     private _command: string;
     private _label = "Remote";
 
-    constructor(outputChannel: vscode.OutputChannel, appInsightsClient: AppInsightsClient) {
-        super(outputChannel, appInsightsClient);
+    constructor(outputChannel: vscode.OutputChannel) {
+        super(outputChannel);
     }
 
     public deploy(run = false): void {
@@ -28,10 +28,10 @@ export class DeviceController extends BaseExplorer {
             if (err) {
                 this.outputLine(this._label, "Deployment failed");
                 this.outputLine(this._label, err);
-                this._appInsightsClient.sendEvent(`${this._label}.deploy`, { Result: "Fail" });
+                AppInsightsClient.sendEvent(`${this._label}.deploy`, { Result: "Fail" });
             } else {
                 this.outputLine(this._label, "Deployment done");
-                this._appInsightsClient.sendEvent(`${this._label}.deploy`, { Result: "Success" });
+                AppInsightsClient.sendEvent(`${this._label}.deploy`, { Result: "Success" });
                 if (run) {
                     this.run();
                 }
@@ -59,7 +59,7 @@ export class DeviceController extends BaseExplorer {
             },
             exit: (code) => {
                 this.outputLine(this._label, `Exited with code=${code}`);
-                this._appInsightsClient.sendEvent(`${this._label}.run`, { Code: code.toString() });
+                AppInsightsClient.sendEvent(`${this._label}.run`, { Code: code.toString() });
                 if (code === 0 && callback) {
                     callback();
                 }

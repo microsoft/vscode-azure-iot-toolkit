@@ -6,8 +6,8 @@ import { Utility } from "./utility";
 import iothub = require("azure-iothub");
 
 export class DeviceExplorer extends BaseExplorer {
-    constructor(outputChannel: vscode.OutputChannel, appInsightsClient: AppInsightsClient) {
-        super(outputChannel, appInsightsClient);
+    constructor(outputChannel: vscode.OutputChannel) {
+        super(outputChannel);
     }
 
     public listDevice(): void {
@@ -20,7 +20,7 @@ export class DeviceExplorer extends BaseExplorer {
         let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
         this._outputChannel.show();
         this.outputLine(label, "Querying devices...");
-        this._appInsightsClient.sendEvent(`${label}.List`);
+        AppInsightsClient.sendEvent(`${label}.List`);
         registry.list((err, deviceList) => {
             this.outputLine(label, `${deviceList.length} device(s) found`);
             deviceList.forEach((device, index) => {
@@ -69,7 +69,7 @@ export class DeviceExplorer extends BaseExplorer {
     private done(op: string, label: string) {
         return (err, deviceInfo, res) => {
             if (err) {
-                this._appInsightsClient.sendEvent(`${label}.${op}`, { Result: "Fail" });
+                AppInsightsClient.sendEvent(`${label}.${op}`, { Result: "Fail" });
                 this.outputLine(label, `[${op}] error: ${err.toString()}`);
             }
             if (res) {
@@ -77,7 +77,7 @@ export class DeviceExplorer extends BaseExplorer {
                 if (res.statusCode < 300) {
                     result = "Success";
                 }
-                this._appInsightsClient.sendEvent(`${label}.${op}`, { Result: result });
+                AppInsightsClient.sendEvent(`${label}.${op}`, { Result: result });
                 this.outputLine(label, `[${op}][${result}] status: ${res.statusCode} ${res.statusMessage}`);
             }
             if (deviceInfo) {
