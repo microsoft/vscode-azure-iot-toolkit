@@ -305,9 +305,9 @@
   },
   "dependencies": {
     "applicationinsights": "^0.16.0",
-    "azure-event-hubs": "^0.0.6",
-    "azure-iot-device": "^1.1.7",
-    "azure-iot-device-mqtt": "^1.1.7",
+    "azure-event-hubs": "0.0.6",
+    "azure-iot-device": "1.1.7",
+    "azure-iot-device-mqtt": "1.1.7",
     "azure-iothub": "1.0.18",
     "device-discovery-cli": "^0.5.9",
     "scp2": "^0.5.0",
