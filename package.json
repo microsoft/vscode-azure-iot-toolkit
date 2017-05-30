@@ -6,7 +6,7 @@
   "publisher": "formulahendry",
   "icon": "logo.png",
   "engines": {
-    "vscode": "^1.0.0"
+    "vscode": "^1.13.0"
   },
   "categories": [
     "Other",
@@ -45,7 +45,16 @@
     "onCommand:azure-iot-toolkit.run"
   ],
   "main": "./out/src/extension",
+  "enableProposedApi": true,
   "contributes": {
+    "views": {
+      "explorer": [
+        {
+          "id": "iotHubDevices",
+          "name": "IoT Hub Devices"
+        }
+      ]
+    },
     "commands": [
       {
         "command": "azure-iot-toolkit.sendD2CMessage",
@@ -147,6 +156,20 @@
       }
     ],
     "menus": {
+      "view/item/context": [
+        {
+          "command": "azure-iot-toolkit.sendD2CMessage",
+          "when": "view == iotHubDevices"
+        },
+        {
+          "command": "azure-iot-toolkit.sendC2DMessage",
+          "when": "view == iotHubDevices"
+        },
+        {
+          "command": "azure-iot-toolkit.startMonitorIoTHubMessage",
+          "when": "view == iotHubDevices"
+        }
+      ],
       "editor/context": [
         {
           "when": "!inOutput",

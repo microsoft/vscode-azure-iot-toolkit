@@ -1,9 +1,12 @@
 "use strict";
 import * as vscode from "vscode";
 import { AzureIoTExplorer } from "./azureIoTExplorer";
+import { DeviceTree } from "./deviceTree";
 
 export function activate(context: vscode.ExtensionContext) {
     let azureIoTExplorer = new AzureIoTExplorer(context);
+
+    vscode.window.registerTreeDataProviderForView("iotHubDevices", new DeviceTree());
 
     let sendD2CMessage = vscode.commands.registerCommand("azure-iot-toolkit.sendD2CMessage", () => {
         azureIoTExplorer.sendD2CMessage();
