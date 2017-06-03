@@ -45,7 +45,6 @@
     "onCommand:azure-iot-toolkit.run"
   ],
   "main": "./out/src/extension",
-  "enableProposedApi": true,
   "contributes": {
     "views": {
       "explorer": [
@@ -115,6 +114,14 @@
       {
         "command": "azure-iot-toolkit.run",
         "title": "IoT: Run in remote machine"
+      },
+      {
+        "command": "azure-iot-toolkit.refreshDeviceTree",
+        "title": "Refresh",
+        "icon": {
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
+        }
       }
     ],
     "keybindings": [
@@ -156,18 +163,33 @@
       }
     ],
     "menus": {
-      "view/item/context": [
+      "view/title": [
         {
-          "command": "azure-iot-toolkit.sendD2CMessage",
-          "when": "view == iotHubDevices"
+          "command": "azure-iot-toolkit.refreshDeviceTree",
+          "when": "view == iotHubDevices",
+          "group": "navigation"
         },
         {
-          "command": "azure-iot-toolkit.sendC2DMessage",
-          "when": "view == iotHubDevices"
+          "command": "azure-iot-toolkit.createDevice",
+          "when": "view == iotHubDevices",
+          "group": "azure-iot-toolkit@1"
         },
         {
           "command": "azure-iot-toolkit.startMonitorIoTHubMessage",
-          "when": "view == iotHubDevices"
+          "when": "view == iotHubDevices",
+          "group": "azure-iot-toolkit@2"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "azure-iot-toolkit.sendD2CMessage",
+          "when": "view == iotHubDevices",
+          "group": "azure-iot-toolkit@0"
+        },
+        {
+          "command": "azure-iot-toolkit.deleteDevice",
+          "when": "view == iotHubDevices",
+          "group": "azure-iot-toolkit@2"
         }
       ],
       "editor/context": [

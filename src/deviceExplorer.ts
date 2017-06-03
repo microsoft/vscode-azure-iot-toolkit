@@ -2,6 +2,7 @@
 import * as vscode from "vscode";
 import { AppInsightsClient } from "./appInsightsClient";
 import { BaseExplorer } from "./baseExplorer";
+import { DeviceItem } from "./Model/DeviceItem";
 import { Utility } from "./utility";
 import iothub = require("azure-iothub");
 
@@ -29,7 +30,7 @@ export class DeviceExplorer extends BaseExplorer {
         });
     }
 
-    public createDevice(): void {
+    public async createDevice() {
         let label = "Device";
         let iotHubConnectionString = Utility.getConfig("iotHubConnectionString", "IoT Hub Connection String");
         if (!iotHubConnectionString) {
@@ -37,7 +38,7 @@ export class DeviceExplorer extends BaseExplorer {
         }
         let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
 
-        vscode.window.showInputBox({ prompt: "Enter device id to create" }).then((deviceId: string) => {
+        await vscode.window.showInputBox({ prompt: "Enter device id to create" }).then((deviceId: string) => {
             if (deviceId !== undefined) {
                 let device = {
                     deviceId,
@@ -49,7 +50,7 @@ export class DeviceExplorer extends BaseExplorer {
         });
     }
 
-    public deleteDevice(): void {
+    public async deleteDevice(deviceItem?: DeviceItem) {
         let label = "Device";
         let iotHubConnectionString = Utility.getConfig("iotHubConnectionString", "IoT Hub Connection String");
         if (!iotHubConnectionString) {
@@ -57,13 +58,21 @@ export class DeviceExplorer extends BaseExplorer {
         }
         let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
 
-        vscode.window.showInputBox({ prompt: "Enter device id to delete" }).then((deviceId: string) => {
-            if (deviceId !== undefined) {
-                this._outputChannel.show();
-                this.outputLine(label, `Deleting device ${deviceId}`);
-                registry.delete(deviceId, this.done("Delete", label));
-            }
-        });
+        if (deviceItem.label) {
+            await this.deleteDeviceById(deviceItem.label, label, registry);
+        } else {
+            await vscode.window.showInputBox({ prompt: "Enter device id to delete" }).then((deviceId: string) => {
+                if (deviceId !== undefined) {
+                    this.deleteDeviceById(deviceId, label, registry);
+                }
+            });
+        }
+    }
+
+    private deleteDeviceById(deviceId: string, label: string, registry: iothub.Registry): void {
+        this._outputChannel.show();
+        this.outputLine(label, `Deleting device ${deviceId}`);
+        registry.delete(deviceId, this.done("Delete", label));
     }
 
     private done(op: string, label: string) {

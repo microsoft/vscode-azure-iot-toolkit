@@ -6,6 +6,7 @@ import * as vscode from "vscode";
 import { AppInsightsClient } from "./appInsightsClient";
 import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
+import { DeviceItem } from "./Model/DeviceItem";
 import { Utility } from "./utility";
 
 export class IoTHubMessageExplorer extends BaseExplorer {
@@ -15,8 +16,9 @@ export class IoTHubMessageExplorer extends BaseExplorer {
         super(outputChannel);
     }
 
-    public sendD2CMessage(): void {
-        let deviceConnectionString = Utility.getConfig(Constants.DeviceConnectionStringKey, Constants.DeviceConnectionStringTitle);
+    public sendD2CMessage(deviceItem?: DeviceItem): void {
+        let deviceConnectionString = deviceItem.connectionString ?
+            deviceItem.connectionString : Utility.getConfig(Constants.DeviceConnectionStringKey, Constants.DeviceConnectionStringTitle);
         if (!deviceConnectionString) {
             return;
         }

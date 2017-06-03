@@ -7,6 +7,7 @@ import { DeviceExplorer } from "./deviceExplorer";
 import { EventHubMessageExplorer } from "./eventHubMessageExplorer";
 import { IotHubC2DMessageExplorer } from "./iotHubC2DMessageExplorer";
 import { IoTHubMessageExplorer } from "./iotHubMessageExplorer";
+import { DeviceItem } from "./Model/DeviceItem";
 import { SnippetManager } from "./snippetManager";
 
 export class AzureIoTExplorer {
@@ -30,8 +31,8 @@ export class AzureIoTExplorer {
         this._snippetManager = new SnippetManager(outputChannel);
     }
 
-    public sendD2CMessage(): void {
-        this._iotHubMessageExplorer.sendD2CMessage();
+    public sendD2CMessage(deviceItem?: DeviceItem): void {
+        this._iotHubMessageExplorer.sendD2CMessage(deviceItem);
     }
 
     public startMonitorIoTHubMessage(): void {
@@ -70,12 +71,12 @@ export class AzureIoTExplorer {
         this._deviceExplorer.listDevice();
     }
 
-    public createDevice(): void {
-        this._deviceExplorer.createDevice();
+    public async createDevice() {
+        await this._deviceExplorer.createDevice();
     }
 
-    public deleteDevice(): void {
-        this._deviceExplorer.deleteDevice();
+    public async deleteDevice(deviceItem?: DeviceItem) {
+        await this._deviceExplorer.deleteDevice(deviceItem);
     }
 
     public discoverDevice(): void {

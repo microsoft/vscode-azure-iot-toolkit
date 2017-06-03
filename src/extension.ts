@@ -5,11 +5,16 @@ import { DeviceTree } from "./deviceTree";
 
 export function activate(context: vscode.ExtensionContext) {
     let azureIoTExplorer = new AzureIoTExplorer(context);
+    let deviceTree = new DeviceTree(context);
 
-    vscode.window.registerTreeDataProviderForView("iotHubDevices", new DeviceTree());
+    vscode.window.registerTreeDataProvider("iotHubDevices", deviceTree);
 
-    let sendD2CMessage = vscode.commands.registerCommand("azure-iot-toolkit.sendD2CMessage", () => {
-        azureIoTExplorer.sendD2CMessage();
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.refreshDeviceTree", () => {
+        deviceTree.refresh();
+    }));
+
+    let sendD2CMessage = vscode.commands.registerCommand("azure-iot-toolkit.sendD2CMessage", (DeviceItem) => {
+        azureIoTExplorer.sendD2CMessage(DeviceItem);
     });
 
     let startMonitorIoTHubMessage = vscode.commands.registerCommand("azure-iot-toolkit.startMonitorIoTHubMessage", () => {
@@ -48,12 +53,14 @@ export function activate(context: vscode.ExtensionContext) {
         azureIoTExplorer.listDevice();
     });
 
-    let createDevice = vscode.commands.registerCommand("azure-iot-toolkit.createDevice", () => {
-        azureIoTExplorer.createDevice();
+    let createDevice = vscode.commands.registerCommand("azure-iot-toolkit.createDevice", async () => {
+        await azureIoTExplorer.createDevice();
+        setTimeout(() => { deviceTree.refresh(); }, 2000);
     });
 
-    let deleteDevice = vscode.commands.registerCommand("azure-iot-toolkit.deleteDevice", () => {
-        azureIoTExplorer.deleteDevice();
+    let deleteDevice = vscode.commands.registerCommand("azure-iot-toolkit.deleteDevice", async (DeviceItem) => {
+        await azureIoTExplorer.deleteDevice(DeviceItem);
+        setTimeout(() => { deviceTree.refresh(); }, 2000);
     });
 
     let discoverDevice = vscode.commands.registerCommand("azure-iot-toolkit.discoverDevice", () => {
