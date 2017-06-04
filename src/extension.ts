@@ -13,6 +13,10 @@ export function activate(context: vscode.ExtensionContext) {
         deviceTree.refresh();
     }));
 
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.getDevice", (deviceId) => {
+        azureIoTExplorer.getDevice(deviceId);
+    }));
+
     let sendD2CMessage = vscode.commands.registerCommand("azure-iot-toolkit.sendD2CMessage", (DeviceItem) => {
         azureIoTExplorer.sendD2CMessage(DeviceItem);
     });

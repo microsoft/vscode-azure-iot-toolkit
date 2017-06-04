@@ -28,15 +28,19 @@ export class DeviceTree implements vscode.TreeDataProvider<DeviceItem> {
 
         let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
         let devices = [];
-        let result = /^HostName=([^=]+);/.exec(iotHubConnectionString);
-        let hostName = result[1];
+        let hostName = Utility.getHostName(iotHubConnectionString);
 
         return new Promise((resolve) => {
             registry.list((err, deviceList) => {
                 deviceList.forEach((device, index) => {
                     devices.push(new DeviceItem(device.deviceId,
                         ConnectionString.createWithSharedAccessKey(hostName, device.deviceId, device.authentication.SymmetricKey.primaryKey),
-                        this.context.asAbsolutePath(path.join("resources", "device.png"))));
+                        this.context.asAbsolutePath(path.join("resources", "device.png")),
+                        {
+                            command: "azure-iot-toolkit.getDevice",
+                            title: "",
+                            arguments: [device.deviceId],
+                        }));
                 });
                 resolve(devices);
             });

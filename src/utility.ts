@@ -18,4 +18,9 @@ export class Utility {
         }
         return value;
     }
+
+    public static getHostName(iotHubConnectionString: string): string {
+        let result = /^HostName=([^=]+);/.exec(iotHubConnectionString);
+        return result[1];
+    }
 }

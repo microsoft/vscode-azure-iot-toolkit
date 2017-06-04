@@ -1,11 +1,11 @@
-import { TreeItem } from "vscode";
+import { Command, TreeItem } from "vscode";
 
 export class DeviceItem extends TreeItem {
-    public connectionString: string;
-
-    constructor(deviceId: string, connectionString: string, iconPath: string) {
+    constructor(
+        public readonly deviceId: string,
+        public readonly connectionString: string,
+        public readonly iconPath: string,
+        public readonly command: Command) {
         super(deviceId);
-        this.connectionString = connectionString;
-        this.iconPath = iconPath;
     }
 }

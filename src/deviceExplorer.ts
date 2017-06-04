@@ -1,4 +1,5 @@
 "use strict";
+import { ConnectionString } from "azure-iot-device";
 import * as vscode from "vscode";
 import { AppInsightsClient } from "./appInsightsClient";
 import { BaseExplorer } from "./baseExplorer";
@@ -30,12 +31,28 @@ export class DeviceExplorer extends BaseExplorer {
         });
     }
 
+    public getDevice(deviceId: string): void {
+        let label = "Device";
+        let iotHubConnectionString = Utility.getConfig("iotHubConnectionString", "IoT Hub Connection String");
+        if (!iotHubConnectionString) {
+            return;
+        }
+
+        let hostName = Utility.getHostName(iotHubConnectionString);
+        let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
+        this._outputChannel.show();
+        this.outputLine(label, `Querying device [${deviceId}]...`);
+        registry.get(deviceId, this.done("Get", label, hostName));
+    }
+
     public async createDevice() {
         let label = "Device";
         let iotHubConnectionString = Utility.getConfig("iotHubConnectionString", "IoT Hub Connection String");
         if (!iotHubConnectionString) {
             return;
         }
+
+        let hostName = Utility.getHostName(iotHubConnectionString);
         let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
 
         await vscode.window.showInputBox({ prompt: "Enter device id to create" }).then((deviceId: string) => {
@@ -45,7 +62,7 @@ export class DeviceExplorer extends BaseExplorer {
                 };
                 this._outputChannel.show();
                 this.outputLine(label, `Creating device '${device.deviceId}'`);
-                registry.create(device, this.done("Create", label));
+                registry.create(device, this.done("Create", label, hostName));
             }
         });
     }
@@ -75,7 +92,7 @@ export class DeviceExplorer extends BaseExplorer {
         registry.delete(deviceId, this.done("Delete", label));
     }
 
-    private done(op: string, label: string) {
+    private done(op: string, label: string, hostName: string = null) {
         return (err, deviceInfo, res) => {
             if (err) {
                 AppInsightsClient.sendEvent(`${label}.${op}`, { Result: "Fail" });
@@ -90,6 +107,13 @@ export class DeviceExplorer extends BaseExplorer {
                 this.outputLine(label, `[${op}][${result}] status: ${res.statusCode} ${res.statusMessage}`);
             }
             if (deviceInfo) {
+                if (deviceInfo.authentication.SymmetricKey.primaryKey != null) {
+                    deviceInfo.connectionStringWithSharedAccessKey = ConnectionString.createWithSharedAccessKey(hostName,
+                        deviceInfo.deviceId, deviceInfo.authentication.SymmetricKey.primaryKey);
+                }
+                if (deviceInfo.authentication.x509Thumbprint.primaryThumbprint != null) {
+                    deviceInfo.connectionStringWithX509Certificate = ConnectionString.createWithX509Certificate(hostName, deviceInfo.deviceId);
+                }
                 this.outputLine(label, `[${op}] device info: ${JSON.stringify(deviceInfo, null, 2)}`);
             }
         };
