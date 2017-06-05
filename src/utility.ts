@@ -9,12 +9,12 @@ export class Utility {
 
     public static async getConfig(id: string, name: string) {
         let config = Utility.getConfiguration();
-        let value = config.get<string>(id);
-        if (!value || value.startsWith("<<insert")) {
+        let configValue = config.get<string>(id);
+        if (!configValue || configValue.startsWith("<<insert")) {
             AppInsightsClient.sendEvent("SetConfig");
             return await vscode.window.showInputBox({
                 prompt: `${name}`,
-                placeHolder: `Enter your ${name}`
+                placeHolder: `Enter your ${name}`,
             }).then((value: string) => {
                 if (value !== undefined) {
                     config.update(id, value, true);
@@ -23,7 +23,7 @@ export class Utility {
                 return null;
             });
         }
-        return value;
+        return configValue;
     }
 
     public static getHostName(iotHubConnectionString: string): string {

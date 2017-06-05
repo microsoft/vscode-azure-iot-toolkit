@@ -31,7 +31,7 @@ export class DeviceExplorer extends BaseExplorer {
         });
     }
 
-    public async getDevice(deviceId: string){
+    public async getDevice(deviceId: string) {
         let label = "Device";
         let iotHubConnectionString = await Utility.getConfig("iotHubConnectionString", "IoT Hub Connection String");
         if (!iotHubConnectionString) {
