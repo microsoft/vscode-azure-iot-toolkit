@@ -20,30 +20,29 @@ export class DeviceTree implements vscode.TreeDataProvider<DeviceItem> {
         return element;
     }
 
-    public getChildren(element?: DeviceItem): Thenable<DeviceItem[]> {
-        return Utility.getConfig("iotHubConnectionString", "IoT Hub Connection String").then((iotHubConnectionString) => {
-            if (!iotHubConnectionString) {
-                return;
-            }
+    public async getChildren(element?: DeviceItem): Promise<DeviceItem[]> {
+        let iotHubConnectionString = await Utility.getConfig("iotHubConnectionString", "IoT Hub Connection String");
+        if (!iotHubConnectionString) {
+            return;
+        }
 
-            let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
-            let devices = [];
-            let hostName = Utility.getHostName(iotHubConnectionString);
+        let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
+        let devices = [];
+        let hostName = Utility.getHostName(iotHubConnectionString);
 
-            return new Promise((resolve) => {
-                registry.list((err, deviceList) => {
-                    deviceList.forEach((device, index) => {
-                        devices.push(new DeviceItem(device.deviceId,
-                            ConnectionString.createWithSharedAccessKey(hostName, device.deviceId, device.authentication.SymmetricKey.primaryKey),
-                            this.context.asAbsolutePath(path.join("resources", "device.png")),
-                            {
-                                command: "azure-iot-toolkit.getDevice",
-                                title: "",
-                                arguments: [device.deviceId],
-                            }));
-                    });
-                    resolve(devices);
+        return new Promise<DeviceItem[]>((resolve) => {
+            registry.list((err, deviceList) => {
+                deviceList.forEach((device, index) => {
+                    devices.push(new DeviceItem(device.deviceId,
+                        ConnectionString.createWithSharedAccessKey(hostName, device.deviceId, device.authentication.SymmetricKey.primaryKey),
+                        this.context.asAbsolutePath(path.join("resources", "device.png")),
+                        {
+                            command: "azure-iot-toolkit.getDevice",
+                            title: "",
+                            arguments: [device.deviceId],
+                        }));
                 });
+                resolve(devices);
             });
         });
     }
