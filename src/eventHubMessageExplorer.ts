@@ -14,9 +14,9 @@ export class EventHubMessageExplorer extends BaseExplorer {
         super(outputChannel);
     }
 
-    public sendMessageToEventHub(): void {
-        let eventHubConnectionString = Utility.getConfig(Constants.EventHubConnectionstringKey, Constants.EventHubConnectionStringTitle);
-        let eventHubPath = Utility.getConfig(Constants.EventHubPathKey, Constants.EventHubPathTitle);
+    public async sendMessageToEventHub() {
+        let eventHubConnectionString = await Utility.getConfig(Constants.EventHubConnectionstringKey, Constants.EventHubConnectionStringTitle);
+        let eventHubPath = await Utility.getConfig(Constants.EventHubPathKey, Constants.EventHubPathTitle);
         if (!eventHubConnectionString || !eventHubPath) {
             return;
         }
@@ -39,9 +39,9 @@ export class EventHubMessageExplorer extends BaseExplorer {
         });
     }
 
-    public startMonitorEventHubMessage(): void {
-        let eventHubConnectionString = Utility.getConfig(Constants.EventHubConnectionstringKey, Constants.EventHubConnectionStringTitle);
-        let eventHubPath = Utility.getConfig(Constants.EventHubPathKey, Constants.EventHubPathTitle);
+    public async startMonitorEventHubMessage() {
+        let eventHubConnectionString = await Utility.getConfig(Constants.EventHubConnectionstringKey, Constants.EventHubConnectionStringTitle);
+        let eventHubPath = await Utility.getConfig(Constants.EventHubPathKey, Constants.EventHubPathTitle);
         if (!eventHubConnectionString || !eventHubPath) {
             return;
         }

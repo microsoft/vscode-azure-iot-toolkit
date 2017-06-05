@@ -15,8 +15,8 @@ export class IotHubC2DMessageExplorer extends BaseExplorer {
         super(outputChannel);
     }
 
-    public sendC2DMessage(): void {
-        let iotHubConnectionString = Utility.getConfig(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
+    public async sendC2DMessage() {
+        let iotHubConnectionString = await Utility.getConfig(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
             return;
         }
@@ -46,8 +46,8 @@ export class IotHubC2DMessageExplorer extends BaseExplorer {
         });
     }
 
-    public startMonitorC2DMessage(): void {
-        let deviceConnectionString = Utility.getConfig(Constants.DeviceConnectionStringKey, Constants.DeviceConnectionStringTitle);
+    public async startMonitorC2DMessage() {
+        let deviceConnectionString = await Utility.getConfig(Constants.DeviceConnectionStringKey, Constants.DeviceConnectionStringTitle);
         if (!deviceConnectionString) {
             return;
         }

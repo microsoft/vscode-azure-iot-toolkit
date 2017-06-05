@@ -7,14 +7,21 @@ export class Utility {
         return vscode.workspace.getConfiguration("azure-iot-toolkit");
     }
 
-    public static getConfig(id: string, name: string): string {
+    public static async getConfig(id: string, name: string) {
         let config = Utility.getConfiguration();
         let value = config.get<string>(id);
         if (!value || value.startsWith("<<insert")) {
-            vscode.window.showErrorMessage(`Please set your ${name} (${id}) in User Settings`);
-            vscode.commands.executeCommand("workbench.action.openGlobalSettings");
-            AppInsightsClient.sendEvent("OpenSettings");
-            return null;
+            AppInsightsClient.sendEvent("SetConfig");
+            return await vscode.window.showInputBox({
+                prompt: `${name}`,
+                placeHolder: `Enter your ${name}`
+            }).then((value: string) => {
+                if (value !== undefined) {
+                    config.update(id, value, true);
+                    return value;
+                }
+                return null;
+            });
         }
         return value;
     }

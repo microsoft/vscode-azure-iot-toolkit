@@ -12,9 +12,9 @@ export class DeviceExplorer extends BaseExplorer {
         super(outputChannel);
     }
 
-    public listDevice(): void {
+    public async listDevice() {
         let label = "Device";
-        let iotHubConnectionString = Utility.getConfig("iotHubConnectionString", "IoT Hub Connection String");
+        let iotHubConnectionString = await Utility.getConfig("iotHubConnectionString", "IoT Hub Connection String");
         if (!iotHubConnectionString) {
             return;
         }
@@ -31,9 +31,9 @@ export class DeviceExplorer extends BaseExplorer {
         });
     }
 
-    public getDevice(deviceId: string): void {
+    public async getDevice(deviceId: string){
         let label = "Device";
-        let iotHubConnectionString = Utility.getConfig("iotHubConnectionString", "IoT Hub Connection String");
+        let iotHubConnectionString = await Utility.getConfig("iotHubConnectionString", "IoT Hub Connection String");
         if (!iotHubConnectionString) {
             return;
         }
@@ -47,7 +47,7 @@ export class DeviceExplorer extends BaseExplorer {
 
     public async createDevice() {
         let label = "Device";
-        let iotHubConnectionString = Utility.getConfig("iotHubConnectionString", "IoT Hub Connection String");
+        let iotHubConnectionString = await Utility.getConfig("iotHubConnectionString", "IoT Hub Connection String");
         if (!iotHubConnectionString) {
             return;
         }
@@ -69,7 +69,7 @@ export class DeviceExplorer extends BaseExplorer {
 
     public async deleteDevice(deviceItem?: DeviceItem) {
         let label = "Device";
-        let iotHubConnectionString = Utility.getConfig("iotHubConnectionString", "IoT Hub Connection String");
+        let iotHubConnectionString = await Utility.getConfig("iotHubConnectionString", "IoT Hub Connection String");
         if (!iotHubConnectionString) {
             return;
         }

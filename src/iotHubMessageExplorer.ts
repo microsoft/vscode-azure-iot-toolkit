@@ -16,9 +16,9 @@ export class IoTHubMessageExplorer extends BaseExplorer {
         super(outputChannel);
     }
 
-    public sendD2CMessage(deviceItem?: DeviceItem): void {
+    public async sendD2CMessage(deviceItem?: DeviceItem) {
         let deviceConnectionString = deviceItem.connectionString ?
-            deviceItem.connectionString : Utility.getConfig(Constants.DeviceConnectionStringKey, Constants.DeviceConnectionStringTitle);
+            deviceItem.connectionString : await Utility.getConfig(Constants.DeviceConnectionStringKey, Constants.DeviceConnectionStringTitle);
         if (!deviceConnectionString) {
             return;
         }
@@ -37,8 +37,8 @@ export class IoTHubMessageExplorer extends BaseExplorer {
         });
     }
 
-    public startMonitorIoTHubMessage(): void {
-        let iotHubConnectionString = Utility.getConfig(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
+    public async startMonitorIoTHubMessage() {
+        let iotHubConnectionString = await Utility.getConfig(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
             return;
         }
