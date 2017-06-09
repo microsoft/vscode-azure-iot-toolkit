@@ -1,3 +1,7 @@
+### 0.1.0 (2017-06-09)
+* Device Explorer
+* Code snippet for Direct Methods
+
 ### 0.0.11 (2017-03-10)
 * Send/monitor C2D message
 * Code snippet for C2D message

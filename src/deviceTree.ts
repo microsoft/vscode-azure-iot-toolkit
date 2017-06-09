@@ -1,6 +1,7 @@
 import { ConnectionString } from "azure-iot-device";
 import * as path from "path";
 import * as vscode from "vscode";
+import { AppInsightsClient } from "./appInsightsClient";
 import { DeviceItem } from "./Model/DeviceItem";
 import { Utility } from "./utility";
 import iothub = require("azure-iothub");
@@ -14,6 +15,7 @@ export class DeviceTree implements vscode.TreeDataProvider<DeviceItem> {
 
     public refresh(): void {
         this._onDidChangeTreeData.fire();
+        AppInsightsClient.sendEvent("RefreshDeviceTree");
     }
 
     public getTreeItem(element: DeviceItem): vscode.TreeItem {
