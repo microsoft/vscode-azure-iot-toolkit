@@ -29,12 +29,12 @@ export function activate(context: vscode.ExtensionContext) {
         azureIoTExplorer.stopMonitorIoTHubMessage();
     });
 
-    let sendC2DMessage = vscode.commands.registerCommand("azure-iot-toolkit.sendC2DMessage", () => {
-        azureIoTExplorer.sendC2DMessage();
+    let sendC2DMessage = vscode.commands.registerCommand("azure-iot-toolkit.sendC2DMessage", (DeviceItem) => {
+        azureIoTExplorer.sendC2DMessage(DeviceItem);
     });
 
-    let startMonitorC2DMessage = vscode.commands.registerCommand("azure-iot-toolkit.startMonitorC2DMessage", () => {
-        azureIoTExplorer.startMonitorC2DMessage();
+    let startMonitorC2DMessage = vscode.commands.registerCommand("azure-iot-toolkit.startMonitorC2DMessage", (DeviceItem) => {
+        azureIoTExplorer.startMonitorC2DMessage(DeviceItem);
     });
 
     let stopMonitorC2DMessage = vscode.commands.registerCommand("azure-iot-toolkit.stopMonitorC2DMessage", () => {

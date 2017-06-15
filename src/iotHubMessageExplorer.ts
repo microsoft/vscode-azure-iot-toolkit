@@ -48,7 +48,7 @@ export class IoTHubMessageExplorer extends BaseExplorer {
         try {
             this._eventHubClient = EventHubClient.fromConnectionString(iotHubConnectionString);
             this._outputChannel.show();
-            this.outputLine(Constants.IoTHubMonitorLabel, `Start monitoring ${Constants.IoTHub} ...`);
+            this.outputLine(Constants.IoTHubMonitorLabel, `Start monitoring [${Constants.IoTHub}] ...`);
             AppInsightsClient.sendEvent(Constants.IoTHubAIStartMonitorEvent);
             this.startMonitor(this._eventHubClient, Constants.IoTHubMonitorLabel, consumerGroup);
         } catch (e) {

@@ -1,3 +1,6 @@
+### 0.1.1 (2017-06-15)
+* Add 'Send/monitor C2D message' into context menu of Device Explorer
+
 ### 0.1.0 (2017-06-09)
 * Device Explorer
 * Code snippet for Direct Methods

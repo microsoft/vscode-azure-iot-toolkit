@@ -43,12 +43,12 @@ export class AzureIoTExplorer {
         this._iotHubMessageExplorer.stopMonitorIoTHubMessage();
     }
 
-    public sendC2DMessage(): void {
-        this._iotHubC2DMessageExplorer.sendC2DMessage();
+    public sendC2DMessage(deviceItem?: DeviceItem): void {
+        this._iotHubC2DMessageExplorer.sendC2DMessage(deviceItem);
     }
 
-    public startMonitorC2DMessage(): void {
-        this._iotHubC2DMessageExplorer.startMonitorC2DMessage();
+    public startMonitorC2DMessage(deviceItem?: DeviceItem): void {
+        this._iotHubC2DMessageExplorer.startMonitorC2DMessage(deviceItem);
     }
 
     public stopMonitorC2DMessage(): void {
