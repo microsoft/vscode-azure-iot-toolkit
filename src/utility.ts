@@ -26,6 +26,15 @@ export class Utility {
         return configValue;
     }
 
+    public static getConfigWithId(id: string) {
+        let config = Utility.getConfiguration();
+        let configValue = config.get<string>(id);
+        if (!configValue || configValue.startsWith("<<insert")) {
+            return null;
+        }
+        return configValue;
+    }
+
     public static getHostName(iotHubConnectionString: string): string {
         let result = /^HostName=([^=]+);/.exec(iotHubConnectionString);
         return result[1];
