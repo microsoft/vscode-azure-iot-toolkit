@@ -1,3 +1,6 @@
+### 0.1.3 (2017-06-28)
+* Make stringifying D2C messages optional
+
 ### 0.1.2 (2017-06-23)
 * Show different icon for connected devices
 
