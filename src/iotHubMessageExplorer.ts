@@ -28,7 +28,8 @@ export class IoTHubMessageExplorer extends BaseExplorer {
                 this._outputChannel.show();
                 try {
                     let client = clientFromConnectionString(deviceConnectionString);
-                    client.sendEvent(new Message(JSON.stringify(message)),
+                    let stringify = Utility.getConfigFlag(Constants.IoTHubD2CMessageStringifyKey);
+                    client.sendEvent(new Message(stringify ? JSON.stringify(message) : message),
                         this.sendEventDone(client, Constants.IoTHubMessageLabel, Constants.IoTHub, Constants.IoTHubAIMessageEvent));
                 } catch (e) {
                     this.outputLine(Constants.IoTHubMessageLabel, e);

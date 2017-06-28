@@ -299,6 +299,11 @@
           "default": true,
           "description": "Whether to show verbose info when monitoring messages."
         },
+        "azure-iot-toolkit.iotHubD2CMessageStringify": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to stringify device-to-cloud messages."
+        },
         "azure-iot-toolkit.enableAppInsights": {
           "type": "boolean",
           "default": true,

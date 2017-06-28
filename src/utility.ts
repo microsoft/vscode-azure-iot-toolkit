@@ -35,6 +35,11 @@ export class Utility {
         return configValue;
     }
 
+    public static getConfigFlag(id: string): boolean {
+        let config = Utility.getConfiguration();
+        return config.get<boolean>(id);
+    }
+
     public static getHostName(iotHubConnectionString: string): string {
         let result = /^HostName=([^=]+);/.exec(iotHubConnectionString);
         return result[1];

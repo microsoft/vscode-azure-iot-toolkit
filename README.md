@@ -190,6 +190,13 @@ To set whether to show verbose info when monitoring messages (default is `true`)
 }
 ```
 
+To set whether to stringify device-to-cloud messages (default is `true`):
+```json
+{ 
+    "azure-iot-toolkit.iotHubD2CMessageStringify": true
+}
+```
+
 ## Telemetry data
 By default, anonymous telemetry data collection is turned on to understand user behavior to improve this extension. To disable it, update the settings.json as below:
 ```json
