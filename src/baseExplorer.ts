@@ -57,7 +57,7 @@ export class BaseExplorer {
         if (eventHubClient) {
             eventHubClient.open()
                 .then(eventHubClient.getPartitionIds.bind(eventHubClient))
-                .then((partitionIds) => {
+                .then((partitionIds: any) => {
                     return partitionIds.map((partitionId) => {
                         return eventHubClient.createReceiver(consumerGroup, partitionId, { startAfterTime: Date.now() })
                             .then((receiver) => {

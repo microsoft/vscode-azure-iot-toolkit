@@ -1,5 +1,6 @@
 "use strict";
-import { Client, ConnectionString, Message } from "azure-iot-device";
+import { Message } from "azure-iot-common";
+import { Client, ConnectionString } from "azure-iot-device";
 import { clientFromConnectionString } from "azure-iot-device-mqtt";
 import { Client as ServiceClient } from "azure-iothub";
 import * as vscode from "vscode";
@@ -68,7 +69,7 @@ export class IotHubC2DMessageExplorer extends BaseExplorer {
                         this.outputLine(Constants.IoTHubC2DMessageLabel, err.message);
                     } else {
                         let message = new Message(messageBody);
-                        serviceClient.send(deviceId, message,
+                        serviceClient.send(deviceId, message.getData(),
                             this.sendEventDone(serviceClient, Constants.IoTHubC2DMessageLabel, deviceId, Constants.IoTHubAIC2DMessageEvent));
                     }
                 });

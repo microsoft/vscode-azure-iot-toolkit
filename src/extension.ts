@@ -79,6 +79,10 @@ export function activate(context: vscode.ExtensionContext) {
         azureIoTExplorer.run();
     });
 
+    let invokeDeviceMethod = vscode.commands.registerCommand("azure-iot-toolkit.invokeDeviceMethod", (DeviceItem) => {
+        azureIoTExplorer.invokeDeviceMethod(DeviceItem);
+    });
+
     vscode.workspace.onDidChangeTextDocument((event) => azureIoTExplorer.replaceConnectionString(event));
 
     context.subscriptions.push(sendD2CMessage);
@@ -96,6 +100,7 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(discoverDevice);
     context.subscriptions.push(deploy);
     context.subscriptions.push(run);
+    context.subscriptions.push(invokeDeviceMethod);
 }
 
 export function deactivate() {

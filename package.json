@@ -116,6 +116,10 @@
         "title": "IoT: Run in remote machine"
       },
       {
+        "command": "azure-iot-toolkit.invokeDeviceMethod",
+        "title": "IoT: Invoke Direct Method"
+      },
+      {
         "command": "azure-iot-toolkit.refreshDeviceTree",
         "title": "Refresh",
         "icon": {
@@ -197,9 +201,14 @@
           "group": "azure-iot-toolkit@2"
         },
         {
-          "command": "azure-iot-toolkit.deleteDevice",
+          "command": "azure-iot-toolkit.invokeDeviceMethod",
           "when": "view == iotHubDevices",
           "group": "azure-iot-toolkit@3"
+        },
+        {
+          "command": "azure-iot-toolkit.deleteDevice",
+          "when": "view == iotHubDevices",
+          "group": "azure-iot-toolkit@4"
         }
       ],
       "editor/context": [
@@ -368,7 +377,7 @@
     "azure-event-hubs": "0.0.6",
     "azure-iot-device": "1.1.7",
     "azure-iot-device-mqtt": "1.1.7",
-    "azure-iothub": "1.0.18",
+    "azure-iothub": "^1.1.13",
     "device-discovery-cli": "^0.5.9",
     "scp2": "^0.5.0",
     "simple-ssh": "^0.9.0"
