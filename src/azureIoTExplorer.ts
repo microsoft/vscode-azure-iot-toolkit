@@ -109,6 +109,10 @@ export class AzureIoTExplorer {
         this._iotHubDeviceTwinExplorer.getDeviceTwin(deviceItem.deviceId);
     }
 
+    public updateDeviceTwin(): void {
+        this._iotHubDeviceTwinExplorer.updateDeviceTwin();
+    }
+
     public replaceConnectionString(event: vscode.TextDocumentChangeEvent): void {
         this._snippetManager.replaceConnectionString(event);
     }

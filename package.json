@@ -42,7 +42,10 @@
     "onCommand:azure-iot-toolkit.deleteDevice",
     "onCommand:azure-iot-toolkit.discoverDevice",
     "onCommand:azure-iot-toolkit.deploy",
-    "onCommand:azure-iot-toolkit.run"
+    "onCommand:azure-iot-toolkit.run",
+    "onCommand:azure-iot-toolkit.invokeDeviceMethod",
+    "onCommand:azure-iot-toolkit.getDeviceTwin",
+    "onCommand:azure-iot-toolkit.updateDeviceTwin"
   ],
   "main": "./out/src/extension",
   "contributes": {
@@ -122,6 +125,10 @@
       {
         "command": "azure-iot-toolkit.getDeviceTwin",
         "title": "IoT: Get Device Twin"
+      },
+      {
+        "command": "azure-iot-toolkit.updateDeviceTwin",
+        "title": "IoT: Update Device Twin"
       },
       {
         "command": "azure-iot-toolkit.refreshDeviceTree",
@@ -275,6 +282,11 @@
           "when": "!inOutput",
           "command": "azure-iot-toolkit.discoverDevice",
           "group": "azure-iot-toolkit-3@4"
+        },
+        {
+          "when": "resourceFilename == azure-iot-device-twin.json",
+          "command": "azure-iot-toolkit.updateDeviceTwin",
+          "group": "navigation"
         }
       ]
     },
