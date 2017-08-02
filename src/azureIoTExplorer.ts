@@ -6,6 +6,7 @@ import { DeviceDiscoverer } from "./deviceDiscoverer";
 import { DeviceExplorer } from "./deviceExplorer";
 import { EventHubMessageExplorer } from "./eventHubMessageExplorer";
 import { IotHubC2DMessageExplorer } from "./iotHubC2DMessageExplorer";
+import { IotHubDeviceTwinExplorer } from "./iotHubDeviceTwinExplorer"
 import { IotHubDirectMethodExplorer } from "./iotHubDirectMethodExplorer";
 import { IoTHubMessageExplorer } from "./iotHubMessageExplorer";
 import { DeviceItem } from "./Model/DeviceItem";
@@ -20,6 +21,7 @@ export class AzureIoTExplorer {
     private _deviceController: DeviceController;
     private _snippetManager: SnippetManager;
     private _iotHubDirectMethodExplorer: IotHubDirectMethodExplorer;
+    private _iotHubDeviceTwinExplorer: IotHubDeviceTwinExplorer;
 
     constructor(context: vscode.ExtensionContext) {
         let outputChannel = vscode.window.createOutputChannel("Azure IoT Toolkit");
@@ -32,6 +34,7 @@ export class AzureIoTExplorer {
         this._deviceController = new DeviceController(outputChannel);
         this._snippetManager = new SnippetManager(outputChannel);
         this._iotHubDirectMethodExplorer = new IotHubDirectMethodExplorer(outputChannel);
+        this._iotHubDeviceTwinExplorer = new IotHubDeviceTwinExplorer(outputChannel);
     }
 
     public sendD2CMessage(deviceItem?: DeviceItem): void {
@@ -100,6 +103,10 @@ export class AzureIoTExplorer {
 
     public invokeDeviceMethod(deviceItem: DeviceItem): void {
         this._iotHubDirectMethodExplorer.invokeDeviceMethod(deviceItem);
+    }
+
+    public getDeviceTwin(deviceItem: DeviceItem): void {
+        this._iotHubDeviceTwinExplorer.getDeviceTwin(deviceItem.deviceId);
     }
 
     public replaceConnectionString(event: vscode.TextDocumentChangeEvent): void {

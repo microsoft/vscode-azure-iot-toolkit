@@ -25,6 +25,7 @@ export class Constants {
     public static IoTHubC2DMessageMonitorLabel = "C2DMessageMonitor";
 
     public static IoTHubDirectMethodLabel = "DirectMethod";
+    public static IoTHubDeviceTwinLabel = "DeviceTwin";
 
     public static IoTHubAIStartMonitorEvent = "D2C.startMonitoring";
     public static IoTHubAIStopMonitorEvent = "D2C.stopMonitoring";

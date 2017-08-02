@@ -120,6 +120,10 @@
         "title": "IoT: Invoke Direct Method"
       },
       {
+        "command": "azure-iot-toolkit.getDeviceTwin",
+        "title": "IoT: Get Device Twin"
+      },
+      {
         "command": "azure-iot-toolkit.refreshDeviceTree",
         "title": "Refresh",
         "icon": {
@@ -206,9 +210,14 @@
           "group": "azure-iot-toolkit@3"
         },
         {
-          "command": "azure-iot-toolkit.deleteDevice",
+          "command": "azure-iot-toolkit.getDeviceTwin",
           "when": "view == iotHubDevices",
           "group": "azure-iot-toolkit@4"
+        },
+        {
+          "command": "azure-iot-toolkit.deleteDevice",
+          "when": "view == iotHubDevices",
+          "group": "azure-iot-toolkit@5"
         }
       ],
       "editor/context": [
