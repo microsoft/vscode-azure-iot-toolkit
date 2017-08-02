@@ -55,21 +55,26 @@ export class IotHubDeviceTwinExplorer extends BaseExplorer {
             vscode.window.showWarningMessage(`Please open ${deviceTwinJosnFileName} and try again.`);
             return;
         }
-        let document = activeTextEditor.document;
-        await document.save();
-        let deviceTwinContent = activeTextEditor.document.getText();
-        let deviceTwinJson = JSON.parse(deviceTwinContent);
 
-        let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
-        this._outputChannel.show();
-        this.outputLine(Constants.IoTHubDeviceTwinLabel, `Update Device Twin for [${deviceTwinJson.deviceId}]...`);
-        registry.updateTwin(deviceTwinJson.deviceId, deviceTwinContent, deviceTwinJson.etag, (err) => {
-            if (err) {
-                this.outputLine(Constants.IoTHubDeviceTwinLabel, `Failed to get Device Twin: ${err.message}`);
-            } else {
-                this.outputLine(Constants.IoTHubDeviceTwinLabel, `Device Twin updated successfully`);
-                this.getDeviceTwin(deviceTwinJson.deviceId);
-            }
-        });
+        try {
+            let document = activeTextEditor.document;
+            await document.save();
+            let deviceTwinContent = activeTextEditor.document.getText();
+            let deviceTwinJson = JSON.parse(deviceTwinContent);
+            let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
+            this._outputChannel.show();
+            this.outputLine(Constants.IoTHubDeviceTwinLabel, `Update Device Twin for [${deviceTwinJson.deviceId}]...`);
+            registry.updateTwin(deviceTwinJson.deviceId, deviceTwinContent, deviceTwinJson.etag, (err) => {
+                if (err) {
+                    this.outputLine(Constants.IoTHubDeviceTwinLabel, `Failed to update Device Twin: ${err.message}`);
+                } else {
+                    this.outputLine(Constants.IoTHubDeviceTwinLabel, `Device Twin updated successfully`);
+                    this.getDeviceTwin(deviceTwinJson.deviceId);
+                }
+            });
+        } catch (e) {
+            this.outputLine(Constants.IoTHubDeviceTwinLabel, `Failed to update Device Twin: ${e}`);
+            return;
+        }
     }
 }
