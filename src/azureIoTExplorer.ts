@@ -6,7 +6,7 @@ import { DeviceDiscoverer } from "./deviceDiscoverer";
 import { DeviceExplorer } from "./deviceExplorer";
 import { EventHubMessageExplorer } from "./eventHubMessageExplorer";
 import { IotHubC2DMessageExplorer } from "./iotHubC2DMessageExplorer";
-import { IotHubDeviceTwinExplorer } from "./iotHubDeviceTwinExplorer"
+import { IotHubDeviceTwinExplorer } from "./iotHubDeviceTwinExplorer";
 import { IotHubDirectMethodExplorer } from "./iotHubDirectMethodExplorer";
 import { IoTHubMessageExplorer } from "./iotHubMessageExplorer";
 import { DeviceItem } from "./Model/DeviceItem";
