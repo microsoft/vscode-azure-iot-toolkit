@@ -57,13 +57,13 @@ export class IotHubDeviceTwinExplorer extends BaseExplorer {
         }
 
         try {
+            this._outputChannel.show();
             let document = activeTextEditor.document;
             await document.save();
             let deviceTwinContent = activeTextEditor.document.getText();
             let deviceTwinJson = JSON.parse(deviceTwinContent);
-            let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
-            this._outputChannel.show();
             this.outputLine(Constants.IoTHubDeviceTwinLabel, `Update Device Twin for [${deviceTwinJson.deviceId}]...`);
+            let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
             registry.updateTwin(deviceTwinJson.deviceId, deviceTwinContent, deviceTwinJson.etag, (err) => {
                 if (err) {
                     this.outputLine(Constants.IoTHubDeviceTwinLabel, `Failed to update Device Twin: ${err.message}`);
