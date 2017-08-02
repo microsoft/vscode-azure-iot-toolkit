@@ -229,16 +229,6 @@
       ],
       "editor/context": [
         {
-          "when": "!inOutput",
-          "command": "azure-iot-toolkit.sendD2CMessage",
-          "group": "azure-iot-toolkit-1"
-        },
-        {
-          "when": "!inOutput",
-          "command": "azure-iot-toolkit.startMonitorIoTHubMessage",
-          "group": "azure-iot-toolkit-1"
-        },
-        {
           "when": "inOutput",
           "command": "azure-iot-toolkit.stopMonitorIoTHubMessage",
           "group": "azure-iot-toolkit@1"
@@ -251,12 +241,12 @@
         {
           "when": "!inOutput",
           "command": "azure-iot-toolkit.sendMessageToEventHub",
-          "group": "azure-iot-toolkit-2"
+          "group": "azure-iot-toolkit@1"
         },
         {
           "when": "!inOutput",
           "command": "azure-iot-toolkit.startMonitorEventHubMessage",
-          "group": "azure-iot-toolkit-2"
+          "group": "azure-iot-toolkit@2"
         },
         {
           "when": "inOutput",
@@ -265,23 +255,8 @@
         },
         {
           "when": "!inOutput",
-          "command": "azure-iot-toolkit.listDevice",
-          "group": "azure-iot-toolkit-3@1"
-        },
-        {
-          "when": "!inOutput",
-          "command": "azure-iot-toolkit.createDevice",
-          "group": "azure-iot-toolkit-3@2"
-        },
-        {
-          "when": "!inOutput",
-          "command": "azure-iot-toolkit.deleteDevice",
-          "group": "azure-iot-toolkit-3@3"
-        },
-        {
-          "when": "!inOutput",
           "command": "azure-iot-toolkit.discoverDevice",
-          "group": "azure-iot-toolkit-3@4"
+          "group": "azure-iot-toolkit@3"
         },
         {
           "when": "resourceFilename == azure-iot-device-twin.json",
