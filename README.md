@@ -26,6 +26,10 @@ Toolkit makes Azure IoT Development easier. For more awesome Azure IoT projects 
 
 [x] Deploy and run in remote machine
 
+[x] Invoke Direct Method
+
+[x] Get/update Device Twin
+
 [ ] Debug in remote machines
 
 [ ] And more...
@@ -42,6 +46,8 @@ Toolkit makes Azure IoT Development easier. For more awesome Azure IoT projects 
     * Monitor IoT Hub D2C message
     * Send C2D message to device
     * Monitor C2D message from IoT Hub
+    * Invoke Direct Method
+    * Get/update Device Twin
 
 ### Prerequisites
 
