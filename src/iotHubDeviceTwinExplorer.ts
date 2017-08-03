@@ -35,7 +35,7 @@ export class IotHubDeviceTwinExplorer extends BaseExplorer {
                 fs.writeFileSync(deviceTwinJosnFilePath, `${JSON.stringify(twin, null, 4)}`);
                 vscode.workspace.openTextDocument(deviceTwinJosnFilePath).then((document: vscode.TextDocument) => {
                     if (document.isDirty) {
-                        vscode.window.showWarningMessage(`You ${deviceTwinJosnFileName} has unsaved changes. \
+                        vscode.window.showWarningMessage(`Your ${deviceTwinJosnFileName} has unsaved changes. \
                         Please close or save the file. Then try again.`);
                     }
                     vscode.window.showTextDocument(document);
