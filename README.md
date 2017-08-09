@@ -67,31 +67,23 @@ Toolkit makes Azure IoT Development easier. For more awesome Azure IoT projects 
 
 | Command | Keyboard Shortcuts | Menu Contexts |
 | --- | --- | --- |
-| IoT: Send message to IoT Hub | Ctrl+Alt+F9 | editor/context |
-| IoT: Start monitoring IoT Hub message | Ctrl+Alt+F10 | editor/context |
+| IoT: Send message to IoT Hub | Ctrl+Alt+F9 | view/item/context |
+| IoT: Start monitoring IoT Hub message | Ctrl+Alt+F10 | view/title |
 | IoT: Stop monitoring IoT Hub message | Ctrl+Alt+F11 | editor/context (in output panel) |
-| IoT: Send C2D message to device | None | None |
-| IoT: Start monitoring C2D message | None | None |
+| IoT: Send C2D message to device | None | view/item/context |
+| IoT: Start monitoring C2D message | None | view/item/context |
 | IoT: Stop monitoring C2D message | None | editor/context (in output panel) |
 | IoT: Send message to Event Hub | None | editor/context |
 | IoT: Start monitoring Event Hub message | None | editor/context |
 | IoT: Stop monitoring Event Hub message | None | editor/context (in output panel) |
-| IoT: List device | Ctrl+Alt+F1 | editor/context |
-| IoT: Create device | Ctrl+Alt+F2 | editor/context |
-| IoT: Delete device | Ctrl+Alt+F3 | editor/context |
+| IoT: List device | Ctrl+Alt+F1 | None |
+| IoT: Create device | Ctrl+Alt+F2 | view/title |
+| IoT: Delete device | Ctrl+Alt+F3 | view/item/context |
 | IoT: Discover connected device | Ctrl+Alt+F6 | editor/context |
 | IoT: Deploy to remote machine | Ctrl+Alt+F4 | None |
 | IoT: Run in remote machine | Ctrl+Alt+F5 | None |
 
 ## Usages
-
-* Send messages to Azure IoT Hub
-
-![Send](images/send.gif)
-
-* Monitor device-to-cloud messages
-
-![Monitor](images/monitor.gif)
 
 * Code Snippets
 
@@ -109,18 +101,9 @@ Toolkit makes Azure IoT Development easier. For more awesome Azure IoT projects 
 > After code snippet is created, you need to install corresponding npm package (e.g. [azure-iot-device-mqtt](https://www.npmjs.com/package/azure-iot-device-mqtt)) to run the code snippet.
 > If you want to 'Run Code' directly, you need to install [Code Runner](https://marketplace.visualstudio.com/items?itemName=formulahendry.code-runner).
 
-* Send/monitor C2D messages for Azure IoT Hub
-
-![C2D](images/c2d.gif)
-
-
 * Send/monitor messages for Azure Event Hub
 
 ![Event Hub](images/event-hub.gif)
-
-* Device management (List, Create, Delete)
-
-![Device](images/device.gif)
 
 * Deploy and run in remote machine
 

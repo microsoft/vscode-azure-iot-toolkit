@@ -1,3 +1,8 @@
+### 0.1.4 (2017-08-09)
+* Invoke Direct Method
+* Get/update Device Twin
+* Remove IoT Hub commands from editor context menu
+
 ### 0.1.3 (2017-06-28)
 * Make stringifying D2C messages optional
 
