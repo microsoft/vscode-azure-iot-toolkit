@@ -32,20 +32,24 @@ export class DeviceTree implements vscode.TreeDataProvider<DeviceItem> {
         let devices = [];
         let hostName = Utility.getHostName(iotHubConnectionString);
 
-        return new Promise<DeviceItem[]>((resolve) => {
+        return new Promise<DeviceItem[]>((resolve, reject) => {
             registry.list((err, deviceList) => {
-                deviceList.forEach((device, index) => {
-                    let image = device.connectionState.toString() === "Connected" ? "device-on.png" : "device-off.png";
-                    devices.push(new DeviceItem(device.deviceId,
-                        ConnectionString.createWithSharedAccessKey(hostName, device.deviceId, device.authentication.SymmetricKey.primaryKey),
-                        this.context.asAbsolutePath(path.join("resources", image)),
-                        {
-                            command: "azure-iot-toolkit.getDevice",
-                            title: "",
-                            arguments: [device.deviceId],
-                        }));
-                });
-                resolve(devices);
+                if (err) {
+                    reject(`[Failed to list IoT Hub devices] ${err.message}`);
+                } else {
+                    deviceList.forEach((device, index) => {
+                        let image = device.connectionState.toString() === "Connected" ? "device-on.png" : "device-off.png";
+                        devices.push(new DeviceItem(device.deviceId,
+                            ConnectionString.createWithSharedAccessKey(hostName, device.deviceId, device.authentication.SymmetricKey.primaryKey),
+                            this.context.asAbsolutePath(path.join("resources", image)),
+                            {
+                                command: "azure-iot-toolkit.getDevice",
+                                title: "",
+                                arguments: [device.deviceId],
+                            }));
+                    });
+                    resolve(devices);
+                }
             });
         });
     }

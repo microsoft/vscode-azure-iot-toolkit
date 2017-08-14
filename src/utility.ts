@@ -42,6 +42,6 @@ export class Utility {
 
     public static getHostName(iotHubConnectionString: string): string {
         let result = /^HostName=([^=]+);/.exec(iotHubConnectionString);
-        return result[1];
+        return result ? result[1] : "";
     }
 }
