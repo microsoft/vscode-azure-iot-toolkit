@@ -67,18 +67,6 @@ export function activate(context: vscode.ExtensionContext) {
         setTimeout(() => { deviceTree.refresh(); }, 2000);
     });
 
-    let discoverDevice = vscode.commands.registerCommand("azure-iot-toolkit.discoverDevice", () => {
-        azureIoTExplorer.discoverDevice();
-    });
-
-    let deploy = vscode.commands.registerCommand("azure-iot-toolkit.deploy", () => {
-        azureIoTExplorer.deploy();
-    });
-
-    let run = vscode.commands.registerCommand("azure-iot-toolkit.run", () => {
-        azureIoTExplorer.run();
-    });
-
     let invokeDeviceMethod = vscode.commands.registerCommand("azure-iot-toolkit.invokeDeviceMethod", (DeviceItem) => {
         azureIoTExplorer.invokeDeviceMethod(DeviceItem);
     });
@@ -105,9 +93,6 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(listDevice);
     context.subscriptions.push(createDevice);
     context.subscriptions.push(deleteDevice);
-    context.subscriptions.push(discoverDevice);
-    context.subscriptions.push(deploy);
-    context.subscriptions.push(run);
     context.subscriptions.push(invokeDeviceMethod);
     context.subscriptions.push(getDeviceTwin);
     context.subscriptions.push(updateDeviceTwin);
