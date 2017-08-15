@@ -41,18 +41,6 @@ export function activate(context: vscode.ExtensionContext) {
         azureIoTExplorer.stopMonitorC2DMessage();
     });
 
-    let sendMessageToEventHub = vscode.commands.registerCommand("azure-iot-toolkit.sendMessageToEventHub", () => {
-        azureIoTExplorer.sendMessageToEventHub();
-    });
-
-    let startMonitorEventHubMessage = vscode.commands.registerCommand("azure-iot-toolkit.startMonitorEventHubMessage", () => {
-        azureIoTExplorer.startMonitorEventHubMessage();
-    });
-
-    let stopMonitorEventHubMessage = vscode.commands.registerCommand("azure-iot-toolkit.stopMonitorEventHubMessage", () => {
-        azureIoTExplorer.stopMonitorEventHubMessage();
-    });
-
     let listDevice = vscode.commands.registerCommand("azure-iot-toolkit.listDevice", () => {
         azureIoTExplorer.listDevice();
     });
@@ -87,9 +75,6 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(sendC2DMessage);
     context.subscriptions.push(startMonitorC2DMessage);
     context.subscriptions.push(stopMonitorC2DMessage);
-    context.subscriptions.push(sendMessageToEventHub);
-    context.subscriptions.push(startMonitorEventHubMessage);
-    context.subscriptions.push(stopMonitorEventHubMessage);
     context.subscriptions.push(listDevice);
     context.subscriptions.push(createDevice);
     context.subscriptions.push(deleteDevice);
