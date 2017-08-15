@@ -1,7 +1,5 @@
 # Azure IoT Toolkit
 
-[![Join the chat at https://gitter.im/formulahendry/vscode-azure-iot-toolkit](https://badges.gitter.im/formulahendry/vscode-azure-iot-toolkit.svg)](https://gitter.im/formulahendry/vscode-azure-iot-toolkit?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Marketplace Version](https://vsmarketplacebadge.apphb.com/version-short/formulahendry.azure-iot-toolkit.svg)](https://marketplace.visualstudio.com/items?itemName=formulahendry.azure-iot-toolkit) [![Installs](https://vsmarketplacebadge.apphb.com/installs-short/formulahendry.azure-iot-toolkit.svg)](https://marketplace.visualstudio.com/items?itemName=formulahendry.azure-iot-toolkit) [![Rating](https://vsmarketplacebadge.apphb.com/rating-short/formulahendry.azure-iot-toolkit.svg)](https://marketplace.visualstudio.com/items?itemName=formulahendry.azure-iot-toolkit) [![Build Status](https://travis-ci.org/formulahendry/vscode-azure-iot-toolkit.svg?branch=master)](https://travis-ci.org/formulahendry/vscode-azure-iot-toolkit) [![Build status](https://ci.appveyor.com/api/projects/status/fh583240003oggc0?svg=true)](https://ci.appveyor.com/project/formulahendry/vscode-azure-iot-toolkit)
-
 Toolkit makes Azure IoT Development easier. For more awesome Azure IoT projects and resources, please visit https://aka.ms/azure.iot
 
 ## Features
@@ -14,25 +12,14 @@ Toolkit makes Azure IoT Development easier. For more awesome Azure IoT projects 
 
 [x] Code snippet for IoT Hub
 
-[x] Send messages to Azure Event Hub
-
-[x] Monitor Event Hub messages
-
 [x] Send/monitor messages from Azure IoT Hub to device (cloud-to-device message)
 
 [x] Device management (List, Create, Delete)
-
-[x] Discover devices connected via Ethernet, USB serial and WiFi
-
-[x] Deploy and run in remote machine
 
 [x] Invoke Direct Method
 
 [x] Get/update Device Twin
 
-[ ] Debug in remote machines
-
-[ ] And more...
 
 ## Device Explorer
 
@@ -73,15 +60,9 @@ Toolkit makes Azure IoT Development easier. For more awesome Azure IoT projects 
 | IoT: Send C2D message to device | None | view/item/context |
 | IoT: Start monitoring C2D message | None | view/item/context |
 | IoT: Stop monitoring C2D message | None | editor/context (in output panel) |
-| IoT: Send message to Event Hub | None | editor/context |
-| IoT: Start monitoring Event Hub message | None | editor/context |
-| IoT: Stop monitoring Event Hub message | None | editor/context (in output panel) |
 | IoT: List device | Ctrl+Alt+F1 | None |
 | IoT: Create device | Ctrl+Alt+F2 | view/title |
 | IoT: Delete device | Ctrl+Alt+F3 | view/item/context |
-| IoT: Discover connected device | Ctrl+Alt+F6 | editor/context |
-| IoT: Deploy to remote machine | Ctrl+Alt+F4 | None |
-| IoT: Run in remote machine | Ctrl+Alt+F5 | None |
 
 ## Usages
 
@@ -100,33 +81,6 @@ Toolkit makes Azure IoT Development easier. For more awesome Azure IoT projects 
 
 > After code snippet is created, you need to install corresponding npm package (e.g. [azure-iot-device-mqtt](https://www.npmjs.com/package/azure-iot-device-mqtt)) to run the code snippet.
 > If you want to 'Run Code' directly, you need to install [Code Runner](https://marketplace.visualstudio.com/items?itemName=formulahendry.code-runner).
-
-* Send/monitor messages for Azure Event Hub
-
-![Event Hub](images/event-hub.gif)
-
-* Deploy and run in remote machine
-
-| Config | description |
-| ---- | ---- |
-| azure-iot-toolkit.localFolder | The folder of current machine to deploy |
-| azure-iot-toolkit.remoteFolder | The folder of remote machine to deploy |
-| azure-iot-toolkit.host | The hostname or IP address of remote machine |
-| azure-iot-toolkit.username | The username of remote machine |
-| azure-iot-toolkit.password | The password of remote machine |
-| azure-iot-toolkit.command | The command to run in remote machine |
-
-![Remote](images/remote.gif)
-
-* Discover Ethernet, USB serial, WiFi devices
-  1. Install Node.js or install [device-discovery-cli](https://github.com/Azure/device-discovery-cli):
-
-    ```
-    $ npm install --global device-discovery-cli
-    ```
-  2. Discover devices in VS Code:
-
-![Device](images/discover.gif)
 
 ## Configuration
 
@@ -148,27 +102,6 @@ To set the IoT Hub Consumer Group (default is "$Default"):
 ```json
 {
     "azure-iot-toolkit.iotHubConsumerGroup": "$Default"
-}
-```
-
-To set the Event Hub Connection String:
-```json
-{
-    "azure-iot-toolkit.eventHubConnectionString": "{Event Hubs connection string}"
-}
-```
-
-To set the Event Hub Path:
-```json
-{
-    "azure-iot-toolkit.eventHubPath": "{Event Hub path/name}"
-}
-```
-
-To set the Event Hub Consumer Group (default is "$Default"):
-```json
-{
-    "azure-iot-toolkit.eventHubConsumerGroup": "$Default"
 }
 ```
 
@@ -198,7 +131,7 @@ By default, anonymous telemetry data collection is turned on to understand user 
 See Change Log [here](CHANGELOG.md)
 
 ## Issues
-Submit the [issues](https://github.com/formulahendry/vscode-azure-iot-toolkit/issues) if you find any bug or have any suggestion.
+Submit the [issues](https://github.com/Microsoft/vscode-azure-iot-toolkit/issues) if you find any bug or have any suggestion.
 
 ## Contribution
-Fork the [repo](https://github.com/formulahendry/vscode-azure-iot-toolkit) and submit pull requests.
+Fork the [repo](https://github.com/Microsoft/vscode-azure-iot-toolkit) and submit pull requests.

@@ -1,8 +1,6 @@
 "use strict";
 import * as vscode from "vscode";
 import { AppInsightsClient } from "./appInsightsClient";
-import { DeviceController } from "./deviceController";
-import { DeviceDiscoverer } from "./deviceDiscoverer";
 import { DeviceExplorer } from "./deviceExplorer";
 import { EventHubMessageExplorer } from "./eventHubMessageExplorer";
 import { IotHubC2DMessageExplorer } from "./iotHubC2DMessageExplorer";
@@ -17,8 +15,6 @@ export class AzureIoTExplorer {
     private _iotHubMessageExplorer: IoTHubMessageExplorer;
     private _eventHubMessageExplorer: EventHubMessageExplorer;
     private _deviceExplorer: DeviceExplorer;
-    private _deviceDiscoverer: DeviceDiscoverer;
-    private _deviceController: DeviceController;
     private _snippetManager: SnippetManager;
     private _iotHubDirectMethodExplorer: IotHubDirectMethodExplorer;
     private _iotHubDeviceTwinExplorer: IotHubDeviceTwinExplorer;
@@ -30,8 +26,6 @@ export class AzureIoTExplorer {
         this._iotHubMessageExplorer = new IoTHubMessageExplorer(outputChannel);
         this._eventHubMessageExplorer = new EventHubMessageExplorer(outputChannel);
         this._deviceExplorer = new DeviceExplorer(outputChannel);
-        this._deviceDiscoverer = new DeviceDiscoverer(context, outputChannel);
-        this._deviceController = new DeviceController(outputChannel);
         this._snippetManager = new SnippetManager(outputChannel);
         this._iotHubDirectMethodExplorer = new IotHubDirectMethodExplorer(outputChannel);
         this._iotHubDeviceTwinExplorer = new IotHubDeviceTwinExplorer(outputChannel);
@@ -87,18 +81,6 @@ export class AzureIoTExplorer {
 
     public async deleteDevice(deviceItem?: DeviceItem) {
         await this._deviceExplorer.deleteDevice(deviceItem);
-    }
-
-    public discoverDevice(): void {
-        this._deviceDiscoverer.discoverDevice();
-    }
-
-    public deploy(): void {
-        this._deviceController.deploy();
-    }
-
-    public run(): void {
-        this._deviceController.run();
     }
 
     public invokeDeviceMethod(deviceItem: DeviceItem): void {
