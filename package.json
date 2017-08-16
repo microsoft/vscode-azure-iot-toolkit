@@ -30,6 +30,7 @@
   },
   "activationEvents": [
     "*",
+    "onView:iotHubDevices",
     "onCommand:azure-iot-toolkit.sendD2CMessage",
     "onCommand:azure-iot-toolkit.startMonitorIoTHubMessage",
     "onCommand:azure-iot-toolkit.sendC2DMessage",
@@ -268,7 +269,8 @@
     "compile": "tsc -watch -p ./",
     "postinstall": "node ./node_modules/vscode/bin/install",
     "tslint": "tslint -t verbose src/**/*.ts",
-    "version": "tsc -v"
+    "version": "tsc -v",
+    "test": "node ./node_modules/vscode/bin/test"
   },
   "devDependencies": {
     "@types/mocha": "^2.2.32",
