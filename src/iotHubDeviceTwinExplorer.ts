@@ -4,10 +4,10 @@ import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
 import * as vscode from "vscode";
-import { AppInsightsClient } from "./appInsightsClient";
 import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
 import { DeviceItem } from "./Model/DeviceItem";
+import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
 const deviceTwinJosnFileName = "azure-iot-device-twin.json";
@@ -19,11 +19,12 @@ export class IotHubDeviceTwinExplorer extends BaseExplorer {
     }
 
     public async getDeviceTwin(deviceId: string) {
-        let iotHubConnectionString = await Utility.getConfig("iotHubConnectionString", "IoT Hub Connection String");
+        let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
             return;
         }
 
+        TelemetryClient.sendEvent(Constants.IoTHubAIGetDeviceTwinEvent);
         let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
         this._outputChannel.show();
         this.outputLine(Constants.IoTHubDeviceTwinLabel, `Get Device Twin for [${deviceId}]...`);
@@ -45,11 +46,12 @@ export class IotHubDeviceTwinExplorer extends BaseExplorer {
     }
 
     public async updateDeviceTwin() {
-        let iotHubConnectionString = await Utility.getConfig("iotHubConnectionString", "IoT Hub Connection String");
+        let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
             return;
         }
 
+        TelemetryClient.sendEvent(Constants.IoTHubAIUpdateDeviceTwinEvent);
         const activeTextEditor = vscode.window.activeTextEditor;
         if (!activeTextEditor || !activeTextEditor.document || !activeTextEditor.document.fileName.endsWith(deviceTwinJosnFileName)) {
             vscode.window.showWarningMessage(`Please open ${deviceTwinJosnFileName} and try again.`);

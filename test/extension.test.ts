@@ -1,18 +1,17 @@
 import * as assert from "assert";
 import * as vscode from "vscode";
-
-const extensionId = "formulahendry.azure-iot-toolkit";
+import { Constants } from "../src/constants";
 
 suite("Extension Tests", () => {
 
     test("should be present", () => {
-        assert.ok(vscode.extensions.getExtension(extensionId));
+        assert.ok(vscode.extensions.getExtension(Constants.ExtensionId));
     });
 
     // tslint:disable-next-line:only-arrow-functions
     test("should be able to activate the extension", function (done) {
         this.timeout(60 * 1000);
-        const extension = vscode.extensions.getExtension(extensionId);
+        const extension = vscode.extensions.getExtension(Constants.ExtensionId);
         if (!extension.isActive) {
             extension.activate().then((api) => {
                 done();

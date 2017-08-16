@@ -1,6 +1,9 @@
 "user strict";
 
 export class Constants {
+    public static ExtensionId = "vsciot-vscode.azure-iot-toolkit";
+    public static AIKey = "d8505d40-fc60-45f8-98b3-3bcd5c23843d";
+
     public static IoTHub = "IoT Hub";
     public static EventHub = "Event Hub";
 
@@ -27,12 +30,16 @@ export class Constants {
     public static IoTHubDirectMethodLabel = "DirectMethod";
     public static IoTHubDeviceTwinLabel = "DeviceTwin";
 
-    public static IoTHubAIStartMonitorEvent = "D2C.startMonitoring";
-    public static IoTHubAIStopMonitorEvent = "D2C.stopMonitoring";
-    public static IoTHubAIMessageEvent = "D2C.Send";
-    public static IoTHubAIStartMonitorC2DEvent = "C2D.startMonitoring";
-    public static IoTHubAIStopMonitorC2DEvent = "C2D.stopMonitoring";
-    public static IoTHubAIC2DMessageEvent = "C2D.Send";
+    public static IoTHubAILoadDeviceTreeEvent = "AZ.LoadDeviceTree";
+    public static IoTHubAIStartMonitorEvent = "AZ.D2C.startMonitoring";
+    public static IoTHubAIStopMonitorEvent = "AZ.D2C.stopMonitoring";
+    public static IoTHubAIMessageEvent = "AZ.D2C.Send";
+    public static IoTHubAIStartMonitorC2DEvent = "AZ.C2D.startMonitoring";
+    public static IoTHubAIStopMonitorC2DEvent = "AZ.C2D.stopMonitoring";
+    public static IoTHubAIC2DMessageEvent = "AZ.C2D.Send";
+    public static IoTHubAIInvokeDeviceMethodEvent = "AZ.DeviceMethod.Invoke";
+    public static IoTHubAIGetDeviceTwinEvent = "AZ.DeviceTwin.Get";
+    public static IoTHubAIUpdateDeviceTwinEvent = "AZ.DeviceTwin.Update";
 
     public static EventHubAIStartMonitorEvent = "EventHub.startMonitoring";
     public static EventHubAIStopMonitorEvent = "EventHub.stopMonitoring";

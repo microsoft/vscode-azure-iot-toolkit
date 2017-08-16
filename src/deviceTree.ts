@@ -1,8 +1,9 @@
 import { ConnectionString } from "azure-iot-device";
 import * as path from "path";
 import * as vscode from "vscode";
-import { AppInsightsClient } from "./appInsightsClient";
+import { Constants } from "./constants";
 import { DeviceItem } from "./Model/DeviceItem";
+import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 import iothub = require("azure-iothub");
 
@@ -15,7 +16,7 @@ export class DeviceTree implements vscode.TreeDataProvider<DeviceItem> {
 
     public refresh(): void {
         this._onDidChangeTreeData.fire();
-        AppInsightsClient.sendEvent("RefreshDeviceTree");
+        TelemetryClient.sendEvent("AZ.RefreshDeviceTree");
     }
 
     public getTreeItem(element: DeviceItem): vscode.TreeItem {
@@ -23,11 +24,12 @@ export class DeviceTree implements vscode.TreeDataProvider<DeviceItem> {
     }
 
     public async getChildren(element?: DeviceItem): Promise<DeviceItem[]> {
-        let iotHubConnectionString = await Utility.getConfig("iotHubConnectionString", "IoT Hub Connection String");
+        let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
             return;
         }
 
+        TelemetryClient.sendEvent(Constants.IoTHubAILoadDeviceTreeEvent);
         let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
         let devices = [];
         let hostName = Utility.getHostName(iotHubConnectionString);

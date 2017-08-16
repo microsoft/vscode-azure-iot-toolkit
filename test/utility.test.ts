@@ -11,7 +11,7 @@ suite("Utility Tests ", () => {
     });
 
     test("should be able to get config", () => {
-        let iotHubD2CMessageStringify = Utility.getConfigFlag(Constants.IoTHubD2CMessageStringifyKey);
-        assert.equal(iotHubD2CMessageStringify, true);
+        let iotHubD2CMessageStringify = Utility.getConfig<boolean>(Constants.IoTHubD2CMessageStringifyKey);
+        assert.equal(iotHubD2CMessageStringify, false);
     });
 });

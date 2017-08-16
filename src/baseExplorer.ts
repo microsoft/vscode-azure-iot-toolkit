@@ -1,12 +1,11 @@
 "use strict";
 import { Client as EventHubClient } from "azure-event-hubs";
 import * as vscode from "vscode";
-import { AppInsightsClient } from "./appInsightsClient";
+import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
 export class BaseExplorer {
     protected _outputChannel: vscode.OutputChannel;
-    protected _appInsightsClient: AppInsightsClient;
 
     constructor(outputChannel: vscode.OutputChannel) {
         this._outputChannel = outputChannel;
@@ -71,7 +70,7 @@ export class BaseExplorer {
     }
 
     protected stopMonoitor(eventHubClient: EventHubClient, label: string, aiEvent: string) {
-        AppInsightsClient.sendEvent(aiEvent);
+        TelemetryClient.sendEvent(aiEvent);
         if (eventHubClient) {
             this.outputLine(label, "Stop monitoring ...");
             eventHubClient.close();
@@ -87,11 +86,11 @@ export class BaseExplorer {
             if (err) {
                 this.outputLine(label, `Failed to send message to [${target}]`);
                 this.outputLine(label, err.toString());
-                AppInsightsClient.sendEvent(aiEventName, { Result: "Fail" });
+                TelemetryClient.sendEvent(aiEventName, { Result: "Fail" });
             }
             if (result) {
                 this.outputLine(label, `[Success] Message sent to [${target}]`);
-                AppInsightsClient.sendEvent(aiEventName, { Result: "Success" });
+                TelemetryClient.sendEvent(aiEventName, { Result: "Success" });
             }
             client.close(() => { return; });
         };

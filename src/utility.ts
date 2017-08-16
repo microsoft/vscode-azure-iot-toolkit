@@ -1,22 +1,23 @@
 "use strict";
 import * as vscode from "vscode";
-import { AppInsightsClient } from "./appInsightsClient";
+import { TelemetryClient } from "./telemetryClient";
 
 export class Utility {
     public static getConfiguration(): vscode.WorkspaceConfiguration {
         return vscode.workspace.getConfiguration("azure-iot-toolkit");
     }
 
-    public static async getConfig(id: string, name: string) {
+    public static async getConnectionString(id: string, name: string) {
         let config = Utility.getConfiguration();
         let configValue = config.get<string>(id);
         if (!configValue || configValue.startsWith("<<insert")) {
-            AppInsightsClient.sendEvent("SetConfig");
+            TelemetryClient.sendEvent("General.SetConfig.Popup");
             return await vscode.window.showInputBox({
                 prompt: `${name}`,
                 placeHolder: `Enter your ${name}`,
             }).then((value: string) => {
                 if (value !== undefined) {
+                    TelemetryClient.sendEvent("General.SetConfig.Done");
                     config.update(id, value, true);
                     return value;
                 }
@@ -26,7 +27,7 @@ export class Utility {
         return configValue;
     }
 
-    public static getConfigWithId(id: string) {
+    public static getConnectionStringWithId(id: string) {
         let config = Utility.getConfiguration();
         let configValue = config.get<string>(id);
         if (!configValue || configValue.startsWith("<<insert")) {
@@ -35,9 +36,9 @@ export class Utility {
         return configValue;
     }
 
-    public static getConfigFlag(id: string): boolean {
+    public static getConfig<T>(id: string): T {
         let config = Utility.getConfiguration();
-        return config.get<boolean>(id);
+        return config.get<T>(id);
     }
 
     public static getHostName(iotHubConnectionString: string): string {

@@ -3,10 +3,10 @@ import { Client as EventHubClient } from "azure-event-hubs";
 import { Client, Message } from "azure-iot-device";
 import { clientFromConnectionString } from "azure-iot-device-mqtt";
 import * as vscode from "vscode";
-import { AppInsightsClient } from "./appInsightsClient";
 import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
 import { DeviceItem } from "./Model/DeviceItem";
+import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
 export class IoTHubMessageExplorer extends BaseExplorer {
@@ -18,7 +18,8 @@ export class IoTHubMessageExplorer extends BaseExplorer {
 
     public async sendD2CMessage(deviceItem?: DeviceItem) {
         let deviceConnectionString = deviceItem.connectionString ?
-            deviceItem.connectionString : await Utility.getConfig(Constants.DeviceConnectionStringKey, Constants.DeviceConnectionStringTitle);
+            deviceItem.connectionString : await Utility.getConnectionString(Constants.DeviceConnectionStringKey,
+                Constants.DeviceConnectionStringTitle);
         if (!deviceConnectionString) {
             return;
         }
@@ -28,7 +29,7 @@ export class IoTHubMessageExplorer extends BaseExplorer {
                 this._outputChannel.show();
                 try {
                     let client = clientFromConnectionString(deviceConnectionString);
-                    let stringify = Utility.getConfigFlag(Constants.IoTHubD2CMessageStringifyKey);
+                    let stringify = Utility.getConfig<boolean>(Constants.IoTHubD2CMessageStringifyKey);
                     client.sendEvent(new Message(stringify ? JSON.stringify(message) : message),
                         this.sendEventDone(client, Constants.IoTHubMessageLabel, Constants.IoTHub, Constants.IoTHubAIMessageEvent));
                 } catch (e) {
@@ -39,7 +40,7 @@ export class IoTHubMessageExplorer extends BaseExplorer {
     }
 
     public async startMonitorIoTHubMessage() {
-        let iotHubConnectionString = await Utility.getConfig(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
+        let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
             return;
         }
@@ -50,11 +51,11 @@ export class IoTHubMessageExplorer extends BaseExplorer {
             this._eventHubClient = EventHubClient.fromConnectionString(iotHubConnectionString);
             this._outputChannel.show();
             this.outputLine(Constants.IoTHubMonitorLabel, `Start monitoring [${Constants.IoTHub}] ...`);
-            AppInsightsClient.sendEvent(Constants.IoTHubAIStartMonitorEvent);
+            TelemetryClient.sendEvent(Constants.IoTHubAIStartMonitorEvent);
             this.startMonitor(this._eventHubClient, Constants.IoTHubMonitorLabel, consumerGroup);
         } catch (e) {
             this.outputLine(Constants.IoTHubMonitorLabel, e);
-            AppInsightsClient.sendEvent(Constants.IoTHubAIStartMonitorEvent, { Result: "Exception", Message: e });
+            TelemetryClient.sendEvent(Constants.IoTHubAIStartMonitorEvent, { Result: "Exception", Message: e });
         }
     }
 

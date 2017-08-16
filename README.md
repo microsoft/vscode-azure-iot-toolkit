@@ -1,25 +1,6 @@
 # Azure IoT Toolkit
 
-Toolkit makes Azure IoT Development easier. For more awesome Azure IoT projects and resources, please visit https://aka.ms/azure.iot
-
-## Features
-
-[x] Device Explorer
-
-[x] Send messages to Azure IoT Hub (device-to-cloud message)
-
-[x] Monitor device-to-cloud messages
-
-[x] Code snippet for IoT Hub
-
-[x] Send/monitor messages from Azure IoT Hub to device (cloud-to-device message)
-
-[x] Device management (List, Create, Delete)
-
-[x] Invoke Direct Method
-
-[x] Get/update Device Twin
-
+Interact with Azure IoT Hub, IoT Device Management, IoT Hub Code Snippets.
 
 ## Device Explorer
 
@@ -40,33 +21,17 @@ Toolkit makes Azure IoT Development easier. For more awesome Azure IoT projects 
 
 1. In Explorer of VS Code, click "IoT Hub Devices" in the bottom left corner.
 
-![Click Device Explorer](images/device-explorer-click.png)
+![Click Device Explorer](https://github.com/formulahendry/vscode-azure-iot-toolkit/raw/master/images/device-explorer-click.png)
 
 2. If you have not set Iot Hub Connection String before, an input box will pop up, then enter your Iot Hub Connection String (It is one-time configuration).
 
-![Enter Connection String](images/enter-connection-string.png)
+![Enter Connection String](https://github.com/formulahendry/vscode-azure-iot-toolkit/raw/master/images/enter-connection-string.png)
 
 3. The device list will be shown.
 
-![Device Explorer](images/device-explorer.png)
+![Device Explorer](https://github.com/formulahendry/vscode-azure-iot-toolkit/raw/master/images/device-explorer.png)
 
-## Commands
-
-| Command | Keyboard Shortcuts | Menu Contexts |
-| --- | --- | --- |
-| IoT: Send message to IoT Hub | Ctrl+Alt+F9 | view/item/context |
-| IoT: Start monitoring IoT Hub message | Ctrl+Alt+F10 | view/title |
-| IoT: Stop monitoring IoT Hub message | Ctrl+Alt+F11 | editor/context (in output panel) |
-| IoT: Send C2D message to device | None | view/item/context |
-| IoT: Start monitoring C2D message | None | view/item/context |
-| IoT: Stop monitoring C2D message | None | editor/context (in output panel) |
-| IoT: List device | Ctrl+Alt+F1 | None |
-| IoT: Create device | Ctrl+Alt+F2 | view/title |
-| IoT: Delete device | Ctrl+Alt+F3 | view/item/context |
-
-## Usages
-
-* Code Snippets
+## Code Snippets
 
 | Trigger | Content |
 | ---- | ---- |
@@ -84,54 +49,37 @@ Toolkit makes Azure IoT Development easier. For more awesome Azure IoT projects 
 
 ## Configuration
 
-To set the Device Connection String which is used to send device-to-cloud message or other functions as a device simulator:
-```json
-{
-    "azure-iot-toolkit.deviceConnectionString": "HostName=<my-hub>.azure-devices.net;DeviceId=<known-device-id>;SharedAccessKey=<known-device-key>"
-}
-```
-
-To set the IoT Hub Connection String to monitor device-to-cloud message or other functions as a service simulator:
+IoT Hub Connection String:
 ```json
 {
     "azure-iot-toolkit.iotHubConnectionString": "HostName=<my-hub>.azure-devices.net;SharedAccessKeyName=<my-policy>;SharedAccessKey=<my-policy-key>"
 }
 ```
 
-To set the IoT Hub Consumer Group (default is "$Default"):
+Device Connection String:
+```json
+{
+    "azure-iot-toolkit.deviceConnectionString": "HostName=<my-hub>.azure-devices.net;DeviceId=<known-device-id>;SharedAccessKey=<known-device-key>"
+}
+```
+
+IoT Hub Consumer Group (default is "$Default"):
 ```json
 {
     "azure-iot-toolkit.iotHubConsumerGroup": "$Default"
 }
 ```
 
-To set whether to show verbose info when monitoring messages (default is `true`):
+Whether to show verbose info when monitoring messages (default is `false`):
 ```json
 {
-    "azure-iot-toolkit.showVerboseMessage": true
+    "azure-iot-toolkit.showVerboseMessage": false
 }
 ```
 
-To set whether to stringify device-to-cloud messages (default is `true`):
+Whether to stringify device-to-cloud messages (default is `false`):
 ```json
 { 
-    "azure-iot-toolkit.iotHubD2CMessageStringify": true
+    "azure-iot-toolkit.iotHubD2CMessageStringify": false
 }
 ```
-
-## Telemetry data
-By default, anonymous telemetry data collection is turned on to understand user behavior to improve this extension. To disable it, update the settings.json as below:
-```json
-{
-    "azure-iot-toolkit.enableAppInsights": false
-}
-```
-
-## Change Log
-See Change Log [here](CHANGELOG.md)
-
-## Issues
-Submit the [issues](https://github.com/Microsoft/vscode-azure-iot-toolkit/issues) if you find any bug or have any suggestion.
-
-## Contribution
-Fork the [repo](https://github.com/Microsoft/vscode-azure-iot-toolkit) and submit pull requests.

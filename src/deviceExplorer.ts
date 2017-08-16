@@ -1,9 +1,10 @@
 "use strict";
 import { ConnectionString } from "azure-iot-device";
 import * as vscode from "vscode";
-import { AppInsightsClient } from "./appInsightsClient";
 import { BaseExplorer } from "./baseExplorer";
+import { Constants } from "./constants";
 import { DeviceItem } from "./Model/DeviceItem";
+import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 import iothub = require("azure-iothub");
 
@@ -14,7 +15,7 @@ export class DeviceExplorer extends BaseExplorer {
 
     public async listDevice() {
         let label = "Device";
-        let iotHubConnectionString = await Utility.getConfig("iotHubConnectionString", "IoT Hub Connection String");
+        let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
             return;
         }
@@ -22,7 +23,7 @@ export class DeviceExplorer extends BaseExplorer {
         let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
         this._outputChannel.show();
         this.outputLine(label, "Querying devices...");
-        AppInsightsClient.sendEvent(`${label}.List`);
+        TelemetryClient.sendEvent(`AZ.${label}.List`);
         registry.list((err, deviceList) => {
             this.outputLine(label, `${deviceList.length} device(s) found`);
             deviceList.forEach((device, index) => {
@@ -33,7 +34,7 @@ export class DeviceExplorer extends BaseExplorer {
 
     public async getDevice(deviceId: string) {
         let label = "Device";
-        let iotHubConnectionString = await Utility.getConfig("iotHubConnectionString", "IoT Hub Connection String");
+        let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
             return;
         }
@@ -47,7 +48,7 @@ export class DeviceExplorer extends BaseExplorer {
 
     public async createDevice() {
         let label = "Device";
-        let iotHubConnectionString = await Utility.getConfig("iotHubConnectionString", "IoT Hub Connection String");
+        let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
             return;
         }
@@ -69,7 +70,7 @@ export class DeviceExplorer extends BaseExplorer {
 
     public async deleteDevice(deviceItem?: DeviceItem) {
         let label = "Device";
-        let iotHubConnectionString = await Utility.getConfig("iotHubConnectionString", "IoT Hub Connection String");
+        let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
             return;
         }
@@ -95,7 +96,7 @@ export class DeviceExplorer extends BaseExplorer {
     private done(op: string, label: string, hostName: string = null) {
         return (err, deviceInfo, res) => {
             if (err) {
-                AppInsightsClient.sendEvent(`${label}.${op}`, { Result: "Fail" });
+                TelemetryClient.sendEvent(`AZ.${label}.${op}`, { Result: "Fail" });
                 this.outputLine(label, `[${op}] error: ${err.toString()}`);
             }
             if (res) {
@@ -103,7 +104,7 @@ export class DeviceExplorer extends BaseExplorer {
                 if (res.statusCode < 300) {
                     result = "Success";
                 }
-                AppInsightsClient.sendEvent(`${label}.${op}`, { Result: result });
+                TelemetryClient.sendEvent(`AZ.${label}.${op}`, { Result: result });
                 this.outputLine(label, `[${op}][${result}] status: ${res.statusCode} ${res.statusMessage}`);
             }
             if (deviceInfo) {
