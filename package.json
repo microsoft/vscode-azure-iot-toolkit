@@ -20,14 +20,6 @@
     "explorer",
     "cloud"
   ],
-  "bugs": {
-    "url": "https://github.com/Microsoft/vscode-azure-iot-toolkit/issues"
-  },
-  "homepage": "https://github.com/Microsoft/vscode-azure-iot-toolkit/blob/master/README.md",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Microsoft/vscode-azure-iot-toolkit.git"
-  },
   "activationEvents": [
     "*",
     "onView:iotHubDevices",
