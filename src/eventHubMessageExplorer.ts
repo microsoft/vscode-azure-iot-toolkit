@@ -2,9 +2,9 @@
 import { Client as EventHubClient, Sender as EventHubSender } from "azure-event-hubs";
 import { Client, Message } from "azure-iot-device";
 import * as vscode from "vscode";
-import { AppInsightsClient } from "./appInsightsClient";
 import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
+import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
 export class EventHubMessageExplorer extends BaseExplorer {
@@ -15,8 +15,9 @@ export class EventHubMessageExplorer extends BaseExplorer {
     }
 
     public async sendMessageToEventHub() {
-        let eventHubConnectionString = await Utility.getConfig(Constants.EventHubConnectionstringKey, Constants.EventHubConnectionStringTitle);
-        let eventHubPath = await Utility.getConfig(Constants.EventHubPathKey, Constants.EventHubPathTitle);
+        let eventHubConnectionString = await Utility.getConnectionString(Constants.EventHubConnectionstringKey,
+            Constants.EventHubConnectionStringTitle);
+        let eventHubPath = await Utility.getConnectionString(Constants.EventHubPathKey, Constants.EventHubPathTitle);
         if (!eventHubConnectionString || !eventHubPath) {
             return;
         }
@@ -40,8 +41,9 @@ export class EventHubMessageExplorer extends BaseExplorer {
     }
 
     public async startMonitorEventHubMessage() {
-        let eventHubConnectionString = await Utility.getConfig(Constants.EventHubConnectionstringKey, Constants.EventHubConnectionStringTitle);
-        let eventHubPath = await Utility.getConfig(Constants.EventHubPathKey, Constants.EventHubPathTitle);
+        let eventHubConnectionString = await Utility.getConnectionString(Constants.EventHubConnectionstringKey,
+            Constants.EventHubConnectionStringTitle);
+        let eventHubPath = await Utility.getConnectionString(Constants.EventHubPathKey, Constants.EventHubPathTitle);
         if (!eventHubConnectionString || !eventHubPath) {
             return;
         }
@@ -52,11 +54,11 @@ export class EventHubMessageExplorer extends BaseExplorer {
             let receiveAfterTime = Date.now() - 5000;
             this._outputChannel.show();
             this.outputLine(Constants.EventHubMonitorLabel, `Start monitoring ${Constants.EventHub} ...`);
-            AppInsightsClient.sendEvent(Constants.EventHubAIStartMonitorEvent);
+            TelemetryClient.sendEvent(Constants.EventHubAIStartMonitorEvent);
             this.startMonitor(this._eventHubClient, Constants.EventHubMonitorLabel, consumerGroup);
         } catch (e) {
             this.outputLine(Constants.EventHubMonitorLabel, e);
-            AppInsightsClient.sendEvent(Constants.EventHubAIStartMonitorEvent, { Result: "Exception", Message: e });
+            TelemetryClient.sendEvent(Constants.EventHubAIStartMonitorEvent, { Result: "Exception", Message: e });
         }
     }
 
@@ -68,14 +70,14 @@ export class EventHubMessageExplorer extends BaseExplorer {
     private sendToEventHubFail(client: EventHubClient, err) {
         this.outputLine(Constants.EventHubMessageLabel, `Failed to send message to ${Constants.EventHub}`);
         this.outputLine(Constants.EventHubMessageLabel, err.toString());
-        AppInsightsClient.sendEvent(Constants.EventHubAIMessageEvent, { Result: "Fail" });
+        TelemetryClient.sendEvent(Constants.EventHubAIMessageEvent, { Result: "Fail" });
         client.close();
     }
 
     private sendToEventHubDone(client: EventHubClient) {
         return () => {
             this.outputLine(Constants.EventHubMessageLabel, `[Success] Message sent to ${Constants.EventHub}`);
-            AppInsightsClient.sendEvent(Constants.EventHubAIMessageEvent, { Result: "Success" });
+            TelemetryClient.sendEvent(Constants.EventHubAIMessageEvent, { Result: "Success" });
             client.close();
         };
     }

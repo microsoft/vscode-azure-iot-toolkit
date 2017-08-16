@@ -1,6 +1,5 @@
 "use strict";
 import * as vscode from "vscode";
-import { AppInsightsClient } from "./appInsightsClient";
 import { DeviceExplorer } from "./deviceExplorer";
 import { EventHubMessageExplorer } from "./eventHubMessageExplorer";
 import { IotHubC2DMessageExplorer } from "./iotHubC2DMessageExplorer";
@@ -21,7 +20,6 @@ export class AzureIoTExplorer {
 
     constructor(context: vscode.ExtensionContext) {
         let outputChannel = vscode.window.createOutputChannel("Azure IoT Toolkit");
-        let appInsightsClient = new AppInsightsClient();
         this._iotHubC2DMessageExplorer = new IotHubC2DMessageExplorer(outputChannel);
         this._iotHubMessageExplorer = new IoTHubMessageExplorer(outputChannel);
         this._eventHubMessageExplorer = new EventHubMessageExplorer(outputChannel);

@@ -1,25 +1,24 @@
 "use strict";
 import * as vscode from "vscode";
+import TelemetryReporter from "vscode-extension-telemetry";
 import { Constants } from "./constants";
 import { Utility } from "./utility";
-import appInsights = require("applicationinsights");
 
-export class AppInsightsClient {
+const extensionVersion: string = vscode.extensions.getExtension(Constants.ExtensionId).packageJSON.version;
+
+export class TelemetryClient {
     public static sendEvent(eventName: string, properties?: { [key: string]: string; }): void {
-        if (this._enableAppInsights) {
-            properties = this.addIoTHubHostName(properties);
-            this._client.trackEvent(eventName, properties);
-        }
+        properties = this.addIoTHubHostName(properties);
+        this._client.sendTelemetryEvent(eventName, properties);
     }
 
-    private static _client = appInsights.getClient("6ada6440-d926-4331-b914-d8f1ea3b012f");
-    private static _enableAppInsights = Utility.getConfiguration().get<boolean>("enableAppInsights");
+    private static _client = new TelemetryReporter(Constants.ExtensionId, extensionVersion, Constants.AIKey);
 
     private static addIoTHubHostName(properties?: { [key: string]: string; }): any {
         let newProperties = properties ? properties : {};
-        let iotHubConnectionString = Utility.getConfigWithId(Constants.IotHubConnectionStringKey);
+        let iotHubConnectionString = Utility.getConnectionStringWithId(Constants.IotHubConnectionStringKey);
         if (!iotHubConnectionString) {
-            iotHubConnectionString = Utility.getConfigWithId(Constants.DeviceConnectionStringKey);
+            iotHubConnectionString = Utility.getConnectionStringWithId(Constants.DeviceConnectionStringKey);
         }
 
         if (iotHubConnectionString) {

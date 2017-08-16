@@ -2,10 +2,10 @@
 import { Message } from "azure-iot-common";
 import { Client as ServiceClient } from "azure-iothub";
 import * as vscode from "vscode";
-import { AppInsightsClient } from "./appInsightsClient";
 import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
 import { DeviceItem } from "./Model/DeviceItem";
+import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
 export class IotHubDirectMethodExplorer extends BaseExplorer {
@@ -14,10 +14,12 @@ export class IotHubDirectMethodExplorer extends BaseExplorer {
     }
 
     public async invokeDeviceMethod(deviceItem: DeviceItem) {
-        let iotHubConnectionString = await Utility.getConfig(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
+        let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
             return;
         }
+
+        TelemetryClient.sendEvent(Constants.IoTHubAIInvokeDeviceMethodEvent);
 
         vscode.window.showInputBox({ prompt: `Enter [Method Name] sent to [${deviceItem.deviceId}]` }).then((methodName: string) => {
             if (methodName !== undefined) {

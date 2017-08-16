@@ -1,8 +1,8 @@
 "use strict";
 import * as vscode from "vscode";
-import { AppInsightsClient } from "./appInsightsClient";
 import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
+import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
 export class SnippetManager extends BaseExplorer {
@@ -36,7 +36,7 @@ export class SnippetManager extends BaseExplorer {
                             editBuilder.replace(new vscode.Range(document.positionAt(offset),
                                 document.positionAt(offset + connectionStringKeyWithAngleBracket.length)),
                                 connectionStringValue);
-                            AppInsightsClient.sendEvent(`ReplaceConnectionString`, { Type: connectionStringKey });
+                            TelemetryClient.sendEvent(`Snippet.ReplaceConnectionString`, { Type: connectionStringKey });
                         });
                         offset = text.indexOf(connectionStringKeyWithAngleBracket, offset + 1);
                     }

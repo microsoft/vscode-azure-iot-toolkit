@@ -1,9 +1,9 @@
 {
   "name": "azure-iot-toolkit",
   "displayName": "Azure IoT Toolkit",
-  "description": "Interact with Azure IoT Hub; IoT Device Management; IoT Hub Code Snippets;",
-  "version": "0.1.4",
-  "publisher": "formulahendry",
+  "description": "Interact with Azure IoT Hub, IoT Device Management, IoT Hub Code Snippets",
+  "version": "0.1.0",
+  "publisher": "vsciot-vscode",
   "icon": "logo.png",
   "engines": {
     "vscode": "^1.13.0"
@@ -20,14 +20,6 @@
     "explorer",
     "cloud"
   ],
-  "bugs": {
-    "url": "https://github.com/Microsoft/vscode-azure-iot-toolkit/issues"
-  },
-  "homepage": "https://github.com/Microsoft/vscode-azure-iot-toolkit/blob/master/README.md",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Microsoft/vscode-azure-iot-toolkit.git"
-  },
   "activationEvents": [
     "*",
     "onView:iotHubDevices",
@@ -55,15 +47,15 @@
     "commands": [
       {
         "command": "azure-iot-toolkit.sendD2CMessage",
-        "title": "IoT: Send message to IoT Hub"
+        "title": "IoT: Send D2C message to IoT Hub"
       },
       {
         "command": "azure-iot-toolkit.startMonitorIoTHubMessage",
-        "title": "IoT: Start monitoring IoT Hub message"
+        "title": "IoT: Start monitoring D2C message"
       },
       {
         "command": "azure-iot-toolkit.stopMonitorIoTHubMessage",
-        "title": "IoT: Stop monitoring IoT Hub message"
+        "title": "IoT: Stop monitoring D2C message"
       },
       {
         "command": "azure-iot-toolkit.sendC2DMessage",
@@ -108,44 +100,6 @@
           "light": "resources/light/refresh.svg",
           "dark": "resources/dark/refresh.svg"
         }
-      }
-    ],
-    "keybindings": [
-      {
-        "command": "azure-iot-toolkit.sendD2CMessage",
-        "key": "ctrl+alt+f9"
-      },
-      {
-        "command": "azure-iot-toolkit.startMonitorIoTHubMessage",
-        "key": "ctrl+alt+f10"
-      },
-      {
-        "command": "azure-iot-toolkit.stopMonitorIoTHubMessage",
-        "key": "ctrl+alt+f11"
-      },
-      {
-        "command": "azure-iot-toolkit.listDevice",
-        "key": "ctrl+alt+f1"
-      },
-      {
-        "command": "azure-iot-toolkit.createDevice",
-        "key": "ctrl+alt+f2"
-      },
-      {
-        "command": "azure-iot-toolkit.deleteDevice",
-        "key": "ctrl+alt+f3"
-      },
-      {
-        "command": "azure-iot-toolkit.discoverDevice",
-        "key": "ctrl+alt+f6"
-      },
-      {
-        "command": "azure-iot-toolkit.deploy",
-        "key": "ctrl+alt+f4"
-      },
-      {
-        "command": "azure-iot-toolkit.run",
-        "key": "ctrl+alt+f5"
       }
     ],
     "menus": {
@@ -210,11 +164,6 @@
           "group": "azure-iot-toolkit@2"
         },
         {
-          "when": "!inOutput",
-          "command": "azure-iot-toolkit.sendMessageToEventHub",
-          "group": "azure-iot-toolkit@1"
-        },
-        {
           "when": "resourceFilename == azure-iot-device-twin.json",
           "command": "azure-iot-toolkit.updateDeviceTwin",
           "group": "navigation"
@@ -242,18 +191,13 @@
         },
         "azure-iot-toolkit.showVerboseMessage": {
           "type": "boolean",
-          "default": true,
+          "default": false,
           "description": "Whether to show verbose info when monitoring messages."
         },
         "azure-iot-toolkit.iotHubD2CMessageStringify": {
           "type": "boolean",
-          "default": true,
+          "default": false,
           "description": "Whether to stringify device-to-cloud messages."
-        },
-        "azure-iot-toolkit.enableAppInsights": {
-          "type": "boolean",
-          "default": true,
-          "description": "Whether to enable AppInsights to track anonymous telemetry data."
         }
       }
     },
@@ -281,10 +225,10 @@
     "vscode": "^1.0.0"
   },
   "dependencies": {
-    "applicationinsights": "^0.21.0",
     "azure-event-hubs": "0.0.6",
     "azure-iot-device": "1.1.7",
     "azure-iot-device-mqtt": "1.1.7",
-    "azure-iothub": "^1.1.13"
+    "azure-iothub": "^1.1.13",
+    "vscode-extension-telemetry": "0.0.8"
   }
 }
