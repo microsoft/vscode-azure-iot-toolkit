@@ -31,6 +31,8 @@ Interact with Azure IoT Hub, IoT Device Management, IoT Hub Code Snippets.
 
 ![Device Explorer](https://github.com/formulahendry/vscode-azure-iot-toolkit/raw/master/images/device-explorer.png)
 
+**NOTE**: You could go to **File** > **Preferences** > **Settings** (**Code** > **Preferences** > **Settings** on Mac), update the config of `azure-iot-toolkit.iotHubConnectionString` to change your IoT Hub Connection String.
+
 ## Code Snippets
 
 | Trigger | Content |
@@ -63,7 +65,7 @@ Device Connection String:
 }
 ```
 
-IoT Hub Consumer Group (default is "$Default"):
+IoT Hub Consumer Group (default is `"$Default"`):
 ```json
 {
     "azure-iot-toolkit.iotHubConsumerGroup": "$Default"
