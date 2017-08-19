@@ -14,7 +14,7 @@ export class Constants {
     public static IoTHubConsumerGroup = "iotHubConsumerGroup";
     public static IoTHubD2CMessageStringifyKey = "iotHubD2CMessageStringify";
 
-    public static EventHubConnectionstringKey = "eventHubConnectionString";
+    public static EventHubConnectionStringKey = "eventHubConnectionString";
     public static EventHubConnectionStringTitle = "Event Hub Connection String";
     public static EventHubPathKey = "eventHubPath";
     public static EventHubPathTitle = "Event Hub Path";

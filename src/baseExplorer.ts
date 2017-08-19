@@ -69,7 +69,7 @@ export class BaseExplorer {
         }
     }
 
-    protected stopMonoitor(eventHubClient: EventHubClient, label: string, aiEvent: string) {
+    protected stopMonitor(eventHubClient: EventHubClient, label: string, aiEvent: string) {
         TelemetryClient.sendEvent(aiEvent);
         if (eventHubClient) {
             this.outputLine(label, "Stop monitoring ...");
