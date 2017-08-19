@@ -1,4 +1,5 @@
 "use strict";
+import * as crypto from "crypto";
 import * as vscode from "vscode";
 import { TelemetryClient } from "./telemetryClient";
 
@@ -44,5 +45,9 @@ export class Utility {
     public static getHostName(iotHubConnectionString: string): string {
         let result = /^HostName=([^=]+);/.exec(iotHubConnectionString);
         return result ? result[1] : "";
+    }
+
+    public static hash(data: string): string {
+        return crypto.createHash("sha256").update(data).digest("hex");
     }
 }
