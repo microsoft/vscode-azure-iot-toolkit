@@ -60,7 +60,7 @@ export class IoTHubMessageExplorer extends BaseExplorer {
     }
 
     public stopMonitorIoTHubMessage(): void {
-        this.stopMonoitor(this._eventHubClient, Constants.IoTHubMonitorLabel, Constants.IoTHubAIStopMonitorEvent);
+        this.stopMonitor(this._eventHubClient, Constants.IoTHubMonitorLabel, Constants.IoTHubAIStopMonitorEvent);
         this._eventHubClient = null;
     }
 }
