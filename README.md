@@ -46,7 +46,7 @@ Interact with Azure IoT Hub, IoT Device Management, IoT Hub Code Snippets.
 | iotCallDirectMethods | Send direct methods to device |
 | iotReceiveDirectMethods | Receive direct methods from IoT Hub |
 
-![Snippet](images/snippet.gif)
+![Snippet](https://github.com/formulahendry/vscode-azure-iot-toolkit/raw/master/images/snippet.gif)
 
 > After code snippet is created, you need to install corresponding npm package (e.g. [azure-iot-device-mqtt](https://www.npmjs.com/package/azure-iot-device-mqtt)) to run the code snippet.
 > If you want to 'Run Code' directly, you need to install [Code Runner](https://marketplace.visualstudio.com/items?itemName=formulahendry.code-runner).
