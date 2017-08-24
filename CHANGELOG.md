@@ -1,5 +1,6 @@
 ### 0.2.1 (2017-08-24)
 * Add 'Azure' category
+* Handle devices with X.509 cert
 
 ### 0.2.0 (2017-08-21)
 * Migrate as official extension
