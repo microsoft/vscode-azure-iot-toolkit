@@ -25,7 +25,7 @@ Interact with Azure IoT Hub, IoT Device Management, IoT Hub Code Snippets.
 
 ![Click Device Explorer](https://github.com/formulahendry/vscode-azure-iot-toolkit/raw/master/images/device-explorer-click.png)
 
-2. If you have not set Iot Hub Connection String before, an input box will pop up, then enter your Iot Hub Connection String (It is one-time configuration).
+2. If you have not set Iot Hub Connection String before, an input box will pop up, then enter your Iot Hub Connection String (It is one-time configuration, and please make sure it is **Iot Hub Connection String** not **Device Connection String**).
 
 ![Enter Connection String](https://github.com/formulahendry/vscode-azure-iot-toolkit/raw/master/images/enter-connection-string.png)
 

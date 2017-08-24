@@ -29,7 +29,6 @@ export class DeviceTree implements vscode.TreeDataProvider<DeviceItem> {
             return;
         }
 
-        TelemetryClient.sendEvent(Constants.IoTHubAILoadDeviceTreeEvent);
         let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
         let devices = [];
         let hostName = Utility.getHostName(iotHubConnectionString);
@@ -39,6 +38,7 @@ export class DeviceTree implements vscode.TreeDataProvider<DeviceItem> {
                 if (err) {
                     reject(`[Failed to list IoT Hub devices] ${err.message}`);
                 } else {
+                    TelemetryClient.sendEvent(Constants.IoTHubAILoadDeviceTreeEvent);
                     deviceList.forEach((device, index) => {
                         let image = device.connectionState.toString() === "Connected" ? "device-on.png" : "device-off.png";
                         devices.push(new DeviceItem(device.deviceId,
