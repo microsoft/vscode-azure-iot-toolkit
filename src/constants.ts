@@ -41,6 +41,8 @@ export class Constants {
     public static IoTHubAIGetDeviceTwinEvent = "AZ.DeviceTwin.Get";
     public static IoTHubAIUpdateDeviceTwinEvent = "AZ.DeviceTwin.Update";
 
+    public static IoTHubAIStartLoadDeviceTreeEvent = "General.StartLoadDeviceTree";
+
     public static EventHubAIStartMonitorEvent = "EventHub.startMonitoring";
     public static EventHubAIStopMonitorEvent = "EventHub.stopMonitoring";
     public static EventHubAIMessageEvent = "EventHub.Send";
