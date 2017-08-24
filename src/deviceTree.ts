@@ -29,6 +29,7 @@ export class DeviceTree implements vscode.TreeDataProvider<DeviceItem> {
             return;
         }
 
+        TelemetryClient.sendEvent(Constants.IoTHubAIStartLoadDeviceTreeEvent);
         let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
         let devices = [];
         let hostName = Utility.getHostName(iotHubConnectionString);
@@ -36,13 +37,21 @@ export class DeviceTree implements vscode.TreeDataProvider<DeviceItem> {
         return new Promise<DeviceItem[]>((resolve, reject) => {
             registry.list((err, deviceList) => {
                 if (err) {
+                    TelemetryClient.sendEvent(Constants.IoTHubAILoadDeviceTreeEvent, { Result: "Fail", Message: err.message });
                     reject(`[Failed to list IoT Hub devices] ${err.message}`);
                 } else {
-                    TelemetryClient.sendEvent(Constants.IoTHubAILoadDeviceTreeEvent);
+                    TelemetryClient.sendEvent(Constants.IoTHubAILoadDeviceTreeEvent, { Result: "Success", DeviceCount: deviceList.length.toString() });
                     deviceList.forEach((device, index) => {
                         let image = device.connectionState.toString() === "Connected" ? "device-on.png" : "device-off.png";
+                        let deviceConnectionString = "";
+                        if (device.authentication.SymmetricKey.primaryKey != null) {
+                            deviceConnectionString = ConnectionString.createWithSharedAccessKey(hostName, device.deviceId,
+                                device.authentication.SymmetricKey.primaryKey);
+                        } else if (device.authentication.x509Thumbprint.primaryThumbprint != null) {
+                            deviceConnectionString = ConnectionString.createWithX509Certificate(hostName, device.deviceId);
+                        }
                         devices.push(new DeviceItem(device.deviceId,
-                            ConnectionString.createWithSharedAccessKey(hostName, device.deviceId, device.authentication.SymmetricKey.primaryKey),
+                            deviceConnectionString,
                             this.context.asAbsolutePath(path.join("resources", image)),
                             {
                                 command: "azure-iot-toolkit.getDevice",
