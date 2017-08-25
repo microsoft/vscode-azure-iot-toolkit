@@ -23,15 +23,15 @@ Interact with Azure IoT Hub, IoT Device Management, IoT Hub Code Snippets.
 
 1. In Explorer of VS Code, click "IoT Hub Devices" in the bottom left corner.
 
-![Click Device Explorer](https://github.com/formulahendry/vscode-azure-iot-toolkit/raw/master/images/device-explorer-click.png)
+  ![Click Device Explorer](https://github.com/formulahendry/vscode-azure-iot-toolkit/raw/master/images/device-explorer-click.png)
 
 2. If you have not set Iot Hub Connection String before, an input box will pop up, then enter your Iot Hub Connection String (It is one-time configuration, and please make sure it is **Iot Hub Connection String** not **Device Connection String**).
 
-![Enter Connection String](https://github.com/formulahendry/vscode-azure-iot-toolkit/raw/master/images/enter-connection-string.png)
+  ![Enter Connection String](https://github.com/formulahendry/vscode-azure-iot-toolkit/raw/master/images/enter-connection-string.png)
 
 3. The device list will be shown.
 
-![Device Explorer](https://github.com/formulahendry/vscode-azure-iot-toolkit/raw/master/images/device-explorer.png)
+  ![Device Explorer](https://github.com/formulahendry/vscode-azure-iot-toolkit/raw/master/images/device-explorer.png)
 
 **NOTE**: You could go to **File** > **Preferences** > **Settings** (**Code** > **Preferences** > **Settings** on Mac), update the config of `azure-iot-toolkit.iotHubConnectionString` to change your IoT Hub Connection String.
 
