@@ -19,6 +19,15 @@ export class DeviceTree implements vscode.TreeDataProvider<DeviceItem> {
         TelemetryClient.sendEvent("AZ.RefreshDeviceTree");
     }
 
+    public async setIoTHubConnectionString() {
+        TelemetryClient.sendEvent("General.Set.IoTHubConnectionString");
+        const iotHubConnectionString = await Utility.setConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
+        if (iotHubConnectionString) {
+            vscode.window.showInformationMessage(`${Constants.IotHubConnectionStringTitle} is updated.`);
+            this._onDidChangeTreeData.fire();
+        }
+    }
+
     public getTreeItem(element: DeviceItem): vscode.TreeItem {
         return element;
     }

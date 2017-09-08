@@ -94,6 +94,10 @@
         "title": "IoT: Update Device Twin"
       },
       {
+        "command": "azure-iot-toolkit.setIoTHubConnectionString",
+        "title": "IoT: Set IoT Hub Connection String"
+      },
+      {
         "command": "azure-iot-toolkit.refreshDeviceTree",
         "title": "Refresh",
         "icon": {
@@ -118,6 +122,11 @@
           "command": "azure-iot-toolkit.startMonitorIoTHubMessage",
           "when": "view == iotHubDevices",
           "group": "azure-iot-toolkit@2"
+        },
+        {
+          "command": "azure-iot-toolkit.setIoTHubConnectionString",
+          "when": "view == iotHubDevices",
+          "group": "azure-iot-toolkit@3"
         }
       ],
       "view/item/context": [

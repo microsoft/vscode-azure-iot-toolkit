@@ -12,20 +12,25 @@ export class Utility {
         let config = Utility.getConfiguration();
         let configValue = config.get<string>(id);
         if (!configValue || configValue.startsWith("<<insert")) {
-            TelemetryClient.sendEvent("General.SetConfig.Popup");
-            return await vscode.window.showInputBox({
-                prompt: `${name}`,
-                placeHolder: `Enter your ${name}`,
-            }).then((value: string) => {
-                if (value !== undefined) {
-                    TelemetryClient.sendEvent("General.SetConfig.Done");
-                    config.update(id, value, true);
-                    return value;
-                }
-                return null;
-            });
+            return this.setConnectionString(id, name);
         }
         return configValue;
+    }
+
+    public static async setConnectionString(id: string, name: string) {
+        TelemetryClient.sendEvent("General.SetConfig.Popup");
+        return vscode.window.showInputBox({
+            prompt: `${name}`,
+            placeHolder: `Enter your ${name}`,
+        }).then((value: string) => {
+            if (value !== undefined) {
+                TelemetryClient.sendEvent("General.SetConfig.Done");
+                let config = Utility.getConfiguration();
+                config.update(id, value, true);
+                return value;
+            }
+            return null;
+        });
     }
 
     public static getConnectionStringWithId(id: string) {
