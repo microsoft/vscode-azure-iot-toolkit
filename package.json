@@ -32,7 +32,8 @@
     "onCommand:azure-iot-toolkit.deleteDevice",
     "onCommand:azure-iot-toolkit.invokeDeviceMethod",
     "onCommand:azure-iot-toolkit.getDeviceTwin",
-    "onCommand:azure-iot-toolkit.updateDeviceTwin"
+    "onCommand:azure-iot-toolkit.updateDeviceTwin",
+    "onCommand:azure-iot-toolkit.setIoTHubConnectionString"
   ],
   "main": "./out/src/extension",
   "contributes": {
