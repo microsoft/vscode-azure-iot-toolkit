@@ -52,7 +52,7 @@ export class IotHubC2DMessageExplorer extends BaseExplorer {
     public stopMonitorC2DMessage(): void {
         TelemetryClient.sendEvent(Constants.IoTHubAIStopMonitorC2DEvent);
         if (this._deviceClient) {
-            this.outputLine(Constants.IoTHubC2DMessageMonitorLabel, "Stop monitoring ...");
+            this.outputLine(Constants.IoTHubC2DMessageMonitorLabel, Constants.MonitoringStoppedMessage);
             this._deviceClient.close(() => { return; });
             this._deviceClient = null;
         } else {

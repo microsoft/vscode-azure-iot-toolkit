@@ -46,4 +46,6 @@ export class Constants {
     public static EventHubAIStartMonitorEvent = "EventHub.startMonitoring";
     public static EventHubAIStopMonitorEvent = "EventHub.stopMonitoring";
     public static EventHubAIMessageEvent = "EventHub.Send";
+
+    public static MonitoringStoppedMessage = "Monitoring stopped.";
 }
