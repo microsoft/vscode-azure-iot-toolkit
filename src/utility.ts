@@ -28,6 +28,8 @@ export class Utility {
                 let config = Utility.getConfiguration();
                 config.update(id, value, true);
                 return value;
+            } else {
+                this.showIoTHubInformationMessage();
             }
             return null;
         });
@@ -54,5 +56,26 @@ export class Utility {
 
     public static hash(data: string): string {
         return crypto.createHash("sha256").update(data).digest("hex");
+    }
+
+    public static showIoTHubInformationMessage(): void {
+        const GoToAzureRegistrationPage = "Go to Azure registration page";
+        const GoToAzureIoTHubPage = "Go to Azure IoT Hub page";
+        vscode.window.showInformationMessage("Don't have Azure IoT Hub? Register a free Azure account to get a free one.",
+            GoToAzureRegistrationPage, GoToAzureIoTHubPage).then((selection) => {
+                switch (selection) {
+                    case GoToAzureRegistrationPage:
+                        vscode.commands.executeCommand("vscode.open",
+                            vscode.Uri.parse("https://azure.microsoft.com/en-us/free/"));
+                        TelemetryClient.sendEvent("General.Open.AzureRegistrationPage");
+                        break;
+                    case GoToAzureIoTHubPage:
+                        vscode.commands.executeCommand("vscode.open",
+                            vscode.Uri.parse("https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-get-started"));
+                        TelemetryClient.sendEvent("General.Open.AzureIoTHubPage");
+                        break;
+                    default:
+                }
+            });
     }
 }
