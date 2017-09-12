@@ -34,7 +34,7 @@ export class Utility {
                     value = null;
                     const reset = "Reset";
                     const GoToConnectionStringPage = "More info";
-                    await vscode.window.showInformationMessage(`The format should be "${Constants.ConnectionStringFormat[id]}". Please enter a valid ${name}.`,
+                    await vscode.window.showErrorMessage(`The format should be "${Constants.ConnectionStringFormat[id]}". Please enter a valid ${name}.`,
                         reset, GoToConnectionStringPage).then(async (selection) => {
                             switch (selection) {
                                 case reset:
