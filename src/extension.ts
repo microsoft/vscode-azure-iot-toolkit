@@ -13,6 +13,10 @@ export function activate(context: vscode.ExtensionContext) {
         deviceTree.refresh();
     }));
 
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.setIoTHubConnectionString", () => {
+        deviceTree.setIoTHubConnectionString();
+    }));
+
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.getDevice", (deviceId) => {
         azureIoTExplorer.getDevice(deviceId);
     }));

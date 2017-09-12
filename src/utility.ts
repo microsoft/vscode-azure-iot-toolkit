@@ -1,6 +1,7 @@
 "use strict";
 import * as crypto from "crypto";
 import * as vscode from "vscode";
+import { Constants } from "./constants";
 import { TelemetryClient } from "./telemetryClient";
 
 export class Utility {
@@ -11,27 +12,57 @@ export class Utility {
     public static async getConnectionString(id: string, name: string) {
         let config = Utility.getConfiguration();
         let configValue = config.get<string>(id);
-        if (!configValue || configValue.startsWith("<<insert")) {
-            TelemetryClient.sendEvent("General.SetConfig.Popup");
-            return await vscode.window.showInputBox({
-                prompt: `${name}`,
-                placeHolder: `Enter your ${name}`,
-            }).then((value: string) => {
-                if (value !== undefined) {
-                    TelemetryClient.sendEvent("General.SetConfig.Done");
-                    config.update(id, value, true);
-                    return value;
-                }
-                return null;
-            });
+        if (!this.isValidConnectionString(id, configValue)) {
+            return this.setConnectionString(id, name);
         }
         return configValue;
+    }
+
+    public static async setConnectionString(id: string, name: string) {
+        TelemetryClient.sendEvent("General.SetConfig.Popup");
+        return vscode.window.showInputBox({
+            prompt: `${name}`,
+            placeHolder: Constants.ConnectionStringFormat[id],
+        }).then(async (value: string) => {
+            if (value !== undefined) {
+                if (this.isValidConnectionString(id, value)) {
+                    TelemetryClient.sendEvent("General.SetConfig.Done", { Result: "Success" });
+                    let config = Utility.getConfiguration();
+                    config.update(id, value, true);
+                } else {
+                    TelemetryClient.sendEvent("General.SetConfig.Done", { Result: "Fail" });
+                    value = null;
+                    const reset = "Reset";
+                    const GoToConnectionStringPage = "More info";
+                    await vscode.window.showInformationMessage(`The format should be "${Constants.ConnectionStringFormat[id]}". Please enter a valid ${name}.`,
+                        reset, GoToConnectionStringPage).then(async (selection) => {
+                            switch (selection) {
+                                case reset:
+                                    value = await this.setConnectionString(id, name);
+                                    TelemetryClient.sendEvent("General.Open.ResetConnectionString");
+                                    break;
+                                case GoToConnectionStringPage:
+                                    vscode.commands.executeCommand("vscode.open",
+                                        vscode.Uri.parse(
+                                            `https://blogs.msdn.microsoft.com/iotdev/2017/05/09/understand-different-connection-strings-in-azure-iot-hub/?WT.mc_id=${Constants.CampaignID}`));
+                                    TelemetryClient.sendEvent("General.Open.ConnectionStringPage");
+                                    break;
+                                default:
+                            }
+                        });
+                }
+                return value;
+            } else {
+                this.showIoTHubInformationMessage();
+            }
+            return null;
+        });
     }
 
     public static getConnectionStringWithId(id: string) {
         let config = Utility.getConfiguration();
         let configValue = config.get<string>(id);
-        if (!configValue || configValue.startsWith("<<insert")) {
+        if (!this.isValidConnectionString(id, configValue)) {
             return null;
         }
         return configValue;
@@ -49,5 +80,33 @@ export class Utility {
 
     public static hash(data: string): string {
         return crypto.createHash("sha256").update(data).digest("hex");
+    }
+
+    private static showIoTHubInformationMessage(): void {
+        const GoToAzureRegistrationPage = "Go to Azure registration page";
+        const GoToAzureIoTHubPage = "Go to Azure IoT Hub page";
+        vscode.window.showInformationMessage("Don't have Azure IoT Hub? Register a free Azure account to get a free one.",
+            GoToAzureRegistrationPage, GoToAzureIoTHubPage).then((selection) => {
+                switch (selection) {
+                    case GoToAzureRegistrationPage:
+                        vscode.commands.executeCommand("vscode.open",
+                            vscode.Uri.parse(`https://azure.microsoft.com/en-us/free/?WT.mc_id=${Constants.CampaignID}`));
+                        TelemetryClient.sendEvent("General.Open.AzureRegistrationPage");
+                        break;
+                    case GoToAzureIoTHubPage:
+                        vscode.commands.executeCommand("vscode.open",
+                            vscode.Uri.parse(`https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-get-started?WT.mc_id=${Constants.CampaignID}`));
+                        TelemetryClient.sendEvent("General.Open.AzureIoTHubPage");
+                        break;
+                    default:
+                }
+            });
+    }
+
+    private static isValidConnectionString(id: string, value: string): boolean {
+        if (!value) {
+            return false;
+        }
+        return Constants.ConnectionStringRegex[id].test(value);
     }
 }

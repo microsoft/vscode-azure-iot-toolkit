@@ -3,6 +3,7 @@
 export class Constants {
     public static ExtensionId = "vsciot-vscode.azure-iot-toolkit";
     public static AIKey = "d8505d40-fc60-45f8-98b3-3bcd5c23843d";
+    public static CampaignID = "vsciottoolkit";
 
     public static IoTHub = "IoT Hub";
     public static EventHub = "Event Hub";
@@ -46,4 +47,16 @@ export class Constants {
     public static EventHubAIStartMonitorEvent = "EventHub.startMonitoring";
     public static EventHubAIStopMonitorEvent = "EventHub.stopMonitoring";
     public static EventHubAIMessageEvent = "EventHub.Send";
+
+    public static MonitoringStoppedMessage = "Monitoring stopped.";
+
+    public static ConnectionStringFormat = {
+        [Constants.IotHubConnectionStringKey]: "HostName=<my-hostname>;SharedAccessKeyName=<my-policy>;SharedAccessKey=<my-policy-key>",
+        [Constants.DeviceConnectionStringKey]: "HostName=<my-hostname>;DeviceId=<known-device-id>;SharedAccessKey=<known-device-key>",
+    }
+
+    public static ConnectionStringRegex = {
+        [Constants.IotHubConnectionStringKey]: /HostName=.+;SharedAccessKeyName=.+;SharedAccessKey=.+/,
+        [Constants.DeviceConnectionStringKey]: /HostName=.+;DeviceId=.+;SharedAccessKey=.+/,
+    }
 }

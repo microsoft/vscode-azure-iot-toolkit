@@ -25,15 +25,19 @@ Interact with Azure IoT Hub, IoT Device Management, IoT Hub Code Snippets.
 
   ![Click Device Explorer](https://github.com/formulahendry/vscode-azure-iot-toolkit/raw/master/images/device-explorer-click.png)
 
-2. If you have not set Iot Hub Connection String before, an input box will pop up, then enter your Iot Hub Connection String (It is one-time configuration, and please make sure it is **Iot Hub Connection String** not **Device Connection String**).
+2. Click "Set IoT Hub Connection String" in context menu.
+
+  ![Set Connection String](https://github.com/formulahendry/vscode-azure-iot-toolkit/raw/master/images/set-connection-string.png)
+
+3. An input box will pop up, then enter your Iot Hub Connection String (It is one-time configuration, and please make sure it is **Iot Hub Connection String** not **Device Connection String**. The format is `HostName=<my-hub>.azure-devices.net;SharedAccessKeyName=<my-policy>;SharedAccessKey=<my-policy-key>`).
 
   ![Enter Connection String](https://github.com/formulahendry/vscode-azure-iot-toolkit/raw/master/images/enter-connection-string.png)
 
-3. The device list will be shown.
+4. The device list will be shown.
 
   ![Device Explorer](https://github.com/formulahendry/vscode-azure-iot-toolkit/raw/master/images/device-explorer.png)
 
-**NOTE**: You could go to **File** > **Preferences** > **Settings** (**Code** > **Preferences** > **Settings** on Mac), update the config of `azure-iot-toolkit.iotHubConnectionString` to change your IoT Hub Connection String.
+**NOTE**: You could also go to **File** > **Preferences** > **Settings** (**Code** > **Preferences** > **Settings** on Mac), update the config of `azure-iot-toolkit.iotHubConnectionString` to change your IoT Hub Connection String.
 
 ## Code Snippets
 

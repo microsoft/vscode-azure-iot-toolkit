@@ -1,6 +1,7 @@
 "use strict";
 import { Client as EventHubClient } from "azure-event-hubs";
 import * as vscode from "vscode";
+import { Constants } from "./constants";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
@@ -72,7 +73,7 @@ export class BaseExplorer {
     protected stopMonitor(eventHubClient: EventHubClient, label: string, aiEvent: string) {
         TelemetryClient.sendEvent(aiEvent);
         if (eventHubClient) {
-            this.outputLine(label, "Stop monitoring ...");
+            this.outputLine(label, Constants.MonitoringStoppedMessage);
             eventHubClient.close();
         } else {
             this.outputLine(label, "No monitor job running.");

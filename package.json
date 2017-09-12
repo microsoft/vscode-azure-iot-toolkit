@@ -32,7 +32,8 @@
     "onCommand:azure-iot-toolkit.deleteDevice",
     "onCommand:azure-iot-toolkit.invokeDeviceMethod",
     "onCommand:azure-iot-toolkit.getDeviceTwin",
-    "onCommand:azure-iot-toolkit.updateDeviceTwin"
+    "onCommand:azure-iot-toolkit.updateDeviceTwin",
+    "onCommand:azure-iot-toolkit.setIoTHubConnectionString"
   ],
   "main": "./out/src/extension",
   "contributes": {
@@ -94,6 +95,10 @@
         "title": "IoT: Update Device Twin"
       },
       {
+        "command": "azure-iot-toolkit.setIoTHubConnectionString",
+        "title": "IoT: Set IoT Hub Connection String"
+      },
+      {
         "command": "azure-iot-toolkit.refreshDeviceTree",
         "title": "Refresh",
         "icon": {
@@ -118,6 +123,11 @@
           "command": "azure-iot-toolkit.startMonitorIoTHubMessage",
           "when": "view == iotHubDevices",
           "group": "azure-iot-toolkit@2"
+        },
+        {
+          "command": "azure-iot-toolkit.setIoTHubConnectionString",
+          "when": "view == iotHubDevices",
+          "group": "azure-iot-toolkit@3"
         }
       ],
       "view/item/context": [
