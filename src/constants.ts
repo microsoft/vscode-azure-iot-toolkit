@@ -48,4 +48,14 @@ export class Constants {
     public static EventHubAIMessageEvent = "EventHub.Send";
 
     public static MonitoringStoppedMessage = "Monitoring stopped.";
+
+    public static ConnectionStringFormat = {
+        [Constants.IotHubConnectionStringKey]: "HostName=<my-hostname>;SharedAccessKeyName=<my-policy>;SharedAccessKey=<my-policy-key>",
+        [Constants.DeviceConnectionStringKey]: "HostName=<my-hostname>;DeviceId=<known-device-id>;SharedAccessKey=<known-device-key>",
+    }
+
+    public static ConnectionStringRegex = {
+        [Constants.IotHubConnectionStringKey]: /HostName=.+;SharedAccessKeyName=.+;SharedAccessKey=.+/,
+        [Constants.DeviceConnectionStringKey]: /HostName=.+;DeviceId=.+;SharedAccessKey=.+/,
+    }
 }

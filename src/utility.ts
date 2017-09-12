@@ -1,6 +1,7 @@
 "use strict";
 import * as crypto from "crypto";
 import * as vscode from "vscode";
+import { Constants } from "./constants";
 import { TelemetryClient } from "./telemetryClient";
 
 export class Utility {
@@ -11,7 +12,7 @@ export class Utility {
     public static async getConnectionString(id: string, name: string) {
         let config = Utility.getConfiguration();
         let configValue = config.get<string>(id);
-        if (!configValue || configValue.startsWith("<<insert")) {
+        if (!this.isValidConnectionString(id, configValue)) {
             return this.setConnectionString(id, name);
         }
         return configValue;
@@ -21,12 +22,34 @@ export class Utility {
         TelemetryClient.sendEvent("General.SetConfig.Popup");
         return vscode.window.showInputBox({
             prompt: `${name}`,
-            placeHolder: `Enter your ${name}`,
-        }).then((value: string) => {
+            placeHolder: Constants.ConnectionStringFormat[id],
+        }).then(async (value: string) => {
             if (value !== undefined) {
-                TelemetryClient.sendEvent("General.SetConfig.Done");
-                let config = Utility.getConfiguration();
-                config.update(id, value, true);
+                if (this.isValidConnectionString(id, value)) {
+                    TelemetryClient.sendEvent("General.SetConfig.Done", { Result: "Success" });
+                    let config = Utility.getConfiguration();
+                    config.update(id, value, true);
+                } else {
+                    TelemetryClient.sendEvent("General.SetConfig.Done", { Result: "Fail" });
+                    value = null;
+                    const reset = "Reset";
+                    const GoToConnectionStringPage = "More info";
+                    await vscode.window.showInformationMessage(`The format should be "${Constants.ConnectionStringFormat[id]}". Please enter a valid ${name}.`,
+                        reset, GoToConnectionStringPage).then(async (selection) => {
+                            switch (selection) {
+                                case reset:
+                                    value = await this.setConnectionString(id, name);
+                                    TelemetryClient.sendEvent("General.Open.ResetConnectionString");
+                                    break;
+                                case GoToConnectionStringPage:
+                                    vscode.commands.executeCommand("vscode.open",
+                                        vscode.Uri.parse("https://blogs.msdn.microsoft.com/iotdev/2017/05/09/understand-different-connection-strings-in-azure-iot-hub/"));
+                                    TelemetryClient.sendEvent("General.Open.ConnectionStringPage");
+                                    break;
+                                default:
+                            }
+                        });
+                }
                 return value;
             } else {
                 this.showIoTHubInformationMessage();
@@ -38,7 +61,7 @@ export class Utility {
     public static getConnectionStringWithId(id: string) {
         let config = Utility.getConfiguration();
         let configValue = config.get<string>(id);
-        if (!configValue || configValue.startsWith("<<insert")) {
+        if (!this.isValidConnectionString(id, configValue)) {
             return null;
         }
         return configValue;
@@ -58,7 +81,7 @@ export class Utility {
         return crypto.createHash("sha256").update(data).digest("hex");
     }
 
-    public static showIoTHubInformationMessage(): void {
+    private static showIoTHubInformationMessage(): void {
         const GoToAzureRegistrationPage = "Go to Azure registration page";
         const GoToAzureIoTHubPage = "Go to Azure IoT Hub page";
         vscode.window.showInformationMessage("Don't have Azure IoT Hub? Register a free Azure account to get a free one.",
@@ -77,5 +100,12 @@ export class Utility {
                     default:
                 }
             });
+    }
+
+    private static isValidConnectionString(id: string, value: string): boolean {
+        if (!value) {
+            return false;
+        }
+        return Constants.ConnectionStringRegex[id].test(value);
     }
 }
