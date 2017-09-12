@@ -38,8 +38,8 @@ export class Utility {
                         reset, GoToConnectionStringPage).then(async (selection) => {
                             switch (selection) {
                                 case reset:
+                                    TelemetryClient.sendEvent("General.Reset.ConnectionString");
                                     value = await this.setConnectionString(id, name);
-                                    TelemetryClient.sendEvent("General.Open.ResetConnectionString");
                                     break;
                                 case GoToConnectionStringPage:
                                     vscode.commands.executeCommand("vscode.open",
