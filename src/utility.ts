@@ -43,7 +43,8 @@ export class Utility {
                                     break;
                                 case GoToConnectionStringPage:
                                     vscode.commands.executeCommand("vscode.open",
-                                        vscode.Uri.parse("https://blogs.msdn.microsoft.com/iotdev/2017/05/09/understand-different-connection-strings-in-azure-iot-hub/"));
+                                        vscode.Uri.parse(
+                                            `https://blogs.msdn.microsoft.com/iotdev/2017/05/09/understand-different-connection-strings-in-azure-iot-hub/?WT.mc_id=${Constants.CampaignID}`));
                                     TelemetryClient.sendEvent("General.Open.ConnectionStringPage");
                                     break;
                                 default:
@@ -89,12 +90,12 @@ export class Utility {
                 switch (selection) {
                     case GoToAzureRegistrationPage:
                         vscode.commands.executeCommand("vscode.open",
-                            vscode.Uri.parse("https://azure.microsoft.com/en-us/free/"));
+                            vscode.Uri.parse(`https://azure.microsoft.com/en-us/free/?WT.mc_id=${Constants.CampaignID}`));
                         TelemetryClient.sendEvent("General.Open.AzureRegistrationPage");
                         break;
                     case GoToAzureIoTHubPage:
                         vscode.commands.executeCommand("vscode.open",
-                            vscode.Uri.parse("https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-get-started"));
+                            vscode.Uri.parse(`https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-get-started?WT.mc_id=${Constants.CampaignID}`));
                         TelemetryClient.sendEvent("General.Open.AzureIoTHubPage");
                         break;
                     default:
