@@ -2,7 +2,7 @@
   "name": "azure-iot-toolkit",
   "displayName": "Azure IoT Toolkit",
   "description": "Interact with Azure IoT Hub, IoT Device Management, IoT Hub Code Snippets",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "publisher": "vsciot-vscode",
   "icon": "logo.png",
   "engines": {
@@ -33,7 +33,8 @@
     "onCommand:azure-iot-toolkit.invokeDeviceMethod",
     "onCommand:azure-iot-toolkit.getDeviceTwin",
     "onCommand:azure-iot-toolkit.updateDeviceTwin",
-    "onCommand:azure-iot-toolkit.setIoTHubConnectionString"
+    "onCommand:azure-iot-toolkit.setIoTHubConnectionString",
+    "onCommand:azure-iot-toolkit.refreshDeviceTree"
   ],
   "main": "./out/src/extension",
   "contributes": {

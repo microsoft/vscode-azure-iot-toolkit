@@ -1,3 +1,9 @@
+### 0.2.2 (2017-09-13)
+* Show IoT Hub info when user does not enter connection string
+* Handle the case when user enters an invalid connection string
+* Context menu to set IoT Hub Connection String
+* Improve wording for 'Monitoring stopped'
+
 ### 0.2.1 (2017-08-24)
 * Add 'Azure' category
 * Handle devices with X.509 cert

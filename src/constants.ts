@@ -56,7 +56,7 @@ export class Constants {
     };
 
     public static ConnectionStringRegex = {
-        [Constants.IotHubConnectionStringKey]: /HostName=.+;SharedAccessKeyName=.+;SharedAccessKey=.+/,
-        [Constants.DeviceConnectionStringKey]: /HostName=.+;DeviceId=.+;SharedAccessKey=.+/,
+        [Constants.IotHubConnectionStringKey]: /^HostName=.+;SharedAccessKeyName=.+;SharedAccessKey=.+$/,
+        [Constants.DeviceConnectionStringKey]: /^HostName=.+;DeviceId=.+;SharedAccessKey=.+$/,
     };
 }
