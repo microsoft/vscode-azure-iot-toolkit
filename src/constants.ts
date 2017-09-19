@@ -59,4 +59,7 @@ export class Constants {
         [Constants.IotHubConnectionStringKey]: /^HostName=.+;SharedAccessKeyName=.+;SharedAccessKey=.+$/,
         [Constants.DeviceConnectionStringKey]: /^HostName=.+;DeviceId=.+;SharedAccessKey=.+$/,
     };
+
+    public static ShowIoTHubInfoKey = "showIoTHubInfo";
+    public static ShowConnectionStringInputBoxKey = "showConnectionStringInputBox";
 }

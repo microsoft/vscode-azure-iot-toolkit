@@ -10,12 +10,11 @@ export class Utility {
     }
 
     public static async getConnectionString(id: string, name: string) {
-        let config = Utility.getConfiguration();
-        let configValue = config.get<string>(id);
-        if (!this.isValidConnectionString(id, configValue)) {
+        const connectionString = this.getConnectionStringWithId(id);
+        if (!connectionString && Utility.getConfiguration().get<string>(Constants.ShowConnectionStringInputBoxKey)) {
             return this.setConnectionString(id, name);
         }
-        return configValue;
+        return connectionString;
     }
 
     public static async setConnectionString(id: string, name: string) {
@@ -83,24 +82,33 @@ export class Utility {
     }
 
     private static showIoTHubInformationMessage(): void {
-        const GoToAzureRegistrationPage = "Go to Azure registration page";
-        const GoToAzureIoTHubPage = "Go to Azure IoT Hub page";
-        vscode.window.showInformationMessage("Don't have Azure IoT Hub? Register a free Azure account to get a free one.",
-            GoToAzureRegistrationPage, GoToAzureIoTHubPage).then((selection) => {
-                switch (selection) {
-                    case GoToAzureRegistrationPage:
-                        vscode.commands.executeCommand("vscode.open",
-                            vscode.Uri.parse(`https://azure.microsoft.com/en-us/free/?WT.mc_id=${Constants.CampaignID}`));
-                        TelemetryClient.sendEvent("General.Open.AzureRegistrationPage");
-                        break;
-                    case GoToAzureIoTHubPage:
-                        vscode.commands.executeCommand("vscode.open",
-                            vscode.Uri.parse(`https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-get-started?WT.mc_id=${Constants.CampaignID}`));
-                        TelemetryClient.sendEvent("General.Open.AzureIoTHubPage");
-                        break;
-                    default:
-                }
-            });
+        let config = Utility.getConfiguration();
+        let showIoTHubInfo = config.get<string>(Constants.ShowIoTHubInfoKey);
+        if (showIoTHubInfo) {
+            const GoToAzureRegistrationPage = "Go to Azure registration page";
+            const GoToAzureIoTHubPage = "Go to Azure IoT Hub page";
+            const DoNotShowAgain = "Don't show again";
+            vscode.window.showInformationMessage("Don't have Azure IoT Hub? Register a free Azure account to get a free one.",
+                GoToAzureRegistrationPage, GoToAzureIoTHubPage, DoNotShowAgain).then((selection) => {
+                    switch (selection) {
+                        case GoToAzureRegistrationPage:
+                            vscode.commands.executeCommand("vscode.open",
+                                vscode.Uri.parse(`https://azure.microsoft.com/en-us/free/?WT.mc_id=${Constants.CampaignID}`));
+                            TelemetryClient.sendEvent("General.Open.AzureRegistrationPage");
+                            break;
+                        case GoToAzureIoTHubPage:
+                            vscode.commands.executeCommand("vscode.open",
+                                vscode.Uri.parse(`https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-get-started?WT.mc_id=${Constants.CampaignID}`));
+                            TelemetryClient.sendEvent("General.Open.AzureIoTHubPage");
+                            break;
+                        case DoNotShowAgain:
+                            config.update(Constants.ShowIoTHubInfoKey, false, true);
+                            TelemetryClient.sendEvent("General.IoTHubInfo.DoNotShowAgain");
+                            break;
+                        default:
+                    }
+                });
+        }
     }
 
     private static isValidConnectionString(id: string, value: string): boolean {
