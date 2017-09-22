@@ -1,3 +1,6 @@
+### 0.2.3 (2017-09-25)
+* Add option to hide Connection String Input Box and IoT Hub info
+
 ### 0.2.2 (2017-09-13)
 * Show IoT Hub info when user does not enter connection string
 * Handle the case when user enters an invalid connection string
