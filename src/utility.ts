@@ -11,7 +11,7 @@ export class Utility {
 
     public static async getConnectionString(id: string, name: string) {
         const connectionString = this.getConnectionStringWithId(id);
-        if (!connectionString && Utility.getConfiguration().get<string>(Constants.ShowConnectionStringInputBoxKey)) {
+        if (!connectionString && Utility.getConfiguration().get<boolean>(Constants.ShowConnectionStringInputBoxKey)) {
             return this.setConnectionString(id, name);
         }
         return connectionString;
@@ -83,7 +83,7 @@ export class Utility {
 
     private static showIoTHubInformationMessage(): void {
         let config = Utility.getConfiguration();
-        let showIoTHubInfo = config.get<string>(Constants.ShowIoTHubInfoKey);
+        let showIoTHubInfo = config.get<boolean>(Constants.ShowIoTHubInfoKey);
         if (showIoTHubInfo) {
             const GoToAzureRegistrationPage = "Go to Azure registration page";
             const GoToAzureIoTHubPage = "Go to Azure IoT Hub page";
