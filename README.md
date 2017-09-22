@@ -91,3 +91,17 @@ Whether to stringify device-to-cloud messages (default is `false`):
     "azure-iot-toolkit.iotHubD2CMessageStringify": false
 }
 ```
+
+Whether to show Connection String Input Box on startup (default is `true`):
+```json
+{ 
+    "azure-iot-toolkit.showConnectionStringInputBox": true
+}
+```
+
+Whether to show IoT Hub info when IoT Hub Connection String is not set (default is `true`):
+```json
+{ 
+    "azure-iot-toolkit.showIoTHubInfo": true
+}
+```

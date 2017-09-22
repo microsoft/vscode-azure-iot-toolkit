@@ -209,6 +209,16 @@
           "type": "boolean",
           "default": false,
           "description": "Whether to stringify device-to-cloud messages."
+        },
+        "azure-iot-toolkit.showConnectionStringInputBox": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to show Connection String Input Box on startup."
+        },
+        "azure-iot-toolkit.showIoTHubInfo": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to show IoT Hub info when IoT Hub Connection String is not set."
         }
       }
     },
