@@ -41,6 +41,7 @@ suite("Extension Tests", () => {
                 "azure-iot-toolkit.getDeviceTwin",
                 "azure-iot-toolkit.updateDeviceTwin",
                 "azure-iot-toolkit.setIoTHubConnectionString",
+                "azure-iot-toolkit.selectIoTHub",
             ].sort();
 
             const foundCommands = commands.filter((value) => {
