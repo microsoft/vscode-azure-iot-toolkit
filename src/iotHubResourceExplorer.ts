@@ -28,7 +28,10 @@ export class IoTHubResourceExplorer extends BaseExplorer {
             const iotHubItem = await vscode.window.showQuickPick(iotHubItems, { placeHolder: "Select IoT Hub" });
             if (iotHubItem) {
                 const iotHubConnectionString = await this.getIoTHubConnectionString(subscriptionItem, iotHubItem);
-                vscode.window.showInformationMessage(iotHubConnectionString);
+                const config = Utility.getConfiguration();
+                await config.update(Constants.IotHubConnectionStringKey, iotHubConnectionString, true);
+                vscode.window.showInformationMessage(`Selected IoT Hub [${iotHubItem.label}]. Refreshing the device list...`);
+                vscode.commands.executeCommand("azure-iot-toolkit.refreshDeviceTree");
             }
         }
     }
@@ -57,7 +60,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         const iotHubs = await client.iotHubResource.listBySubscription();
         iotHubItems.push(...iotHubs.map((iotHub) => ({
             label: iotHub.name || "",
-            description: iotHub.resourcegroup,
+            description: iotHub.resourcegroup || "",
             iotHubDescription: iotHub,
         })));
         iotHubItems.sort((a, b) => a.label.localeCompare(b.label));
