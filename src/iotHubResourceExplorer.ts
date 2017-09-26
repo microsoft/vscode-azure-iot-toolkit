@@ -18,18 +18,23 @@ export class IoTHubResourceExplorer extends BaseExplorer {
     }
 
     public async selectIoTHub() {
+        TelemetryClient.sendEvent("General.Select.IoTHub.Start");
         if (!(await this.accountApi.waitForLogin())) {
+            TelemetryClient.sendEvent("General.AskForAzureLogin");
             return vscode.commands.executeCommand("azure-account.askForLogin");
         }
+        TelemetryClient.sendEvent("General.Select.Subscription.Start");
         const subscriptionItems = this.loadSubscriptionItems(this.accountApi);
         const subscriptionItem = await vscode.window.showQuickPick(subscriptionItems, { placeHolder: "Select Subscription", ignoreFocusOut: true });
         if (subscriptionItem) {
+            TelemetryClient.sendEvent("General.Select.Subscription.Done");
             const iotHubItems = this.loadIoTHubItems(subscriptionItem);
             const iotHubItem = await vscode.window.showQuickPick(iotHubItems, { placeHolder: "Select IoT Hub", ignoreFocusOut: true });
             if (iotHubItem) {
                 const iotHubConnectionString = await this.getIoTHubConnectionString(subscriptionItem, iotHubItem);
                 const config = Utility.getConfiguration();
                 await config.update(Constants.IotHubConnectionStringKey, iotHubConnectionString, true);
+                TelemetryClient.sendEvent("AZ.Select.IoTHub.Done");
                 vscode.window.showInformationMessage(`Selected IoT Hub [${iotHubItem.label}]. Refreshing the device list...`);
                 vscode.commands.executeCommand("azure-iot-toolkit.refreshDeviceTree");
             }
@@ -50,6 +55,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
             })));
         }
         subscriptionItems.sort((a, b) => a.label.localeCompare(b.label));
+        TelemetryClient.sendEvent("General.Load.Subscription", { SubscriptionCount: subscriptionItems.length.toString() })
         return subscriptionItems;
     }
 
@@ -64,6 +70,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
             iotHubDescription: iotHub,
         })));
         iotHubItems.sort((a, b) => a.label.localeCompare(b.label));
+        TelemetryClient.sendEvent("General.Load.IoTHub", { IoTHubCount: iotHubItems.length.toString() })
         return iotHubItems;
     }
 
