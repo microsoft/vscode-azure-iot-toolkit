@@ -22,11 +22,14 @@ export class IoTHubResourceExplorer extends BaseExplorer {
             return vscode.commands.executeCommand("azure-account.askForLogin");
         }
         const subscriptionItems = this.loadSubscriptionItems(this.accountApi);
-        const result = await vscode.window.showQuickPick(subscriptionItems, { placeHolder: "Select Subscription" });
-        if (result) {
-            const iotHubItems = this.loadIoTHubItems(result);
-            const a = await vscode.window.showQuickPick(iotHubItems, { placeHolder: "Select IoT Hub" });
-            vscode.window.showInformationMessage(a.label);
+        const subscriptionItem = await vscode.window.showQuickPick(subscriptionItems, { placeHolder: "Select Subscription" });
+        if (subscriptionItem) {
+            const iotHubItems = this.loadIoTHubItems(subscriptionItem);
+            const iotHubItem = await vscode.window.showQuickPick(iotHubItems, { placeHolder: "Select IoT Hub" });
+            if (iotHubItem) {
+                const iotHubConnectionString = await this.getIoTHubConnectionString(subscriptionItem, iotHubItem);
+                vscode.window.showInformationMessage(iotHubConnectionString);
+            }
         }
     }
 
@@ -50,7 +53,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
     private async loadIoTHubItems(subscriptionItem: ISubscriptionItem) {
         const iotHubItems: IIotHubItem[] = [];
         const { session, subscription } = subscriptionItem;
-        const client = new IoTHubClient(session.credentials, subscription.subscriptionId!);
+        const client = new IoTHubClient(session.credentials, subscription.subscriptionId);
         const iotHubs = await client.iotHubResource.listBySubscription();
         iotHubItems.push(...iotHubs.map((iotHub) => ({
             label: iotHub.name || "",
@@ -59,6 +62,15 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         })));
         iotHubItems.sort((a, b) => a.label.localeCompare(b.label));
         return iotHubItems;
+    }
+
+    private async getIoTHubConnectionString(subscriptionItem: ISubscriptionItem, iotHubItem: IIotHubItem) {
+        const { session, subscription } = subscriptionItem;
+        const { iotHubDescription } = iotHubItem;
+        const client = new IoTHubClient(session.credentials, subscription.subscriptionId);
+        return client.iotHubResource.getKeysForKeyName(iotHubDescription.resourcegroup, iotHubDescription.name, "iothubowner").then((result) => {
+            return `HostName=${iotHubDescription.properties.hostName};SharedAccessKeyName=${result.keyName};SharedAccessKey=${result.primaryKey}`;
+        });
     }
 
     private async listAll<T>(client: { listNext(nextPageLink: string): Promise<IPartialList<T>>; }, first: Promise<IPartialList<T>>): Promise<T[]> {
