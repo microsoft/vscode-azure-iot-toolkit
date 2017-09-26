@@ -20,4 +20,6 @@ install:
 
 script:
   - npm run tslint
+  - node CI/removeExtensionDependencies.js
   - npm test --silent
+  - node CI/restoreExtensionDependencies.js
