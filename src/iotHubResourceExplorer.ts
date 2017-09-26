@@ -1,6 +1,8 @@
 "use strict";
 import { SubscriptionClient, SubscriptionModels } from "azure-arm-resource";
+import IoTHubClient = require("azure-arm-iothub");
 import * as vscode from "vscode";
+import { IotHubDescription } from "../node_modules/azure-arm-iothub/lib/models";
 import { AzureAccount, AzureLoginStatus, AzureResourceFilter, AzureSession } from "./azure-account.api";
 import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
@@ -20,8 +22,12 @@ export class IoTHubResourceExplorer extends BaseExplorer {
             return vscode.commands.executeCommand("azure-account.askForLogin");
         }
         const subscriptionItems = this.loadSubscriptionItems(this.accountApi);
-        const result = await vscode.window.showQuickPick(subscriptionItems, { placeHolder: "Select a Subscription" });
-        vscode.window.showInformationMessage(result.label);
+        const result = await vscode.window.showQuickPick(subscriptionItems, { placeHolder: "Select Subscription" });
+        if (result) {
+            const iotHubItems = this.loadIoTHubItems(result);
+            const a = await vscode.window.showQuickPick(iotHubItems, { placeHolder: "Select IoT Hub" });
+            vscode.window.showInformationMessage(a.label);
+        }
     }
 
     private async loadSubscriptionItems(api: AzureAccount) {
@@ -41,6 +47,20 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         return subscriptionItems;
     }
 
+    private async loadIoTHubItems(subscriptionItem: ISubscriptionItem) {
+        const iotHubItems: IIotHubItem[] = [];
+        const { session, subscription } = subscriptionItem;
+        const client = new IoTHubClient(session.credentials, subscription.subscriptionId!);
+        const iotHubs = await client.iotHubResource.listBySubscription();
+        iotHubItems.push(...iotHubs.map((iotHub) => ({
+            label: iotHub.name || "",
+            description: iotHub.resourcegroup,
+            iotHubDescription: iotHub,
+        })));
+        iotHubItems.sort((a, b) => a.label.localeCompare(b.label));
+        return iotHubItems;
+    }
+
     private async listAll<T>(client: { listNext(nextPageLink: string): Promise<IPartialList<T>>; }, first: Promise<IPartialList<T>>): Promise<T[]> {
         const all: T[] = [];
         for (let list = await first; list.length || list.nextLink; list = list.nextLink ? await client.listNext(list.nextLink) : []) {
@@ -55,6 +75,12 @@ interface ISubscriptionItem {
     description: string;
     session: AzureSession;
     subscription: SubscriptionModels.Subscription;
+}
+
+interface IIotHubItem {
+    label: string;
+    description: string;
+    iotHubDescription: IotHubDescription;
 }
 
 interface IPartialList<T> extends Array<T> {
