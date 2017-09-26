@@ -22,10 +22,10 @@ export class IoTHubResourceExplorer extends BaseExplorer {
             return vscode.commands.executeCommand("azure-account.askForLogin");
         }
         const subscriptionItems = this.loadSubscriptionItems(this.accountApi);
-        const subscriptionItem = await vscode.window.showQuickPick(subscriptionItems, { placeHolder: "Select Subscription" });
+        const subscriptionItem = await vscode.window.showQuickPick(subscriptionItems, { placeHolder: "Select Subscription", ignoreFocusOut: true });
         if (subscriptionItem) {
             const iotHubItems = this.loadIoTHubItems(subscriptionItem);
-            const iotHubItem = await vscode.window.showQuickPick(iotHubItems, { placeHolder: "Select IoT Hub" });
+            const iotHubItem = await vscode.window.showQuickPick(iotHubItems, { placeHolder: "Select IoT Hub", ignoreFocusOut: true });
             if (iotHubItem) {
                 const iotHubConnectionString = await this.getIoTHubConnectionString(subscriptionItem, iotHubItem);
                 const config = Utility.getConfiguration();
