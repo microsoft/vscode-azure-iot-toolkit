@@ -17,6 +17,7 @@ install:
   - npm install
   - npm run version
   - npm run vscode:prepublish
+  - code --install-extension ms-vscode.azure-account
 
 script:
   - npm run tslint
