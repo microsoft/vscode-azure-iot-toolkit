@@ -55,7 +55,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
             })));
         }
         subscriptionItems.sort((a, b) => a.label.localeCompare(b.label));
-        TelemetryClient.sendEvent("General.Load.Subscription", { SubscriptionCount: subscriptionItems.length.toString() })
+        TelemetryClient.sendEvent("General.Load.Subscription", { SubscriptionCount: subscriptionItems.length.toString() });
         return subscriptionItems;
     }
 
@@ -70,7 +70,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
             iotHubDescription: iotHub,
         })));
         iotHubItems.sort((a, b) => a.label.localeCompare(b.label));
-        TelemetryClient.sendEvent("General.Load.IoTHub", { IoTHubCount: iotHubItems.length.toString() })
+        TelemetryClient.sendEvent("General.Load.IoTHub", { IoTHubCount: iotHubItems.length.toString() });
         return iotHubItems;
     }
 

@@ -39,6 +39,16 @@ Interact with Azure IoT Hub, IoT Device Management, IoT Hub Code Snippets.
 
 **NOTE**: You could also go to **File** > **Preferences** > **Settings** (**Code** > **Preferences** > **Settings** on Mac), update the config of `azure-iot-toolkit.iotHubConnectionString` to change your IoT Hub Connection String.
 
+### Sign in to Azure
+
+Instead of copying and pasting to set IoT Hub Connection String, you could sign in to Azure to select IoT Hub from your Azure Subscription.
+
+1. Click "Select IoT Hub" in context menu.
+2. If you have not signed in to Azure, a pop-up will show to let you sign in to Azure. After you sign in, click "Select IoT Hub" again.
+3. Your Azure Subscription list will be shown, then select an Azure Subscription.
+4. Your IoT Hub list will be shown, then select an IoT Hub.
+5. The device list will be shown.
+
 ## Code Snippets
 
 | Trigger | Content |
