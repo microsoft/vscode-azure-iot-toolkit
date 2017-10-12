@@ -6,7 +6,7 @@
   "publisher": "vsciot-vscode",
   "icon": "logo.png",
   "engines": {
-    "vscode": "^1.16.0"
+    "vscode": "^1.17.0"
   },
   "categories": [
     "Azure",
@@ -37,7 +37,8 @@
     "onCommand:azure-iot-toolkit.refreshDeviceTree",
     "onCommand:azure-iot-toolkit.selectIoTHub",
     "onCommand:azure-iot-toolkit.copyIoTHubConnectionString",
-    "onCommand:azure-iot-toolkit.copyDeviceConnectionString"
+    "onCommand:azure-iot-toolkit.copyDeviceConnectionString",
+    "onCommand:azure-iot-toolkit.createDeployment"
   ],
   "main": "./out/src/extension",
   "contributes": {
@@ -131,6 +132,11 @@
         "category": "IoT"
       },
       {
+        "command": "azure-iot-toolkit.createDeployment",
+        "title": "Create deployment for Edge device",
+        "category": "Edge"
+      },
+      {
         "command": "azure-iot-toolkit.refreshDeviceTree",
         "title": "Refresh",
         "category": "IoT",
@@ -211,6 +217,11 @@
         },
         {
           "command": "azure-iot-toolkit.deleteDevice",
+          "when": "view == iotHubDevices && viewItem == device",
+          "group": "azure-iot-toolkit@7"
+        },
+        {
+          "command": "azure-iot-toolkit.createDeployment",
           "when": "view == iotHubDevices && viewItem == device",
           "group": "azure-iot-toolkit@7"
         }
@@ -298,6 +309,7 @@
     "vscode": "^1.0.0"
   },
   "dependencies": {
+    "axios": "^0.16.2",
     "azure-arm-iothub": "^1.1.0-preview",
     "azure-arm-resource": "^2.0.0-preview",
     "azure-event-hubs": "0.0.6",
