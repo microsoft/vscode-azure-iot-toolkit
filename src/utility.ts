@@ -1,4 +1,5 @@
 "use strict";
+import { ConnectionString, SharedAccessSignature } from "azure-iothub";
 import * as crypto from "crypto";
 import * as vscode from "vscode";
 import { Constants } from "./constants";
@@ -79,6 +80,13 @@ export class Utility {
 
     public static hash(data: string): string {
         return crypto.createHash("sha256").update(data).digest("hex");
+    }
+
+    public static generateSasTokenForService(iotHubConnectionString: string): string {
+        const connectionString = ConnectionString.parse(iotHubConnectionString);
+        const expiry = Math.floor(Date.now() / 1000) + 3600;
+        const sas = SharedAccessSignature.create(connectionString.HostName, connectionString.SharedAccessKeyName, connectionString.SharedAccessKey, expiry).toString();
+        return sas;
     }
 
     private static showIoTHubInformationMessage(): void {
