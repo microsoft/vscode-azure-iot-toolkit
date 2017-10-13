@@ -15,6 +15,8 @@ export class IoTEdgeExplorer extends BaseExplorer {
     }
 
     public async createDeployment(deviceItem: DeviceItem) {
+        TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployStartEvent);
+
         let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
             return;
@@ -57,9 +59,11 @@ export class IoTEdgeExplorer extends BaseExplorer {
             .then((response) => {
                 this.outputLine(label, "Deployment succeeded.");
                 console.log(response);
+                TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployDoneEvent, { Result: "Success" });
             })
             .catch((err) => {
                 this.outputLine(label, `Deployment failed. ${err}`);
+                TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployDoneEvent, { Result: "Fail", Message: err });
             });
     }
 }
