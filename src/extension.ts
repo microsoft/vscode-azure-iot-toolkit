@@ -51,12 +51,10 @@ export function activate(context: vscode.ExtensionContext) {
 
     let createDevice = vscode.commands.registerCommand("azure-iot-toolkit.createDevice", async () => {
         await azureIoTExplorer.createDevice();
-        setTimeout(() => { deviceTree.refresh(); }, 2000);
     });
 
     let deleteDevice = vscode.commands.registerCommand("azure-iot-toolkit.deleteDevice", async (DeviceItem) => {
         await azureIoTExplorer.deleteDevice(DeviceItem);
-        setTimeout(() => { deviceTree.refresh(); }, 2000);
     });
 
     let invokeDeviceMethod = vscode.commands.registerCommand("azure-iot-toolkit.invokeDeviceMethod", (DeviceItem) => {
