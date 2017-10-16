@@ -7,5 +7,6 @@ export class DeviceItem extends TreeItem {
         public readonly iconPath: string,
         public readonly command: Command) {
         super(deviceId);
+        this.contextValue = "device";
     }
 }

@@ -159,32 +159,32 @@
       "view/item/context": [
         {
           "command": "azure-iot-toolkit.sendD2CMessage",
-          "when": "view == iotHubDevices",
+          "when": "view == iotHubDevices && viewItem == device",
           "group": "azure-iot-toolkit@0"
         },
         {
           "command": "azure-iot-toolkit.sendC2DMessage",
-          "when": "view == iotHubDevices",
+          "when": "view == iotHubDevices && viewItem == device",
           "group": "azure-iot-toolkit@1"
         },
         {
           "command": "azure-iot-toolkit.startMonitorC2DMessage",
-          "when": "view == iotHubDevices",
+          "when": "view == iotHubDevices && viewItem == device",
           "group": "azure-iot-toolkit@2"
         },
         {
           "command": "azure-iot-toolkit.invokeDeviceMethod",
-          "when": "view == iotHubDevices",
+          "when": "view == iotHubDevices && viewItem == device",
           "group": "azure-iot-toolkit@3"
         },
         {
           "command": "azure-iot-toolkit.getDeviceTwin",
-          "when": "view == iotHubDevices",
+          "when": "view == iotHubDevices && viewItem == device",
           "group": "azure-iot-toolkit@4"
         },
         {
           "command": "azure-iot-toolkit.deleteDevice",
-          "when": "view == iotHubDevices",
+          "when": "view == iotHubDevices && viewItem == device",
           "group": "azure-iot-toolkit@5"
         }
       ],
