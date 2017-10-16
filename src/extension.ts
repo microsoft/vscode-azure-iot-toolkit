@@ -73,6 +73,14 @@ export function activate(context: vscode.ExtensionContext) {
         azureIoTExplorer.selectIoTHub();
     });
 
+    let copyIoTHubConnectionString = vscode.commands.registerCommand("azure-iot-toolkit.copyIoTHubConnectionString", () => {
+        azureIoTExplorer.copyIoTHubConnectionString();
+    });
+
+    let copyDeviceConnectionString = vscode.commands.registerCommand("azure-iot-toolkit.copyDeviceConnectionString", (DeviceItem) => {
+        azureIoTExplorer.copyDeviceConnectionString(DeviceItem);
+    });
+
     vscode.workspace.onDidChangeTextDocument((event) => azureIoTExplorer.replaceConnectionString(event));
 
     context.subscriptions.push(sendD2CMessage);
@@ -88,6 +96,8 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(getDeviceTwin);
     context.subscriptions.push(updateDeviceTwin);
     context.subscriptions.push(selectIoTHub);
+    context.subscriptions.push(copyIoTHubConnectionString);
+    context.subscriptions.push(copyDeviceConnectionString);
 }
 
 export function deactivate() {

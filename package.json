@@ -35,7 +35,9 @@
     "onCommand:azure-iot-toolkit.updateDeviceTwin",
     "onCommand:azure-iot-toolkit.setIoTHubConnectionString",
     "onCommand:azure-iot-toolkit.refreshDeviceTree",
-    "onCommand:azure-iot-toolkit.selectIoTHub"
+    "onCommand:azure-iot-toolkit.selectIoTHub",
+    "onCommand:azure-iot-toolkit.copyIoTHubConnectionString",
+    "onCommand:azure-iot-toolkit.copyDeviceConnectionString"
   ],
   "main": "./out/src/extension",
   "contributes": {
@@ -119,6 +121,16 @@
         "category": "IoT"
       },
       {
+        "command": "azure-iot-toolkit.copyIoTHubConnectionString",
+        "title": "Copy IoT Hub Connection String",
+        "category": "IoT"
+      },
+      {
+        "command": "azure-iot-toolkit.copyDeviceConnectionString",
+        "title": "Copy Device Connection String",
+        "category": "IoT"
+      },
+      {
         "command": "azure-iot-toolkit.refreshDeviceTree",
         "title": "Refresh",
         "category": "IoT",
@@ -154,6 +166,11 @@
           "command": "azure-iot-toolkit.selectIoTHub",
           "when": "view == iotHubDevices",
           "group": "azure-iot-toolkit@4"
+        },
+        {
+          "command": "azure-iot-toolkit.copyIoTHubConnectionString",
+          "when": "view == iotHubDevices",
+          "group": "azure-iot-toolkit@5"
         }
       ],
       "view/item/context": [
@@ -183,9 +200,14 @@
           "group": "azure-iot-toolkit@4"
         },
         {
-          "command": "azure-iot-toolkit.deleteDevice",
+          "command": "azure-iot-toolkit.copyDeviceConnectionString",
           "when": "view == iotHubDevices && viewItem == device",
           "group": "azure-iot-toolkit@5"
+        },
+        {
+          "command": "azure-iot-toolkit.deleteDevice",
+          "when": "view == iotHubDevices && viewItem == device",
+          "group": "azure-iot-toolkit@6"
         }
       ],
       "editor/context": [
@@ -277,6 +299,7 @@
     "azure-iot-device": "1.1.7",
     "azure-iot-device-mqtt": "1.1.7",
     "azure-iothub": "^1.1.13",
+    "clipboardy": "^1.1.4",
     "vscode-extension-telemetry": "0.0.8"
   },
   "extensionDependencies": [

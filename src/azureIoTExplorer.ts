@@ -100,6 +100,14 @@ export class AzureIoTExplorer {
         this._iotHubResourceExplorer.selectIoTHub();
     }
 
+    public copyIoTHubConnectionString(): void {
+        this._iotHubResourceExplorer.copyIoTHubConnectionString();
+    }
+
+    public copyDeviceConnectionString(deviceItem: DeviceItem): void {
+        this._iotHubResourceExplorer.copyDeviceConnectionString(deviceItem);
+    }
+
     public replaceConnectionString(event: vscode.TextDocumentChangeEvent): void {
         this._snippetManager.replaceConnectionString(event);
     }
