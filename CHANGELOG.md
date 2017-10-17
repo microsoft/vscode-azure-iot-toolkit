@@ -1,4 +1,4 @@
-### 0.3.0 (2017-10-??)
+### 0.3.0 (2017-10-17)
 * [Added] Select IoT Hub with Azure login
 * [Added] Copy connection string
 * [Changed] Refresh device list right after device is created or deleted

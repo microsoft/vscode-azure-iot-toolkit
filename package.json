@@ -2,11 +2,11 @@
   "name": "azure-iot-toolkit",
   "displayName": "Azure IoT Toolkit",
   "description": "Interact with Azure IoT Hub, IoT Device Management, IoT Hub Code Snippets",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "publisher": "vsciot-vscode",
   "icon": "logo.png",
   "engines": {
-    "vscode": "^1.13.0"
+    "vscode": "^1.16.0"
   },
   "categories": [
     "Azure",
