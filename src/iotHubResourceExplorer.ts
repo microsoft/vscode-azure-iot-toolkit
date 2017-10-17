@@ -23,6 +23,10 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         TelemetryClient.sendEvent("General.Select.IoTHub.Start");
         if (!(await this.accountApi.waitForLogin())) {
             TelemetryClient.sendEvent("General.AskForAzureLogin");
+            const subscription = this.accountApi.onStatusChanged(() => {
+                subscription.dispose();
+                this.selectIoTHub();
+            });
             return vscode.commands.executeCommand("azure-account.askForLogin");
         }
         TelemetryClient.sendEvent("General.Select.Subscription.Start");
@@ -33,11 +37,11 @@ export class IoTHubResourceExplorer extends BaseExplorer {
             const iotHubItems = this.loadIoTHubItems(subscriptionItem);
             const iotHubItem = await vscode.window.showQuickPick(iotHubItems, { placeHolder: "Select IoT Hub", ignoreFocusOut: true });
             if (iotHubItem) {
+                vscode.window.showInformationMessage(`Selected IoT Hub [${iotHubItem.label}]. Refreshing the device list...`);
                 const iotHubConnectionString = await this.getIoTHubConnectionString(subscriptionItem, iotHubItem);
                 const config = Utility.getConfiguration();
                 await config.update(Constants.IotHubConnectionStringKey, iotHubConnectionString, true);
                 TelemetryClient.sendEvent("AZ.Select.IoTHub.Done");
-                vscode.window.showInformationMessage(`Selected IoT Hub [${iotHubItem.label}]. Refreshing the device list...`);
                 vscode.commands.executeCommand("azure-iot-toolkit.refreshDeviceTree");
             }
         }
