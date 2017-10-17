@@ -1,3 +1,9 @@
+### 0.3.0 (2017-10-??)
+* [Added] Select IoT Hub with Azure login
+* [Added] Copy connection string
+* [Changed] Refresh device list right after device is created or deleted
+* [Changed] Show error message in device tree explorer instead of pop-up when failing to list devices
+
 ### 0.2.3 (2017-09-25)
 * Add option to hide Connection String Input Box and IoT Hub info
 

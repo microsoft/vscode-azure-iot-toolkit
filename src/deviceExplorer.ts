@@ -89,7 +89,7 @@ export class DeviceExplorer extends BaseExplorer {
 
     private deleteDeviceById(deviceId: string, label: string, registry: iothub.Registry): void {
         this._outputChannel.show();
-        this.outputLine(label, `Deleting device ${deviceId}`);
+        this.outputLine(label, `Deleting device '${deviceId}'`);
         registry.delete(deviceId, this.done("Delete", label));
     }
 
@@ -103,6 +103,9 @@ export class DeviceExplorer extends BaseExplorer {
                 let result = "Fail";
                 if (res.statusCode < 300) {
                     result = "Success";
+                    if (op === "Create" || op === "Delete") {
+                        vscode.commands.executeCommand("azure-iot-toolkit.refreshDeviceTree");
+                    }
                 }
                 TelemetryClient.sendEvent(`AZ.${label}.${op}`, { Result: result });
                 this.outputLine(label, `[${op}][${result}] status: ${res.statusCode} ${res.statusMessage}`);

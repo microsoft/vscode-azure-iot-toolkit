@@ -51,12 +51,10 @@ export function activate(context: vscode.ExtensionContext) {
 
     let createDevice = vscode.commands.registerCommand("azure-iot-toolkit.createDevice", async () => {
         await azureIoTExplorer.createDevice();
-        setTimeout(() => { deviceTree.refresh(); }, 2000);
     });
 
     let deleteDevice = vscode.commands.registerCommand("azure-iot-toolkit.deleteDevice", async (DeviceItem) => {
         await azureIoTExplorer.deleteDevice(DeviceItem);
-        setTimeout(() => { deviceTree.refresh(); }, 2000);
     });
 
     let invokeDeviceMethod = vscode.commands.registerCommand("azure-iot-toolkit.invokeDeviceMethod", (DeviceItem) => {
@@ -75,6 +73,14 @@ export function activate(context: vscode.ExtensionContext) {
         azureIoTExplorer.selectIoTHub();
     });
 
+    let copyIoTHubConnectionString = vscode.commands.registerCommand("azure-iot-toolkit.copyIoTHubConnectionString", () => {
+        azureIoTExplorer.copyIoTHubConnectionString();
+    });
+
+    let copyDeviceConnectionString = vscode.commands.registerCommand("azure-iot-toolkit.copyDeviceConnectionString", (DeviceItem) => {
+        azureIoTExplorer.copyDeviceConnectionString(DeviceItem);
+    });
+
     vscode.workspace.onDidChangeTextDocument((event) => azureIoTExplorer.replaceConnectionString(event));
 
     context.subscriptions.push(sendD2CMessage);
@@ -90,6 +96,8 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(getDeviceTwin);
     context.subscriptions.push(updateDeviceTwin);
     context.subscriptions.push(selectIoTHub);
+    context.subscriptions.push(copyIoTHubConnectionString);
+    context.subscriptions.push(copyDeviceConnectionString);
 }
 
 export function deactivate() {

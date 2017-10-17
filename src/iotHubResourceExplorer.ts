@@ -1,11 +1,13 @@
 "use strict";
 import { SubscriptionClient, SubscriptionModels } from "azure-arm-resource";
 import IoTHubClient = require("azure-arm-iothub");
+import * as clipboardy from "clipboardy";
 import * as vscode from "vscode";
 import { IotHubDescription } from "../node_modules/azure-arm-iothub/lib/models";
 import { AzureAccount, AzureLoginStatus, AzureResourceFilter, AzureSession } from "./azure-account.api";
 import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
+import { DeviceItem } from "./Model/DeviceItem";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
@@ -21,6 +23,10 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         TelemetryClient.sendEvent("General.Select.IoTHub.Start");
         if (!(await this.accountApi.waitForLogin())) {
             TelemetryClient.sendEvent("General.AskForAzureLogin");
+            const subscription = this.accountApi.onStatusChanged(() => {
+                subscription.dispose();
+                this.selectIoTHub();
+            });
             return vscode.commands.executeCommand("azure-account.askForLogin");
         }
         TelemetryClient.sendEvent("General.Select.Subscription.Start");
@@ -31,13 +37,28 @@ export class IoTHubResourceExplorer extends BaseExplorer {
             const iotHubItems = this.loadIoTHubItems(subscriptionItem);
             const iotHubItem = await vscode.window.showQuickPick(iotHubItems, { placeHolder: "Select IoT Hub", ignoreFocusOut: true });
             if (iotHubItem) {
+                vscode.window.showInformationMessage(`Selected IoT Hub [${iotHubItem.label}]. Refreshing the device list...`);
                 const iotHubConnectionString = await this.getIoTHubConnectionString(subscriptionItem, iotHubItem);
                 const config = Utility.getConfiguration();
                 await config.update(Constants.IotHubConnectionStringKey, iotHubConnectionString, true);
                 TelemetryClient.sendEvent("AZ.Select.IoTHub.Done");
-                vscode.window.showInformationMessage(`Selected IoT Hub [${iotHubItem.label}]. Refreshing the device list...`);
                 vscode.commands.executeCommand("azure-iot-toolkit.refreshDeviceTree");
             }
+        }
+    }
+
+    public copyIoTHubConnectionString() {
+        TelemetryClient.sendEvent("Az.Copy.IotHubConnectionString");
+        const iotHubConnectionString = Utility.getConnectionStringWithId(Constants.IotHubConnectionStringKey);
+        if (iotHubConnectionString) {
+            clipboardy.write(iotHubConnectionString);
+        }
+    }
+
+    public copyDeviceConnectionString(deviceItem: DeviceItem) {
+        TelemetryClient.sendEvent("Az.Copy.DeviceConnectionString");
+        if (deviceItem && deviceItem.connectionString) {
+            clipboardy.write(deviceItem.connectionString);
         }
     }
 
