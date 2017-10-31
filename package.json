@@ -223,7 +223,7 @@
         {
           "command": "azure-iot-toolkit.createDeployment",
           "when": "view == iotHubDevices && viewItem == device",
-          "group": "azure-iot-toolkit@7"
+          "group": "azure-iot-toolkit-edge@0"
         }
       ],
       "editor/context": [
