@@ -312,6 +312,7 @@
     "azure-iot-device-mqtt": "1.1.7",
     "azure-iothub": "^1.1.13",
     "clipboardy": "^1.1.4",
+    "strip-json-comments": "^2.0.1",
     "vscode-extension-telemetry": "0.0.8"
   },
   "extensionDependencies": [

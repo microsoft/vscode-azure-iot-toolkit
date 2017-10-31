@@ -2,6 +2,7 @@
 import axios from "axios";
 import * as iothub from "azure-iothub";
 import * as fs from "fs";
+import * as stripJsonComments from "strip-json-comments";
 import * as vscode from "vscode";
 import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
@@ -51,14 +52,14 @@ export class IoTEdgeExplorer extends BaseExplorer {
 
         const config = {
             headers: {
-                Authorization: sasToken,
+                "Authorization": sasToken,
+                "Content-Type": "application/json",
             },
         };
-        const url = `https://${hostName}/devices/${deviceId}/applyConfigurationContent?api-version=2016-02-03`;
-        axios.post(url, deploymentJson, config)
+        const url = `https://${hostName}/devices/${deviceId}/applyConfigurationContent?api-version=2017-11-08-preview`;
+        axios.post(url, stripJsonComments(deploymentJson), config)
             .then((response) => {
                 this.outputLine(label, "Deployment succeeded.");
-                console.log(response);
                 TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployDoneEvent, { Result: "Success" });
             })
             .catch((err) => {
