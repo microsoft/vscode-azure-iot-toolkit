@@ -1,6 +1,7 @@
 "use strict";
 import { ConnectionString, SharedAccessSignature } from "azure-iothub";
 import * as crypto from "crypto";
+import * as os from "os";
 import * as vscode from "vscode";
 import { Constants } from "./constants";
 import { TelemetryClient } from "./telemetryClient";
@@ -87,6 +88,36 @@ export class Utility {
         const expiry = Math.floor(Date.now() / 1000) + 3600;
         const sas = SharedAccessSignature.create(connectionString.HostName, connectionString.SharedAccessKeyName, connectionString.SharedAccessKey, expiry).toString();
         return sas;
+    }
+
+    public static adjustTerminalCommand(command: string): string {
+        if (os.platform() === "linux") {
+            return `sudo ${command}`;
+        }
+        return command;
+    }
+
+    public static adjustFilePath(filePath: string): string {
+        if (os.platform() === "win32") {
+            const windowsShell = vscode.workspace.getConfiguration("terminal").get<string>("integrated.shell.windows");
+            const terminalRoot = Utility.getConfiguration().get<string>("terminalRoot");
+            if (windowsShell && terminalRoot) {
+                filePath = filePath
+                    .replace(/^([A-Za-z]):/, (match, p1) => `${terminalRoot}${p1.toLowerCase()}`)
+                    .replace(/\\/g, "/");
+            } else if (windowsShell && windowsShell.toLowerCase().indexOf("bash") > -1 && windowsShell.toLowerCase().indexOf("git") > -1) {
+                // Git Bash
+                filePath = filePath
+                    .replace(/^([A-Za-z]):/, (match, p1) => `/${p1.toLowerCase()}`)
+                    .replace(/\\/g, "/");
+            } else if (windowsShell && windowsShell.toLowerCase().indexOf("bash") > -1 && windowsShell.toLowerCase().indexOf("windows") > -1) {
+                // Bash on Ubuntu on Windows
+                filePath = filePath
+                    .replace(/^([A-Za-z]):/, (match, p1) => `/mnt/${p1.toLowerCase()}`)
+                    .replace(/\\/g, "/");
+            }
+        }
+        return filePath;
     }
 
     private static showIoTHubInformationMessage(): void {

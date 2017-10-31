@@ -39,24 +39,24 @@ export class IoTEdgeExplorer extends BaseExplorer {
             openLabel: "Select Config File",
         });
         if (configFiles) {
-            Executor.runInTerminal(`iotedgectl setup --config-file "${configFiles[0].fsPath}"`);
+            Executor.runInTerminal(Utility.adjustTerminalCommand(`iotedgectl setup --config-file "${Utility.adjustFilePath(configFiles[0].fsPath)}"`));
         }
     }
 
     public startEdge() {
-        Executor.runInTerminal("iotedgectl start");
+        Executor.runInTerminal(Utility.adjustTerminalCommand("iotedgectl start"));
     }
 
     public stopEdge() {
-        Executor.runInTerminal("iotedgectl stop");
+        Executor.runInTerminal(Utility.adjustTerminalCommand("iotedgectl stop"));
     }
 
     public restartEdge() {
-        Executor.runInTerminal("iotedgectl restart");
+        Executor.runInTerminal(Utility.adjustTerminalCommand("iotedgectl restart"));
     }
 
     public uninstallEdge() {
-        Executor.runInTerminal("iotedgectl uninstall");
+        Executor.runInTerminal(Utility.adjustTerminalCommand("iotedgectl uninstall"));
     }
 
     private async getDeploymentJson(): Promise<string> {
