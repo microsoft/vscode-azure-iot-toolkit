@@ -38,7 +38,12 @@
     "onCommand:azure-iot-toolkit.selectIoTHub",
     "onCommand:azure-iot-toolkit.copyIoTHubConnectionString",
     "onCommand:azure-iot-toolkit.copyDeviceConnectionString",
-    "onCommand:azure-iot-toolkit.createDeployment"
+    "onCommand:azure-iot-toolkit.createDeployment",
+    "onCommand:azure-iot-toolkit.setupEdge",
+    "onCommand:azure-iot-toolkit.startEdge",
+    "onCommand:azure-iot-toolkit.stopEdge",
+    "onCommand:azure-iot-toolkit.restartEdge",
+    "onCommand:azure-iot-toolkit.uninstallEdge"
   ],
   "main": "./out/src/extension",
   "contributes": {
@@ -302,6 +307,11 @@
           "type": "boolean",
           "default": true,
           "description": "Whether to show IoT Hub info when IoT Hub Connection String is not set."
+        },
+        "azure-iot-toolkit.terminalRoot": {
+          "type": "string",
+          "default": "",
+          "description": "(Windows Only) Replace the Windows style drive letter in the command with a Unix style root when using a custom shell as the terminal, like Bash on Windows, Git Bash or Cgywin. Example: For Bash on Windows, setting this to '/mnt/' will replace 'C:\\foo\\bar' with '/mnt/c/foo/bar'"
         }
       }
     },
