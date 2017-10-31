@@ -137,6 +137,31 @@
         "category": "Edge"
       },
       {
+        "command": "azure-iot-toolkit.setupEdge",
+        "title": "Setup Edge",
+        "category": "Edge"
+      },
+      {
+        "command": "azure-iot-toolkit.startEdge",
+        "title": "Start Edge",
+        "category": "Edge"
+      },
+      {
+        "command": "azure-iot-toolkit.stopEdge",
+        "title": "Stop Edge",
+        "category": "Edge"
+      },
+      {
+        "command": "azure-iot-toolkit.restartEdge",
+        "title": "Restart Edge",
+        "category": "Edge"
+      },
+      {
+        "command": "azure-iot-toolkit.uninstallEdge",
+        "title": "Uninstall Edge",
+        "category": "Edge"
+      },
+      {
         "command": "azure-iot-toolkit.refreshDeviceTree",
         "title": "Refresh",
         "category": "IoT",
