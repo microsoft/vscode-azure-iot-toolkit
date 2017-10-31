@@ -85,6 +85,26 @@ export function activate(context: vscode.ExtensionContext) {
         azureIoTExplorer.createDeployment(DeviceItem);
     });
 
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.setupEdge", () => {
+        azureIoTExplorer.setupEdge();
+    }));
+
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.startEdge", () => {
+        azureIoTExplorer.startEdge();
+    }));
+
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.stopEdge", () => {
+        azureIoTExplorer.stopEdge();
+    }));
+
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.restartEdge", () => {
+        azureIoTExplorer.restartEdge();
+    }));
+
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.uninstallEdge", () => {
+        azureIoTExplorer.uninstallEdge();
+    }));
+
     vscode.workspace.onDidChangeTextDocument((event) => azureIoTExplorer.replaceConnectionString(event));
 
     context.subscriptions.push(sendD2CMessage);
