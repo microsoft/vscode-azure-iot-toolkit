@@ -6,6 +6,7 @@ import * as stripJsonComments from "strip-json-comments";
 import * as vscode from "vscode";
 import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
+import { Executor } from "./executor";
 import { DeviceItem } from "./Model/DeviceItem";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
@@ -31,6 +32,31 @@ export class IoTEdgeExplorer extends BaseExplorer {
         const hostName = Utility.getHostName(iotHubConnectionString);
 
         this.deploy(hostName, deviceItem.deviceId, sasToken, deploymentJson);
+    }
+
+    public async setupEdge() {
+        const configFiles: vscode.Uri[] = await vscode.window.showOpenDialog({
+            openLabel: "Select Config File",
+        });
+        if (configFiles) {
+            Executor.runInTerminal(`iotedgectl setup --config-file "${configFiles[0].fsPath}"`);
+        }
+    }
+
+    public startEdge() {
+        Executor.runInTerminal("iotedgectl start");
+    }
+
+    public stopEdge() {
+        Executor.runInTerminal("iotedgectl stop");
+    }
+
+    public restartEdge() {
+        Executor.runInTerminal("iotedgectl restart");
+    }
+
+    public uninstallEdge() {
+        Executor.runInTerminal("iotedgectl uninstall");
     }
 
     private async getDeploymentJson(): Promise<string> {
