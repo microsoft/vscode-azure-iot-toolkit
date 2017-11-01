@@ -55,9 +55,16 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         }
     }
 
+    public getDeviceConnectionString(deviceItem: DeviceItem) {
+        if (deviceItem && deviceItem.connectionString) {
+            return deviceItem.connectionString;
+        }
+    }
+
     public copyDeviceConnectionString(deviceItem: DeviceItem) {
         TelemetryClient.sendEvent("Az.Copy.DeviceConnectionString");
-        if (deviceItem && deviceItem.connectionString) {
+        if (deviceItem) {
+            const connectionString = this.getDeviceConnectionString(deviceItem);
             clipboardy.write(deviceItem.connectionString);
         }
     }

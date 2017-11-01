@@ -6,14 +6,19 @@ import * as stripJsonComments from "strip-json-comments";
 import * as vscode from "vscode";
 import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
+import {DeviceTree} from "./deviceTree";
 import { Executor } from "./executor";
+import { IoTHubResourceExplorer } from "./iotHubResourceExplorer";
 import { DeviceItem } from "./Model/DeviceItem";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
 export class IoTEdgeExplorer extends BaseExplorer {
+    private _iotHubResourceExplorer: IoTHubResourceExplorer;
+
     constructor(outputChannel: vscode.OutputChannel) {
         super(outputChannel);
+        this._iotHubResourceExplorer = new IoTHubResourceExplorer(outputChannel);
     }
 
     public async createDeployment(deviceItem: DeviceItem) {
@@ -61,6 +66,24 @@ export class IoTEdgeExplorer extends BaseExplorer {
 
     public uninstallEdge() {
         Executor.runInTerminal(Utility.adjustTerminalCommand("iotedgectl uninstall"));
+    }
+
+    public async generateEdgeLaunchConfig(deviceItem?: DeviceItem) {
+        let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
+        if (!iotHubConnectionString) {
+            return;
+        }
+
+        if (!deviceItem) {
+        }
+
+        if (deviceItem) {
+            const connectString = this._iotHubResourceExplorer.getDeviceConnectionString(deviceItem);
+        }
+    }
+
+    public generateEdgeConfig() {
+
     }
 
     private async getDeploymentJson(): Promise<string> {
