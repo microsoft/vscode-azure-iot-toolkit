@@ -348,6 +348,7 @@
     "azure-arm-iothub": "^1.1.0-preview",
     "azure-arm-resource": "^2.0.0-preview",
     "azure-event-hubs": "0.0.6",
+    "azure-iot-common": "^1.2.1",
     "azure-iot-device": "1.1.7",
     "azure-iot-device-mqtt": "1.1.7",
     "azure-iothub": "^1.1.13",
