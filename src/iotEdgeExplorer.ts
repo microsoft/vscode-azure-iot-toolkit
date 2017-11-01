@@ -35,11 +35,15 @@ export class IoTEdgeExplorer extends BaseExplorer {
     }
 
     public async setupEdge() {
-        const configFiles: vscode.Uri[] = await vscode.window.showOpenDialog({
+        const filePathUri: vscode.Uri[] = await vscode.window.showOpenDialog({
             openLabel: "Select Config File",
+            filters: {
+                JSON: ["json"],
+            },
+            defaultUri: vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri : undefined,
         });
-        if (configFiles) {
-            Executor.runInTerminal(Utility.adjustTerminalCommand(`iotedgectl setup --config-file "${Utility.adjustFilePath(configFiles[0].fsPath)}"`));
+        if (filePathUri) {
+            Executor.runInTerminal(Utility.adjustTerminalCommand(`iotedgectl setup --config-file "${Utility.adjustFilePath(filePathUri[0].fsPath)}"`));
         }
     }
 
@@ -60,10 +64,13 @@ export class IoTEdgeExplorer extends BaseExplorer {
     }
 
     private async getDeploymentJson(): Promise<string> {
-        const options: vscode.OpenDialogOptions = {
+        const filePathUri: vscode.Uri[] = await vscode.window.showOpenDialog({
             openLabel: "Select Deployment File",
-        };
-        const filePathUri = await vscode.window.showOpenDialog(options);
+            filters: {
+                JSON: ["json"],
+            },
+            defaultUri: vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri : undefined,
+        });
         if (!filePathUri) {
             return "";
         }
