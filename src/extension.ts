@@ -109,8 +109,8 @@ export function activate(context: vscode.ExtensionContext) {
         await azureIoTExplorer.generateEdgeLaunchConfig(DeviceItem);
     }));
 
-    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.generateEdgeConfig", () => {
-        azureIoTExplorer.generateEdgeConfig();
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.generateEdgeConfig", async () => {
+        await azureIoTExplorer.generateEdgeConfig();
     }));
 
     vscode.workspace.onDidChangeTextDocument((event) => azureIoTExplorer.replaceConnectionString(event));

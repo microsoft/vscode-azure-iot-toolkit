@@ -143,7 +143,7 @@ export class AzureIoTExplorer {
         this._iotEdgeExplorer.generateEdgeLaunchConfig(deviceItem);
     }
 
-    public generateEdgeConfig() {
+    public async generateEdgeConfig() {
         this._iotEdgeExplorer.generateEdgeConfig();
     }
 }
