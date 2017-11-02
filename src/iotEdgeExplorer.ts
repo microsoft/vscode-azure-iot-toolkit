@@ -2,11 +2,13 @@
 import axios from "axios";
 import * as iothub from "azure-iothub";
 import * as fs from "fs";
+import * as os from "os";
+import * as path from "path";
 import * as stripJsonComments from "strip-json-comments";
 import * as vscode from "vscode";
 import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
-import {DeviceTree} from "./deviceTree";
+import { DeviceExplorer } from "./deviceExplorer";
 import { Executor } from "./executor";
 import { IoTHubResourceExplorer } from "./iotHubResourceExplorer";
 import { DeviceItem } from "./Model/DeviceItem";
@@ -14,10 +16,12 @@ import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
 export class IoTEdgeExplorer extends BaseExplorer {
+    private _deviceExplorer: DeviceExplorer;
     private _iotHubResourceExplorer: IoTHubResourceExplorer;
 
     constructor(outputChannel: vscode.OutputChannel) {
         super(outputChannel);
+        this._deviceExplorer = new DeviceExplorer(outputChannel);
         this._iotHubResourceExplorer = new IoTHubResourceExplorer(outputChannel);
     }
 
@@ -69,16 +73,34 @@ export class IoTEdgeExplorer extends BaseExplorer {
     }
 
     public async generateEdgeLaunchConfig(deviceItem?: DeviceItem) {
+        if (!Utility.checkWorkspace()) {
+            return;
+        }
+
         let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
             return;
         }
 
         if (!deviceItem) {
+            const deviceList: DeviceItem[] = await this._deviceExplorer.getDeviceList(iotHubConnectionString);
+            deviceItem = await vscode.window.showQuickPick(deviceList, {placeHolder: "Select an IoT Hub device"});
         }
 
         if (deviceItem) {
-            const connectString = this._iotHubResourceExplorer.getDeviceConnectionString(deviceItem);
+            const connectString: string = this._iotHubResourceExplorer.getDeviceConnectionString(deviceItem);
+            const configContent: string = this.generateEdgeLaunchConfigContent(deviceItem.connectionString);
+            const fileName: string = await vscode.window.showInputBox(
+                {
+                    value: "launchConfig.json",
+                    valueSelection: [0, "launchConfig".length],
+                    prompt: "Enter launch configuration file name",
+                    ignoreFocusOut: true,
+                });
+            if (fileName) {
+                const configPath: string = path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, fileName);
+                Utility.writeFile(configPath, configContent);
+            }
         }
     }
 
@@ -122,5 +144,49 @@ export class IoTEdgeExplorer extends BaseExplorer {
                 this.outputLine(label, `Deployment failed. ${err}`);
                 TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployDoneEvent, { Result: "Fail", Message: err });
             });
+    }
+
+    private generateEdgeLaunchConfigContent(connectionString: string): string {
+        return `{
+    "schemaVersion": "1",
+    "deviceConnectionString": "${connectionString}",
+    "homeDir": "${path.join(os.homedir(), ".azure_iot_edge").replace(/\\/g, "\\\\")}",
+    "hostName": "${Utility.getHostName(connectionString)}",
+    "logLevel": "info",
+    "security": {
+        "certificates": {
+        "option": "selfSigned",
+        "selfSigned": {
+            "forceRegenerate": false,
+            "forceNoPasswords": true
+        },
+        "preInstalled": {
+            "deviceCACertificateFilePath": "",
+            "serverCertificateFilePath": ""
+        }
+        }
+    },
+    "deployment": {
+        "type": "docker",
+        "docker": {
+        "uri": "unix:///var/run/docker.sock",
+        "edgeRuntimeImage": "",
+        "registries": [
+            {
+            "address": "",
+            "username": "",
+            "password": ""
+            }
+        ],
+        "loggingOptions": {
+            "log-driver": "json-file",
+            "log-opts": {
+            "max-size": "10m"
+            }
+        }
+        }
+    }
+}
+`;
     }
 }

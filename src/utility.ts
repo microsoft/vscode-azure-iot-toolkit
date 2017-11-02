@@ -1,6 +1,7 @@
 "use strict";
 import { ConnectionString, SharedAccessSignature } from "azure-iothub";
 import * as crypto from "crypto";
+import * as fs from "fs";
 import * as os from "os";
 import * as vscode from "vscode";
 import { Constants } from "./constants";
@@ -118,6 +119,39 @@ export class Utility {
             }
         }
         return filePath;
+    }
+
+    public static checkWorkspace(): boolean {
+        if (!vscode.workspace.workspaceFolders) {
+            vscode.window.showErrorMessage("Please open a folder.");
+            return false;
+        }
+
+        return true;
+    }
+
+    public static writeFile(filePath: string, content: string): void {
+        fs.stat(filePath, (err, stats) => {
+            if (err) {
+                if (err.code === "ENOENT") {
+                    fs.writeFile(filePath, content, (err2) => {
+                        if (err2) {
+                            vscode.window.showErrorMessage(err2.message);
+                            return;
+                        }
+                        vscode.window.showTextDocument(vscode.Uri.file(filePath));
+                    });
+                } else {
+                    vscode.window.showErrorMessage(err.message);
+                }
+
+                return;
+            }
+
+            if (stats.isFile()) {
+                vscode.window.showErrorMessage("File with the same name already exists.");
+            }
+        });
     }
 
     private static showIoTHubInformationMessage(): void {
