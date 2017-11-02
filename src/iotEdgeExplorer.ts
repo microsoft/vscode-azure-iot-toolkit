@@ -103,8 +103,19 @@ export class IoTEdgeExplorer extends BaseExplorer {
         }
     }
 
-    public generateEdgeConfig() {
-
+    public async generateEdgeConfig() {
+        const configContent: string = this.generateEdgeConfigContent();
+        const fileName: string = await vscode.window.showInputBox(
+            {
+                value: "edgeConfig.json",
+                valueSelection: [0, "edgeConfig".length],
+                prompt: "Enter Edge configuration file name",
+                ignoreFocusOut: true,
+            });
+        if (fileName) {
+            const configPath: string = path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, fileName);
+            Utility.writeFile(configPath, configContent);
+        }
     }
 
     private async getDeploymentJson(): Promise<string> {
@@ -179,6 +190,76 @@ export class IoTEdgeExplorer extends BaseExplorer {
                 "log-driver": "json-file",
                 "log-opts": {
                     "max-size": "10m"
+                }
+            }
+        }
+    }
+}`;
+    }
+
+    private generateEdgeConfigContent(): string {
+        return `{
+    "moduleContent": {
+        "$edgeAgent": {
+            "properties.desired": {
+                "schemaVersion": "1.0",
+                "runtime": { // Information about the edge device runtime, common to all modules
+                    "type": "docker", // Enum - values - docker
+                    "settings": {
+                        "minDockerVersion": "v1.13", // Min docker version required by this edgeAgent (currently ignored)
+                        "loggingOptions": "" // Logging options for the Edge modules
+                    }
+                },
+                "systemModules": {
+                    "edgeAgent": { // System Module - required
+                        "type": "docker", // Enum - values - docker
+                        "settings": {
+                            "image": "edgepreview.azurecr.io/azureiotedge/edge-agent:1.0.0-preview003", // Location of the edgeAgent image
+                            "createOptions": "" // Optional - will be null in general case. This is for future proofing
+                        },
+                        "configuration": {
+                            "id": "1234"
+                        }
+                    },
+                    "edgeHub": { // System Module - required
+                        "type": "docker", // Enum - values – docker
+                        "status": "running", // Enum - values - running, stopped
+                        "restartPolicy": "always", // This value should be "always"
+                        "settings": {
+                            "image": "edgepreview.azurecr.io/azureiotedge/edge-hub:1.0.0-preview003", // Path to the EdgeHub Image
+                            "createOptions": "" // Options string to start the Edge Hub module (templated)
+                        },
+                        "configuration": {
+                            "id": "1234"
+                        }
+                    }
+                },
+                "modules": {
+                    "tempSensor": {
+                        "version": "1.0",
+                        "type": "docker",
+                        "status": "running",
+                        "restartPolicy": "always",
+                        "settings": {
+                            "image": "edgepreview.azurecr.io/azureiotedge/simulated-temperature-sensor:1.0.0-preview003",
+                            "createOptions": ""
+                        },
+                        "configuration": {
+                            "id": "1234"
+                        }
+                    }
+                }
+            }
+        },
+        "$edgeHub": {
+            "properties.desired": {
+                "schemaVersion": "1.0",
+                "routes": { // List of routes for the edge hub
+                    // Route for the edge hub. Route name is used as key for the routes. To delete a route, set the routeName = null
+                    "route1": "FROM /* INTO $upstream" // Sample value. Route name can be anything
+                },
+                "storeAndForwardConfiguration": {
+                    "timeToLiveSecs": 90000 // Sample value
                 }
             }
         }
