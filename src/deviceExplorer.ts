@@ -65,7 +65,7 @@ export class DeviceExplorer extends BaseExplorer {
                                 arguments: [device.deviceId],
                             }));
                     });
-                    resolve(devices);
+                    resolve(devices.sort((a: DeviceItem, b: DeviceItem) => {return a.deviceId.localeCompare(b.deviceId); }));
                 }
             });
         });
