@@ -88,7 +88,6 @@ export class IoTEdgeExplorer extends BaseExplorer {
         }
 
         if (deviceItem) {
-            const connectString: string = this._iotHubResourceExplorer.getDeviceConnectionString(deviceItem);
             const configContent: string = this.generateEdgeLaunchConfigContent(deviceItem.connectionString);
             const fileName: string = await vscode.window.showInputBox(
                 {
