@@ -84,7 +84,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 
         if (!deviceItem) {
             const deviceList: DeviceItem[] = await this._deviceExplorer.getDeviceList(iotHubConnectionString);
-            deviceItem = await vscode.window.showQuickPick(deviceList, {placeHolder: "Select an IoT Hub device"});
+            deviceItem = await vscode.window.showQuickPick(deviceList, { placeHolder: "Select an IoT Hub device" });
         }
 
         if (deviceItem) {
@@ -154,38 +154,35 @@ export class IoTEdgeExplorer extends BaseExplorer {
     "logLevel": "info",
     "security": {
         "certificates": {
-        "option": "selfSigned",
-        "selfSigned": {
-            "forceRegenerate": false,
-            "forceNoPasswords": true
-        },
-        "preInstalled": {
-            "deviceCACertificateFilePath": "",
-            "serverCertificateFilePath": ""
-        }
+            "option": "selfSigned",
+            "selfSigned": {
+                "forceRegenerate": false,
+                "forceNoPasswords": true
+            },
+            "preInstalled": {
+                "deviceCACertificateFilePath": "",
+                "serverCertificateFilePath": ""
+            }
         }
     },
     "deployment": {
         "type": "docker",
         "docker": {
-        "uri": "unix:///var/run/docker.sock",
-        "edgeRuntimeImage": "",
-        "registries": [
-            {
-            "address": "",
-            "username": "",
-            "password": ""
+            "uri": "unix:///var/run/docker.sock",
+            "edgeRuntimeImage": "",
+            "registries": [{
+                "address": "",
+                "username": "",
+                "password": ""
+            }],
+            "loggingOptions": {
+                "log-driver": "json-file",
+                "log-opts": {
+                    "max-size": "10m"
+                }
             }
-        ],
-        "loggingOptions": {
-            "log-driver": "json-file",
-            "log-opts": {
-            "max-size": "10m"
-            }
-        }
         }
     }
-}
-`;
+}`;
     }
 }
