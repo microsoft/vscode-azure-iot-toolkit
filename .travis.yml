@@ -15,9 +15,6 @@ before_install:
 
 install:
   - npm install
-  # To make CI pass: ms-rest-azure and ms-rest are not directly used in extension but in azure-account.api.d.ts
-  - npm install ms-rest-azure
-  - npm install ms-rest
   - npm run version
   - npm run vscode:prepublish
 
