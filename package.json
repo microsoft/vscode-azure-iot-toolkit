@@ -265,7 +265,7 @@
         {
           "command": "azure-iot-toolkit.generateEdgeLaunchConfig",
           "when": "view == iotHubDevices && viewItem == device",
-          "group": "azure-iot-toolkit-edge@0"
+          "group": "azure-iot-toolkit-edge@1"
         }
       ],
       "editor/context": [
