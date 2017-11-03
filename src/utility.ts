@@ -121,36 +121,13 @@ export class Utility {
         return filePath;
     }
 
-    public static checkWorkspace(): boolean {
-        if (!vscode.workspace.workspaceFolders) {
-            vscode.window.showErrorMessage("Please open a folder.");
-            return false;
-        }
-
-        return true;
-    }
-
-    public static writeFile(filePath: string, content: string): void {
-        fs.stat(filePath, (err, stats) => {
+    public static writeFile(filePath: vscode.Uri, content: string): void {
+        fs.writeFile(filePath.fsPath, content, (err) => {
             if (err) {
-                if (err.code === "ENOENT") {
-                    fs.writeFile(filePath, content, (err2) => {
-                        if (err2) {
-                            vscode.window.showErrorMessage(err2.message);
-                            return;
-                        }
-                        vscode.window.showTextDocument(vscode.Uri.file(filePath));
-                    });
-                } else {
-                    vscode.window.showErrorMessage(err.message);
-                }
-
+                vscode.window.showErrorMessage(err.message);
                 return;
             }
-
-            if (stats.isFile()) {
-                vscode.window.showErrorMessage("File with the same name already exists.");
-            }
+            vscode.window.showTextDocument(vscode.Uri.file(filePath.fsPath));
         });
     }
 

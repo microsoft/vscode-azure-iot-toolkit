@@ -73,10 +73,6 @@ export class IoTEdgeExplorer extends BaseExplorer {
     }
 
     public async generateEdgeLaunchConfig(deviceItem?: DeviceItem) {
-        if (!Utility.checkWorkspace()) {
-            return;
-        }
-
         let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
             return;
@@ -89,15 +85,15 @@ export class IoTEdgeExplorer extends BaseExplorer {
 
         if (deviceItem) {
             const configContent: string = this.generateEdgeLaunchConfigContent(deviceItem.connectionString);
-            const fileName: string = await vscode.window.showInputBox(
-                {
-                    value: "launchConfig.json",
-                    valueSelection: [0, "launchConfig".length],
-                    prompt: "Enter launch configuration file name",
-                    ignoreFocusOut: true,
-                });
-            if (fileName) {
-                const configPath: string = path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, fileName);
+            const configPath: vscode.Uri = await vscode.window.showSaveDialog({
+                defaultUri: vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri : undefined,
+                saveLabel: "Save Edge launch configuration file",
+                filters: {
+                    JSON: ["json"],
+                },
+            });
+
+            if (configPath) {
                 Utility.writeFile(configPath, configContent);
             }
         }
@@ -105,15 +101,15 @@ export class IoTEdgeExplorer extends BaseExplorer {
 
     public async generateEdgeConfig() {
         const configContent: string = this.generateEdgeConfigContent();
-        const fileName: string = await vscode.window.showInputBox(
-            {
-                value: "edgeConfig.json",
-                valueSelection: [0, "edgeConfig".length],
-                prompt: "Enter Edge configuration file name",
-                ignoreFocusOut: true,
-            });
-        if (fileName) {
-            const configPath: string = path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, fileName);
+        const configPath: vscode.Uri = await vscode.window.showSaveDialog({
+            defaultUri: vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri : undefined,
+            saveLabel: "Save Edge configuration file",
+            filters: {
+                JSON: ["json"],
+            },
+        });
+
+        if (configPath) {
             Utility.writeFile(configPath, configContent);
         }
     }
