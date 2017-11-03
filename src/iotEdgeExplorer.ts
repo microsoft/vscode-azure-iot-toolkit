@@ -8,21 +8,14 @@ import * as stripJsonComments from "strip-json-comments";
 import * as vscode from "vscode";
 import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
-import { DeviceExplorer } from "./deviceExplorer";
 import { Executor } from "./executor";
-import { IoTHubResourceExplorer } from "./iotHubResourceExplorer";
 import { DeviceItem } from "./Model/DeviceItem";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
 export class IoTEdgeExplorer extends BaseExplorer {
-    private _deviceExplorer: DeviceExplorer;
-    private _iotHubResourceExplorer: IoTHubResourceExplorer;
-
     constructor(outputChannel: vscode.OutputChannel) {
         super(outputChannel);
-        this._deviceExplorer = new DeviceExplorer(outputChannel);
-        this._iotHubResourceExplorer = new IoTHubResourceExplorer(outputChannel);
     }
 
     public async createDeployment(deviceItem: DeviceItem) {
@@ -79,23 +72,20 @@ export class IoTEdgeExplorer extends BaseExplorer {
         }
 
         if (!deviceItem) {
-            const deviceList: DeviceItem[] = await this._deviceExplorer.getDeviceList(iotHubConnectionString);
-            deviceItem = await vscode.window.showQuickPick(deviceList, { placeHolder: "Select an IoT Hub device" });
+            return;
         }
 
-        if (deviceItem) {
-            const configContent: string = this.generateEdgeLaunchConfigContent(deviceItem.connectionString);
-            const configPath: vscode.Uri = await vscode.window.showSaveDialog({
-                defaultUri: vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri : undefined,
-                saveLabel: "Save Edge launch configuration file",
-                filters: {
-                    JSON: ["json"],
-                },
-            });
+        const configContent: string = this.generateEdgeLaunchConfigContent(deviceItem.connectionString);
+        const configPath: vscode.Uri = await vscode.window.showSaveDialog({
+            defaultUri: vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri : undefined,
+            saveLabel: "Save Edge launch configuration file",
+            filters: {
+                JSON: ["json"],
+            },
+        });
 
-            if (configPath) {
-                Utility.writeFile(configPath, configContent);
-            }
+        if (configPath) {
+            Utility.writeFile(configPath, configContent);
         }
     }
 
