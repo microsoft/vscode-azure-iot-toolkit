@@ -127,7 +127,7 @@ export class Utility {
                 vscode.window.showErrorMessage(err.message);
                 return;
             }
-            vscode.window.showTextDocument(vscode.Uri.file(filePath.fsPath));
+            vscode.window.showTextDocument(filePath);
         });
     }
 
