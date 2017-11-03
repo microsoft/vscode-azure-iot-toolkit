@@ -147,7 +147,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
     "schemaVersion": "1",
     "deviceConnectionString": "${connectionString}",
     "homeDir": "${path.join(os.homedir(), ".azure_iot_edge").replace(/\\/g, "\\\\")}",
-    "hostName": "${Utility.getHostName(connectionString)}",
+    "hostName": "${os.hostname()}",
     "logLevel": "info",
     "security": {
         "certificates": {
