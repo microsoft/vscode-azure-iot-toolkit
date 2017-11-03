@@ -77,7 +77,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 
         const configContent: string = this.generateEdgeLaunchConfigContent(deviceItem.connectionString);
         const configPath: vscode.Uri = await vscode.window.showSaveDialog({
-            defaultUri: vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri : undefined,
+            defaultUri: vscode.workspace.workspaceFolders ? vscode.Uri.file(path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, "launchConfig.json")) : undefined,
             saveLabel: "Save Edge launch configuration file",
             filters: {
                 JSON: ["json"],
@@ -92,7 +92,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
     public async generateEdgeConfig() {
         const configContent: string = this.generateEdgeConfigContent();
         const configPath: vscode.Uri = await vscode.window.showSaveDialog({
-            defaultUri: vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri : undefined,
+            defaultUri: vscode.workspace.workspaceFolders ? vscode.Uri.file(path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, "edgeConfig.json")) : undefined,
             saveLabel: "Save Edge configuration file",
             filters: {
                 JSON: ["json"],
