@@ -138,4 +138,12 @@ export class AzureIoTExplorer {
     public uninstallEdge(): void {
         this._iotEdgeExplorer.uninstallEdge();
     }
+
+    public async generateEdgeLaunchConfig(deviceItem: DeviceItem) {
+        this._iotEdgeExplorer.generateEdgeLaunchConfig(deviceItem);
+    }
+
+    public async generateEdgeConfig() {
+        this._iotEdgeExplorer.generateEdgeConfig();
+    }
 }

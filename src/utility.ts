@@ -1,6 +1,7 @@
 "use strict";
 import { ConnectionString, SharedAccessSignature } from "azure-iothub";
 import * as crypto from "crypto";
+import * as fs from "fs";
 import * as os from "os";
 import * as vscode from "vscode";
 import { Constants } from "./constants";
@@ -118,6 +119,16 @@ export class Utility {
             }
         }
         return filePath;
+    }
+
+    public static writeFile(filePath: vscode.Uri, content: string): void {
+        fs.writeFile(filePath.fsPath, content, (err) => {
+            if (err) {
+                vscode.window.showErrorMessage(err.message);
+                return;
+            }
+            vscode.window.showTextDocument(filePath);
+        });
     }
 
     private static showIoTHubInformationMessage(): void {
