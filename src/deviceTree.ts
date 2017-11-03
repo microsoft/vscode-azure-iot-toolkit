@@ -71,7 +71,7 @@ export class DeviceTree implements vscode.TreeDataProvider<vscode.TreeItem> {
                                 arguments: [device.deviceId],
                             }));
                     });
-                    resolve(devices.sort((a, b)=>{return a.deviceId < b.deviceId ? -1: 1;}));
+                    resolve(devices.sort((a, b) => { return a.deviceId < b.deviceId ? -1 : 1; }));
                 }
             });
         });
