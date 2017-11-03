@@ -66,11 +66,6 @@ export class IoTEdgeExplorer extends BaseExplorer {
     }
 
     public async generateEdgeLaunchConfig(deviceItem?: DeviceItem) {
-        let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
-        if (!iotHubConnectionString) {
-            return;
-        }
-
         if (!deviceItem) {
             return;
         }
