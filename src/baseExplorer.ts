@@ -29,7 +29,7 @@ export class BaseExplorer {
         };
     };
 
-    protected printMessage(outputChannel: vscode.OutputChannel, label: string, prefix: string) {
+    protected printMessage(outputChannel: vscode.OutputChannel, label: string) {
         return (message) => {
             let config = Utility.getConfiguration();
             let showVerboseMessage = config.get<boolean>("showVerboseMessage");
@@ -37,18 +37,15 @@ export class BaseExplorer {
             if (showVerboseMessage) {
                 result = {
                     body: message.body,
-                    enqueuedTimeUtc: message.enqueuedTimeUtc,
-                    offset: message.offset,
-                    partitionKey: message.partitionKey,
+                    applicationProperties: message.applicationProperties,
+                    annotations: message.annotations,
                     properties: message.properties,
-                    sequenceNumber: message.sequenceNumber,
-                    systemProperties: message.systemProperties,
                 };
                 result.body = this.tryGetStringFromCharCode(message.body);
             } else {
                 result = this.tryGetStringFromCharCode(message.body);
             }
-            this.outputLine(label, prefix + ":");
+            this.outputLine(label, `Message received from [${message.annotations["iothub-connection-device-id"]}]:`);
             this._outputChannel.appendLine(JSON.stringify(result, null, 2));
         };
     };
@@ -63,7 +60,7 @@ export class BaseExplorer {
                             .then((receiver) => {
                                 this.outputLine(label, `Created partition receiver [${partitionId}] for consumerGroup [${consumerGroup}]`);
                                 receiver.on("errorReceived", this.printError(this._outputChannel, label, eventHubClient));
-                                receiver.on("message", this.printMessage(this._outputChannel, label, "Message Received"));
+                                receiver.on("message", this.printMessage(this._outputChannel, label));
                             });
                     });
                 });

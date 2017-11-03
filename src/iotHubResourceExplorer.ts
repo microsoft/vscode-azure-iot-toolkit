@@ -48,7 +48,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
     }
 
     public copyIoTHubConnectionString() {
-        TelemetryClient.sendEvent("Az.Copy.IotHubConnectionString");
+        TelemetryClient.sendEvent("AZ.Copy.IotHubConnectionString");
         const iotHubConnectionString = Utility.getConnectionStringWithId(Constants.IotHubConnectionStringKey);
         if (iotHubConnectionString) {
             clipboardy.write(iotHubConnectionString);
@@ -56,7 +56,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
     }
 
     public copyDeviceConnectionString(deviceItem: DeviceItem) {
-        TelemetryClient.sendEvent("Az.Copy.DeviceConnectionString");
+        TelemetryClient.sendEvent("AZ.Copy.DeviceConnectionString");
         if (deviceItem && deviceItem.connectionString) {
             clipboardy.write(deviceItem.connectionString);
         }
