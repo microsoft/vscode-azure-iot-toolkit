@@ -34,16 +34,21 @@ export class BaseExplorer {
             let config = Utility.getConfiguration();
             let showVerboseMessage = config.get<boolean>("showVerboseMessage");
             let result;
+            const body = this.tryGetStringFromCharCode(message.body);
             if (showVerboseMessage) {
                 result = {
-                    body: message.body,
+                    body,
                     applicationProperties: message.applicationProperties,
                     annotations: message.annotations,
                     properties: message.properties,
                 };
-                result.body = this.tryGetStringFromCharCode(message.body);
+            } else if (message.applicationProperties && Object.keys(message.applicationProperties).length > 0) {
+                result = {
+                    body,
+                    applicationProperties: message.applicationProperties,
+                };
             } else {
-                result = this.tryGetStringFromCharCode(message.body);
+                result = body;
             }
             this.outputLine(label, `Message received from [${message.annotations["iothub-connection-device-id"]}]:`);
             this._outputChannel.appendLine(JSON.stringify(result, null, 2));
