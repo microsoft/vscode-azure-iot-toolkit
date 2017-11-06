@@ -85,8 +85,12 @@ export function activate(context: vscode.ExtensionContext) {
         azureIoTExplorer.createDeployment(DeviceItem);
     });
 
-    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.setupEdge", () => {
-        azureIoTExplorer.setupEdge();
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.setupEdge", (DeviceItem) => {
+        azureIoTExplorer.setupEdge(DeviceItem);
+    }));
+
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.setupEdgeFromConfig", () => {
+        azureIoTExplorer.setupEdgeFromConfig();
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.startEdge", () => {

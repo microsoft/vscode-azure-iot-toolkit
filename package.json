@@ -40,6 +40,7 @@
     "onCommand:azure-iot-toolkit.copyDeviceConnectionString",
     "onCommand:azure-iot-toolkit.createDeployment",
     "onCommand:azure-iot-toolkit.setupEdge",
+    "onCommand:azure-iot-toolkit.setupEdgeFromConfig",
     "onCommand:azure-iot-toolkit.startEdge",
     "onCommand:azure-iot-toolkit.stopEdge",
     "onCommand:azure-iot-toolkit.restartEdge",
@@ -146,6 +147,11 @@
       {
         "command": "azure-iot-toolkit.setupEdge",
         "title": "Setup Edge",
+        "category": "Edge"
+      },
+      {
+        "command": "azure-iot-toolkit.setupEdgeFromConfig",
+        "title": "Setup Edge from configuration file",
         "category": "Edge"
       },
       {
@@ -268,9 +274,14 @@
           "group": "azure-iot-toolkit-edge@0"
         },
         {
-          "command": "azure-iot-toolkit.generateEdgeLaunchConfig",
+          "command": "azure-iot-toolkit.setupEdge",
           "when": "view == iotHubDevices && viewItem == device",
           "group": "azure-iot-toolkit-edge@1"
+        },
+        {
+          "command": "azure-iot-toolkit.generateEdgeLaunchConfig",
+          "when": "view == iotHubDevices && viewItem == device",
+          "group": "azure-iot-toolkit-edge@2"
         }
       ],
       "editor/context": [
