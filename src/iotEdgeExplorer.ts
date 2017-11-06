@@ -19,6 +19,10 @@ export class IoTEdgeExplorer extends BaseExplorer {
     }
 
     public async createDeployment(deviceItem: DeviceItem) {
+        if (!deviceItem) {
+            return;
+        }
+
         TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployStartEvent);
 
         let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
@@ -36,7 +40,15 @@ export class IoTEdgeExplorer extends BaseExplorer {
         this.deploy(hostName, deviceItem.deviceId, sasToken, deploymentJson);
     }
 
-    public async setupEdge() {
+    public async setupEdge(deviceItem: DeviceItem) {
+        if (!deviceItem) {
+            return;
+        }
+
+        Executor.runInTerminal(Utility.adjustTerminalCommand(`iotedgectl setup --connection-string "${deviceItem.connectionString}"  --auto-cert-gen-force-no-passwords`));
+    }
+
+    public async setupEdgeFromConfig() {
         const filePathUri: vscode.Uri[] = await vscode.window.showOpenDialog({
             openLabel: "Select Config File",
             filters: {

@@ -119,8 +119,12 @@ export class AzureIoTExplorer {
         this._iotEdgeExplorer.createDeployment(deviceItem);
     }
 
-    public setupEdge(): void {
-        this._iotEdgeExplorer.setupEdge();
+    public setupEdge(deviceItem: DeviceItem): void {
+        this._iotEdgeExplorer.setupEdge(deviceItem);
+    }
+
+    public setupEdgeFromConfig(): void {
+        this._iotEdgeExplorer.setupEdgeFromConfig();
     }
 
     public startEdge(): void {
