@@ -36,8 +36,8 @@ export class AzureIoTExplorer {
         this._iotHubMessageExplorer.sendD2CMessage(deviceItem);
     }
 
-    public startMonitorIoTHubMessage(): void {
-        this._iotHubMessageExplorer.startMonitorIoTHubMessage();
+    public startMonitorIoTHubMessage(deviceItem?: DeviceItem): void {
+        this._iotHubMessageExplorer.startMonitorIoTHubMessage(deviceItem);
     }
 
     public stopMonitorIoTHubMessage(): void {

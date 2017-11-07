@@ -39,7 +39,12 @@ export class IoTHubMessageExplorer extends BaseExplorer {
         });
     }
 
-    public async startMonitorIoTHubMessage() {
+    public async startMonitorIoTHubMessage(deviceItem?: DeviceItem) {
+        if (this._eventHubClient) {
+            this.outputLine(Constants.IoTHubMonitorLabel, "There is a running job to monitor D2C message. Please stop it first.");
+            return;
+        }
+
         let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
             return;
@@ -50,9 +55,10 @@ export class IoTHubMessageExplorer extends BaseExplorer {
         try {
             this._eventHubClient = EventHubClient.fromConnectionString(iotHubConnectionString);
             this._outputChannel.show();
-            this.outputLine(Constants.IoTHubMonitorLabel, `Start monitoring [${Constants.IoTHub}] ...`);
+            const deviceLabel = deviceItem ? `[${deviceItem.deviceId}]` : "all devices";
+            this.outputLine(Constants.IoTHubMonitorLabel, `Start monitoring D2C message for ${deviceLabel} ...`);
             TelemetryClient.sendEvent(Constants.IoTHubAIStartMonitorEvent);
-            this.startMonitor(this._eventHubClient, Constants.IoTHubMonitorLabel, consumerGroup);
+            this.startMonitor(this._eventHubClient, Constants.IoTHubMonitorLabel, consumerGroup, deviceItem);
         } catch (e) {
             this.outputLine(Constants.IoTHubMonitorLabel, e);
             TelemetryClient.sendEvent(Constants.IoTHubAIStartMonitorEvent, { Result: "Exception", Message: e });
