@@ -2,6 +2,7 @@
 import { Client as EventHubClient } from "azure-event-hubs";
 import * as vscode from "vscode";
 import { Constants } from "./constants";
+import { DeviceItem } from "./Model/DeviceItem";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
@@ -29,8 +30,11 @@ export class BaseExplorer {
         };
     };
 
-    protected printMessage(outputChannel: vscode.OutputChannel, label: string) {
+    protected printMessage(outputChannel: vscode.OutputChannel, label: string, deviceItem?: DeviceItem) {
         return (message) => {
+            if (deviceItem && deviceItem.deviceId !== message.annotations["iothub-connection-device-id"]) {
+                return;
+            }
             let config = Utility.getConfiguration();
             let showVerboseMessage = config.get<boolean>("showVerboseMessage");
             let result;
@@ -55,7 +59,7 @@ export class BaseExplorer {
         };
     };
 
-    protected startMonitor(eventHubClient: EventHubClient, label: string, consumerGroup: string) {
+    protected startMonitor(eventHubClient: EventHubClient, label: string, consumerGroup: string, deviceItem?: DeviceItem) {
         if (eventHubClient) {
             eventHubClient.open()
                 .then(eventHubClient.getPartitionIds.bind(eventHubClient))
@@ -65,7 +69,7 @@ export class BaseExplorer {
                             .then((receiver) => {
                                 this.outputLine(label, `Created partition receiver [${partitionId}] for consumerGroup [${consumerGroup}]`);
                                 receiver.on("errorReceived", this.printError(this._outputChannel, label, eventHubClient));
-                                receiver.on("message", this.printMessage(this._outputChannel, label));
+                                receiver.on("message", this.printMessage(this._outputChannel, label, deviceItem));
                             });
                     });
                 });
@@ -75,10 +79,10 @@ export class BaseExplorer {
     protected stopMonitor(eventHubClient: EventHubClient, label: string, aiEvent: string) {
         TelemetryClient.sendEvent(aiEvent);
         if (eventHubClient) {
-            this.outputLine(label, Constants.MonitoringStoppedMessage);
+            this.outputLine(label, "D2C monitoring stopped.");
             eventHubClient.close();
         } else {
-            this.outputLine(label, "No monitor job running.");
+            this.outputLine(label, "No D2C monitor job running.");
         }
     }
 

@@ -25,8 +25,8 @@ export function activate(context: vscode.ExtensionContext) {
         azureIoTExplorer.sendD2CMessage(DeviceItem);
     });
 
-    let startMonitorIoTHubMessage = vscode.commands.registerCommand("azure-iot-toolkit.startMonitorIoTHubMessage", () => {
-        azureIoTExplorer.startMonitorIoTHubMessage();
+    let startMonitorIoTHubMessage = vscode.commands.registerCommand("azure-iot-toolkit.startMonitorIoTHubMessage", (DeviceItem) => {
+        azureIoTExplorer.startMonitorIoTHubMessage(DeviceItem);
     });
 
     let stopMonitorIoTHubMessage = vscode.commands.registerCommand("azure-iot-toolkit.stopMonitorIoTHubMessage", () => {

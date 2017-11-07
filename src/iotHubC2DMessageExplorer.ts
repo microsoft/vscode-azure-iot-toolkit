@@ -38,6 +38,11 @@ export class IotHubC2DMessageExplorer extends BaseExplorer {
     }
 
     public async startMonitorC2DMessage(deviceItem?: DeviceItem) {
+        if (this._deviceClient) {
+            this.outputLine(Constants.IoTHubC2DMessageMonitorLabel, "There is a running job to monitor C2D message. Please stop it first.");
+            return;
+        }
+
         let deviceConnectionString = deviceItem.connectionString ?
             deviceItem.connectionString : await Utility.getConnectionString(Constants.DeviceConnectionStringKey,
                 Constants.DeviceConnectionStringTitle);
@@ -52,11 +57,11 @@ export class IotHubC2DMessageExplorer extends BaseExplorer {
     public stopMonitorC2DMessage(): void {
         TelemetryClient.sendEvent(Constants.IoTHubAIStopMonitorC2DEvent);
         if (this._deviceClient) {
-            this.outputLine(Constants.IoTHubC2DMessageMonitorLabel, Constants.MonitoringStoppedMessage);
+            this.outputLine(Constants.IoTHubC2DMessageMonitorLabel, "C2D monitoring stopped.");
             this._deviceClient.close(() => { return; });
             this._deviceClient = null;
         } else {
-            this.outputLine(Constants.IoTHubC2DMessageMonitorLabel, "No monitor job running.");
+            this.outputLine(Constants.IoTHubC2DMessageMonitorLabel, "No C2D monitor job running.");
         }
     }
 
