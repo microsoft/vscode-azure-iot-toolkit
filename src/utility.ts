@@ -87,35 +87,33 @@ export class Utility {
     public static generateSasTokenForService(iotHubConnectionString: string): string {
         const connectionString = ConnectionString.parse(iotHubConnectionString);
         const expiry = Math.floor(Date.now() / 1000) + 3600;
-        const sas = SharedAccessSignature.create(connectionString.HostName, connectionString.SharedAccessKeyName, connectionString.SharedAccessKey, expiry).toString();
-        return sas;
+        return SharedAccessSignature.create(connectionString.HostName, connectionString.SharedAccessKeyName, connectionString.SharedAccessKey, expiry).toString();
     }
 
     public static adjustTerminalCommand(command: string): string {
-        if (os.platform() === "linux") {
-            return `sudo ${command}`;
-        }
-        return command;
+        return os.platform() === "linux" ? `sudo ${command}` : command;
     }
 
     public static adjustFilePath(filePath: string): string {
         if (os.platform() === "win32") {
             const windowsShell = vscode.workspace.getConfiguration("terminal").get<string>("integrated.shell.windows");
             const terminalRoot = Utility.getConfiguration().get<string>("terminalRoot");
-            if (windowsShell && terminalRoot) {
-                filePath = filePath
-                    .replace(/^([A-Za-z]):/, (match, p1) => `${terminalRoot}${p1.toLowerCase()}`)
-                    .replace(/\\/g, "/");
-            } else if (windowsShell && windowsShell.toLowerCase().indexOf("bash") > -1 && windowsShell.toLowerCase().indexOf("git") > -1) {
-                // Git Bash
-                filePath = filePath
-                    .replace(/^([A-Za-z]):/, (match, p1) => `/${p1.toLowerCase()}`)
-                    .replace(/\\/g, "/");
-            } else if (windowsShell && windowsShell.toLowerCase().indexOf("bash") > -1 && windowsShell.toLowerCase().indexOf("windows") > -1) {
-                // Bash on Ubuntu on Windows
-                filePath = filePath
-                    .replace(/^([A-Za-z]):/, (match, p1) => `/mnt/${p1.toLowerCase()}`)
-                    .replace(/\\/g, "/");
+            if (windowsShell) {
+                if (terminalRoot) {
+                    filePath = filePath
+                        .replace(/^([A-Za-z]):/, (match, p1) => `${terminalRoot}${p1.toLowerCase()}`)
+                        .replace(/\\/g, "/");
+                } else if (windowsShell.toLowerCase().indexOf("bash") > -1 && windowsShell.toLowerCase().indexOf("git") > -1) {
+                    // Git Bash
+                    filePath = filePath
+                        .replace(/^([A-Za-z]):/, (match, p1) => `/${p1.toLowerCase()}`)
+                        .replace(/\\/g, "/");
+                } else if (windowsShell.toLowerCase().indexOf("bash") > -1 && windowsShell.toLowerCase().indexOf("windows") > -1) {
+                    // Bash on Ubuntu on Windows
+                    filePath = filePath
+                        .replace(/^([A-Za-z]):/, (match, p1) => `/mnt/${p1.toLowerCase()}`)
+                        .replace(/\\/g, "/");
+                }
             }
         }
         return filePath;
