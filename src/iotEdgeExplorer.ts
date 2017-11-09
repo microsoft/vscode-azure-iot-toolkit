@@ -145,6 +145,9 @@ export class IoTEdgeExplorer extends BaseExplorer {
             })
             .catch((err) => {
                 this.outputLine(label, `Deployment failed. ${err}`);
+                if (err && err.response && err.response.data && err.response.data.Message) {
+                    this.outputLine(label, err.response.data.Message);
+                }
                 TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployDoneEvent, { Result: "Fail", Message: err });
             });
     }
