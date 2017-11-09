@@ -43,7 +43,7 @@ export class IotHubC2DMessageExplorer extends BaseExplorer {
             return;
         }
 
-        let deviceConnectionString = deviceItem.connectionString ?
+        let deviceConnectionString = (deviceItem && deviceItem.connectionString) ?
             deviceItem.connectionString : await Utility.getConnectionString(Constants.DeviceConnectionStringKey,
                 Constants.DeviceConnectionStringTitle);
         if (!deviceConnectionString) {

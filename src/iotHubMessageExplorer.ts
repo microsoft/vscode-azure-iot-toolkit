@@ -17,7 +17,7 @@ export class IoTHubMessageExplorer extends BaseExplorer {
     }
 
     public async sendD2CMessage(deviceItem?: DeviceItem) {
-        let deviceConnectionString = deviceItem.connectionString ?
+        let deviceConnectionString = (deviceItem && deviceItem.connectionString) ?
             deviceItem.connectionString : await Utility.getConnectionString(Constants.DeviceConnectionStringKey,
                 Constants.DeviceConnectionStringTitle);
         if (!deviceConnectionString) {
