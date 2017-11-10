@@ -19,11 +19,11 @@ export class IoTEdgeExplorer extends BaseExplorer {
     }
 
     public async createDeployment(deviceItem: DeviceItem) {
+        TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployStartEvent);
+
         if (!deviceItem) {
             return;
         }
-
-        TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployStartEvent);
 
         let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
@@ -41,14 +41,18 @@ export class IoTEdgeExplorer extends BaseExplorer {
     }
 
     public async setupEdge(deviceItem: DeviceItem) {
+        TelemetryClient.sendEvent("Edge.Setup.Start");
+
         if (!deviceItem) {
             return;
         }
 
         Executor.runInTerminal(Utility.adjustTerminalCommand(`iotedgectl setup --connection-string "${deviceItem.connectionString}"  --auto-cert-gen-force-no-passwords`));
+        TelemetryClient.sendEvent("AZ.Edge.Setup.Done");
     }
 
     public async setupEdgeFromConfig() {
+        TelemetryClient.sendEvent("Edge.SetupFromConfig.Start");
         const filePathUri: vscode.Uri[] = await vscode.window.showOpenDialog({
             openLabel: "Select Config File",
             filters: {
@@ -58,26 +62,32 @@ export class IoTEdgeExplorer extends BaseExplorer {
         });
         if (filePathUri) {
             Executor.runInTerminal(Utility.adjustTerminalCommand(`iotedgectl setup --config-file "${Utility.adjustFilePath(filePathUri[0].fsPath)}"`));
+            TelemetryClient.sendEvent("AZ.Edge.SetupFromConfig.Done");
         }
     }
 
     public startEdge() {
         Executor.runInTerminal(Utility.adjustTerminalCommand("iotedgectl start"));
+        TelemetryClient.sendEvent("AZ.Edge.StartRuntime");
     }
 
     public stopEdge() {
         Executor.runInTerminal(Utility.adjustTerminalCommand("iotedgectl stop"));
+        TelemetryClient.sendEvent("AZ.Edge.Stop");
     }
 
     public restartEdge() {
         Executor.runInTerminal(Utility.adjustTerminalCommand("iotedgectl restart"));
+        TelemetryClient.sendEvent("AZ.Edge.Restart");
     }
 
     public uninstallEdge() {
         Executor.runInTerminal(Utility.adjustTerminalCommand("iotedgectl uninstall"));
+        TelemetryClient.sendEvent("AZ.Edge.Uninstall");
     }
 
     public async generateEdgeLaunchConfig(deviceItem?: DeviceItem) {
+        TelemetryClient.sendEvent("Edge.GenerateLaunchConfig.Start");
         if (!deviceItem) {
             return;
         }
@@ -95,11 +105,13 @@ export class IoTEdgeExplorer extends BaseExplorer {
 
             if (configPath) {
                 Utility.writeFile(configPath, configContent);
+                TelemetryClient.sendEvent("Edge.GenerateLaunchConfig.Done");
             }
         }
     }
 
     public async generateEdgeConfig() {
+        TelemetryClient.sendEvent("Edge.GenerateEdgeConfig.Start");
         const configContent: string = this.generateEdgeConfigContent();
         const configPath: vscode.Uri = await vscode.window.showSaveDialog({
             defaultUri: vscode.workspace.workspaceFolders ? vscode.Uri.file(path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, "edgeConfig.json")) : undefined,
@@ -111,6 +123,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 
         if (configPath) {
             Utility.writeFile(configPath, configContent);
+            TelemetryClient.sendEvent("Edge.GenerateEdgeConfig.Done");
         }
     }
 
