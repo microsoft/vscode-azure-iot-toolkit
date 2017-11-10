@@ -106,6 +106,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 
             if (configPath) {
                 Utility.writeFile(configPath, configContent);
+                TelemetryClient.sendEvent("Edge.GenerateLaunchConfig.Done");
             }
         }
     }
