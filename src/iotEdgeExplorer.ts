@@ -1,6 +1,7 @@
 "use strict";
 import axios from "axios";
 import * as iothub from "azure-iothub";
+import * as fqdn from "fqdn-multi";
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
@@ -179,13 +180,14 @@ export class IoTEdgeExplorer extends BaseExplorer {
                     "max-size": "10m"
                 }
             },
+            "registries": [],
             "uri": "${containerOS === "Linux" ? "unix:///var/run/docker.sock" : "npipe://./pipe/docker_engine"}"
         },
         "type": "docker"
     },
     "deviceConnectionString": "${connectionString}",
     "homeDir": "${path.join(os.homedir(), "azure_iot_edge").replace(/\\/g, "\\\\")}",
-    "hostName": "${os.hostname()}",
+    "hostName": "${fqdn()}",
     "logLevel": "info",
     "schemaVersion": "1",
     "security": {
@@ -256,7 +258,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
                     "route": "FROM /* INTO $upstream"
                 },
                 "storeAndForwardConfiguration": {
-                    "timeToLiveSecs": 10
+                    "timeToLiveSecs": 7200
                 }
             }
         }
