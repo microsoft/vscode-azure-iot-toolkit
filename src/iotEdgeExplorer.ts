@@ -167,6 +167,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
                     "max-size": "10m"
                 }
             },
+            "registries": [],
             "uri": "${containerOS === "Linux" ? "unix:///var/run/docker.sock" : "npipe://./pipe/docker_engine"}"
         },
         "type": "docker"
@@ -218,7 +219,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
                         "status": "running",
                         "restartPolicy": "always",
                         "settings": {
-                            "image": "microsoft/azureiotedge-hub:1.0-preview",
+                            "image": "<dockeruser>/<image>:<tag>",
                             "createOptions": ""
                         }
                     }
