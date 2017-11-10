@@ -238,7 +238,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
                     }
                 },
                 "modules": {
-                    "tempSensor": {
+                    "SampleModule": {
                         "version": "1.0",
                         "type": "docker",
                         "status": "running",
