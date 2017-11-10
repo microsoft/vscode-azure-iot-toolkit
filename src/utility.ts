@@ -95,26 +95,22 @@ export class Utility {
     }
 
     public static adjustFilePath(filePath: string): string {
-        if (os.platform() === "win32") {
-            const windowsShell = vscode.workspace.getConfiguration("terminal").get<string>("integrated.shell.windows");
-            const terminalRoot = Utility.getConfiguration().get<string>("terminalRoot");
-            if (windowsShell) {
-                if (terminalRoot) {
-                    filePath = filePath
-                        .replace(/^([A-Za-z]):/, (match, p1) => `${terminalRoot}${p1.toLowerCase()}`)
-                        .replace(/\\/g, "/");
-                } else if (windowsShell.toLowerCase().indexOf("bash") > -1 && windowsShell.toLowerCase().indexOf("git") > -1) {
-                    // Git Bash
-                    filePath = filePath
-                        .replace(/^([A-Za-z]):/, (match, p1) => `/${p1.toLowerCase()}`)
-                        .replace(/\\/g, "/");
-                } else if (windowsShell.toLowerCase().indexOf("bash") > -1 && windowsShell.toLowerCase().indexOf("windows") > -1) {
-                    // Bash on Ubuntu on Windows
-                    filePath = filePath
-                        .replace(/^([A-Za-z]):/, (match, p1) => `/mnt/${p1.toLowerCase()}`)
-                        .replace(/\\/g, "/");
-                }
-            }
+        const windowsShell = vscode.workspace.getConfiguration("terminal").get<string>("integrated.shell.windows");
+        if (os.platform() !== "win32" || !windowsShell) {
+            return filePath;
+        }
+        const terminalRoot = Utility.getConfiguration().get<string>("terminalRoot");
+        if (terminalRoot) {
+            return filePath.replace(/^([A-Za-z]):/, (match, p1) => `${terminalRoot}${p1.toLowerCase()}`).replace(/\\/g, "/");
+        }
+        let winshell = windowsShell.toLowerCase();
+        if (windowsShell.indexOf("bash") > -1 && windowsShell.indexOf("git") > -1) {
+            // Git Bash
+            return filePath.replace(/^([A-Za-z]):/, (match, p1) => `/${p1.toLowerCase()}`).replace(/\\/g, "/");
+        }
+        if (windowsShell.indexOf("bash") > -1 && windowsShell.indexOf("windows") > -1) {
+            // Bash on Ubuntu on Windows
+            return filePath.replace(/^([A-Za-z]):/, (match, p1) => `/mnt/${p1.toLowerCase()}`).replace(/\\/g, "/");
         }
         return filePath;
     }
