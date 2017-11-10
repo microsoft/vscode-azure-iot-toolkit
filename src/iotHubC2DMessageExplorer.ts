@@ -39,6 +39,7 @@ export class IotHubC2DMessageExplorer extends BaseExplorer {
 
     public async startMonitorC2DMessage(deviceItem?: DeviceItem) {
         if (this._deviceClient) {
+            this._outputChannel.show();
             this.outputLine(Constants.IoTHubC2DMessageMonitorLabel, "There is a running job to monitor C2D message. Please stop it first.");
             return;
         }
@@ -56,6 +57,7 @@ export class IotHubC2DMessageExplorer extends BaseExplorer {
 
     public stopMonitorC2DMessage(): void {
         TelemetryClient.sendEvent(Constants.IoTHubAIStopMonitorC2DEvent);
+        this._outputChannel.show();
         if (this._deviceClient) {
             this.outputLine(Constants.IoTHubC2DMessageMonitorLabel, "C2D monitoring stopped.");
             this._deviceClient.close(() => { return; });

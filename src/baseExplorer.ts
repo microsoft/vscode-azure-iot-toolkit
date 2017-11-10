@@ -78,6 +78,7 @@ export class BaseExplorer {
 
     protected stopMonitor(eventHubClient: EventHubClient, label: string, aiEvent: string) {
         TelemetryClient.sendEvent(aiEvent);
+        this._outputChannel.show();
         if (eventHubClient) {
             this.outputLine(label, "D2C monitoring stopped.");
             eventHubClient.close();

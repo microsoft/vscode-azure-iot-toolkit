@@ -41,6 +41,7 @@ export class IoTHubMessageExplorer extends BaseExplorer {
 
     public async startMonitorIoTHubMessage(deviceItem?: DeviceItem) {
         if (this._eventHubClient) {
+            this._outputChannel.show();
             this.outputLine(Constants.IoTHubMonitorLabel, "There is a running job to monitor D2C message. Please stop it first.");
             return;
         }
