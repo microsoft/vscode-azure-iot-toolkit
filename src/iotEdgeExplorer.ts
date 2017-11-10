@@ -1,6 +1,7 @@
 "use strict";
 import axios from "axios";
 import * as iothub from "azure-iothub";
+import * as fqdn from "fqdn-multi";
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
@@ -172,7 +173,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
     },
     "deviceConnectionString": "${connectionString}",
     "homeDir": "${path.join(os.homedir(), "azure_iot_edge").replace(/\\/g, "\\\\")}",
-    "hostName": "${os.hostname()}",
+    "hostName": "${fqdn()}",
     "logLevel": "info",
     "schemaVersion": "1",
     "security": {
@@ -223,13 +224,13 @@ export class IoTEdgeExplorer extends BaseExplorer {
                     }
                 },
                 "modules": {
-                    "SampleModule": {
+                    "tempSensor": {
                         "version": "1.0",
                         "type": "docker",
                         "status": "running",
                         "restartPolicy": "always",
                         "settings": {
-                            "image": "<dockeruser>/<image>:<tag>",
+                            "image": "microsoft/azureiotedge-simulated-temperature-sensor:1.0-preview",
                             "createOptions": "{}"
                         }
                     }
@@ -243,7 +244,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
                     "route": "FROM /* INTO $upstream"
                 },
                 "storeAndForwardConfiguration": {
-                    "timeToLiveSecs": 10
+                    "timeToLiveSecs": 7200
                 }
             }
         }
