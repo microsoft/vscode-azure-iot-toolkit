@@ -55,7 +55,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
     public async setupEdgeFromConfig() {
         TelemetryClient.sendEvent("Edge.SetupFromConfig.Start");
         const filePathUri: vscode.Uri[] = await vscode.window.showOpenDialog({
-            openLabel: "Select Config File",
+            openLabel: "Select Edge Setup Configuration File",
             filters: {
                 JSON: ["json"],
             },
@@ -87,18 +87,18 @@ export class IoTEdgeExplorer extends BaseExplorer {
         TelemetryClient.sendEvent("AZ.Edge.Uninstall");
     }
 
-    public async generateEdgeLaunchConfig(deviceItem?: DeviceItem) {
-        TelemetryClient.sendEvent("Edge.GenerateLaunchConfig.Start");
+    public async generateEdgeSetupConfig(deviceItem?: DeviceItem) {
+        TelemetryClient.sendEvent("Edge.GenerateSetupConfig.Start");
         if (!deviceItem) {
             return;
         }
 
         const containerOS: string = await vscode.window.showQuickPick(["Linux", "Windows"], { placeHolder: "Select container OS", ignoreFocusOut: true });
         if (containerOS) {
-            const configContent: string = this.generateEdgeLaunchConfigContent(deviceItem.connectionString, containerOS);
+            const configContent: string = this.generateEdgeSetupConfigContent(deviceItem.connectionString, containerOS);
             const configPath: vscode.Uri = await vscode.window.showSaveDialog({
-                defaultUri: vscode.workspace.workspaceFolders ? vscode.Uri.file(path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, "launchConfig.json")) : undefined,
-                saveLabel: "Save Edge launch configuration file",
+                defaultUri: vscode.workspace.workspaceFolders ? vscode.Uri.file(path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, "config.json")) : undefined,
+                saveLabel: "Save Edge Setup Configuration File",
                 filters: {
                     JSON: ["json"],
                 },
@@ -106,17 +106,17 @@ export class IoTEdgeExplorer extends BaseExplorer {
 
             if (configPath) {
                 Utility.writeFile(configPath, configContent);
-                TelemetryClient.sendEvent("Edge.GenerateLaunchConfig.Done");
+                TelemetryClient.sendEvent("Edge.GenerateSetupConfig.Done");
             }
         }
     }
 
-    public async generateEdgeConfig() {
-        TelemetryClient.sendEvent("Edge.GenerateEdgeConfig.Start");
-        const configContent: string = this.generateEdgeConfigContent();
+    public async generateEdgeDeploymentConfig() {
+        TelemetryClient.sendEvent("Edge.GenerateDeploymentConfig.Start");
+        const configContent: string = this.generateEdgeDeploymentConfigContent();
         const configPath: vscode.Uri = await vscode.window.showSaveDialog({
-            defaultUri: vscode.workspace.workspaceFolders ? vscode.Uri.file(path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, "edgeConfig.json")) : undefined,
-            saveLabel: "Save Edge configuration file",
+            defaultUri: vscode.workspace.workspaceFolders ? vscode.Uri.file(path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, "deployment.json")) : undefined,
+            saveLabel: "Save Edge Deployment Configuration File",
             filters: {
                 JSON: ["json"],
             },
@@ -124,13 +124,13 @@ export class IoTEdgeExplorer extends BaseExplorer {
 
         if (configPath) {
             Utility.writeFile(configPath, configContent);
-            TelemetryClient.sendEvent("Edge.GenerateEdgeConfig.Done");
+            TelemetryClient.sendEvent("Edge.GenerateDeploymentConfig.Done");
         }
     }
 
     private async getDeploymentJson(): Promise<string> {
         const filePathUri: vscode.Uri[] = await vscode.window.showOpenDialog({
-            openLabel: "Select Deployment File",
+            openLabel: "Select Edge Deployment Configuration File",
             filters: {
                 JSON: ["json"],
             },
@@ -169,7 +169,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
             });
     }
 
-    private generateEdgeLaunchConfigContent(connectionString: string, containerOS: string): string {
+    private generateEdgeSetupConfigContent(connectionString: string, containerOS: string): string {
         return `{
     "deployment": {
         "docker": {
@@ -206,7 +206,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 }`;
     }
 
-    private generateEdgeConfigContent(): string {
+    private generateEdgeDeploymentConfigContent(): string {
         return `{
     "moduleContent": {
         "$edgeAgent": {

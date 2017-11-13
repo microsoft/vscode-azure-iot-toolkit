@@ -2,7 +2,7 @@
 
 [![Join the chat at https://gitter.im/Microsoft/azure-iot-toolkit](https://badges.gitter.im/Microsoft/azure-iot-toolkit.svg)](https://gitter.im/Microsoft/azure-iot-toolkit?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Interact with Azure IoT Hub, IoT Device Management, IoT Hub Code Snippets.
+Interact with Azure IoT Hub, IoT Device Management, IoT Edge Management, IoT Hub Code Snippets.
 
 ## Device Explorer
 

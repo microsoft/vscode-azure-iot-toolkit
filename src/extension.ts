@@ -109,12 +109,12 @@ export function activate(context: vscode.ExtensionContext) {
         azureIoTExplorer.uninstallEdge();
     }));
 
-    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.generateEdgeLaunchConfig", async (DeviceItem) => {
-        await azureIoTExplorer.generateEdgeLaunchConfig(DeviceItem);
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.generateEdgeSetupConfig", async (DeviceItem) => {
+        await azureIoTExplorer.generateEdgeSetupConfig(DeviceItem);
     }));
 
-    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.generateEdgeConfig", async () => {
-        await azureIoTExplorer.generateEdgeConfig();
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.generateEdgeDeploymentConfig", async () => {
+        await azureIoTExplorer.generateEdgeDeploymentConfig();
     }));
 
     vscode.workspace.onDidChangeTextDocument((event) => azureIoTExplorer.replaceConnectionString(event));
