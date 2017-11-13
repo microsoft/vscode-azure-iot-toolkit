@@ -2,6 +2,7 @@
 import * as vscode from "vscode";
 import { AzureIoTExplorer } from "./azureIoTExplorer";
 import { DeviceTree } from "./deviceTree";
+import { Executor } from "./executor";
 
 export function activate(context: vscode.ExtensionContext) {
     let azureIoTExplorer = new AzureIoTExplorer(context);
@@ -118,6 +119,10 @@ export function activate(context: vscode.ExtensionContext) {
     }));
 
     vscode.workspace.onDidChangeTextDocument((event) => azureIoTExplorer.replaceConnectionString(event));
+
+    context.subscriptions.push(vscode.window.onDidCloseTerminal((closedTerminal: vscode.Terminal) => {
+        Executor.onDidCloseTerminal(closedTerminal);
+    }));
 
     context.subscriptions.push(sendD2CMessage);
     context.subscriptions.push(startMonitorIoTHubMessage);
