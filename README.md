@@ -18,6 +18,10 @@ Interact with Azure IoT Hub, IoT Device Management, IoT Edge Management, IoT Hub
     * Monitor C2D message from IoT Hub
     * Invoke Direct Method
     * Get/update Device Twin
+* Interact with Azure IoT Edge
+    * Manage Edge runtime
+    * Create deployment for Edge device
+    * Generate Edge configuration file
 
 ### Prerequisites
 
