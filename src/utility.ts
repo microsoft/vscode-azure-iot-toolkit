@@ -95,8 +95,11 @@ export class Utility {
     }
 
     public static adjustFilePath(filePath: string): string {
+        if (os.platform() !== "win32") {
+            return filePath;
+        }
         const windowsShell = vscode.workspace.getConfiguration("terminal").get<string>("integrated.shell.windows");
-        if (os.platform() !== "win32" || !windowsShell) {
+        if (!windowsShell) {
             return filePath;
         }
         const terminalRoot = Utility.getConfiguration().get<string>("terminalRoot");
