@@ -1,8 +1,8 @@
 {
   "name": "azure-iot-toolkit",
   "displayName": "Azure IoT Toolkit",
-  "description": "Interact with Azure IoT Hub, IoT Device Management, IoT Hub Code Snippets",
-  "version": "0.3.0",
+  "description": "Interact with Azure IoT Hub, IoT Device Management, IoT Edge Management, IoT Hub Code Snippets",
+  "version": "0.4.0",
   "publisher": "vsciot-vscode",
   "icon": "logo.png",
   "engines": {
@@ -17,7 +17,7 @@
     "azure",
     "iot",
     "device",
-    "explorer",
+    "IoT Edge",
     "cloud"
   ],
   "activationEvents": [
@@ -45,8 +45,8 @@
     "onCommand:azure-iot-toolkit.stopEdge",
     "onCommand:azure-iot-toolkit.restartEdge",
     "onCommand:azure-iot-toolkit.uninstallEdge",
-    "onCommand:azure-iot-toolkit.generateEdgeLaunchConfig",
-    "onCommand:azure-iot-toolkit.generateEdgeConfig"
+    "onCommand:azure-iot-toolkit.generateEdgeSetupConfig",
+    "onCommand:azure-iot-toolkit.generateEdgeDeploymentConfig"
   ],
   "main": "./out/src/extension",
   "contributes": {
@@ -151,7 +151,7 @@
       },
       {
         "command": "azure-iot-toolkit.setupEdgeFromConfig",
-        "title": "Setup Edge from configuration file",
+        "title": "Setup Edge using configuration file",
         "category": "Edge"
       },
       {
@@ -184,13 +184,13 @@
         }
       },
       {
-        "command": "azure-iot-toolkit.generateEdgeLaunchConfig",
-        "title": "Generate Edge launch configuration file",
+        "command": "azure-iot-toolkit.generateEdgeSetupConfig",
+        "title": "Generate Edge setup configuration file",
         "category": "Edge"
       },
       {
-        "command": "azure-iot-toolkit.generateEdgeConfig",
-        "title": "Generate Edge configuration file",
+        "command": "azure-iot-toolkit.generateEdgeDeploymentConfig",
+        "title": "Generate Edge deployment configuration file",
         "category": "Edge"
       }
     ],
@@ -279,7 +279,7 @@
           "group": "azure-iot-toolkit-edge@1"
         },
         {
-          "command": "azure-iot-toolkit.generateEdgeLaunchConfig",
+          "command": "azure-iot-toolkit.generateEdgeSetupConfig",
           "when": "view == iotHubDevices && viewItem == device",
           "group": "azure-iot-toolkit-edge@2"
         }

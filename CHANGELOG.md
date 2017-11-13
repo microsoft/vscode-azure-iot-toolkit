@@ -1,3 +1,10 @@
+### 0.4.0 (2017-11-13)
+* [Added] Add support for IoT Edge
+* [Added] Monitor D2C message per device
+* [Changed] Show application properties when monitoring D2C message
+* [Changed] Show device id when monitoring D2C message
+* [Changed] Sort devices by device id in device tree
+
 ### 0.3.0 (2017-10-17)
 * [Added] Select IoT Hub with Azure login
 * [Added] Copy connection string
