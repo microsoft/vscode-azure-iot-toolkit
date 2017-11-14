@@ -106,12 +106,12 @@ export class Utility {
         if (terminalRoot) {
             return filePath.replace(/^([A-Za-z]):/, (match, p1) => `${terminalRoot}${p1.toLowerCase()}`).replace(/\\/g, "/");
         }
-        let winshell = windowsShell.toLowerCase();
-        if (windowsShell.indexOf("bash") > -1 && windowsShell.indexOf("git") > -1) {
+        let winshellLowercase = windowsShell.toLowerCase();
+        if (winshellLowercase.indexOf("bash") > -1 && winshellLowercase.indexOf("git") > -1) {
             // Git Bash
             return filePath.replace(/^([A-Za-z]):/, (match, p1) => `/${p1.toLowerCase()}`).replace(/\\/g, "/");
         }
-        if (windowsShell.indexOf("bash") > -1 && windowsShell.indexOf("windows") > -1) {
+        if (winshellLowercase.indexOf("bash") > -1 && winshellLowercase.indexOf("windows") > -1) {
             // Bash on Ubuntu on Windows
             return filePath.replace(/^([A-Za-z]):/, (match, p1) => `/mnt/${p1.toLowerCase()}`).replace(/\\/g, "/");
         }
