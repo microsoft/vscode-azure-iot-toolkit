@@ -26,6 +26,7 @@ export class BaseExplorer {
             this.outputLine(label, err.message);
             if (eventHubClient) {
                 eventHubClient.close();
+                eventHubClient = null;
             }
         };
     };
