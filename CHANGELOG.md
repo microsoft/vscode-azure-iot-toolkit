@@ -1,3 +1,7 @@
+### 0.4.1 (2017-11-14)
+* [Fixed] Handle terminal closed
+* [Fixed] Set eventHubClient as null when there is error
+
 ### 0.4.0 (2017-11-13)
 * [Added] Add support for IoT Edge
 * [Added] Monitor D2C message per device
