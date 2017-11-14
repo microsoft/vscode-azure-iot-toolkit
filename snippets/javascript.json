@@ -199,7 +199,7 @@
             "",
             "client.open(function (err) {",
             "\tif (err) {",
-            "\t\tconsole.error('could not open IotHub client');",
+            "\t\tconsole.error('could not open IoTHub client');",
             "\t} else {",
             "\t\tconsole.log('client opened');",
             "\t\tclient.onDeviceMethod('${1:writeLine}', onWriteLine);",

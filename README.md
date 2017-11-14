@@ -33,7 +33,7 @@ Interact with Azure IoT Hub, IoT Device Management, IoT Edge Management, IoT Hub
 
   ![Set Connection String](https://github.com/formulahendry/vscode-azure-iot-toolkit/raw/master/images/set-connection-string.png)
 
-3. An input box will pop up, then enter your Iot Hub Connection String (It is one-time configuration, and please make sure it is **Iot Hub Connection String** not **Device Connection String**. The format is `HostName=<my-hub>.azure-devices.net;SharedAccessKeyName=<my-policy>;SharedAccessKey=<my-policy-key>`).
+3. An input box will pop up, then enter your IoT Hub Connection String (It is one-time configuration, and please make sure it is **IoT Hub Connection String** not **Device Connection String**. The format is `HostName=<my-hub>.azure-devices.net;SharedAccessKeyName=<my-policy>;SharedAccessKey=<my-policy-key>`).
 
   ![Enter Connection String](https://github.com/formulahendry/vscode-azure-iot-toolkit/raw/master/images/enter-connection-string.png)
 

@@ -11,7 +11,7 @@ export class Constants {
     public static DeviceConnectionStringKey = "deviceConnectionString";
     public static DeviceConnectionStringTitle = "Device Connection String";
     public static IotHubConnectionStringKey = "iotHubConnectionString";
-    public static IotHubConnectionStringTitle = "Iot Hub Connection String";
+    public static IotHubConnectionStringTitle = "IoT Hub Connection String";
     public static IoTHubConsumerGroup = "iotHubConsumerGroup";
     public static IoTHubD2CMessageStringifyKey = "iotHubD2CMessageStringify";
 
