@@ -1,7 +1,6 @@
 "use strict";
 import * as vscode from "vscode";
 import { DeviceExplorer } from "./deviceExplorer";
-import { EventHubMessageExplorer } from "./eventHubMessageExplorer";
 import { IoTEdgeExplorer } from "./iotEdgeExplorer";
 import { IotHubC2DMessageExplorer } from "./iotHubC2DMessageExplorer";
 import { IotHubDeviceTwinExplorer } from "./iotHubDeviceTwinExplorer";
@@ -14,7 +13,6 @@ import { SnippetManager } from "./snippetManager";
 export class AzureIoTExplorer {
     private _iotHubC2DMessageExplorer: IotHubC2DMessageExplorer;
     private _iotHubMessageExplorer: IoTHubMessageExplorer;
-    private _eventHubMessageExplorer: EventHubMessageExplorer;
     private _deviceExplorer: DeviceExplorer;
     private _snippetManager: SnippetManager;
     private _iotHubDirectMethodExplorer: IotHubDirectMethodExplorer;
@@ -26,7 +24,6 @@ export class AzureIoTExplorer {
         let outputChannel = vscode.window.createOutputChannel("Azure IoT Toolkit");
         this._iotHubC2DMessageExplorer = new IotHubC2DMessageExplorer(outputChannel);
         this._iotHubMessageExplorer = new IoTHubMessageExplorer(outputChannel);
-        this._eventHubMessageExplorer = new EventHubMessageExplorer(outputChannel);
         this._deviceExplorer = new DeviceExplorer(outputChannel);
         this._snippetManager = new SnippetManager(outputChannel);
         this._iotHubDirectMethodExplorer = new IotHubDirectMethodExplorer(outputChannel);
@@ -57,18 +54,6 @@ export class AzureIoTExplorer {
 
     public stopMonitorC2DMessage(): void {
         this._iotHubC2DMessageExplorer.stopMonitorC2DMessage();
-    }
-
-    public sendMessageToEventHub(): void {
-        this._eventHubMessageExplorer.sendMessageToEventHub();
-    }
-
-    public startMonitorEventHubMessage(): void {
-        this._eventHubMessageExplorer.startMonitorEventHubMessage();
-    }
-
-    public stopMonitorEventHubMessage(): void {
-        this._eventHubMessageExplorer.stopMonitorEventHubMessage();
     }
 
     public listDevice(): void {

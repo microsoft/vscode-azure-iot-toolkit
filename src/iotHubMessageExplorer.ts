@@ -10,8 +10,6 @@ import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
 export class IoTHubMessageExplorer extends BaseExplorer {
-    private _eventHubClient;
-
     constructor(outputChannel: vscode.OutputChannel) {
         super(outputChannel);
     }
@@ -59,7 +57,7 @@ export class IoTHubMessageExplorer extends BaseExplorer {
             const deviceLabel = deviceItem ? `[${deviceItem.deviceId}]` : "all devices";
             this.outputLine(Constants.IoTHubMonitorLabel, `Start monitoring D2C message for ${deviceLabel} ...`);
             TelemetryClient.sendEvent(Constants.IoTHubAIStartMonitorEvent);
-            this.startMonitor(this._eventHubClient, Constants.IoTHubMonitorLabel, consumerGroup, deviceItem);
+            this.startMonitor(Constants.IoTHubMonitorLabel, consumerGroup, deviceItem);
         } catch (e) {
             this.outputLine(Constants.IoTHubMonitorLabel, e);
             TelemetryClient.sendEvent(Constants.IoTHubAIStartMonitorEvent, { Result: "Exception", Message: e });
@@ -67,7 +65,7 @@ export class IoTHubMessageExplorer extends BaseExplorer {
     }
 
     public stopMonitorIoTHubMessage(): void {
-        this.stopMonitor(this._eventHubClient, Constants.IoTHubMonitorLabel, Constants.IoTHubAIStopMonitorEvent);
+        this.stopMonitor(Constants.IoTHubMonitorLabel, Constants.IoTHubAIStopMonitorEvent);
         this._eventHubClient = null;
     }
 }
