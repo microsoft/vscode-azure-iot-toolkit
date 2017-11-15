@@ -1,3 +1,6 @@
+### 0.4.2 (2017-11-15)
+* [Fixed] Stop monitoring D2C message and show friendly message when there is error
+
 ### 0.4.1 (2017-11-14)
 * [Fixed] Handle terminal closed
 * [Fixed] Set eventHubClient as null when there is error
