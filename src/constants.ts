@@ -6,7 +6,6 @@ export class Constants {
     public static CampaignID = "vsciottoolkit";
 
     public static IoTHub = "IoT Hub";
-    public static EventHub = "Event Hub";
 
     public static DeviceConnectionStringKey = "deviceConnectionString";
     public static DeviceConnectionStringTitle = "Device Connection String";
@@ -14,15 +13,6 @@ export class Constants {
     public static IotHubConnectionStringTitle = "IoT Hub Connection String";
     public static IoTHubConsumerGroup = "iotHubConsumerGroup";
     public static IoTHubD2CMessageStringifyKey = "iotHubD2CMessageStringify";
-
-    public static EventHubConnectionStringKey = "eventHubConnectionString";
-    public static EventHubConnectionStringTitle = "Event Hub Connection String";
-    public static EventHubPathKey = "eventHubPath";
-    public static EventHubPathTitle = "Event Hub Path";
-    public static EventHubConsumerGroup = "eventHubConsumerGroup";
-
-    public static EventHubMonitorLabel = "EventHubMonitor";
-    public static EventHubMessageLabel = "EventHubMessage";
     public static IoTHubMonitorLabel = "IoTHubMonitor";
     public static IoTHubMessageLabel = "D2CMessage";
     public static IoTHubC2DMessageLabel = "C2DMessage";
@@ -45,10 +35,6 @@ export class Constants {
     public static IoTHubAIEdgeDeployDoneEvent = "AZ.Edge.Deploy.Done";
 
     public static IoTHubAIStartLoadDeviceTreeEvent = "General.StartLoadDeviceTree";
-
-    public static EventHubAIStartMonitorEvent = "EventHub.startMonitoring";
-    public static EventHubAIStopMonitorEvent = "EventHub.stopMonitoring";
-    public static EventHubAIMessageEvent = "EventHub.Send";
 
     public static ConnectionStringFormat = {
         [Constants.IotHubConnectionStringKey]: "HostName=<my-hostname>;SharedAccessKeyName=<my-policy>;SharedAccessKey=<my-policy-key>",
