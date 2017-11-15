@@ -7,6 +7,7 @@ import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
 export class BaseExplorer {
+    protected _eventHubClient;
     protected _outputChannel: vscode.OutputChannel;
 
     constructor(outputChannel: vscode.OutputChannel) {
@@ -21,12 +22,13 @@ export class BaseExplorer {
         this._outputChannel.appendLine(`[${label}] ${message}`);
     }
 
-    protected printError(outputChannel: vscode.OutputChannel, label: string, eventHubClient: EventHubClient) {
+    protected printError(outputChannel: vscode.OutputChannel, label: string) {
         return (err) => {
             this.outputLine(label, err.message);
-            if (eventHubClient) {
-                eventHubClient.close();
-                eventHubClient = null;
+            if (this._eventHubClient) {
+                this.outputLine(label, "D2C monitoring stopped. Please try to start monitoring again or use a differnt consumer group to monitor.");
+                this._eventHubClient.close();
+                this._eventHubClient = null;
             }
         };
     };
@@ -60,16 +62,16 @@ export class BaseExplorer {
         };
     };
 
-    protected startMonitor(eventHubClient: EventHubClient, label: string, consumerGroup: string, deviceItem?: DeviceItem) {
-        if (eventHubClient) {
-            eventHubClient.open()
-                .then(eventHubClient.getPartitionIds.bind(eventHubClient))
+    protected startMonitor(label: string, consumerGroup: string, deviceItem?: DeviceItem) {
+        if (this._eventHubClient) {
+            this._eventHubClient.open()
+                .then(this._eventHubClient.getPartitionIds.bind(this._eventHubClient))
                 .then((partitionIds: any) => {
                     return partitionIds.map((partitionId) => {
-                        return eventHubClient.createReceiver(consumerGroup, partitionId, { startAfterTime: Date.now() })
+                        return this._eventHubClient.createReceiver(consumerGroup, partitionId, { startAfterTime: Date.now() })
                             .then((receiver) => {
                                 this.outputLine(label, `Created partition receiver [${partitionId}] for consumerGroup [${consumerGroup}]`);
-                                receiver.on("errorReceived", this.printError(this._outputChannel, label, eventHubClient));
+                                receiver.on("errorReceived", this.printError(this._outputChannel, label));
                                 receiver.on("message", this.printMessage(this._outputChannel, label, deviceItem));
                             });
                     });
@@ -77,12 +79,12 @@ export class BaseExplorer {
         }
     }
 
-    protected stopMonitor(eventHubClient: EventHubClient, label: string, aiEvent: string) {
+    protected stopMonitor(label: string, aiEvent: string) {
         TelemetryClient.sendEvent(aiEvent);
         this._outputChannel.show();
-        if (eventHubClient) {
+        if (this._eventHubClient) {
             this.outputLine(label, "D2C monitoring stopped.");
-            eventHubClient.close();
+            this._eventHubClient.close();
         } else {
             this.outputLine(label, "No D2C monitor job running.");
         }
