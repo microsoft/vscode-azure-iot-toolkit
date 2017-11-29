@@ -9,17 +9,14 @@ import * as stripJsonComments from "strip-json-comments";
 import * as vscode from "vscode";
 import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
-import { DeviceExplorer } from "./deviceExplorer";
 import { Executor } from "./executor";
 import { DeviceItem } from "./Model/DeviceItem";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
 export class IoTEdgeExplorer extends BaseExplorer {
-    private _deviceExplorer: DeviceExplorer;
     constructor(outputChannel: vscode.OutputChannel) {
         super(outputChannel);
-        this._deviceExplorer = new DeviceExplorer(outputChannel);
     }
 
     public async createDeployment(deviceItem: DeviceItem) {
@@ -91,34 +88,24 @@ export class IoTEdgeExplorer extends BaseExplorer {
     }
 
     public async generateEdgeSetupConfig(deviceItem?: DeviceItem) {
-        if (!deviceItem) {
-            TelemetryClient.sendEvent("Edge.GenerateSetupConfig.Start", { entry: "commandPalette" });
-            let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
-            if (!iotHubConnectionString) {
-                return;
-            }
+        deviceItem = await Utility.getInputDevice(deviceItem, "Edge.GenerateSetupConfig.Start");
 
-            const deviceList: DeviceItem[] = await this._deviceExplorer.getDeviceList(iotHubConnectionString);
-            deviceItem = await vscode.window.showQuickPick(deviceList, { placeHolder: "Select an IoT Hub device" });
-            return;
-        } else {
-            TelemetryClient.sendEvent("Edge.GenerateSetupConfig.Start", { entry: "contextMenu" });
-        }
+        if (deviceItem) {
+            const containerOS: string = await vscode.window.showQuickPick(["Linux", "Windows"], { placeHolder: "Select container OS", ignoreFocusOut: true });
+            if (containerOS) {
+                const configContent: string = this.generateEdgeSetupConfigContent(deviceItem.connectionString, containerOS);
+                const configPath: vscode.Uri = await vscode.window.showSaveDialog({
+                    defaultUri: vscode.workspace.workspaceFolders ? vscode.Uri.file(path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, "config.json")) : undefined,
+                    saveLabel: "Save Edge Setup Configuration File",
+                    filters: {
+                        JSON: ["json"],
+                    },
+                });
 
-        const containerOS: string = await vscode.window.showQuickPick(["Linux", "Windows"], { placeHolder: "Select container OS", ignoreFocusOut: true });
-        if (containerOS) {
-            const configContent: string = this.generateEdgeSetupConfigContent(deviceItem.connectionString, containerOS);
-            const configPath: vscode.Uri = await vscode.window.showSaveDialog({
-                defaultUri: vscode.workspace.workspaceFolders ? vscode.Uri.file(path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, "config.json")) : undefined,
-                saveLabel: "Save Edge Setup Configuration File",
-                filters: {
-                    JSON: ["json"],
-                },
-            });
-
-            if (configPath) {
-                Utility.writeFile(configPath, configContent);
-                TelemetryClient.sendEvent("Edge.GenerateSetupConfig.Done");
+                if (configPath) {
+                    Utility.writeFile(configPath, configContent);
+                    TelemetryClient.sendEvent("Edge.GenerateSetupConfig.Done");
+                }
             }
         }
     }

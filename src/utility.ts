@@ -4,7 +4,10 @@ import * as crypto from "crypto";
 import * as fs from "fs";
 import * as os from "os";
 import * as vscode from "vscode";
+import { OutputChannel } from "vscode";
 import { Constants } from "./constants";
+import { DeviceExplorer } from "./deviceExplorer";
+import { DeviceItem } from "./Model/DeviceItem";
 import { TelemetryClient } from "./telemetryClient";
 
 export class Utility {
@@ -126,6 +129,23 @@ export class Utility {
             }
             vscode.window.showTextDocument(filePath);
         });
+    }
+
+    public static async getInputDevice(deviceItem: DeviceItem, eventName: string): Promise<DeviceItem> {
+        if (!deviceItem) {
+            TelemetryClient.sendEvent(eventName, { entry: "commandPalette" });
+            let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
+            if (!iotHubConnectionString) {
+                return null;
+            }
+
+            const deviceList: DeviceItem[] = await new DeviceExplorer().getDeviceList(iotHubConnectionString);
+            deviceItem = await vscode.window.showQuickPick(deviceList, { placeHolder: "Select an IoT Hub device" });
+            return deviceItem;
+        } else {
+            TelemetryClient.sendEvent(eventName, { entry: "contextMenu" });
+            return deviceItem;
+        }
     }
 
     private static showIoTHubInformationMessage(): void {

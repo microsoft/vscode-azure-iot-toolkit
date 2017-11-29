@@ -10,7 +10,7 @@ import * as path from "path";
 import * as vscode from "vscode";
 
 export class DeviceExplorer extends BaseExplorer {
-    constructor(outputChannel: vscode.OutputChannel, private context?: vscode.ExtensionContext) {
+    constructor(outputChannel?: vscode.OutputChannel, private context?: vscode.ExtensionContext) {
         super(outputChannel);
     }
 
