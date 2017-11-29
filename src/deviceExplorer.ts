@@ -1,15 +1,16 @@
 "use strict";
 import { ConnectionString } from "azure-iot-device";
-import * as vscode from "vscode";
 import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
 import { DeviceItem } from "./Model/DeviceItem";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 import iothub = require("azure-iothub");
+import * as path from "path";
+import * as vscode from "vscode";
 
 export class DeviceExplorer extends BaseExplorer {
-    constructor(outputChannel: vscode.OutputChannel) {
+    constructor(outputChannel: vscode.OutputChannel, private context?: vscode.ExtensionContext) {
         super(outputChannel);
     }
 
@@ -85,6 +86,44 @@ export class DeviceExplorer extends BaseExplorer {
                 }
             });
         }
+    }
+
+    public async getDeviceList(iotHubConnectionString: string): Promise<DeviceItem[]> {
+        if (!iotHubConnectionString) {
+            return null;
+        }
+
+        let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
+        let devices = [];
+        let hostName = Utility.getHostName(iotHubConnectionString);
+
+        return new Promise<DeviceItem[]>((resolve, reject) => {
+            registry.list((err, deviceList) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    deviceList.forEach((device, index) => {
+                        let image = device.connectionState.toString() === "Connected" ? "device-on.png" : "device-off.png";
+                        let deviceConnectionString = "";
+                        if (device.authentication.SymmetricKey.primaryKey != null) {
+                            deviceConnectionString = ConnectionString.createWithSharedAccessKey(hostName, device.deviceId,
+                                device.authentication.SymmetricKey.primaryKey);
+                        } else if (device.authentication.x509Thumbprint.primaryThumbprint != null) {
+                            deviceConnectionString = ConnectionString.createWithX509Certificate(hostName, device.deviceId);
+                        }
+                        devices.push(new DeviceItem(device.deviceId,
+                            deviceConnectionString,
+                            this.context ? this.context.asAbsolutePath(path.join("resources", image)) : null,
+                            {
+                                command: "azure-iot-toolkit.getDevice",
+                                title: "",
+                                arguments: [device.deviceId],
+                            }));
+                    });
+                    resolve(devices.sort((a: DeviceItem, b: DeviceItem) => { return a.deviceId.localeCompare(b.deviceId); }));
+                }
+            });
+        });
     }
 
     private deleteDeviceById(deviceId: string, label: string, registry: iothub.Registry): void {
