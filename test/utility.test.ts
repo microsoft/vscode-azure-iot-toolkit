@@ -18,6 +18,7 @@ suite("Utility Tests ", () => {
 
     // tslint:disable-next-line:only-arrow-functions
     test("should be able to get IoT Hub Connection String", function (done) {
+        this.timeout(5 * 1000);
         let config = Utility.getConfiguration();
         config.update(Constants.IotHubConnectionStringKey, TestConstants.IotHubConnectionString, true).then(() => {
             Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle).then((IotHubConnectionString) => {
@@ -29,6 +30,7 @@ suite("Utility Tests ", () => {
 
     // tslint:disable-next-line:only-arrow-functions
     test("should be able to get 'null' value when querying a invalid IoT Hub Connection String", function (done) {
+        this.timeout(5 * 1000);
         let config = Utility.getConfiguration();
         config.update(Constants.IotHubConnectionStringKey, TestConstants.InvalidIotHubConnectionString, true).then(() => {
             let IotHubConnectionString = Utility.getConnectionStringWithId(Constants.IotHubConnectionStringKey);
