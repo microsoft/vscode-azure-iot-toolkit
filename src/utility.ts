@@ -138,7 +138,7 @@ export class Utility {
                 return null;
             }
 
-            const deviceList: DeviceItem[] = await new DeviceExplorer().getDeviceList(iotHubConnectionString);
+            const deviceList: Promise<DeviceItem[]> = new DeviceExplorer().getDeviceList(iotHubConnectionString);
             deviceItem = await vscode.window.showQuickPick(deviceList, { placeHolder: "Select an IoT Hub device" });
             return deviceItem;
         } else {
