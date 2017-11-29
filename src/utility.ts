@@ -4,7 +4,6 @@ import * as crypto from "crypto";
 import * as fs from "fs";
 import * as os from "os";
 import * as vscode from "vscode";
-import { OutputChannel } from "vscode";
 import { Constants } from "./constants";
 import { DeviceExplorer } from "./deviceExplorer";
 import { DeviceItem } from "./Model/DeviceItem";
