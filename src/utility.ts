@@ -133,7 +133,7 @@ export class Utility {
     public static async getInputDevice(deviceItem: DeviceItem, eventName: string): Promise<DeviceItem> {
         if (!deviceItem) {
             TelemetryClient.sendEvent(eventName, { entry: "commandPalette" });
-            let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
+            const iotHubConnectionString: string = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
             if (!iotHubConnectionString) {
                 return null;
             }

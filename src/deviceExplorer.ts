@@ -6,6 +6,7 @@ import { DeviceItem } from "./Model/DeviceItem";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 import iothub = require("azure-iothub");
+import { Registry } from "azure-iothub/lib/registry";
 import * as path from "path";
 import * as vscode from "vscode";
 
@@ -93,9 +94,9 @@ export class DeviceExplorer extends BaseExplorer {
             return null;
         }
 
-        let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
-        let devices = [];
-        let hostName = Utility.getHostName(iotHubConnectionString);
+        const registry: Registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
+        const devices: DeviceItem[] = [];
+        const hostName: string = Utility.getHostName(iotHubConnectionString);
 
         return new Promise<DeviceItem[]>((resolve, reject) => {
             registry.list((err, deviceList) => {
@@ -103,8 +104,8 @@ export class DeviceExplorer extends BaseExplorer {
                     reject(err);
                 } else {
                     deviceList.forEach((device, index) => {
-                        let image = device.connectionState.toString() === "Connected" ? "device-on.png" : "device-off.png";
-                        let deviceConnectionString = "";
+                        const image: string = device.connectionState.toString() === "Connected" ? "device-on.png" : "device-off.png";
+                        let deviceConnectionString: string = "";
                         if (device.authentication.SymmetricKey.primaryKey != null) {
                             deviceConnectionString = ConnectionString.createWithSharedAccessKey(hostName, device.deviceId,
                                 device.authentication.SymmetricKey.primaryKey);
