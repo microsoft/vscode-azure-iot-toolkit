@@ -88,7 +88,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
     }
 
     public async generateEdgeSetupConfig(deviceItem?: DeviceItem) {
-        deviceItem = await Utility.getInputDevice(deviceItem, "Edge.GenerateSetupConfig.Start", null);
+        deviceItem = await Utility.getInputDevice(deviceItem, "Edge.GenerateSetupConfig.Start");
 
         if (deviceItem) {
             const containerOS: string = await vscode.window.showQuickPick(["Linux", "Windows"], { placeHolder: "Select container OS", ignoreFocusOut: true });
@@ -243,7 +243,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
                         "status": "running",
                         "restartPolicy": "always",
                         "settings": {
-                            "image": "<dockeruser>/<image>:<tag>",
+                            "image": "<registry>/<image>:<tag>",
                             "createOptions": "{}"
                         }
                     }
