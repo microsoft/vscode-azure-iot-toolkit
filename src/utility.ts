@@ -1,5 +1,5 @@
 "use strict";
-import { ConnectionString as CS} from "azure-iot-device";
+import { ConnectionString as DeviceConnectionString} from "azure-iot-device";
 import { ConnectionString, Registry, SharedAccessSignature } from "azure-iothub";
 import * as crypto from "crypto";
 import * as fs from "fs";
@@ -166,10 +166,10 @@ export class Utility {
                         const image: string = device.connectionState.toString() === "Connected" ? "device-on.png" : "device-off.png";
                         let deviceConnectionString: string = "";
                         if (device.authentication.SymmetricKey.primaryKey != null) {
-                            deviceConnectionString = CS.createWithSharedAccessKey(hostName, device.deviceId,
+                            deviceConnectionString = DeviceConnectionString.createWithSharedAccessKey(hostName, device.deviceId,
                                 device.authentication.SymmetricKey.primaryKey);
                         } else if (device.authentication.x509Thumbprint.primaryThumbprint != null) {
-                            deviceConnectionString = CS.createWithX509Certificate(hostName, device.deviceId);
+                            deviceConnectionString = DeviceConnectionString.createWithX509Certificate(hostName, device.deviceId);
                         }
                         devices.push(new DeviceItem(device.deviceId,
                             deviceConnectionString,
