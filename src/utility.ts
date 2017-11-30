@@ -178,7 +178,8 @@ export class Utility {
                                 command: "azure-iot-toolkit.getDevice",
                                 title: "",
                                 arguments: [device.deviceId],
-                            }));
+                            },
+                            null));
                     });
                     resolve(devices.sort((a: DeviceItem, b: DeviceItem) => { return a.deviceId.localeCompare(b.deviceId); }));
                 }
