@@ -2,7 +2,6 @@ import { ConnectionString } from "azure-iot-device";
 import * as path from "path";
 import * as vscode from "vscode";
 import { Constants } from "./constants";
-import { DeviceExplorer } from "./deviceExplorer";
 import { DeviceItem } from "./Model/DeviceItem";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
@@ -41,7 +40,7 @@ export class DeviceTree implements vscode.TreeDataProvider<vscode.TreeItem> {
 
         TelemetryClient.sendEvent(Constants.IoTHubAIStartLoadDeviceTreeEvent);
         try {
-            const deviceList: DeviceItem[] = await new DeviceExplorer(null, this.context).getDeviceList(iotHubConnectionString);
+            const deviceList: DeviceItem[] = await Utility.getDeviceList(iotHubConnectionString, this.context);
             TelemetryClient.sendEvent(Constants.IoTHubAILoadDeviceTreeEvent, { Result: "Success", DeviceCount: deviceList.length.toString() });
             return new Promise<vscode.TreeItem[]>((resolve, reject) => {
                 resolve(deviceList);

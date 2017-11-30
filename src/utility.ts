@@ -1,11 +1,12 @@
 "use strict";
-import { ConnectionString, SharedAccessSignature } from "azure-iothub";
+import { ConnectionString as CS} from "azure-iot-device";
+import { ConnectionString, Registry, SharedAccessSignature } from "azure-iothub";
 import * as crypto from "crypto";
 import * as fs from "fs";
 import * as os from "os";
+import * as path from "path";
 import * as vscode from "vscode";
 import { Constants } from "./constants";
-import { DeviceExplorer } from "./deviceExplorer";
 import { DeviceItem } from "./Model/DeviceItem";
 import { TelemetryClient } from "./telemetryClient";
 
@@ -130,7 +131,7 @@ export class Utility {
         });
     }
 
-    public static async getInputDevice(deviceItem: DeviceItem, eventName: string): Promise<DeviceItem> {
+    public static async getInputDevice(deviceItem: DeviceItem, eventName: string, context: vscode.ExtensionContext): Promise<DeviceItem> {
         if (!deviceItem) {
             TelemetryClient.sendEvent(eventName, { entry: "commandPalette" });
             const iotHubConnectionString: string = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
@@ -138,13 +139,51 @@ export class Utility {
                 return null;
             }
 
-            const deviceList: Promise<DeviceItem[]> = new DeviceExplorer().getDeviceList(iotHubConnectionString);
+            const deviceList: Promise<DeviceItem[]> = Utility.getDeviceList(iotHubConnectionString, context);
             deviceItem = await vscode.window.showQuickPick(deviceList, { placeHolder: "Select an IoT Hub device" });
             return deviceItem;
         } else {
             TelemetryClient.sendEvent(eventName, { entry: "contextMenu" });
             return deviceItem;
         }
+    }
+
+    public static async getDeviceList(iotHubConnectionString: string, context: vscode.ExtensionContext): Promise<DeviceItem[]> {
+        if (!iotHubConnectionString) {
+            return null;
+        }
+
+        const registry: Registry = Registry.fromConnectionString(iotHubConnectionString);
+        const devices: DeviceItem[] = [];
+        const hostName: string = Utility.getHostName(iotHubConnectionString);
+
+        return new Promise<DeviceItem[]>((resolve, reject) => {
+            registry.list((err, deviceList) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    deviceList.forEach((device, index) => {
+                        const image: string = device.connectionState.toString() === "Connected" ? "device-on.png" : "device-off.png";
+                        let deviceConnectionString: string = "";
+                        if (device.authentication.SymmetricKey.primaryKey != null) {
+                            deviceConnectionString = CS.createWithSharedAccessKey(hostName, device.deviceId,
+                                device.authentication.SymmetricKey.primaryKey);
+                        } else if (device.authentication.x509Thumbprint.primaryThumbprint != null) {
+                            deviceConnectionString = CS.createWithX509Certificate(hostName, device.deviceId);
+                        }
+                        devices.push(new DeviceItem(device.deviceId,
+                            deviceConnectionString,
+                            context ? context.asAbsolutePath(path.join("resources", image)) : null,
+                            {
+                                command: "azure-iot-toolkit.getDevice",
+                                title: "",
+                                arguments: [device.deviceId],
+                            }));
+                    });
+                    resolve(devices.sort((a: DeviceItem, b: DeviceItem) => { return a.deviceId.localeCompare(b.deviceId); }));
+                }
+            });
+        });
     }
 
     private static showIoTHubInformationMessage(): void {

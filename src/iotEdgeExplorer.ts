@@ -15,7 +15,7 @@ import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
 export class IoTEdgeExplorer extends BaseExplorer {
-    constructor(outputChannel: vscode.OutputChannel) {
+    constructor(outputChannel: vscode.OutputChannel, private context?: vscode.ExtensionContext) {
         super(outputChannel);
     }
 
@@ -88,7 +88,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
     }
 
     public async generateEdgeSetupConfig(deviceItem?: DeviceItem) {
-        deviceItem = await Utility.getInputDevice(deviceItem, "Edge.GenerateSetupConfig.Start");
+        deviceItem = await Utility.getInputDevice(deviceItem, "Edge.GenerateSetupConfig.Start", this.context);
 
         if (deviceItem) {
             const containerOS: string = await vscode.window.showQuickPick(["Linux", "Windows"], { placeHolder: "Select container OS", ignoreFocusOut: true });
