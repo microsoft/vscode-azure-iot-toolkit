@@ -131,7 +131,7 @@ export class Utility {
         });
     }
 
-    public static async getInputDevice(deviceItem: DeviceItem, eventName: string, context: vscode.ExtensionContext): Promise<DeviceItem> {
+    public static async getInputDevice(deviceItem: DeviceItem, eventName: string): Promise<DeviceItem> {
         if (!deviceItem) {
             TelemetryClient.sendEvent(eventName, { entry: "commandPalette" });
             const iotHubConnectionString: string = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
@@ -139,7 +139,7 @@ export class Utility {
                 return null;
             }
 
-            const deviceList: Promise<DeviceItem[]> = Utility.getDeviceList(iotHubConnectionString, context);
+            const deviceList: Promise<DeviceItem[]> = Utility.getDeviceList(iotHubConnectionString);
             deviceItem = await vscode.window.showQuickPick(deviceList, { placeHolder: "Select an IoT Hub device" });
             return deviceItem;
         } else {
@@ -148,7 +148,7 @@ export class Utility {
         }
     }
 
-    public static async getDeviceList(iotHubConnectionString: string, context: vscode.ExtensionContext): Promise<DeviceItem[]> {
+    public static async getDeviceList(iotHubConnectionString: string, context?: vscode.ExtensionContext): Promise<DeviceItem[]> {
         if (!iotHubConnectionString) {
             return null;
         }
