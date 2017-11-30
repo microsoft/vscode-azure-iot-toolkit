@@ -1,12 +1,12 @@
 "use strict";
 import { ConnectionString } from "azure-iot-device";
+import * as vscode from "vscode";
 import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
 import { DeviceItem } from "./Model/DeviceItem";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 import iothub = require("azure-iothub");
-import * as vscode from "vscode";
 
 export class DeviceExplorer extends BaseExplorer {
     constructor(outputChannel: vscode.OutputChannel) {
