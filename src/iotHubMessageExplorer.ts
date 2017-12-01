@@ -15,7 +15,7 @@ export class IoTHubMessageExplorer extends BaseExplorer {
     }
 
     public async sendD2CMessage(deviceItem?: DeviceItem) {
-        deviceItem = await Utility.getInputDevice(deviceItem, "AZ.D2C.startSending");
+        deviceItem = await Utility.getInputDevice(deviceItem, "AZ.D2C.Send.Start");
 
         if (!deviceItem || !deviceItem.connectionString) {
             return;

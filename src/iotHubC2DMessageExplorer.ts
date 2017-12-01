@@ -23,7 +23,7 @@ export class IotHubC2DMessageExplorer extends BaseExplorer {
             return;
         }
 
-        deviceItem = await Utility.getInputDevice(deviceItem, "AZ.C2D.startSending");
+        deviceItem = await Utility.getInputDevice(deviceItem, "AZ.C2D.Send.Start");
 
         if (deviceItem && deviceItem.label) {
             this.sendC2DMessageById(iotHubConnectionString, deviceItem.label);
