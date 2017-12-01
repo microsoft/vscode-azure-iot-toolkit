@@ -28,7 +28,7 @@ export class Constants {
     public static IoTHubAIStopMonitorC2DEvent = "AZ.C2D.stopMonitoring";
     public static IoTHubAIC2DMessageEvent = "AZ.C2D.Send";
     public static IoTHubAIInvokeDeviceMethodEvent = "AZ.DeviceMethod.Invoke";
-    public static IoTHubAIGetDeviceTwinEvent = "AZ.DeviceTwin.Get";
+    public static IoTHubAIGetDeviceTwinEvent = "AZ.DeviceTwin.Get.Done";
     public static IoTHubAIUpdateDeviceTwinEvent = "AZ.DeviceTwin.Update";
     public static IoTHubAIEdgeDeployStartEvent = "Edge.Deploy.Start";
     public static IoTHubAIEdgeDeployDoneEvent = "AZ.Edge.Deploy.Done";
