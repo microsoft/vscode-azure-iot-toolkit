@@ -88,25 +88,24 @@ export class IoTEdgeExplorer extends BaseExplorer {
     }
 
     public async generateEdgeSetupConfig(deviceItem?: DeviceItem) {
-        TelemetryClient.sendEvent("Edge.GenerateSetupConfig.Start");
-        if (!deviceItem) {
-            return;
-        }
+        deviceItem = await Utility.getInputDevice(deviceItem, "Edge.GenerateSetupConfig.Start");
 
-        const containerOS: string = await vscode.window.showQuickPick(["Linux", "Windows"], { placeHolder: "Select container OS", ignoreFocusOut: true });
-        if (containerOS) {
-            const configContent: string = this.generateEdgeSetupConfigContent(deviceItem.connectionString, containerOS);
-            const configPath: vscode.Uri = await vscode.window.showSaveDialog({
-                defaultUri: vscode.workspace.workspaceFolders ? vscode.Uri.file(path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, "config.json")) : undefined,
-                saveLabel: "Save Edge Setup Configuration File",
-                filters: {
-                    JSON: ["json"],
-                },
-            });
+        if (deviceItem) {
+            const containerOS: string = await vscode.window.showQuickPick(["Linux", "Windows"], { placeHolder: "Select container OS", ignoreFocusOut: true });
+            if (containerOS) {
+                const configContent: string = this.generateEdgeSetupConfigContent(deviceItem.connectionString, containerOS);
+                const configPath: vscode.Uri = await vscode.window.showSaveDialog({
+                    defaultUri: vscode.workspace.workspaceFolders ? vscode.Uri.file(path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, "config.json")) : undefined,
+                    saveLabel: "Save Edge Setup Configuration File",
+                    filters: {
+                        JSON: ["json"],
+                    },
+                });
 
-            if (configPath) {
-                Utility.writeFile(configPath, configContent);
-                TelemetryClient.sendEvent("Edge.GenerateSetupConfig.Done");
+                if (configPath) {
+                    Utility.writeFile(configPath, configContent);
+                    TelemetryClient.sendEvent("Edge.GenerateSetupConfig.Done");
+                }
             }
         }
     }
@@ -187,7 +186,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
     },
     "deviceConnectionString": "${connectionString}",
     "homeDir": "${path.join(os.homedir(), "azure_iot_edge").replace(/\\/g, "\\\\")}",
-    "hostName": "${fqdn()}",
+    "hostName": "${fqdn().toLowerCase()}",
     "logLevel": "info",
     "schemaVersion": "1",
     "security": {
@@ -244,7 +243,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
                         "status": "running",
                         "restartPolicy": "always",
                         "settings": {
-                            "image": "<dockeruser>/<image>:<tag>",
+                            "image": "<registry>/<image>:<tag>",
                             "createOptions": "{}"
                         }
                     }
