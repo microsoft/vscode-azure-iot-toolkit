@@ -8,7 +8,6 @@ export class Constants {
     public static IoTHub = "IoT Hub";
 
     public static DeviceConnectionStringKey = "deviceConnectionString";
-    public static DeviceConnectionStringTitle = "Device Connection String";
     public static IotHubConnectionStringKey = "iotHubConnectionString";
     public static IotHubConnectionStringTitle = "IoT Hub Connection String";
     public static IoTHubConsumerGroup = "iotHubConsumerGroup";
