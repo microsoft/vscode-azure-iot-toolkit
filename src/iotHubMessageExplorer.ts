@@ -15,13 +15,13 @@ export class IoTHubMessageExplorer extends BaseExplorer {
     }
 
     public async sendD2CMessage(deviceItem?: DeviceItem) {
-        let deviceConnectionString = (deviceItem && deviceItem.connectionString) ?
-            deviceItem.connectionString : await Utility.getConnectionString(Constants.DeviceConnectionStringKey,
-                Constants.DeviceConnectionStringTitle);
-        if (!deviceConnectionString) {
+        deviceItem = await Utility.getInputDevice(deviceItem, "AZ.D2C.startSending");
+
+        if (!deviceItem || !deviceItem.connectionString) {
             return;
         }
 
+        const deviceConnectionString: string = deviceItem.connectionString;
         vscode.window.showInputBox({ prompt: `Enter message to send to ${Constants.IoTHub}` }).then((message: string) => {
             if (message !== undefined) {
                 this._outputChannel.show();

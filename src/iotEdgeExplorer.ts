@@ -20,7 +20,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
     }
 
     public async createDeployment(deviceItem: DeviceItem) {
-        TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployStartEvent);
+        deviceItem = await Utility.getInputDevice(deviceItem, Constants.IoTHubAIEdgeDeployStartEvent);
 
         if (!deviceItem) {
             return;
@@ -42,7 +42,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
     }
 
     public async setupEdge(deviceItem: DeviceItem) {
-        TelemetryClient.sendEvent("Edge.Setup.Start");
+        deviceItem = await Utility.getInputDevice(deviceItem, "Edge.Setup.Start");
 
         if (!deviceItem) {
             return;

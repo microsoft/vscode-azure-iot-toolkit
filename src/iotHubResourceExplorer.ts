@@ -55,8 +55,8 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         }
     }
 
-    public copyDeviceConnectionString(deviceItem: DeviceItem) {
-        TelemetryClient.sendEvent("AZ.Copy.DeviceConnectionString");
+    public async copyDeviceConnectionString(deviceItem: DeviceItem) {
+        deviceItem = await Utility.getInputDevice(deviceItem, "AZ.Copy.DeviceConnectionString");
         if (deviceItem && deviceItem.connectionString) {
             clipboardy.write(deviceItem.connectionString);
         }

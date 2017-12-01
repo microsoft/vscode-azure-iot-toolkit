@@ -23,17 +23,10 @@ export class IotHubC2DMessageExplorer extends BaseExplorer {
             return;
         }
 
-        if (deviceItem.label) {
+        deviceItem = await Utility.getInputDevice(deviceItem, "AZ.C2D.startSending");
+
+        if (deviceItem && deviceItem.label) {
             this.sendC2DMessageById(iotHubConnectionString, deviceItem.label);
-        } else {
-            let config = Utility.getConfiguration();
-            let deviceConnectionString = config.get<string>(Constants.DeviceConnectionStringKey);
-            let defaultDeviceId = deviceConnectionString.startsWith("<<insert") ? null : ConnectionString.parse(deviceConnectionString).DeviceId;
-            vscode.window.showInputBox({ prompt: `Enter deviceId to send message`, value: defaultDeviceId }).then((deviceId: string) => {
-                if (deviceId !== undefined) {
-                    this.sendC2DMessageById(iotHubConnectionString, deviceId);
-                }
-            });
         }
     }
 
@@ -44,12 +37,12 @@ export class IotHubC2DMessageExplorer extends BaseExplorer {
             return;
         }
 
-        let deviceConnectionString = (deviceItem && deviceItem.connectionString) ?
-            deviceItem.connectionString : await Utility.getConnectionString(Constants.DeviceConnectionStringKey,
-                Constants.DeviceConnectionStringTitle);
-        if (!deviceConnectionString) {
+        deviceItem = await Utility.getInputDevice(deviceItem, Constants.IoTHubAIStartMonitorC2DEvent);
+        if (!deviceItem || !deviceItem.connectionString) {
             return;
         }
+
+        const deviceConnectionString: string = deviceItem.connectionString;
         this._outputChannel.show();
         this._deviceClient = clientFromConnectionString(deviceConnectionString);
         this._deviceClient.open(this.connectCallback(deviceConnectionString));

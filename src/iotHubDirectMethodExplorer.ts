@@ -19,7 +19,10 @@ export class IotHubDirectMethodExplorer extends BaseExplorer {
             return;
         }
 
-        TelemetryClient.sendEvent(Constants.IoTHubAIInvokeDeviceMethodEvent);
+        deviceItem = await Utility.getInputDevice(deviceItem, Constants.IoTHubAIInvokeDeviceMethodEvent);
+        if (!deviceItem) {
+            return;
+        }
 
         vscode.window.showInputBox({ prompt: `Enter [Method Name] sent to [${deviceItem.deviceId}]` }).then((methodName: string) => {
             if (methodName !== undefined) {

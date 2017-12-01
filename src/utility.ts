@@ -1,5 +1,5 @@
 "use strict";
-import { ConnectionString as DeviceConnectionString} from "azure-iot-device";
+import { ConnectionString as DeviceConnectionString } from "azure-iot-device";
 import { ConnectionString, Registry, SharedAccessSignature } from "azure-iothub";
 import * as crypto from "crypto";
 import * as fs from "fs";
