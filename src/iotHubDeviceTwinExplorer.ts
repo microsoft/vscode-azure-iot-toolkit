@@ -79,7 +79,7 @@ export class IotHubDeviceTwinExplorer extends BaseExplorer {
                     this.outputLine(Constants.IoTHubDeviceTwinLabel, `Failed to update Device Twin: ${err.message}`);
                 } else {
                     this.outputLine(Constants.IoTHubDeviceTwinLabel, `Device Twin updated successfully`);
-                    this.getDeviceTwinById(deviceTwinJson);
+                    this.getDeviceTwinById(deviceTwinJson.deviceId);
                 }
             });
         } catch (e) {
