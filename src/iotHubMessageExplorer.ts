@@ -15,13 +15,13 @@ export class IoTHubMessageExplorer extends BaseExplorer {
     }
 
     public async sendD2CMessage(deviceItem?: DeviceItem) {
-        let deviceConnectionString = (deviceItem && deviceItem.connectionString) ?
-            deviceItem.connectionString : await Utility.getConnectionString(Constants.DeviceConnectionStringKey,
-                Constants.DeviceConnectionStringTitle);
-        if (!deviceConnectionString) {
+        deviceItem = await Utility.getInputDevice(deviceItem, Constants.IoTHubAIMessageStartEvent);
+
+        if (!deviceItem || !deviceItem.connectionString) {
             return;
         }
 
+        const deviceConnectionString: string = deviceItem.connectionString;
         vscode.window.showInputBox({ prompt: `Enter message to send to ${Constants.IoTHub}` }).then((message: string) => {
             if (message !== undefined) {
                 this._outputChannel.show();
@@ -29,7 +29,7 @@ export class IoTHubMessageExplorer extends BaseExplorer {
                     let client = clientFromConnectionString(deviceConnectionString);
                     let stringify = Utility.getConfig<boolean>(Constants.IoTHubD2CMessageStringifyKey);
                     client.sendEvent(new Message(stringify ? JSON.stringify(message) : message),
-                        this.sendEventDone(client, Constants.IoTHubMessageLabel, Constants.IoTHub, Constants.IoTHubAIMessageEvent));
+                        this.sendEventDone(client, Constants.IoTHubMessageLabel, Constants.IoTHub, Constants.IoTHubAIMessageDoneEvent));
                 } catch (e) {
                     this.outputLine(Constants.IoTHubMessageLabel, e);
                 }

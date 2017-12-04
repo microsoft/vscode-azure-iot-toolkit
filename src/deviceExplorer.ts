@@ -76,14 +76,9 @@ export class DeviceExplorer extends BaseExplorer {
         }
         let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
 
-        if (deviceItem.label) {
+        deviceItem = await Utility.getInputDevice(deviceItem, "AZ.Device.Delete.Start");
+        if (deviceItem && deviceItem.label) {
             await this.deleteDeviceById(deviceItem.label, label, registry);
-        } else {
-            await vscode.window.showInputBox({ prompt: "Enter device id to delete" }).then((deviceId: string) => {
-                if (deviceId !== undefined) {
-                    this.deleteDeviceById(deviceId, label, registry);
-                }
-            });
         }
     }
 

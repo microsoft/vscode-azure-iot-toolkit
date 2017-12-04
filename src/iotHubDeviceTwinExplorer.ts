@@ -18,13 +18,21 @@ export class IotHubDeviceTwinExplorer extends BaseExplorer {
         super(outputChannel);
     }
 
-    public async getDeviceTwin(deviceId: string) {
+    public async getDeviceTwin(deviceItem: DeviceItem) {
+        deviceItem = await Utility.getInputDevice(deviceItem, Constants.IoTHubAIGetDeviceTwinStartEvent);
+
+        if (deviceItem) {
+            this.getDeviceTwinById(deviceItem.deviceId);
+        }
+    }
+
+    public async getDeviceTwinById(deviceId: string) {
         let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
             return;
         }
 
-        TelemetryClient.sendEvent(Constants.IoTHubAIGetDeviceTwinEvent);
+        TelemetryClient.sendEvent(Constants.IoTHubAIGetDeviceTwinDoneEvent);
         let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
         this._outputChannel.show();
         this.outputLine(Constants.IoTHubDeviceTwinLabel, `Get Device Twin for [${deviceId}]...`);
@@ -71,7 +79,7 @@ export class IotHubDeviceTwinExplorer extends BaseExplorer {
                     this.outputLine(Constants.IoTHubDeviceTwinLabel, `Failed to update Device Twin: ${err.message}`);
                 } else {
                     this.outputLine(Constants.IoTHubDeviceTwinLabel, `Device Twin updated successfully`);
-                    this.getDeviceTwin(deviceTwinJson.deviceId);
+                    this.getDeviceTwinById(deviceTwinJson.deviceId);
                 }
             });
         } catch (e) {

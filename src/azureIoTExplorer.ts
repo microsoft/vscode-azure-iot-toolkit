@@ -77,7 +77,7 @@ export class AzureIoTExplorer {
     }
 
     public getDeviceTwin(deviceItem: DeviceItem): void {
-        this._iotHubDeviceTwinExplorer.getDeviceTwin(deviceItem.deviceId);
+        this._iotHubDeviceTwinExplorer.getDeviceTwin(deviceItem);
     }
 
     public updateDeviceTwin(): void {

@@ -8,7 +8,6 @@ export class Constants {
     public static IoTHub = "IoT Hub";
 
     public static DeviceConnectionStringKey = "deviceConnectionString";
-    public static DeviceConnectionStringTitle = "Device Connection String";
     public static IotHubConnectionStringKey = "iotHubConnectionString";
     public static IotHubConnectionStringTitle = "IoT Hub Connection String";
     public static IoTHubConsumerGroup = "iotHubConsumerGroup";
@@ -24,12 +23,15 @@ export class Constants {
     public static IoTHubAILoadDeviceTreeEvent = "AZ.LoadDeviceTree";
     public static IoTHubAIStartMonitorEvent = "AZ.D2C.startMonitoring";
     public static IoTHubAIStopMonitorEvent = "AZ.D2C.stopMonitoring";
-    public static IoTHubAIMessageEvent = "AZ.D2C.Send";
+    public static IoTHubAIMessageStartEvent = "AZ.D2C.Send.Start";
+    public static IoTHubAIMessageDoneEvent = "AZ.D2C.Send.Done";
     public static IoTHubAIStartMonitorC2DEvent = "AZ.C2D.startMonitoring";
     public static IoTHubAIStopMonitorC2DEvent = "AZ.C2D.stopMonitoring";
-    public static IoTHubAIC2DMessageEvent = "AZ.C2D.Send";
+    public static IoTHubAIC2DMessageStartEvent = "AZ.C2D.Send.Start";
+    public static IoTHubAIC2DMessageDoneEvent = "AZ.C2D.Send.Done";
     public static IoTHubAIInvokeDeviceMethodEvent = "AZ.DeviceMethod.Invoke";
-    public static IoTHubAIGetDeviceTwinEvent = "AZ.DeviceTwin.Get";
+    public static IoTHubAIGetDeviceTwinStartEvent = "AZ.DeviceTwin.Get.Start";
+    public static IoTHubAIGetDeviceTwinDoneEvent = "AZ.DeviceTwin.Get.Done";
     public static IoTHubAIUpdateDeviceTwinEvent = "AZ.DeviceTwin.Update";
     public static IoTHubAIEdgeDeployStartEvent = "Edge.Deploy.Start";
     public static IoTHubAIEdgeDeployDoneEvent = "AZ.Edge.Deploy.Done";
