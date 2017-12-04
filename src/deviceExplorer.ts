@@ -81,7 +81,7 @@ export class DeviceExplorer extends BaseExplorer {
             return;
         }
 
-        const label: string = "Device";
+        const label: string = "EdgeDevice";
         const sasToken: string = Utility.generateSasTokenForService(iotHubConnectionString);
         const hostName: string = Utility.getHostName(iotHubConnectionString);
         const config: AxiosRequestConfig = {
@@ -108,17 +108,17 @@ export class DeviceExplorer extends BaseExplorer {
         this.outputLine(label, `Creating Edge device '${deviceId}'`);
 
         const url = `https://${hostName}/devices/${deviceId}?api-version=${Constants.IoTHubApiVersion}`;
+        const handler: (error: any, deviceInfo: any, res: any) => void = this.done("Create", label, hostName);
         axios.put(url, data, config)
             .then((response) => {
-                this.outputLine(label, "Create succeeded.");
-                // TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployDoneEvent, { Result: "Success" });
+                handler(null, response.data, null);
             })
             .catch((err) => {
-                this.outputLine(label, `Deployment failed. ${err}`);
-                if (err && err.response && err.response.data && err.response.data.Message) {
-                    this.outputLine(label, err.response.data.Message);
-                }
-                // TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployDoneEvent, { Result: "Fail", Message: err });
+                handler(err, null, null);
+                // this.outputLine(label, `Deployment failed. ${err}`);
+                // if (err && err.response && err.response.data && err.response.data.Message) {
+                //     this.outputLine(label, err.response.data.Message);
+                // }
             });
 
     }
