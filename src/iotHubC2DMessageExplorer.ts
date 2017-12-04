@@ -23,7 +23,7 @@ export class IotHubC2DMessageExplorer extends BaseExplorer {
             return;
         }
 
-        deviceItem = await Utility.getInputDevice(deviceItem, "AZ.C2D.Send.Start");
+        deviceItem = await Utility.getInputDevice(deviceItem, Constants.IoTHubAIC2DMessageStartEvent);
 
         if (deviceItem && deviceItem.label) {
             this.sendC2DMessageById(iotHubConnectionString, deviceItem.label);
@@ -71,7 +71,7 @@ export class IotHubC2DMessageExplorer extends BaseExplorer {
                     } else {
                         let message = new Message(messageBody);
                         serviceClient.send(deviceId, message.getData(),
-                            this.sendEventDone(serviceClient, Constants.IoTHubC2DMessageLabel, deviceId, Constants.IoTHubAIC2DMessageEvent));
+                            this.sendEventDone(serviceClient, Constants.IoTHubC2DMessageLabel, deviceId, Constants.IoTHubAIC2DMessageDoneEvent));
                     }
                 });
             }

@@ -19,7 +19,7 @@ export class IotHubDeviceTwinExplorer extends BaseExplorer {
     }
 
     public async getDeviceTwin(deviceItem: DeviceItem) {
-        deviceItem = await Utility.getInputDevice(deviceItem, "AZ.DeviceTwin.Get.Start");
+        deviceItem = await Utility.getInputDevice(deviceItem, Constants.IoTHubAIGetDeviceTwinStartEvent);
 
         if (deviceItem) {
             this.getDeviceTwinById(deviceItem.deviceId);
@@ -32,7 +32,7 @@ export class IotHubDeviceTwinExplorer extends BaseExplorer {
             return;
         }
 
-        TelemetryClient.sendEvent(Constants.IoTHubAIGetDeviceTwinEvent);
+        TelemetryClient.sendEvent(Constants.IoTHubAIGetDeviceTwinDoneEvent);
         let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
         this._outputChannel.show();
         this.outputLine(Constants.IoTHubDeviceTwinLabel, `Get Device Twin for [${deviceId}]...`);

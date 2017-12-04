@@ -15,7 +15,7 @@ export class IoTHubMessageExplorer extends BaseExplorer {
     }
 
     public async sendD2CMessage(deviceItem?: DeviceItem) {
-        deviceItem = await Utility.getInputDevice(deviceItem, "AZ.D2C.Send.Start");
+        deviceItem = await Utility.getInputDevice(deviceItem, Constants.IoTHubAIMessageStartEvent);
 
         if (!deviceItem || !deviceItem.connectionString) {
             return;
@@ -29,7 +29,7 @@ export class IoTHubMessageExplorer extends BaseExplorer {
                     let client = clientFromConnectionString(deviceConnectionString);
                     let stringify = Utility.getConfig<boolean>(Constants.IoTHubD2CMessageStringifyKey);
                     client.sendEvent(new Message(stringify ? JSON.stringify(message) : message),
-                        this.sendEventDone(client, Constants.IoTHubMessageLabel, Constants.IoTHub, Constants.IoTHubAIMessageEvent));
+                        this.sendEventDone(client, Constants.IoTHubMessageLabel, Constants.IoTHub, Constants.IoTHubAIMessageDoneEvent));
                 } catch (e) {
                     this.outputLine(Constants.IoTHubMessageLabel, e);
                 }
