@@ -23,7 +23,7 @@ export class Constants {
     public static IoTHubAILoadDeviceTreeEvent = "AZ.LoadDeviceTree";
     public static IoTHubAIStartMonitorEvent = "AZ.D2C.startMonitoring";
     public static IoTHubAIStopMonitorEvent = "AZ.D2C.stopMonitoring";
-    public static IoTHubAIMessageEvent = "AZ.D2C.Send";
+    public static IoTHubAIMessageEvent = "AZ.D2C.Send.Done";
     public static IoTHubAIStartMonitorC2DEvent = "AZ.C2D.startMonitoring";
     public static IoTHubAIStopMonitorC2DEvent = "AZ.C2D.stopMonitoring";
     public static IoTHubAIC2DMessageEvent = "AZ.C2D.Send.Done";
