@@ -1,5 +1,5 @@
 ### 0.4.3 (2017-12-05)
-* [Added] Add F1 integration for several commands
+* [Added] Add Command Palette integration for several commands
 
 ### 0.4.2 (2017-11-15)
 * [Fixed] Stop monitoring D2C message and show friendly message when there is error
