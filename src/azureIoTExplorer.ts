@@ -100,6 +100,10 @@ export class AzureIoTExplorer {
         this._snippetManager.replaceConnectionString(event);
     }
 
+    public async createEdgeDevice() {
+        await this._deviceExplorer.createEdgeDevice();
+    }
+
     public createDeployment(deviceItem: DeviceItem): void {
         this._iotEdgeExplorer.createDeployment(deviceItem);
     }
