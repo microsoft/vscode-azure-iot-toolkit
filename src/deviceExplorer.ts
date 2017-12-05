@@ -93,9 +93,7 @@ export class DeviceExplorer extends BaseExplorer {
         let deviceId: string = await vscode.window.showInputBox({ prompt });
         if (deviceId !== undefined) {
             deviceId = deviceId.trim();
-            if (deviceId) {
-                return deviceId;
-            } else {
+            if (!deviceId) {
                 vscode.window.showErrorMessage("Device ID cannot be empty");
             }
         }
