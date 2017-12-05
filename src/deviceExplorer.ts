@@ -111,14 +111,15 @@ export class DeviceExplorer extends BaseExplorer {
         const handler: (error: any, deviceInfo: any, res: any) => void = this.done("Create", label, hostName);
         axios.put(url, data, config)
             .then((response) => {
-                handler(null, response.data, null);
+                let deviceInfo = response.data;
+                // device info returned by REST API uses "symmetricKey" instead of "SymmetricKey" returned by Node SDK
+                if (deviceInfo.authentication.symmetricKey) {
+                    deviceInfo.authentication.SymmetricKey = deviceInfo.authentication.symmetricKey;
+                }
+                handler(null, response.data, response);
             })
             .catch((err) => {
-                handler(err, null, null);
-                // this.outputLine(label, `Deployment failed. ${err}`);
-                // if (err && err.response && err.response.data && err.response.data.Message) {
-                //     this.outputLine(label, err.response.data.Message);
-                // }
+                handler(err.response.data.Message, null, err.response);
             });
 
     }
@@ -165,14 +166,16 @@ export class DeviceExplorer extends BaseExplorer {
             }
             if (res) {
                 let result = "Fail";
-                if (res.statusCode < 300) {
+                const statusCode = res.statusCode || res.status;
+                const statusMessage = res.statusMessage || res.statusText;
+                if (statusCode < 300) {
                     result = "Success";
                     if (op === "Create" || op === "Delete") {
                         vscode.commands.executeCommand("azure-iot-toolkit.refreshDeviceTree");
                     }
                 }
                 TelemetryClient.sendEvent(`AZ.${label}.${op}`, { Result: result });
-                this.outputLine(label, `[${op}][${result}] status: ${res.statusCode} ${res.statusMessage}`);
+                this.outputLine(label, `[${op}][${result}] status: ${statusCode} ${statusMessage}`);
             }
             if (deviceInfo) {
                 if (deviceInfo.authentication.SymmetricKey.primaryKey != null) {
