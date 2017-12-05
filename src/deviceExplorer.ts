@@ -116,7 +116,7 @@ export class DeviceExplorer extends BaseExplorer {
                 if (deviceInfo.authentication.symmetricKey) {
                     deviceInfo.authentication.SymmetricKey = deviceInfo.authentication.symmetricKey;
                 }
-                handler(null, response.data, response);
+                handler(null, deviceInfo, response);
             })
             .catch((err) => {
                 handler(err.response.data.Message, null, err.response);
