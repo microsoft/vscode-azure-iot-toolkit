@@ -1,5 +1,4 @@
 "use strict";
-import axios, { AxiosRequestConfig } from "axios";
 import { ConnectionString } from "azure-iot-device";
 import * as vscode from "vscode";
 import { BaseExplorer } from "./baseExplorer";
@@ -47,81 +46,33 @@ export class DeviceExplorer extends BaseExplorer {
         registry.get(deviceId, this.done("Get", label, hostName));
     }
 
-    public async createDevice() {
+    public async createDevice(edgeDevice?: boolean) {
         const iotHubConnectionString: string = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
             return;
         }
 
-        const label: string = "Device";
+        const label: string = edgeDevice ? "Edge Device" : "Device";
         const hostName: string = Utility.getHostName(iotHubConnectionString);
         const registry: iothub.Registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
 
-        const deviceId: string = await this.promptForDeviceId("Enter device ID to create");
+        const deviceId: string = await this.promptForDeviceId(`Enter ${label} ID to create`);
         if (!deviceId) {
             return;
         }
 
-        const device = {
+        const device: any = {
             deviceId,
         };
-        this._outputChannel.show();
-        this.outputLine(label, `Creating device '${device.deviceId}'`);
-        registry.create(device, this.done("Create", label, hostName));
-    }
-
-    public async createEdgeDevice() {
-        const iotHubConnectionString: string = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
-        if (!iotHubConnectionString) {
-            return;
-        }
-
-        const deviceId: string = await this.promptForDeviceId("Enter Edge device ID to create");
-        if (!deviceId) {
-            return;
-        }
-
-        const label: string = "EdgeDevice";
-        const sasToken: string = Utility.generateSasTokenForService(iotHubConnectionString);
-        const hostName: string = Utility.getHostName(iotHubConnectionString);
-        const config: AxiosRequestConfig = {
-            headers: {
-                "Authorization": sasToken,
-                "Content-Type": "application/json; charset=utf-8",
-            },
-        };
-        const data = {
-            deviceId,
-            authentication: {
-                type: "sas",
-                symmetricKey: {
-                    primaryKey: "",
-                    secondaryKey: "",
-                },
-            },
-            capabilities: {
+        if (edgeDevice) {
+            device.capabilities = {
                 iotEdge: true,
-            },
-        };
+            };
+        }
 
         this._outputChannel.show();
-        this.outputLine(label, `Creating Edge device '${deviceId}'`);
-
-        const url = `https://${hostName}/devices/${deviceId}?api-version=${Constants.IoTHubApiVersion}`;
-        const handler: (error: any, deviceInfo: any, res: any) => void = this.done("Create", label, hostName);
-        axios.put(url, data, config)
-            .then((response) => {
-                let deviceInfo = response.data;
-                // device info returned by REST API uses "symmetricKey" instead of "SymmetricKey" returned by Node SDK
-                if (deviceInfo.authentication.symmetricKey) {
-                    deviceInfo.authentication.SymmetricKey = deviceInfo.authentication.symmetricKey;
-                }
-                handler(null, deviceInfo, response);
-            })
-            .catch((err) => {
-                handler(err.response.data.Message, null, err.response);
-            });
-
+        this.outputLine(label, `Creating ${label} '${device.deviceId}'`);
+        registry.create(device, this.done("Create", label, hostName));
     }
 
     public async deleteDevice(deviceItem?: DeviceItem) {
@@ -161,21 +112,19 @@ export class DeviceExplorer extends BaseExplorer {
     private done(op: string, label: string, hostName: string = null) {
         return (err, deviceInfo, res) => {
             if (err) {
-                TelemetryClient.sendEvent(`AZ.${label}.${op}`, { Result: "Fail" });
+                TelemetryClient.sendEvent(`AZ.${label.replace(/\s/g, "")}.${op}`, { Result: "Fail" });
                 this.outputLine(label, `[${op}] error: ${err.toString()}`);
             }
             if (res) {
                 let result = "Fail";
-                const statusCode = res.statusCode || res.status;
-                const statusMessage = res.statusMessage || res.statusText;
-                if (statusCode < 300) {
+                if (res.statusCode < 300) {
                     result = "Success";
                     if (op === "Create" || op === "Delete") {
                         vscode.commands.executeCommand("azure-iot-toolkit.refreshDeviceTree");
                     }
                 }
                 TelemetryClient.sendEvent(`AZ.${label}.${op}`, { Result: result });
-                this.outputLine(label, `[${op}][${result}] status: ${statusCode} ${statusMessage}`);
+                this.outputLine(label, `[${op}][${result}] status: ${res.statusCode} ${res.statusMessage}`);
             }
             if (deviceInfo) {
                 if (deviceInfo.authentication.SymmetricKey.primaryKey != null) {

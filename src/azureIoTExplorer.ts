@@ -64,8 +64,8 @@ export class AzureIoTExplorer {
         this._deviceExplorer.getDevice(deviceId);
     }
 
-    public async createDevice() {
-        await this._deviceExplorer.createDevice();
+    public async createDevice(edgeDevice?: boolean) {
+        await this._deviceExplorer.createDevice(edgeDevice);
     }
 
     public async deleteDevice(deviceItem?: DeviceItem) {
@@ -98,10 +98,6 @@ export class AzureIoTExplorer {
 
     public replaceConnectionString(event: vscode.TextDocumentChangeEvent): void {
         this._snippetManager.replaceConnectionString(event);
-    }
-
-    public async createEdgeDevice() {
-        await this._deviceExplorer.createEdgeDevice();
     }
 
     public createDeployment(deviceItem: DeviceItem): void {
