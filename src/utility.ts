@@ -1,4 +1,5 @@
 "use strict";
+import axios from "axios";
 import { ConnectionString as DeviceConnectionString } from "azure-iot-device";
 import { ConnectionString, Registry, SharedAccessSignature } from "azure-iothub";
 import * as crypto from "crypto";
@@ -131,7 +132,7 @@ export class Utility {
         });
     }
 
-    public static async getInputDevice(deviceItem: DeviceItem, eventName: string): Promise<DeviceItem> {
+    public static async getInputDevice(deviceItem: DeviceItem, eventName: string, onlyEdgeDevice: boolean = false): Promise<DeviceItem> {
         if (!deviceItem) {
             TelemetryClient.sendEvent(eventName, { entry: "commandPalette" });
             const iotHubConnectionString: string = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
@@ -139,7 +140,7 @@ export class Utility {
                 return null;
             }
 
-            const deviceList: Promise<DeviceItem[]> = Utility.getDeviceList(iotHubConnectionString);
+            const deviceList: Promise<DeviceItem[]> = Utility.getFilteredDeviceList(iotHubConnectionString, onlyEdgeDevice);
             deviceItem = await vscode.window.showQuickPick(deviceList, { placeHolder: "Select an IoT Hub device" });
             return deviceItem;
         } else {
@@ -148,7 +149,16 @@ export class Utility {
         }
     }
 
-    public static async getDeviceList(iotHubConnectionString: string, context?: vscode.ExtensionContext): Promise<DeviceItem[]> {
+    public static async getFilteredDeviceList(iotHubConnectionString: string, onlyEdgeDevice: boolean): Promise<DeviceItem[]> {
+        if (onlyEdgeDevice) {
+            let [deviceList, edgeDeviceIdSet] = await Promise.all([Utility.getDeviceList(iotHubConnectionString), Utility.getEdgeDeviceIdSet(iotHubConnectionString)]);
+            return deviceList.filter((device) => edgeDeviceIdSet.has(device.deviceId));
+        } else {
+            return Utility.getDeviceList(iotHubConnectionString);
+        }
+    }
+
+    public static async getDeviceList(iotHubConnectionString: string): Promise<DeviceItem[]> {
         if (!iotHubConnectionString) {
             return null;
         }
@@ -163,7 +173,6 @@ export class Utility {
                     reject(err);
                 } else {
                     deviceList.forEach((device, index) => {
-                        const image: string = device.connectionState.toString() === "Connected" ? "device-on.png" : "device-off.png";
                         let deviceConnectionString: string = "";
                         if (device.authentication.SymmetricKey.primaryKey != null) {
                             deviceConnectionString = DeviceConnectionString.createWithSharedAccessKey(hostName, device.deviceId,
@@ -173,18 +182,45 @@ export class Utility {
                         }
                         devices.push(new DeviceItem(device.deviceId,
                             deviceConnectionString,
-                            context ? context.asAbsolutePath(path.join("resources", image)) : null,
+                            null,
                             {
                                 command: "azure-iot-toolkit.getDevice",
                                 title: "",
                                 arguments: [device.deviceId],
                             },
+                            device.connectionState.toString(),
                             null));
                     });
                     resolve(devices.sort((a: DeviceItem, b: DeviceItem) => { return a.deviceId.localeCompare(b.deviceId); }));
                 }
             });
         });
+    }
+
+    public static async getEdgeDeviceIdSet(iotHubConnectionString: string): Promise<Set<string>> {
+        const edgeDevices = await Utility.getEdgeDeviceList(iotHubConnectionString);
+        const set = new Set<string>();
+        for (const edgeDevice of edgeDevices) {
+            set.add(edgeDevice.deviceId);
+        }
+        return set;
+    }
+
+    public static async getEdgeDeviceList(iotHubConnectionString: string): Promise<any[]> {
+        const sasToken = Utility.generateSasTokenForService(iotHubConnectionString);
+        const hostName = Utility.getHostName(iotHubConnectionString);
+        const body = {
+            query: "SELECT * FROM DEVICES where capabilities.iotEdge=true",
+        };
+        const config = {
+            headers: {
+                "Authorization": sasToken,
+                "Content-Type": "application/json",
+            },
+        };
+        const url = `https://${hostName}/devices/query?api-version=2017-11-08-preview`;
+
+        return (await axios.post(url, body, config)).data;
     }
 
     private static showIoTHubInformationMessage(): void {

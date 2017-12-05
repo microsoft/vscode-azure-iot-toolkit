@@ -4,8 +4,9 @@ export class DeviceItem extends TreeItem implements QuickPickItem {
     constructor(
         public readonly deviceId: string,
         public readonly connectionString: string,
-        public readonly iconPath: string,
+        public iconPath: string,
         public readonly command: Command,
+        public readonly connectionState: string,
         public readonly description: string) {
         super(deviceId);
         this.contextValue = "device";

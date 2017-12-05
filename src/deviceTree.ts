@@ -40,7 +40,17 @@ export class DeviceTree implements vscode.TreeDataProvider<vscode.TreeItem> {
 
         TelemetryClient.sendEvent(Constants.IoTHubAIStartLoadDeviceTreeEvent);
         try {
-            const deviceList: DeviceItem[] = await Utility.getDeviceList(iotHubConnectionString, this.context);
+            let [deviceList, edgeDeviceIdSet] = await Promise.all([Utility.getDeviceList(iotHubConnectionString), Utility.getEdgeDeviceIdSet(iotHubConnectionString)]);
+            deviceList = deviceList.map((device) => {
+                const state: string = device.connectionState.toString() === "Connected" ? "on" : "off";
+                const deviceType: string = edgeDeviceIdSet.has(device.deviceId) ? "edge" : "device";
+                // if (edgeDeviceIdSet.has(device.deviceId)) {
+                //     device.label += " [Edge]";
+                // }
+                device.iconPath = this.context.asAbsolutePath(path.join("resources", `${deviceType}-${state}.png`));
+                return device;
+            });
+
             TelemetryClient.sendEvent(Constants.IoTHubAILoadDeviceTreeEvent, { Result: "Success", DeviceCount: deviceList.length.toString() });
             return new Promise<vscode.TreeItem[]>((resolve, reject) => {
                 resolve(deviceList);

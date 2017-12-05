@@ -20,7 +20,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
     }
 
     public async createDeployment(deviceItem: DeviceItem) {
-        deviceItem = await Utility.getInputDevice(deviceItem, Constants.IoTHubAIEdgeDeployStartEvent);
+        deviceItem = await Utility.getInputDevice(deviceItem, Constants.IoTHubAIEdgeDeployStartEvent, true);
 
         if (!deviceItem) {
             return;
@@ -42,7 +42,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
     }
 
     public async setupEdge(deviceItem: DeviceItem) {
-        deviceItem = await Utility.getInputDevice(deviceItem, "Edge.Setup.Start");
+        deviceItem = await Utility.getInputDevice(deviceItem, "Edge.Setup.Start", true);
 
         if (!deviceItem) {
             return;
@@ -88,7 +88,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
     }
 
     public async generateEdgeSetupConfig(deviceItem?: DeviceItem) {
-        deviceItem = await Utility.getInputDevice(deviceItem, "Edge.GenerateSetupConfig.Start");
+        deviceItem = await Utility.getInputDevice(deviceItem, "Edge.GenerateSetupConfig.Start", true);
 
         if (deviceItem) {
             const containerOS: string = await vscode.window.showQuickPick(["Linux", "Windows"], { placeHolder: "Select container OS", ignoreFocusOut: true });
