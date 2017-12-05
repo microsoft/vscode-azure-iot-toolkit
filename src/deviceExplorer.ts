@@ -61,17 +61,12 @@ export class DeviceExplorer extends BaseExplorer {
             return;
         }
 
-        let device;
+        const device: any = {
+            deviceId,
+        };
         if (edgeDevice) {
-            device = {
-                deviceId,
-                capabilities: {
-                    iotEdge: true,
-                },
-            };
-        } else {
-            device = {
-                deviceId,
+            device.capabilities = {
+                iotEdge: true,
             };
         }
 
