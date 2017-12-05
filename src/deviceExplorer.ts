@@ -46,7 +46,7 @@ export class DeviceExplorer extends BaseExplorer {
         registry.get(deviceId, this.done("Get", label, hostName));
     }
 
-    public async createDevice(edgeDevice?: boolean) {
+    public async createDevice(edgeDevice: boolean = false) {
         const iotHubConnectionString: string = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
             return;
@@ -61,12 +61,17 @@ export class DeviceExplorer extends BaseExplorer {
             return;
         }
 
-        const device: any = {
-            deviceId,
-        };
+        let device;
         if (edgeDevice) {
-            device.capabilities = {
-                iotEdge: true,
+            device = {
+                deviceId,
+                capabilities: {
+                    iotEdge: true,
+                },
+            };
+        } else {
+            device = {
+                deviceId,
             };
         }
 
