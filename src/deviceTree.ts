@@ -47,7 +47,6 @@ export class DeviceTree implements vscode.TreeDataProvider<vscode.TreeItem> {
                 if (edgeDeviceIdSet.has(device.deviceId)) {
                     deviceType = "edge";
                     device.contextValue = "edge";
-                    // device.label += " [Edge]";
                 } else {
                     deviceType = "device";
                 }
