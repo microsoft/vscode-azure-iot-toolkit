@@ -46,26 +46,33 @@ export class DeviceExplorer extends BaseExplorer {
         registry.get(deviceId, this.done("Get", label, hostName));
     }
 
-    public async createDevice() {
-        let label = "Device";
-        let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
+    public async createDevice(edgeDevice: boolean = false) {
+        const iotHubConnectionString: string = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
             return;
         }
 
-        let hostName = Utility.getHostName(iotHubConnectionString);
-        let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
+        const label: string = edgeDevice ? "Edge Device" : "Device";
+        const hostName: string = Utility.getHostName(iotHubConnectionString);
+        const registry: iothub.Registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
 
-        await vscode.window.showInputBox({ prompt: "Enter device id to create" }).then((deviceId: string) => {
-            if (deviceId !== undefined) {
-                let device = {
-                    deviceId,
-                };
-                this._outputChannel.show();
-                this.outputLine(label, `Creating device '${device.deviceId}'`);
-                registry.create(device, this.done("Create", label, hostName));
-            }
-        });
+        const deviceId: string = await this.promptForDeviceId(`Enter ${label} ID to create`);
+        if (!deviceId) {
+            return;
+        }
+
+        const device: any = {
+            deviceId,
+        };
+        if (edgeDevice) {
+            device.capabilities = {
+                iotEdge: true,
+            };
+        }
+
+        this._outputChannel.show();
+        this.outputLine(label, `Creating ${label} '${device.deviceId}'`);
+        registry.create(device, this.done("Create", label, hostName));
     }
 
     public async deleteDevice(deviceItem?: DeviceItem) {
@@ -82,6 +89,18 @@ export class DeviceExplorer extends BaseExplorer {
         }
     }
 
+    private async promptForDeviceId(prompt: string): Promise<string> {
+        let deviceId: string = await vscode.window.showInputBox({ prompt });
+        if (deviceId !== undefined) {
+            deviceId = deviceId.trim();
+            if (!deviceId) {
+                vscode.window.showErrorMessage("Device ID cannot be empty");
+            }
+        }
+
+        return deviceId;
+    }
+
     private deleteDeviceById(deviceId: string, label: string, registry: iothub.Registry): void {
         this._outputChannel.show();
         this.outputLine(label, `Deleting device '${deviceId}'`);
@@ -91,7 +110,7 @@ export class DeviceExplorer extends BaseExplorer {
     private done(op: string, label: string, hostName: string = null) {
         return (err, deviceInfo, res) => {
             if (err) {
-                TelemetryClient.sendEvent(`AZ.${label}.${op}`, { Result: "Fail" });
+                TelemetryClient.sendEvent(`AZ.${label.replace(/\s/g, "")}.${op}`, { Result: "Fail" });
                 this.outputLine(label, `[${op}] error: ${err.toString()}`);
             }
             if (res) {

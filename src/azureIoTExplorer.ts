@@ -64,8 +64,8 @@ export class AzureIoTExplorer {
         this._deviceExplorer.getDevice(deviceId);
     }
 
-    public async createDevice() {
-        await this._deviceExplorer.createDevice();
+    public async createDevice(edgeDevice: boolean = false) {
+        await this._deviceExplorer.createDevice(edgeDevice);
     }
 
     public async deleteDevice(deviceItem?: DeviceItem) {

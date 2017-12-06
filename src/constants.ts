@@ -50,4 +50,5 @@ export class Constants {
 
     public static ShowIoTHubInfoKey = "showIoTHubInfo";
     public static ShowConnectionStringInputBoxKey = "showConnectionStringInputBox";
+    public static IoTHubApiVersion = "2017-11-08-preview";
 }

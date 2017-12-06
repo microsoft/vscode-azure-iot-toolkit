@@ -153,7 +153,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
                 "Content-Type": "application/json",
             },
         };
-        const url = `https://${hostName}/devices/${deviceId}/applyConfigurationContent?api-version=2017-11-08-preview`;
+        const url = `https://${hostName}/devices/${deviceId}/applyConfigurationContent?api-version=${Constants.IoTHubApiVersion}`;
         axios.post(url, stripJsonComments(deploymentJson), config)
             .then((response) => {
                 this.outputLine(label, "Deployment succeeded.");
