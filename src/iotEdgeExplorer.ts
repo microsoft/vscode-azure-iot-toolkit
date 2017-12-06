@@ -95,7 +95,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
             if (containerOS) {
                 const configContent: string = this.generateEdgeSetupConfigContent(deviceItem.connectionString, containerOS);
                 const configPath: vscode.Uri = await vscode.window.showSaveDialog({
-                    defaultUri: vscode.workspace.workspaceFolders ? vscode.Uri.file(path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, "config.json")) : undefined,
+                    defaultUri: vscode.workspace.workspaceFolders ? vscode.Uri.file(path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, "config.json")) : vscode.Uri.file("config.json"),
                     saveLabel: "Save Edge Setup Configuration File",
                     filters: {
                         JSON: ["json"],
@@ -114,7 +114,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
         TelemetryClient.sendEvent("Edge.GenerateDeploymentConfig.Start");
         const configContent: string = this.generateEdgeDeploymentConfigContent();
         const configPath: vscode.Uri = await vscode.window.showSaveDialog({
-            defaultUri: vscode.workspace.workspaceFolders ? vscode.Uri.file(path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, "deployment.json")) : undefined,
+            defaultUri: vscode.workspace.workspaceFolders ? vscode.Uri.file(path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, "deployment.json")) : vscode.Uri.file("deployment.json"),
             saveLabel: "Save Edge Deployment Configuration File",
             filters: {
                 JSON: ["json"],
