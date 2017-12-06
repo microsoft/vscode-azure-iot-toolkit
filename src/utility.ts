@@ -218,7 +218,7 @@ export class Utility {
                 "Content-Type": "application/json",
             },
         };
-        const url = `https://${hostName}/devices/query?api-version=2017-11-08-preview`;
+        const url = `https://${hostName}/devices/query?api-version=${Constants.IoTHubApiVersion}`;
 
         return (await axios.post(url, body, config)).data;
     }
