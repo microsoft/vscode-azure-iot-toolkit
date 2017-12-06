@@ -280,18 +280,58 @@
           "group": "azure-iot-toolkit@7"
         },
         {
+          "command": "azure-iot-toolkit.sendD2CMessage",
+          "when": "view == iotHubDevices && viewItem == edge",
+          "group": "azure-iot-toolkit@0"
+        },
+        {
+          "command": "azure-iot-toolkit.startMonitorIoTHubMessage",
+          "when": "view == iotHubDevices && viewItem == edge",
+          "group": "azure-iot-toolkit@1"
+        },
+        {
+          "command": "azure-iot-toolkit.sendC2DMessage",
+          "when": "view == iotHubDevices && viewItem == edge",
+          "group": "azure-iot-toolkit@2"
+        },
+        {
+          "command": "azure-iot-toolkit.startMonitorC2DMessage",
+          "when": "view == iotHubDevices && viewItem == edge",
+          "group": "azure-iot-toolkit@3"
+        },
+        {
+          "command": "azure-iot-toolkit.invokeDeviceMethod",
+          "when": "view == iotHubDevices && viewItem == edge",
+          "group": "azure-iot-toolkit@4"
+        },
+        {
+          "command": "azure-iot-toolkit.getDeviceTwin",
+          "when": "view == iotHubDevices && viewItem == edge",
+          "group": "azure-iot-toolkit@5"
+        },
+        {
+          "command": "azure-iot-toolkit.copyDeviceConnectionString",
+          "when": "view == iotHubDevices && viewItem == edge",
+          "group": "azure-iot-toolkit@6"
+        },
+        {
+          "command": "azure-iot-toolkit.deleteDevice",
+          "when": "view == iotHubDevices && viewItem == edge",
+          "group": "azure-iot-toolkit@7"
+        },
+        {
           "command": "azure-iot-toolkit.createDeployment",
-          "when": "view == iotHubDevices && viewItem == device",
+          "when": "view == iotHubDevices && viewItem == edge",
           "group": "azure-iot-toolkit-edge@0"
         },
         {
           "command": "azure-iot-toolkit.setupEdge",
-          "when": "view == iotHubDevices && viewItem == device",
+          "when": "view == iotHubDevices && viewItem == edge",
           "group": "azure-iot-toolkit-edge@1"
         },
         {
           "command": "azure-iot-toolkit.generateEdgeSetupConfig",
-          "when": "view == iotHubDevices && viewItem == device",
+          "when": "view == iotHubDevices && viewItem == edge",
           "group": "azure-iot-toolkit-edge@2"
         }
       ],
