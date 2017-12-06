@@ -1,4 +1,4 @@
-### 0.4.3 (2017-12-05)
+### 0.4.3 (2017-12-06)
 * [Added] Add Command Palette integration for several commands
 
 ### 0.4.2 (2017-11-15)
