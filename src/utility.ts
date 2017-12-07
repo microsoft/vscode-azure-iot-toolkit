@@ -150,7 +150,7 @@ export class Utility {
     }
 
     public static async getDeviceList(iotHubConnectionString: string, context: vscode.ExtensionContext): Promise<DeviceItem[]> {
-        let [deviceList, edgeDeviceIdSet] = await Promise.all([Utility.getIoTDeviceList(iotHubConnectionString), Utility.getEdgeDeviceIdSet(iotHubConnectionString)]);
+        const [deviceList, edgeDeviceIdSet] = await Promise.all([Utility.getIoTDeviceList(iotHubConnectionString), Utility.getEdgeDeviceIdSet(iotHubConnectionString)]);
         return deviceList.map((device) => {
             const state: string = device.connectionState.toString() === "Connected" ? "on" : "off";
             let deviceType: string;
@@ -167,7 +167,7 @@ export class Utility {
 
     private static async getFilteredDeviceList(iotHubConnectionString: string, onlyEdgeDevice: boolean): Promise<DeviceItem[]> {
         if (onlyEdgeDevice) {
-            let [deviceList, edgeDeviceIdSet] = await Promise.all([Utility.getIoTDeviceList(iotHubConnectionString), Utility.getEdgeDeviceIdSet(iotHubConnectionString)]);
+            const [deviceList, edgeDeviceIdSet] = await Promise.all([Utility.getIoTDeviceList(iotHubConnectionString), Utility.getEdgeDeviceIdSet(iotHubConnectionString)]);
             return deviceList.filter((device) => edgeDeviceIdSet.has(device.deviceId));
         } else {
             return Utility.getIoTDeviceList(iotHubConnectionString);
