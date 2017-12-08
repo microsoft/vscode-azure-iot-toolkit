@@ -160,7 +160,7 @@ export class Utility {
             } else {
                 deviceType = "device";
             }
-            device.iconPath = context.asAbsolutePath(path.join("resources", `${deviceType}-${state}.png`));
+            device.iconPath = context.asAbsolutePath(path.join("resources", `${deviceType}-${state}.svg`));
             return device;
         });
     }
