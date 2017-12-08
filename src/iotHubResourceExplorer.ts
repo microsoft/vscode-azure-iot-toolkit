@@ -1,5 +1,5 @@
 "use strict";
-import { SubscriptionClient, SubscriptionModels } from "azure-arm-resource";
+import { ResourceManagementClient, ResourceModels, SubscriptionClient, SubscriptionModels } from "azure-arm-resource";
 import IoTHubClient = require("azure-arm-iothub");
 import * as clipboardy from "clipboardy";
 import * as vscode from "vscode";
@@ -19,15 +19,62 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         this.accountApi = vscode.extensions.getExtension<AzureAccount>("ms-vscode.azure-account")!.exports;
     }
 
+    public async createIoTHub() {
+        if (!(await this.waitForLogin(this.createIoTHub))) {
+            return;
+        }
+
+        const subscriptionItem = await vscode.window.showQuickPick(
+            this.loadSubscriptionItems(this.accountApi),
+            { placeHolder: "Select a subscription to create your IoT Hub in...", ignoreFocusOut: true },
+        );
+
+        if (subscriptionItem) {
+            const resourceGroupItem = await this.getResourceGroupItem(subscriptionItem);
+
+            if (resourceGroupItem) {
+                const locationItem = await vscode.window.showQuickPick(
+                    this.getLocationItems(subscriptionItem),
+                    { placeHolder: "Select a location to create your IoT Hub in...", ignoreFocusOut: true },
+                );
+
+                if (locationItem) {
+                    const name = await vscode.window.showInputBox({
+                        prompt: "IoT Hub name",
+                        ignoreFocusOut: true,
+                    });
+
+                    if (name) {
+                        const { session, subscription } = subscriptionItem;
+                        const client = new IoTHubClient(session.credentials, subscription.subscriptionId);
+                        const iotHubCreateParams = {
+                            location: locationItem.location.name,
+                            subscriptionid: subscription.subscriptionId,
+                            resourcegroup: resourceGroupItem.resourceGroup.name,
+                            sku:
+                                {
+                                    name: "S1",
+                                    capacity: 1,
+                                },
+                        };
+                        client.iotHubResource.createOrUpdate(resourceGroupItem.resourceGroup.name, name, iotHubCreateParams, (err, result, request, response) => {
+                            if (err) {
+                                // tslint:disable-next-line:no-console
+                                console.log(err);
+                            }
+                            // tslint:disable-next-line:no-console
+                            console.log(result);
+                        });
+                    }
+                }
+            }
+        }
+    }
+
     public async selectIoTHub() {
         TelemetryClient.sendEvent("General.Select.IoTHub.Start");
-        if (!(await this.accountApi.waitForLogin())) {
-            TelemetryClient.sendEvent("General.AskForAzureLogin");
-            const subscription = this.accountApi.onStatusChanged(() => {
-                subscription.dispose();
-                this.selectIoTHub();
-            });
-            return vscode.commands.executeCommand("azure-account.askForLogin");
+        if (!(await this.waitForLogin(this.selectIoTHub))) {
+            return;
         }
         TelemetryClient.sendEvent("General.Select.Subscription.Start");
         const subscriptionItems = this.loadSubscriptionItems(this.accountApi);
@@ -59,6 +106,20 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         deviceItem = await Utility.getInputDevice(deviceItem, "AZ.Copy.DeviceConnectionString");
         if (deviceItem && deviceItem.connectionString) {
             clipboardy.write(deviceItem.connectionString);
+        }
+    }
+
+    private async waitForLogin(callback): Promise<boolean> {
+        if (!(await this.accountApi.waitForLogin())) {
+            TelemetryClient.sendEvent("General.AskForAzureLogin");
+            const subscription = this.accountApi.onStatusChanged(() => {
+                subscription.dispose();
+                callback();
+            });
+            vscode.commands.executeCommand("azure-account.askForLogin");
+            return false;
+        } else {
+            return true;
         }
     }
 
@@ -111,6 +172,33 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         }
         return all;
     }
+
+    private async getResourceGroupItem(subscriptionItem: ISubscriptionItem): Promise<IResourceGroup> {
+        return vscode.window.showQuickPick(
+            this.getResourceGroupItems(subscriptionItem),
+            { placeHolder: "Select a resource group to create your IoT Hub in...", ignoreFocusOut: true },
+        );
+    }
+
+    private async getResourceGroupItems(subscriptionItem: ISubscriptionItem): Promise<IResourceGroup[]> {
+        const resourceManagementClient = new ResourceManagementClient(subscriptionItem.session.credentials, subscriptionItem.subscription.subscriptionId);
+        const resourceGroups = await resourceManagementClient.resourceGroups.list();
+        return resourceGroups.map((resourceGroup) => ({
+            label: resourceGroup.name,
+            description: resourceGroup.location,
+            resourceGroup,
+        }));
+    }
+
+    private async getLocationItems(subscriptionItem: ISubscriptionItem): Promise<ILocation[]> {
+        const subscriptionClient = new SubscriptionClient(subscriptionItem.session.credentials);
+        const locations = await subscriptionClient.subscriptions.listLocations(subscriptionItem.subscription.subscriptionId);
+        return locations.map((location) => ({
+            label: location.displayName,
+            description: location.name,
+            location,
+        }));
+    }
 }
 
 interface ISubscriptionItem {
@@ -124,6 +212,18 @@ interface IIotHubItem {
     label: string;
     description: string;
     iotHubDescription: IotHubDescription;
+}
+
+interface IResourceGroup {
+    label: string;
+    description: string;
+    resourceGroup: ResourceModels.ResourceGroup;
+}
+
+interface ILocation {
+    label: string;
+    description: string;
+    location: SubscriptionModels.Location;
 }
 
 interface IPartialList<T> extends Array<T> {

@@ -70,6 +70,10 @@ export function activate(context: vscode.ExtensionContext) {
         azureIoTExplorer.updateDeviceTwin();
     });
 
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.createIoTHub", () => {
+        azureIoTExplorer.createIoTHub();
+    }));
+
     let selectIoTHub = vscode.commands.registerCommand("azure-iot-toolkit.selectIoTHub", () => {
         azureIoTExplorer.selectIoTHub();
     });
