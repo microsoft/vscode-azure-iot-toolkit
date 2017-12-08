@@ -122,6 +122,15 @@ export class Utility {
         return filePath;
     }
 
+    public static getDefaultPath(filename?: string): vscode.Uri {
+        if (filename) {
+            const defaultPath: string = vscode.workspace.workspaceFolders ? path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, filename) : `*/${filename}`;
+            return vscode.Uri.file(defaultPath);
+        } else {
+            return vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri : undefined;
+        }
+    }
+
     public static writeFile(filePath: vscode.Uri, content: string): void {
         fs.writeFile(filePath.fsPath, content, (err) => {
             if (err) {
@@ -163,15 +172,6 @@ export class Utility {
             device.iconPath = context.asAbsolutePath(path.join("resources", `${deviceType}-${state}.svg`));
             return device;
         });
-    }
-
-    public static getDefaultPath(filename?: string): vscode.Uri {
-        if (filename) {
-            const defaultPath: string = vscode.workspace.workspaceFolders ? path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, filename) : `*/${filename}`;
-            return vscode.Uri.file(defaultPath);
-        } else {
-            return vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri : undefined;
-        }
     }
 
     private static async getFilteredDeviceList(iotHubConnectionString: string, onlyEdgeDevice: boolean): Promise<DeviceItem[]> {
