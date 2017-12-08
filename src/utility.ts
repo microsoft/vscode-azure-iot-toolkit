@@ -165,6 +165,15 @@ export class Utility {
         });
     }
 
+    public static getDefaultPath(filename?: string): vscode.Uri {
+        if (filename) {
+            const defaultPath: string = vscode.workspace.workspaceFolders ? path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, filename) : `*/${filename}`;
+            return vscode.Uri.file(defaultPath);
+        } else {
+            return vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri : undefined;
+        }
+    }
+
     private static async getFilteredDeviceList(iotHubConnectionString: string, onlyEdgeDevice: boolean): Promise<DeviceItem[]> {
         if (onlyEdgeDevice) {
             const [deviceList, edgeDeviceIdSet] = await Promise.all([Utility.getIoTDeviceList(iotHubConnectionString), Utility.getEdgeDeviceIdSet(iotHubConnectionString)]);

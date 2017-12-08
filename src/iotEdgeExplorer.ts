@@ -59,7 +59,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
             filters: {
                 JSON: ["json"],
             },
-            defaultUri: vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri : undefined,
+            defaultUri: Utility.getDefaultPath(),
         });
         if (filePathUri) {
             Executor.runInTerminal(Utility.adjustTerminalCommand(`iotedgectl setup --config-file "${Utility.adjustFilePath(filePathUri[0].fsPath)}"`));
@@ -95,7 +95,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
             if (containerOS) {
                 const configContent: string = this.generateEdgeSetupConfigContent(deviceItem.connectionString, containerOS);
                 const configPath: vscode.Uri = await vscode.window.showSaveDialog({
-                    defaultUri: vscode.workspace.workspaceFolders ? vscode.Uri.file(path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, "config.json")) : vscode.Uri.file("*/config.json"),
+                    defaultUri: Utility.getDefaultPath("config.json"),
                     saveLabel: "Save Edge Setup Configuration File",
                     filters: {
                         JSON: ["json"],
@@ -114,7 +114,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
         TelemetryClient.sendEvent("Edge.GenerateDeploymentConfig.Start");
         const configContent: string = this.generateEdgeDeploymentConfigContent();
         const configPath: vscode.Uri = await vscode.window.showSaveDialog({
-            defaultUri: vscode.workspace.workspaceFolders ? vscode.Uri.file(path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, "deployment.json")) : vscode.Uri.file("*/deployment.json"),
+            defaultUri: Utility.getDefaultPath("deployment.json"),
             saveLabel: "Save Edge Deployment Configuration File",
             filters: {
                 JSON: ["json"],
@@ -133,7 +133,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
             filters: {
                 JSON: ["json"],
             },
-            defaultUri: vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri : undefined,
+            defaultUri: Utility.getDefaultPath(),
         });
         if (!filePathUri) {
             return "";
