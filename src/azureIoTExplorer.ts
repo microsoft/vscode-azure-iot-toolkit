@@ -84,8 +84,8 @@ export class AzureIoTExplorer {
         this._iotHubDeviceTwinExplorer.updateDeviceTwin();
     }
 
-    public createIoTHub(): void {
-        this._iotHubResourceExplorer.createIoTHub();
+    public async createIoTHub() {
+        return this._iotHubResourceExplorer.createIoTHub();
     }
 
     public selectIoTHub(): void {
