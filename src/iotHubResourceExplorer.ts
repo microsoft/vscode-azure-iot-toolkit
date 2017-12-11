@@ -134,6 +134,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
             TelemetryClient.sendEvent("General.AskForAzureLogin");
             const subscription = this.accountApi.onStatusChanged(() => {
                 subscription.dispose();
+                callback = callback.bind(this);
                 callback();
             });
             vscode.commands.executeCommand("azure-account.askForLogin");
