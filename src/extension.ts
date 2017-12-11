@@ -148,6 +148,8 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(copyIoTHubConnectionString);
     context.subscriptions.push(copyDeviceConnectionString);
     context.subscriptions.push(createDeployment);
+
+    return { azureIoTExplorer };
 }
 
 export function deactivate() {

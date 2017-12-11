@@ -213,6 +213,11 @@
           "group": "navigation"
         },
         {
+          "command": "azure-iot-toolkit.createIoTHub",
+          "when": "view == iotHubDevices",
+          "group": "azure-iot-toolkit@0"
+        },
+        {
           "command": "azure-iot-toolkit.createDevice",
           "when": "view == iotHubDevices",
           "group": "azure-iot-toolkit@1"
@@ -226,11 +231,6 @@
           "command": "azure-iot-toolkit.setIoTHubConnectionString",
           "when": "view == iotHubDevices",
           "group": "azure-iot-toolkit@3"
-        },
-        {
-          "command": "azure-iot-toolkit.createIoTHub",
-          "when": "view == iotHubDevices",
-          "group": "azure-iot-toolkit@4"
         },
         {
           "command": "azure-iot-toolkit.selectIoTHub",
