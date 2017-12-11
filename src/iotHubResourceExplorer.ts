@@ -303,7 +303,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         if (resourceGroupName) {
             const locationItem = await vscode.window.showQuickPick(
                 this.getLocationItems(subscriptionItem),
-                { placeHolder: "Select a location to create your Resource Group in...", ignoreFocusOut: true }
+                { placeHolder: "Select a location to create your Resource Group in...", ignoreFocusOut: true },
             );
 
             if (locationItem) {
