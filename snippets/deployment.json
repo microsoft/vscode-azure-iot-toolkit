@@ -1,0 +1,9 @@
+{
+    "Edge module": {
+        "prefix": "edgeModule",
+        "description": "Lorem Ipsum",
+        "body": [
+            "Lorem"
+        ]
+    }
+}
