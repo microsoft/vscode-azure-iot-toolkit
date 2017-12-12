@@ -20,6 +20,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
     }
 
     public async createIoTHub(): Promise<IotHubDescription> {
+        TelemetryClient.sendEvent(Constants.IoTHubAICreateStartEvent);
         if (!(await this.waitForLogin(this.createIoTHub))) {
             return;
         }
@@ -80,10 +81,12 @@ export class IoTHubResourceExplorer extends BaseExplorer {
                                             vscode.window.showInformationMessage(`IoT Hub '${name}' is created.`);
                                             this.updateIoTHubConnectionString(subscriptionItem, iotHubDescription);
                                         }
+                                        TelemetryClient.sendEvent(Constants.IoTHubAICreateDoneEvent, { Result: "Success"});
                                         return iotHubDescription;
                                     })
                                     .catch((err) => {
                                         vscode.window.showErrorMessage(err.message);
+                                        TelemetryClient.sendEvent(Constants.IoTHubAICreateDoneEvent, { Result: "Fail", Message: err.message });
                                         return Promise.reject(err);
                                     });
                             });
@@ -308,8 +311,10 @@ export class IoTHubResourceExplorer extends BaseExplorer {
             );
 
             if (locationItem) {
-                return vscode.window.withProgress({ location: vscode.ProgressLocation.Window }, async (progress) => {
-                    progress.report({ message: `Creating resource group '${resourceGroupName}'` });
+                return vscode.window.withProgress({
+                    title: `Creating resource group '${resourceGroupName}'`,
+                    location: vscode.ProgressLocation.Window,
+                }, async (progress) => {
                     const resourceManagementClient = new ResourceManagementClient(subscriptionItem.session.credentials, subscriptionItem.subscription.subscriptionId);
                     return resourceManagementClient.resourceGroups.createOrUpdate(resourceGroupName, { location: locationItem.location.name });
                 });
