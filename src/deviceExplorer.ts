@@ -32,18 +32,23 @@ export class DeviceExplorer extends BaseExplorer {
         });
     }
 
-    public async getDevice(deviceId: string) {
+    public async getDevice(deviceItem: DeviceItem) {
         let label = "Device";
         let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
             return;
         }
 
+        deviceItem = await Utility.getInputDevice(deviceItem, "AZ.Device.Get.Start");
+        if (!deviceItem) {
+            return;
+        }
+
         let hostName = Utility.getHostName(iotHubConnectionString);
         let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
         this._outputChannel.show();
-        this.outputLine(label, `Querying device [${deviceId}]...`);
-        registry.get(deviceId, this.done("Get", label, hostName));
+        this.outputLine(label, `Querying device [${deviceItem.deviceId}]...`);
+        registry.get(deviceItem.deviceId, this.done("Get", label, hostName));
     }
 
     public async createDevice(edgeDevice: boolean = false) {
@@ -118,7 +123,7 @@ export class DeviceExplorer extends BaseExplorer {
                 if (res.statusCode < 300) {
                     result = "Success";
                     if (op === "Create" || op === "Delete") {
-                        vscode.commands.executeCommand("azure-iot-toolkit.refreshDeviceTree");
+                        vscode.commands.executeCommand("azure-iot-toolkit.refresh");
                     }
                 }
                 TelemetryClient.sendEvent(`AZ.${label}.${op}`, { Result: result });

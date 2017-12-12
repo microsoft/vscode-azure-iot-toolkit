@@ -184,7 +184,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         const iotHubConnectionString = await this.getIoTHubConnectionString(subscriptionItem, iotHubDescription);
         const config = Utility.getConfiguration();
         await config.update(Constants.IotHubConnectionStringKey, iotHubConnectionString, true);
-        vscode.commands.executeCommand("azure-iot-toolkit.refreshDeviceTree");
+        vscode.commands.executeCommand("azure-iot-toolkit.refresh");
     }
 
     private async getIoTHubConnectionString(subscriptionItem: SubscriptionItem, iotHubDescription: IotHubDescription) {

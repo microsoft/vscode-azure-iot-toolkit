@@ -8,6 +8,7 @@ import { IotHubDirectMethodExplorer } from "./iotHubDirectMethodExplorer";
 import { IoTHubMessageExplorer } from "./iotHubMessageExplorer";
 import { IoTHubResourceExplorer } from "./iotHubResourceExplorer";
 import { DeviceItem } from "./Model/DeviceItem";
+import { ModuleItem } from "./Model/ModuleItem";
 import { SnippetManager } from "./snippetManager";
 
 export class AzureIoTExplorer {
@@ -60,8 +61,8 @@ export class AzureIoTExplorer {
         this._deviceExplorer.listDevice();
     }
 
-    public getDevice(deviceId: string): void {
-        this._deviceExplorer.getDevice(deviceId);
+    public getDevice(deviceItem: DeviceItem): void {
+        this._deviceExplorer.getDevice(deviceItem);
     }
 
     public async createDevice(edgeDevice: boolean = false) {
@@ -142,5 +143,9 @@ export class AzureIoTExplorer {
 
     public async generateEdgeDeploymentConfig() {
         this._iotEdgeExplorer.generateEdgeDeploymentConfig();
+    }
+
+    public async getModuleTwin(moduleItem: ModuleItem) {
+        this._iotEdgeExplorer.getModuleTwin(moduleItem);
     }
 }

@@ -9,6 +9,7 @@ import * as path from "path";
 import * as vscode from "vscode";
 import { Constants } from "./constants";
 import { DeviceItem } from "./Model/DeviceItem";
+import { ModuleItem } from "./Model/ModuleItem";
 import { TelemetryClient } from "./telemetryClient";
 
 export class Utility {
@@ -141,6 +142,52 @@ export class Utility {
         });
     }
 
+    public static async getModuleItems(iotHubConnectionString: string, deviceId: string) {
+        const [modules, edgeAgent] = await Promise.all([Utility.getModules(iotHubConnectionString, deviceId), Utility.getModuleTwin(iotHubConnectionString, deviceId, "$edgeAgent")]);
+        const reportedTwin = (edgeAgent as any).properties.reported;
+        return modules.map((module) => {
+            if (module.moduleId.startsWith("$")) {
+                const moduleId = module.moduleId.substring(1);
+                if (reportedTwin.systemModules && Object.keys(reportedTwin.systemModules).indexOf(moduleId) > -1) {
+                    return new ModuleItem(deviceId, module.moduleId, reportedTwin.systemModules[moduleId].runtimeStatus, null);
+                }
+            } else {
+                if (reportedTwin.modules && Object.keys(reportedTwin.modules).indexOf(module.moduleId) > -1) {
+                    return new ModuleItem(deviceId, module.moduleId, reportedTwin.modules[module.moduleId].runtimeStatus, null);
+                }
+            }
+            return new ModuleItem(deviceId, module.moduleId, null, null);
+        });
+    }
+
+    public static async getModules(iotHubConnectionString: string, deviceId: string): Promise<any[]> {
+        const sasToken = Utility.generateSasTokenForService(iotHubConnectionString);
+        const hostName = Utility.getHostName(iotHubConnectionString);
+        const config = {
+            headers: {
+                "Authorization": sasToken,
+                "Content-Type": "application/json",
+            },
+        };
+        const url = `https://${hostName}/devices/${deviceId}/modules?api-version=${Constants.IoTHubApiVersion}`;
+
+        return (await axios.get(url, config)).data;
+    }
+
+    public static async getModuleTwin(iotHubConnectionString: string, deviceId: string, moduleId: string): Promise<string> {
+        const sasToken = Utility.generateSasTokenForService(iotHubConnectionString);
+        const hostName = Utility.getHostName(iotHubConnectionString);
+        const config = {
+            headers: {
+                "Authorization": sasToken,
+                "Content-Type": "application/json",
+            },
+        };
+        const url = `https://${hostName}/twins/${deviceId}/modules/${moduleId}?api-version=${Constants.IoTHubApiVersion}`;
+
+        return (await axios.get(url, config)).data;
+    }
+
     public static async getInputDevice(deviceItem: DeviceItem, eventName: string, onlyEdgeDevice: boolean = false): Promise<DeviceItem> {
         if (!deviceItem) {
             TelemetryClient.sendEvent(eventName, { entry: "commandPalette" });
@@ -166,6 +213,8 @@ export class Utility {
             if (edgeDeviceIdSet.has(device.deviceId)) {
                 deviceType = "edge";
                 device.contextValue = "edge";
+                device.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
+                device.command = null;
             } else {
                 deviceType = "device";
             }
@@ -211,7 +260,7 @@ export class Utility {
                             {
                                 command: "azure-iot-toolkit.getDevice",
                                 title: "",
-                                arguments: [device.deviceId],
+                                arguments: [device],
                             },
                             device.connectionState.toString(),
                             null));

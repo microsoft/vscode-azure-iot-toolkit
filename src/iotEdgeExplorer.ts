@@ -11,6 +11,7 @@ import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
 import { Executor } from "./executor";
 import { DeviceItem } from "./Model/DeviceItem";
+import { ModuleItem } from "./Model/ModuleItem";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
@@ -165,6 +166,21 @@ export class IoTEdgeExplorer extends BaseExplorer {
         if (configPath) {
             Utility.writeFile(configPath, configContent);
             TelemetryClient.sendEvent("Edge.GenerateDeploymentConfig.Done");
+        }
+    }
+
+    public async getModuleTwin(moduleItem: ModuleItem) {
+        let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
+        if (!iotHubConnectionString) {
+            return;
+        }
+
+        try {
+            const content = await Utility.getModuleTwin(iotHubConnectionString, moduleItem.deviceId, moduleItem.moduleId);
+            const textDocument = await vscode.workspace.openTextDocument({ content: JSON.stringify(content, null, 4), language: "json" });
+            vscode.window.showTextDocument(textDocument);
+        } catch (error) {
+            vscode.window.showErrorMessage(`Failed to get Module Twin: ${error}`);
         }
     }
 
