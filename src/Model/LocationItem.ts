@@ -1,6 +1,5 @@
 import { SubscriptionModels } from "azure-arm-resource";
 import { QuickPickItem } from "vscode";
-import { IotHubDescription } from "../../node_modules/azure-arm-iothub/lib/models";
 
 export class LocationItem implements QuickPickItem {
     public readonly label: string;
