@@ -1,6 +1,6 @@
 {
     "Edge module": {
-        "prefix": "edgeModule",
+        "prefix": "edgemodule",
         "description": "Edge module",
         "body": [
             "\"${1:SampleModule}\": {",
@@ -13,6 +13,13 @@
             "\t\t\"createOptions\": \"${8:{}},\"",
             "\t}",
             "}"
+        ]
+    },
+    "Edge route": {
+        "prefix": "edgeroute",
+        "description": "Edge route",
+        "body":[
+            "\"${1:route}\": \"FROM ${2|/*,/messages/*,/messages/modules/*,/messages/modules/{moduleId}/*,/messages/modules/{moduleId}/outputs/*,/messages/modules/{moduleId}/outputs/{output}|} WHERE ${3:<condition>} INTO ${4|$upstream,BrokeredEndpoint(/modules/{moduleId}/inputs/{input})|}\""
         ]
     }
 }
