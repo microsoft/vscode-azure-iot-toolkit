@@ -1,9 +1,18 @@
 {
     "Edge module": {
         "prefix": "edgeModule",
-        "description": "Lorem Ipsum",
+        "description": "Edge module",
         "body": [
-            "Lorem"
+            "\"${1:SampleModule}\": {",
+            "\t\"version\": \"${2:1.0}\",",
+            "\t\"type\": \"docker\",",
+            "\t\"status\": \"${3|running,stopped|}\",",
+            "\t\"restartPolicy\": \"${4|always,never,on-failed,on-unhealthy|}\",",
+            "\t\"settings\": {",
+            "\t\t\"image\": \"${5:registry}/${6:image}:${7:latest}\",",
+            "\t\t\"createOptions\": \"${8:{}},\"",
+            "\t}",
+            "}"
         ]
     }
 }
