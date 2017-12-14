@@ -148,11 +148,11 @@ export class Utility {
         return modules.map((module) => {
             if (module.moduleId.startsWith("$")) {
                 const moduleId = module.moduleId.substring(1);
-                if (reportedTwin.systemModules && Object.keys(reportedTwin.systemModules).indexOf(moduleId) > -1) {
+                if (reportedTwin.systemModules && reportedTwin.systemModules[moduleId]) {
                     return new ModuleItem(deviceId, module.moduleId, reportedTwin.systemModules[moduleId].runtimeStatus, null);
                 }
             } else {
-                if (reportedTwin.modules && Object.keys(reportedTwin.modules).indexOf(module.moduleId) > -1) {
+                if (reportedTwin.modules && reportedTwin.modules[module.moduleId]) {
                     return new ModuleItem(deviceId, module.moduleId, reportedTwin.modules[module.moduleId].runtimeStatus, null);
                 }
             }
