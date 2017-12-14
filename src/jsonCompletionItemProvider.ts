@@ -21,7 +21,7 @@ export class JsonCompletionItemProvider implements vscode.CompletionItemProvider
     }
 
     private getSnippetString(moduleIds: string[]): string {
-        const snippet: string[] = ["\"${1:route}\":", "\",FROM"];
+        const snippet: string[] = ["\"${1:route}\":", "\"FROM"];
 
         const sources: string[] = ["${2|/*", "/messages/*", "/messages/modules/*"];
         if (moduleIds.length === 0) {
