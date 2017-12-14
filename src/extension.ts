@@ -70,6 +70,10 @@ export function activate(context: vscode.ExtensionContext) {
         azureIoTExplorer.updateDeviceTwin();
     });
 
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.createIoTHub", () => {
+        azureIoTExplorer.createIoTHub();
+    }));
+
     let selectIoTHub = vscode.commands.registerCommand("azure-iot-toolkit.selectIoTHub", () => {
         azureIoTExplorer.selectIoTHub();
     });
@@ -144,6 +148,8 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(copyIoTHubConnectionString);
     context.subscriptions.push(copyDeviceConnectionString);
     context.subscriptions.push(createDeployment);
+
+    return { azureIoTExplorer };
 }
 
 export function deactivate() {
