@@ -95,7 +95,7 @@ export class Utility {
     }
 
     public static adjustTerminalCommand(command: string): string {
-        return os.platform() === "linux" ? `sudo ${command}` : command;
+        return (os.platform() === "linux" || os.platform() === "darwin") ? `sudo ${command}` : command;
     }
 
     public static adjustFilePath(filePath: string): string {
