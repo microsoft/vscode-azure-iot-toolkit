@@ -241,8 +241,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
     private async getIoTHubName(subscriptionItem: SubscriptionItem): Promise<string> {
         const client = new IoTHubClient(subscriptionItem.session.credentials, subscriptionItem.subscription.subscriptionId);
 
-        let nameNotAvailable = true;
-        while (nameNotAvailable) {
+        while (true) {
             const accountName = await vscode.window.showInputBox({
                 placeHolder: "IoT Hub name",
                 prompt: "Provide IoT Hub name",
@@ -253,17 +252,17 @@ export class IoTHubResourceExplorer extends BaseExplorer {
             if (!accountName) {
                 // If the user escaped the input box, exit the while loop
                 break;
-            } else {
-                try {
-                    const nameAvailable = (await client.iotHubResource.checkNameAvailability(accountName)).nameAvailable;
-                    if (nameAvailable) {
-                        return accountName;
-                    } else {
-                        await vscode.window.showErrorMessage(`IoT Hub name '${accountName}' is not available.`);
-                    }
-                } catch (error) {
-                    await vscode.window.showErrorMessage(error.message);
+            }
+
+            try {
+                const nameAvailable = (await client.iotHubResource.checkNameAvailability(accountName)).nameAvailable;
+                if (nameAvailable) {
+                    return accountName;
+                } else {
+                    await vscode.window.showErrorMessage(`IoT Hub name '${accountName}' is not available.`);
                 }
+            } catch (error) {
+                await vscode.window.showErrorMessage(error.message);
             }
         }
     }
@@ -273,11 +272,14 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         const max = 50;
         if (name.length < min || name.length > max) {
             return `The name must be between ${min} and ${max} characters long.`;
-        } else if (name.match(/[^a-zA-Z0-9-]/)) {
+        }
+        if (name.match(/[^a-zA-Z0-9-]/)) {
             return "The name must contain only alphanumeric characters or -";
-        } else if (name.startsWith("-")) {
+        }
+        if (name.startsWith("-")) {
             return "The name must not start with -";
-        } else if (name.endsWith("-")) {
+        }
+        if (name.endsWith("-")) {
             return "The name must not end with -";
         }
         return null;
@@ -315,9 +317,11 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         const max = 90;
         if (name.length < min || name.length > max) {
             return `The name must be between ${min} and ${max} characters long.`;
-        } else if (name.match(/[^a-zA-Z0-9\.\_\-\(\)]/)) {
+        }
+        if (name.match(/[^a-zA-Z0-9\.\_\-\(\)]/)) {
             return "The name must contain only alphanumeric characters or the symbols ._-()";
-        } else if (name.endsWith(".")) {
+        }
+        if (name.endsWith(".")) {
             return "The name must not end in a period.";
         }
         return null;
