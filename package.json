@@ -437,6 +437,7 @@
     "azure-iothub": "^1.1.13",
     "clipboardy": "^1.1.4",
     "fqdn-multi": "^0.1.1",
+    "jsonc-parser": "^1.0.0",
     "ms-rest": "^2.2.4",
     "ms-rest-azure": "^2.4.1",
     "strip-json-comments": "^2.0.1",
