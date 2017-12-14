@@ -170,6 +170,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
     }
 
     public async getModuleTwin(moduleItem: ModuleItem) {
+        TelemetryClient.sendEvent(Constants.IoTHubAIGetModuleTwinStartEvent);
         let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
             return;
@@ -179,8 +180,10 @@ export class IoTEdgeExplorer extends BaseExplorer {
             const content = await Utility.getModuleTwin(iotHubConnectionString, moduleItem.deviceId, moduleItem.moduleId);
             const textDocument = await vscode.workspace.openTextDocument({ content: JSON.stringify(content, null, 4), language: "json" });
             vscode.window.showTextDocument(textDocument);
+            TelemetryClient.sendEvent(Constants.IoTHubAIGetModuleTwinDoneEvent, { Result: "Success"});
         } catch (error) {
             vscode.window.showErrorMessage(`Failed to get Module Twin: ${error}`);
+            TelemetryClient.sendEvent(Constants.IoTHubAIGetModuleTwinDoneEvent, { Result: "Fail", Message: error });
         }
     }
 

@@ -37,6 +37,9 @@ export class Constants {
     public static IoTHubAIEdgeDeployDoneEvent = "AZ.Edge.Deploy.Done";
     public static IoTHubAICreateStartEvent = "General.IoTHub.Create.Start";
     public static IoTHubAICreateDoneEvent = "AZ.IoTHub.Create.Done";
+    public static IoTHubAIGetModuleTwinStartEvent = "AZ.ModuleTwin.Get.Start";
+    public static IoTHubAIGetModuleTwinDoneEvent = "AZ.ModuleTwin.Get.Done";
+    public static IoTHubAILoadModuleTreeEvent = "AZ.LoadModuleTree";
 
     public static IoTHubAIStartLoadDeviceTreeEvent = "General.StartLoadDeviceTree";
 
