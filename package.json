@@ -47,7 +47,8 @@
     "onCommand:azure-iot-toolkit.restartEdge",
     "onCommand:azure-iot-toolkit.uninstallEdge",
     "onCommand:azure-iot-toolkit.generateEdgeSetupConfig",
-    "onCommand:azure-iot-toolkit.generateEdgeDeploymentConfig"
+    "onCommand:azure-iot-toolkit.generateEdgeDeploymentConfig",
+    "onCommand:azure-iot-toolkit.createIoTHub"
   ],
   "main": "./out/src/extension",
   "contributes": {
@@ -123,6 +124,11 @@
       {
         "command": "azure-iot-toolkit.setIoTHubConnectionString",
         "title": "Set IoT Hub Connection String",
+        "category": "IoT"
+      },
+      {
+        "command": "azure-iot-toolkit.createIoTHub",
+        "title": "Create IoT Hub",
         "category": "IoT"
       },
       {
@@ -206,6 +212,11 @@
           "command": "azure-iot-toolkit.refreshDeviceTree",
           "when": "view == iotHubDevices",
           "group": "navigation"
+        },
+        {
+          "command": "azure-iot-toolkit.createIoTHub",
+          "when": "view == iotHubDevices",
+          "group": "azure-iot-toolkit@0"
         },
         {
           "command": "azure-iot-toolkit.createDevice",
