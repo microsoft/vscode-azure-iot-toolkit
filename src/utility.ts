@@ -1,5 +1,5 @@
 "use strict";
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import { ConnectionString as DeviceConnectionString } from "azure-iot-device";
 import { ConnectionString, Registry, SharedAccessSignature } from "azure-iothub";
 import * as crypto from "crypto";
@@ -142,6 +142,15 @@ export class Utility {
         });
     }
 
+    public static generateAxiosRequestConfig(iotHubConnectionString: string): AxiosRequestConfig {
+        return {
+            headers: {
+                "Authorization": Utility.generateSasTokenForService(iotHubConnectionString),
+                "Content-Type": "application/json",
+            },
+        };
+    }
+
     public static async getModuleItems(iotHubConnectionString: string, deviceId: string, context: vscode.ExtensionContext) {
         const [modules, edgeAgent] = await Promise.all([Utility.getModules(iotHubConnectionString, deviceId), Utility.getModuleTwin(iotHubConnectionString, deviceId, "$edgeAgent")]);
         const reportedTwin = (edgeAgent as any).properties.reported;
@@ -167,28 +176,16 @@ export class Utility {
     }
 
     public static async getModules(iotHubConnectionString: string, deviceId: string): Promise<any[]> {
-        const sasToken = Utility.generateSasTokenForService(iotHubConnectionString);
         const hostName = Utility.getHostName(iotHubConnectionString);
-        const config = {
-            headers: {
-                "Authorization": sasToken,
-                "Content-Type": "application/json",
-            },
-        };
+        const config = Utility.generateAxiosRequestConfig(iotHubConnectionString);
         const url = `https://${hostName}/devices/${deviceId}/modules?api-version=${Constants.IoTHubApiVersion}`;
 
         return (await axios.get(url, config)).data;
     }
 
     public static async getModuleTwin(iotHubConnectionString: string, deviceId: string, moduleId: string): Promise<string> {
-        const sasToken = Utility.generateSasTokenForService(iotHubConnectionString);
         const hostName = Utility.getHostName(iotHubConnectionString);
-        const config = {
-            headers: {
-                "Authorization": sasToken,
-                "Content-Type": "application/json",
-            },
-        };
+        const config = Utility.generateAxiosRequestConfig(iotHubConnectionString);
         const url = `https://${hostName}/twins/${deviceId}/modules/${moduleId}?api-version=${Constants.IoTHubApiVersion}`;
 
         return (await axios.get(url, config)).data;
@@ -287,17 +284,11 @@ export class Utility {
     }
 
     private static async getEdgeDeviceList(iotHubConnectionString: string): Promise<any[]> {
-        const sasToken = Utility.generateSasTokenForService(iotHubConnectionString);
-        const hostName = Utility.getHostName(iotHubConnectionString);
         const body = {
             query: "SELECT * FROM DEVICES where capabilities.iotEdge=true",
         };
-        const config = {
-            headers: {
-                "Authorization": sasToken,
-                "Content-Type": "application/json",
-            },
-        };
+        const hostName = Utility.getHostName(iotHubConnectionString);
+        const config = Utility.generateAxiosRequestConfig(iotHubConnectionString);
         const url = `https://${hostName}/devices/query?api-version=${Constants.IoTHubApiVersion}`;
 
         return (await axios.post(url, body, config)).data;

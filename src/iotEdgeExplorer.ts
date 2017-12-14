@@ -36,10 +36,8 @@ export class IoTEdgeExplorer extends BaseExplorer {
         if (!deploymentJson) {
             return;
         }
-        const sasToken = Utility.generateSasTokenForService(iotHubConnectionString);
-        const hostName = Utility.getHostName(iotHubConnectionString);
 
-        this.deploy(hostName, deviceItem.deviceId, sasToken, deploymentJson);
+        this.deploy(iotHubConnectionString, deviceItem.deviceId, deploymentJson);
     }
 
     public async setupEdge(deviceItem: DeviceItem) {
@@ -202,17 +200,13 @@ export class IoTEdgeExplorer extends BaseExplorer {
         return fs.readFileSync(filePath, "utf8");
     }
 
-    private deploy(hostName: string, deviceId: string, sasToken: string, deploymentJson: string) {
+    private deploy(iotHubConnectionString: string, deviceId: string, deploymentJson: string) {
         const label = "Edge";
         this._outputChannel.show();
         this.outputLine(label, `Start deployment to [${deviceId}]`);
 
-        const config = {
-            headers: {
-                "Authorization": sasToken,
-                "Content-Type": "application/json",
-            },
-        };
+        const hostName = Utility.getHostName(iotHubConnectionString);
+        const config = Utility.generateAxiosRequestConfig(iotHubConnectionString);
         const url = `https://${hostName}/devices/${deviceId}/applyConfigurationContent?api-version=${Constants.IoTHubApiVersion}`;
         axios.post(url, stripJsonComments(deploymentJson), config)
             .then((response) => {
