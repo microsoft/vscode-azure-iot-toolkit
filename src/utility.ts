@@ -148,6 +148,7 @@ export class Utility {
         return modules.map((module) => {
             const isConnected = module.connectionState === "Connected";
             const state = isConnected ? "on" : "off";
+            // TODO: Update module image
             const iconPath = context.asAbsolutePath(path.join("resources", `device-${state}.svg`));
             if (isConnected) {
                 if (module.moduleId.startsWith("$")) {
