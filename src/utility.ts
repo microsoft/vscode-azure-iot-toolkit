@@ -142,21 +142,26 @@ export class Utility {
         });
     }
 
-    public static async getModuleItems(iotHubConnectionString: string, deviceId: string) {
+    public static async getModuleItems(iotHubConnectionString: string, deviceId: string, context: vscode.ExtensionContext) {
         const [modules, edgeAgent] = await Promise.all([Utility.getModules(iotHubConnectionString, deviceId), Utility.getModuleTwin(iotHubConnectionString, deviceId, "$edgeAgent")]);
         const reportedTwin = (edgeAgent as any).properties.reported;
         return modules.map((module) => {
-            if (module.moduleId.startsWith("$")) {
-                const moduleId = module.moduleId.substring(1);
-                if (reportedTwin.systemModules && reportedTwin.systemModules[moduleId]) {
-                    return new ModuleItem(deviceId, module.moduleId, reportedTwin.systemModules[moduleId].runtimeStatus, null);
-                }
-            } else {
-                if (reportedTwin.modules && reportedTwin.modules[module.moduleId]) {
-                    return new ModuleItem(deviceId, module.moduleId, reportedTwin.modules[module.moduleId].runtimeStatus, null);
+            const isConnected = module.connectionState === "Connected";
+            const state = isConnected ? "on" : "off";
+            const iconPath = context.asAbsolutePath(path.join("resources", `device-${state}.svg`));
+            if (isConnected) {
+                if (module.moduleId.startsWith("$")) {
+                    const moduleId = module.moduleId.substring(1);
+                    if (reportedTwin.systemModules && reportedTwin.systemModules[moduleId]) {
+                        return new ModuleItem(deviceId, module.moduleId, reportedTwin.systemModules[moduleId].runtimeStatus, iconPath);
+                    }
+                } else {
+                    if (reportedTwin.modules && reportedTwin.modules[module.moduleId]) {
+                        return new ModuleItem(deviceId, module.moduleId, reportedTwin.modules[module.moduleId].runtimeStatus, iconPath);
+                    }
                 }
             }
-            return new ModuleItem(deviceId, module.moduleId, null, null);
+            return new ModuleItem(deviceId, module.moduleId, null, iconPath);
         });
     }
 

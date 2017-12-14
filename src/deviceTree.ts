@@ -39,7 +39,7 @@ export class DeviceTree implements vscode.TreeDataProvider<vscode.TreeItem> {
         }
 
         if (element && element.contextValue === "edge") {
-            return Utility.getModuleItems(iotHubConnectionString, (element as DeviceItem).deviceId);
+            return Utility.getModuleItems(iotHubConnectionString, (element as DeviceItem).deviceId, this.context);
         } else {
             TelemetryClient.sendEvent(Constants.IoTHubAIStartLoadDeviceTreeEvent);
             try {
