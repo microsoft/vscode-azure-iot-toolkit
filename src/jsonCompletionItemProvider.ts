@@ -1,7 +1,6 @@
 "use restrict";
 import { getLocation, Location, parse } from "jsonc-parser";
 import * as vscode from "vscode";
-import { CompletionItem, CompletionItemKind } from "vscode";
 
 export class JsonCompletionItemProvider implements vscode.CompletionItemProvider {
     public provideCompletionItems(document: vscode.TextDocument, position: vscode.Position): vscode.ProviderResult<vscode.CompletionItem[]> {
@@ -13,8 +12,8 @@ export class JsonCompletionItemProvider implements vscode.CompletionItemProvider
             const moduleIds: string[] = Object.keys(modules);
 
             const completionItem: vscode.CompletionItem = new vscode.CompletionItem("edgeRoute");
-            completionItem.kind = CompletionItemKind.Snippet;
-            completionItem.detail = "Route for the Edge Hub. Route name is used as key for the route. To delete a route, set the route name as null";
+            completionItem.kind = vscode.CompletionItemKind.Snippet;
+            completionItem.detail = "Route for the Edge Hub. Route name is used as the key for the route. To delete a route, set the route name as null";
             completionItem.range = range;
             completionItem.insertText = new vscode.SnippetString(this.getSnippetString(moduleIds));
             return [completionItem];
