@@ -1,0 +1,25 @@
+{
+    "Edge module": {
+        "prefix": "edgemodule",
+        "description": "Edge module",
+        "body": [
+            "\"${1:SampleModule}\": {",
+            "\t\"version\": \"${2:1.0}\",",
+            "\t\"type\": \"docker\",",
+            "\t\"status\": \"${3|running,stopped|}\",",
+            "\t\"restartPolicy\": \"${4|always,never,on-failed,on-unhealthy|}\",",
+            "\t\"settings\": {",
+            "\t\t\"image\": \"${5:registry}/${6:image}:${7:latest}\",",
+            "\t\t\"createOptions\": \"${8:{}},\"",
+            "\t}",
+            "}"
+        ]
+    },
+    "Edge route": {
+        "prefix": "edgeroute",
+        "description": "Edge route",
+        "body":[
+            "\"${1:route}\": \"FROM ${2|/*,/messages/*,/messages/modules/*,/messages/modules/{moduleId}/*,/messages/modules/{moduleId}/outputs/*,/messages/modules/{moduleId}/outputs/{output}|} WHERE ${3:<condition>} INTO ${4|$upstream,BrokeredEndpoint(/modules/{moduleId}/inputs/{input})|}\""
+        ]
+    }
+}
