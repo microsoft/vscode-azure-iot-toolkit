@@ -12,6 +12,7 @@ export class JsonCompletionItemProvider implements vscode.CompletionItemProvider
             const moduleIds: string[] = Object.keys(modules);
 
             const completionItem: vscode.CompletionItem = new vscode.CompletionItem("edgeRoute");
+            completionItem.filterText = "\"edgeRoute\"";
             completionItem.kind = vscode.CompletionItemKind.Snippet;
             completionItem.detail = "Route for the Edge Hub. Route name is used as the key for the route. To delete a route, set the route name as null";
             completionItem.range = range;
