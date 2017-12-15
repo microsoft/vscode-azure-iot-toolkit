@@ -1,4 +1,4 @@
-"use restrict";
+"use strict";
 import { getLocation, Location, parse } from "jsonc-parser";
 import * as vscode from "vscode";
 
