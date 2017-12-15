@@ -11,7 +11,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     vscode.window.registerTreeDataProvider("iotHubDevices", deviceTree);
 
-    vscode.languages.registerCompletionItemProvider({ language: "json" }, new JsonCompletionItemProvider());
+    vscode.languages.registerCompletionItemProvider([{ language: "json" }, { language: "jsonc" }], new JsonCompletionItemProvider());
 
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.refreshDeviceTree", () => {
         deviceTree.refresh();
