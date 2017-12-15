@@ -202,7 +202,7 @@
       },
       {
         "command": "azure-iot-toolkit.generateEdgeDeploymentConfig",
-        "title": "Generate Edge deployment configuration file",
+        "title": "Generate Edge deployment manifest",
         "category": "Edge"
       }
     ],
