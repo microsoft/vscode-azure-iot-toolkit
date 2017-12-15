@@ -115,7 +115,7 @@ export class DeviceExplorer extends BaseExplorer {
     private done(op: string, label: string, hostName: string = null) {
         return (err, deviceInfo, res) => {
             if (err) {
-                TelemetryClient.sendEvent(`AZ.${label.replace(/\s/g, "")}.${op}`, { Result: "Fail" });
+                TelemetryClient.sendEvent(`AZ.${label.replace(/\s/g, ".")}.${op}`, { Result: "Fail" });
                 this.outputLine(label, `[${op}] error: ${err.toString()}`);
             }
             if (res) {
