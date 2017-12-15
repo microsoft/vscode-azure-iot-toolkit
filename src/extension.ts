@@ -3,12 +3,15 @@ import * as vscode from "vscode";
 import { AzureIoTExplorer } from "./azureIoTExplorer";
 import { DeviceTree } from "./deviceTree";
 import { Executor } from "./executor";
+import { JsonCompletionItemProvider } from "./jsonCompletionItemProvider";
 
 export function activate(context: vscode.ExtensionContext) {
     let azureIoTExplorer = new AzureIoTExplorer(context);
     let deviceTree = new DeviceTree(context);
 
     vscode.window.registerTreeDataProvider("iotHubDevices", deviceTree);
+
+    vscode.languages.registerCompletionItemProvider([{ language: "json" }, { language: "jsonc" }], new JsonCompletionItemProvider(), "\"");
 
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.refreshDeviceTree", () => {
         deviceTree.refresh();
