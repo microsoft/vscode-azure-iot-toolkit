@@ -132,6 +132,10 @@ export class AzureIoTExplorer {
         this._iotEdgeExplorer.uninstallEdge();
     }
 
+    public loginToContainerRegistry(): void {
+        this._iotEdgeExplorer.loginToContainerRegistry();
+    }
+
     public async generateEdgeSetupConfig(deviceItem: DeviceItem) {
         this._iotEdgeExplorer.generateEdgeSetupConfig(deviceItem);
     }
