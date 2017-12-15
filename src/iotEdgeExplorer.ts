@@ -121,7 +121,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
             return;
         }
 
-        Executor.runInTerminal(`iotedgectl login${address ? ` --address "${address}"` : ""} --username "${username}" --password "${password}"`);
+        Executor.runInTerminal(Utility.adjustTerminalCommand(`iotedgectl login${address ? ` --address "${address}"` : ""} --username "${username}" --password "${password}"`));
         TelemetryClient.sendEvent("AZ.Edge.LoginToContainerRegistry.Done");
     }
 
