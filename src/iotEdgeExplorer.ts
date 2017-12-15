@@ -99,14 +99,13 @@ export class IoTEdgeExplorer extends BaseExplorer {
         }
         address = address.trim();
 
-        let username: string = await vscode.window.showInputBox({
+        const username: string = await vscode.window.showInputBox({
             prompt: "Enter username",
             ignoreFocusOut: true,
         });
         if (username === undefined) {
             return;
         }
-        username = username.trim();
         if (username === "") {
             vscode.window.showErrorMessage("Username cannot be empty");
             return;
@@ -118,6 +117,10 @@ export class IoTEdgeExplorer extends BaseExplorer {
             ignoreFocusOut: true,
         });
         if (password === undefined) {
+            return;
+        }
+        if (password === "") {
+            vscode.window.showErrorMessage("Password cannot be empty");
             return;
         }
 
