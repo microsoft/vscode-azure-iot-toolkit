@@ -169,7 +169,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 
     public async getModuleTwin(moduleItem: ModuleItem) {
         TelemetryClient.sendEvent(Constants.IoTHubAIGetModuleTwinStartEvent);
-        let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
+        const iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
             return;
         }
@@ -205,10 +205,10 @@ export class IoTEdgeExplorer extends BaseExplorer {
         this._outputChannel.show();
         this.outputLine(label, `Start deployment to [${deviceId}]`);
 
-        const hostName = Utility.getHostName(iotHubConnectionString);
-        const config = Utility.generateAxiosRequestConfig(iotHubConnectionString);
-        const url = `https://${hostName}/devices/${deviceId}/applyConfigurationContent?api-version=${Constants.IoTHubApiVersion}`;
-        axios.post(url, stripJsonComments(deploymentJson), config)
+        const url = `/devices/${deviceId}/applyConfigurationContent?api-version=${Constants.IoTHubApiVersion}`;
+        const config = Utility.generateIoTHubAxiosRequestConfig(iotHubConnectionString, url, "post", stripJsonComments(deploymentJson));
+
+        axios.request(config)
             .then((response) => {
                 this.outputLine(label, "Deployment succeeded.");
                 TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployDoneEvent, { Result: "Success" });
