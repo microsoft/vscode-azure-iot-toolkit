@@ -414,10 +414,6 @@
       {
         "language": "javascript",
         "path": "./snippets/javascript.json"
-      },
-      {
-        "language": "json",
-        "path": "./snippets/deployment.json"
       }
     ]
   },
