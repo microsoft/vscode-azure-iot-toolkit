@@ -11,6 +11,7 @@ import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
 import { Executor } from "./executor";
 import { DeviceItem } from "./Model/DeviceItem";
+import { ModuleItem } from "./Model/ModuleItem";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
@@ -35,10 +36,8 @@ export class IoTEdgeExplorer extends BaseExplorer {
         if (!deploymentJson) {
             return;
         }
-        const sasToken = Utility.generateSasTokenForService(iotHubConnectionString);
-        const hostName = Utility.getHostName(iotHubConnectionString);
 
-        this.deploy(hostName, deviceItem.deviceId, sasToken, deploymentJson);
+        this.deploy(iotHubConnectionString, deviceItem.deviceId, deploymentJson);
     }
 
     public async setupEdge(deviceItem: DeviceItem) {
@@ -168,6 +167,24 @@ export class IoTEdgeExplorer extends BaseExplorer {
         }
     }
 
+    public async getModuleTwin(moduleItem: ModuleItem) {
+        TelemetryClient.sendEvent(Constants.IoTHubAIGetModuleTwinStartEvent);
+        const iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
+        if (!iotHubConnectionString) {
+            return;
+        }
+
+        try {
+            const content = await Utility.getModuleTwin(iotHubConnectionString, moduleItem.deviceId, moduleItem.moduleId);
+            const textDocument = await vscode.workspace.openTextDocument({ content: JSON.stringify(content, null, 4), language: "json" });
+            vscode.window.showTextDocument(textDocument);
+            TelemetryClient.sendEvent(Constants.IoTHubAIGetModuleTwinDoneEvent, { Result: "Success"});
+        } catch (error) {
+            vscode.window.showErrorMessage(`Failed to get Module Twin: ${error}`);
+            TelemetryClient.sendEvent(Constants.IoTHubAIGetModuleTwinDoneEvent, { Result: "Fail", Message: error });
+        }
+    }
+
     private async getDeploymentJson(): Promise<string> {
         const filePathUri: vscode.Uri[] = await vscode.window.showOpenDialog({
             openLabel: "Select Edge Deployment Configuration File",
@@ -183,19 +200,15 @@ export class IoTEdgeExplorer extends BaseExplorer {
         return fs.readFileSync(filePath, "utf8");
     }
 
-    private deploy(hostName: string, deviceId: string, sasToken: string, deploymentJson: string) {
+    private deploy(iotHubConnectionString: string, deviceId: string, deploymentJson: string) {
         const label = "Edge";
         this._outputChannel.show();
         this.outputLine(label, `Start deployment to [${deviceId}]`);
 
-        const config = {
-            headers: {
-                "Authorization": sasToken,
-                "Content-Type": "application/json",
-            },
-        };
-        const url = `https://${hostName}/devices/${deviceId}/applyConfigurationContent?api-version=${Constants.IoTHubApiVersion}`;
-        axios.post(url, stripJsonComments(deploymentJson), config)
+        const url = `/devices/${deviceId}/applyConfigurationContent?api-version=${Constants.IoTHubApiVersion}`;
+        const config = Utility.generateIoTHubAxiosRequestConfig(iotHubConnectionString, url, "post", stripJsonComments(deploymentJson));
+
+        axios.request(config)
             .then((response) => {
                 this.outputLine(label, "Deployment succeeded.");
                 TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployDoneEvent, { Result: "Success" });

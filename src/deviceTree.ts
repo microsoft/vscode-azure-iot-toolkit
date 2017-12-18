@@ -14,9 +14,9 @@ export class DeviceTree implements vscode.TreeDataProvider<vscode.TreeItem> {
     constructor(private context: vscode.ExtensionContext) {
     }
 
-    public refresh(): void {
-        this._onDidChangeTreeData.fire();
-        TelemetryClient.sendEvent("AZ.RefreshDeviceTree");
+    public refresh(element): void {
+        this._onDidChangeTreeData.fire(element);
+        TelemetryClient.sendEvent("AZ.Refresh");
     }
 
     public async setIoTHubConnectionString() {
@@ -38,20 +38,36 @@ export class DeviceTree implements vscode.TreeDataProvider<vscode.TreeItem> {
             return;
         }
 
-        TelemetryClient.sendEvent(Constants.IoTHubAIStartLoadDeviceTreeEvent);
-        try {
-            const deviceList: vscode.TreeItem[] = await Utility.getDeviceList(iotHubConnectionString, this.context);
-            TelemetryClient.sendEvent(Constants.IoTHubAILoadDeviceTreeEvent, { Result: "Success", DeviceCount: deviceList.length.toString() });
-            if (deviceList.length === 0) {
-                deviceList.push(new vscode.TreeItem(`No devices in ${Utility.getHostName(iotHubConnectionString)}`));
+        if (element && element.contextValue === "edge") {
+            TelemetryClient.sendEvent(Constants.IoTHubAILoadModuleTreeStartEvent);
+            try {
+                const moduleList: vscode.TreeItem[] = await Utility.getModuleItems(iotHubConnectionString, (element as DeviceItem).deviceId, this.context);
+                TelemetryClient.sendEvent(Constants.IoTHubAILoadModuleTreeDoneEvent, { Result: "Success" });
+                return moduleList;
+            } catch (err) {
+                TelemetryClient.sendEvent(Constants.IoTHubAILoadModuleTreeDoneEvent, { Result: "Fail", Message: err.message });
+                return this.getErrorMessageTreeItems("modules", err.message);
             }
-            return deviceList;
-        } catch (err) {
-            TelemetryClient.sendEvent(Constants.IoTHubAILoadDeviceTreeEvent, { Result: "Fail", Message: err.message });
-            let items = [];
-            items.push(new vscode.TreeItem("Failed to list IoT Hub devices"));
-            items.push(new vscode.TreeItem(`Error: ${err.message}`));
-            return items;
+        } else {
+            TelemetryClient.sendEvent(Constants.IoTHubAIStartLoadDeviceTreeEvent);
+            try {
+                const deviceList: vscode.TreeItem[] = await Utility.getDeviceList(iotHubConnectionString, this.context);
+                TelemetryClient.sendEvent(Constants.IoTHubAILoadDeviceTreeEvent, { Result: "Success", DeviceCount: deviceList.length.toString() });
+                if (deviceList.length === 0) {
+                    deviceList.push(new vscode.TreeItem(`No devices in ${Utility.getHostName(iotHubConnectionString)}`));
+                }
+                return deviceList;
+            } catch (err) {
+                TelemetryClient.sendEvent(Constants.IoTHubAILoadDeviceTreeEvent, { Result: "Fail", Message: err.message });
+                return this.getErrorMessageTreeItems("IoT Hub devices", err.message);
+            }
         }
+    }
+
+    private getErrorMessageTreeItems(item: string, error: string): vscode.TreeItem[] {
+        const items = [];
+        items.push(new vscode.TreeItem(`Failed to list ${item}`));
+        items.push(new vscode.TreeItem(`Error: ${error}`));
+        return items;
     }
 }

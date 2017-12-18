@@ -13,16 +13,16 @@ export function activate(context: vscode.ExtensionContext) {
 
     vscode.languages.registerCompletionItemProvider([{ language: "json" }, { language: "jsonc" }], new JsonCompletionItemProvider(), "\"");
 
-    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.refreshDeviceTree", () => {
-        deviceTree.refresh();
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.refresh", (element) => {
+        deviceTree.refresh(element);
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.setIoTHubConnectionString", () => {
         deviceTree.setIoTHubConnectionString();
     }));
 
-    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.getDevice", (deviceId) => {
-        azureIoTExplorer.getDevice(deviceId);
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.getDevice", (DeviceItem) => {
+        azureIoTExplorer.getDevice(DeviceItem);
     }));
 
     let sendD2CMessage = vscode.commands.registerCommand("azure-iot-toolkit.sendD2CMessage", (DeviceItem) => {
@@ -131,6 +131,10 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.generateEdgeDeploymentConfig", async () => {
         await azureIoTExplorer.generateEdgeDeploymentConfig();
+    }));
+
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.getModuleTwin", async (moduleItem) => {
+        await azureIoTExplorer.getModuleTwin(moduleItem);
     }));
 
     vscode.workspace.onDidChangeTextDocument((event) => azureIoTExplorer.replaceConnectionString(event));
