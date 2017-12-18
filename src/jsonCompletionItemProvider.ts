@@ -11,17 +11,38 @@ export class JsonCompletionItemProvider implements vscode.CompletionItemProvider
             const modules: any = ((json.moduleContent.$edgeAgent || {})["properties.desired"] || {}).modules || {};
             const moduleIds: string[] = Object.keys(modules);
 
-            const completionItem: vscode.CompletionItem = new vscode.CompletionItem("edgeRoute");
-            completionItem.filterText = "\"edgeRoute\"";
-            completionItem.kind = vscode.CompletionItemKind.Snippet;
-            completionItem.detail = "Route for the Edge Hub. Route name is used as the key for the route. To delete a route, set the route name as null";
-            completionItem.range = range;
-            completionItem.insertText = new vscode.SnippetString(this.getSnippetString(moduleIds));
-            return [completionItem];
+            const routeCompletionItem: vscode.CompletionItem = new vscode.CompletionItem("edgeRoute");
+            routeCompletionItem.filterText = "\"edgeRoute\"";
+            routeCompletionItem.kind = vscode.CompletionItemKind.Snippet;
+            routeCompletionItem.detail = "Route for the Edge Hub. Route name is used as the key for the route. To delete a route, set the route name as null";
+            routeCompletionItem.range = range;
+            routeCompletionItem.insertText = new vscode.SnippetString(this.getRouteSnippetString(moduleIds));
+            return [routeCompletionItem];
+        }
+
+        if (location.path[0] === "moduleContent" && location.path[1] === "$edgeAgent" && location.path[2] === "properties.desired" && location.path[3] === "modules") {
+            const moduleCompletionItem = new vscode.CompletionItem("edgeModule");
+            moduleCompletionItem.filterText = "\"edgeModule\"";
+            moduleCompletionItem.kind = vscode.CompletionItemKind.Snippet;
+            moduleCompletionItem.detail = "Module for edgeAgent to start";
+            moduleCompletionItem.range = range;
+            moduleCompletionItem.insertText = new vscode.SnippetString([
+                "\"${1:SampleModule}\": {",
+                "\t\"version\": \"${2:1.0}\",",
+                "\t\"type\": \"docker\",",
+                "\t\"status\": \"${3|running,stopped|}\",",
+                "\t\"restartPolicy\": \"${4|always,never,on-failed,on-unhealthy|}\",",
+                "\t\"settings\": {",
+                "\t\t\"image\": \"${5:<registry>}/${6:<image>}:${7:<tag>}\",",
+                "\t\t\"createOptions\": \"${8:{}}\"",
+                "\t}",
+                "}",
+            ].join("\n"));
+            return [moduleCompletionItem];
         }
     }
 
-    private getSnippetString(moduleIds: string[]): string {
+    private getRouteSnippetString(moduleIds: string[]): string {
         const snippet: string[] = ["\"${1:route}\":", "\"FROM"];
 
         const sources: string[] = ["${2|/*", "/messages/*", "/messages/modules/*"];
