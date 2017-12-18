@@ -18,7 +18,9 @@ export class JsonCompletionItemProvider implements vscode.CompletionItemProvider
             routeCompletionItem.range = range;
             routeCompletionItem.insertText = new vscode.SnippetString(this.getRouteSnippetString(moduleIds));
             return [routeCompletionItem];
-        } else if (location.path[0] === "moduleContent" && location.path[1] === "$edgeAgent" && location.path[2] === "properties.desired" && location.path[3] === "modules") {
+        }
+
+        if (location.path[0] === "moduleContent" && location.path[1] === "$edgeAgent" && location.path[2] === "properties.desired" && location.path[3] === "modules") {
             const moduleCompletionItem = new vscode.CompletionItem("edgeModule");
             moduleCompletionItem.filterText = "\"edgeModule\"";
             moduleCompletionItem.kind = vscode.CompletionItemKind.Snippet;
