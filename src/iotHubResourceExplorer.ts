@@ -23,7 +23,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         this.accountApi = vscode.extensions.getExtension<AzureAccount>("ms-vscode.azure-account")!.exports;
     }
 
-    public async createIoTHub(): Promise<IotHubDescription> {
+    public async createIoTHub(): Promise<{iotHubDescription: IotHubDescription, iotHubConnectionString: string}> {
         TelemetryClient.sendEvent(Constants.IoTHubAICreateStartEvent);
         if (!(await this.waitForLogin(this.createIoTHub))) {
             return;
@@ -80,23 +80,24 @@ export class IoTHubResourceExplorer extends BaseExplorer {
                     },
             };
             return client.iotHubResource.createOrUpdate(resourceGroupItem.resourceGroup.name, name, iotHubCreateParams)
-                .then((iotHubDescription) => {
-                    const iotHubConnectionString = Utility.getConnectionStringWithId(Constants.IotHubConnectionStringKey);
-                    if (iotHubConnectionString) {
+                .then(async (iotHubDescription) => {
+                    const newIotHubConnectionString = await this.getIoTHubConnectionString(subscriptionItem, iotHubDescription)
+                    const currentIotHubConnectionString = Utility.getConnectionStringWithId(Constants.IotHubConnectionStringKey);
+                    if (currentIotHubConnectionString) {
                         vscode.window.showInformationMessage<vscode.MessageItem>(`IoT Hub '${name}' is created. Do you want to refresh device list using this IoT Hub?`,
                             { title: "Yes" },
                             { title: "No", isCloseAffordance: true },
                         ).then((selection) => {
                             if (selection.title === "Yes") {
-                                this.updateIoTHubConnectionString(subscriptionItem, iotHubDescription);
+                                this.updateIoTHubConnectionString(newIotHubConnectionString);
                             }
                         });
                     } else {
                         vscode.window.showInformationMessage(`IoT Hub '${name}' is created.`);
-                        this.updateIoTHubConnectionString(subscriptionItem, iotHubDescription);
+                        this.updateIoTHubConnectionString(newIotHubConnectionString);
                     }
                     TelemetryClient.sendEvent(Constants.IoTHubAICreateDoneEvent, { Result: "Success" });
-                    return iotHubDescription;
+                    return {iotHubDescription, iotHubConnectionString: newIotHubConnectionString};
                 })
                 .catch((err) => {
                     vscode.window.showErrorMessage(err.message);
@@ -120,7 +121,8 @@ export class IoTHubResourceExplorer extends BaseExplorer {
             const iotHubItem = await vscode.window.showQuickPick(iotHubItems, { placeHolder: "Select IoT Hub", ignoreFocusOut: true });
             if (iotHubItem) {
                 vscode.window.showInformationMessage(`Selected IoT Hub [${iotHubItem.label}]. Refreshing the device list...`);
-                await this.updateIoTHubConnectionString(subscriptionItem, iotHubItem.iotHubDescription);
+                const iotHubConnectionString = await this.getIoTHubConnectionString(subscriptionItem, iotHubItem.iotHubDescription);
+                await this.updateIoTHubConnectionString(iotHubConnectionString);
                 TelemetryClient.sendEvent("AZ.Select.IoTHub.Done");
             }
         }
@@ -180,8 +182,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         return iotHubItems;
     }
 
-    private async updateIoTHubConnectionString(subscriptionItem: SubscriptionItem, iotHubDescription: IotHubDescription) {
-        const iotHubConnectionString = await this.getIoTHubConnectionString(subscriptionItem, iotHubDescription);
+    private async updateIoTHubConnectionString(iotHubConnectionString: string) {
         const config = Utility.getConfiguration();
         await config.update(Constants.IotHubConnectionStringKey, iotHubConnectionString, true);
         vscode.commands.executeCommand("azure-iot-toolkit.refresh");
