@@ -87,6 +87,47 @@ export class IoTEdgeExplorer extends BaseExplorer {
         TelemetryClient.sendEvent("AZ.Edge.Uninstall");
     }
 
+    public async loginToContainerRegistry() {
+        TelemetryClient.sendEvent("AZ.Edge.LoginToContainerRegistry.Start");
+        let address: string = await vscode.window.showInputBox({
+            prompt: "Enter container registry address (Leave blank for Docker Hub)",
+            placeHolder: "E.g., myregistry.azurecr.io",
+            ignoreFocusOut: true,
+        });
+        if (address === undefined) {
+            return;
+        }
+        address = address.trim();
+
+        const username: string = await vscode.window.showInputBox({
+            prompt: "Enter username",
+            ignoreFocusOut: true,
+        });
+        if (username === undefined) {
+            return;
+        }
+        if (username === "") {
+            vscode.window.showErrorMessage("Username cannot be empty");
+            return;
+        }
+
+        const password: string = await vscode.window.showInputBox({
+            prompt: "Enter password",
+            password: true,
+            ignoreFocusOut: true,
+        });
+        if (password === undefined) {
+            return;
+        }
+        if (password === "") {
+            vscode.window.showErrorMessage("Password cannot be empty");
+            return;
+        }
+
+        Executor.runInTerminal(Utility.adjustTerminalCommand(`iotedgectl login${address ? ` --address "${address}"` : ""} --username "${username}" --password "${password}"`));
+        TelemetryClient.sendEvent("AZ.Edge.LoginToContainerRegistry.Done");
+    }
+
     public async generateEdgeSetupConfig(deviceItem?: DeviceItem) {
         deviceItem = await Utility.getInputDevice(deviceItem, "Edge.GenerateSetupConfig.Start", true);
 

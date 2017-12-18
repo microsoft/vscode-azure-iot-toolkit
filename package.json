@@ -46,6 +46,7 @@
     "onCommand:azure-iot-toolkit.stopEdge",
     "onCommand:azure-iot-toolkit.restartEdge",
     "onCommand:azure-iot-toolkit.uninstallEdge",
+    "onCommand:azure-iot-toolkit.loginToContainerRegistry",
     "onCommand:azure-iot-toolkit.generateEdgeSetupConfig",
     "onCommand:azure-iot-toolkit.generateEdgeDeploymentConfig",
     "onCommand:azure-iot-toolkit.createIoTHub"
@@ -184,6 +185,11 @@
       {
         "command": "azure-iot-toolkit.uninstallEdge",
         "title": "Uninstall Edge",
+        "category": "Edge"
+      },
+      {
+        "command": "azure-iot-toolkit.loginToContainerRegistry",
+        "title": "Log in to container registry",
         "category": "Edge"
       },
       {
