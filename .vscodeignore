@@ -8,3 +8,8 @@ images/**
 .gitignore
 tsconfig.json
 vsc-extension-quickstart.md
+appveyor.yml
+CONTRIBUTING.md
+package-lock.json
+tslint.json
+**/*.ts
