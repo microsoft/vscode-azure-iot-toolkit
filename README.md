@@ -21,7 +21,8 @@ Interact with Azure IoT Hub, IoT Device Management, IoT Edge Management, IoT Hub
 * Interact with Azure IoT Edge <sup>Preview</sup> (Install [Azure IoT Edge](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.azure-iot-edge) for more IoT Edge support)
     * Manage Edge runtime
     * Create deployment for Edge device
-    * Generate Edge configuration file
+    * Generate Edge setup configuration file
+    * Generate Edge deployment manifest
 
 ### Prerequisites
 

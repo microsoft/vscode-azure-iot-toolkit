@@ -155,7 +155,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
         const configContent: string = this.generateEdgeDeploymentConfigContent();
         const configPath: vscode.Uri = await vscode.window.showSaveDialog({
             defaultUri: Utility.getDefaultPath("deployment.json"),
-            saveLabel: "Save Edge Deployment Configuration File",
+            saveLabel: "Save Edge Deployment Manifest",
             filters: {
                 JSON: ["json"],
             },
@@ -187,7 +187,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 
     private async getDeploymentJson(): Promise<string> {
         const filePathUri: vscode.Uri[] = await vscode.window.showOpenDialog({
-            openLabel: "Select Edge Deployment Configuration File",
+            openLabel: "Select Edge Deployment Manifest",
             filters: {
                 JSON: ["json"],
             },
