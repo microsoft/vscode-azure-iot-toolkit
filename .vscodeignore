@@ -8,3 +8,9 @@ images/**
 .gitignore
 tsconfig.json
 vsc-extension-quickstart.md
+.gitattributes
+.travis.yml
+appveyor.yml
+CONTRIBUTING.md
+package-lock.json
+tslint.json
