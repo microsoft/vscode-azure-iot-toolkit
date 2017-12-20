@@ -2,7 +2,7 @@
 * [Added] Create IoT Hub
 * [Added] Create Edge device
 * [Added] Show different icons for Edge devices
-* [Added] Add command for iotedgectl login
+* [Added] Command to log in to container registry for Edge
 * [Added] Code snippet for Edge module and route authoring
 * [Added] List Edge Moudles
 * [Added] View Module Twin
