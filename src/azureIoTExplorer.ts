@@ -85,12 +85,12 @@ export class AzureIoTExplorer {
         this._iotHubDeviceTwinExplorer.updateDeviceTwin();
     }
 
-    public async createIoTHub() {
-        return this._iotHubResourceExplorer.createIoTHub();
+    public async createIoTHub(callByExternal: boolean = false) {
+        return this._iotHubResourceExplorer.createIoTHub(callByExternal);
     }
 
-    public selectIoTHub() {
-        return this._iotHubResourceExplorer.selectIoTHub();
+    public selectIoTHub(callByExternal: boolean = false) {
+        return this._iotHubResourceExplorer.selectIoTHub(callByExternal);
     }
 
     public copyIoTHubConnectionString(): void {

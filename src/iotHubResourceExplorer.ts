@@ -23,7 +23,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         this.accountApi = vscode.extensions.getExtension<AzureAccount>("ms-vscode.azure-account")!.exports;
     }
 
-    public async createIoTHub(): Promise<IotHubDescription> {
+    public async createIoTHub(callByExternal: boolean = false): Promise<IotHubDescription> {
         TelemetryClient.sendEvent(Constants.IoTHubAICreateStartEvent);
         if (!(await this.waitForLogin(this.createIoTHub))) {
             return;
@@ -82,19 +82,21 @@ export class IoTHubResourceExplorer extends BaseExplorer {
             return client.iotHubResource.createOrUpdate(resourceGroupItem.resourceGroup.name, name, iotHubCreateParams)
                 .then(async (iotHubDescription) => {
                     const newIotHubConnectionString = await this.getIoTHubConnectionString(subscriptionItem, iotHubDescription);
-                    const currentIotHubConnectionString = Utility.getConnectionStringWithId(Constants.IotHubConnectionStringKey);
-                    if (currentIotHubConnectionString) {
-                        vscode.window.showInformationMessage<vscode.MessageItem>(`IoT Hub '${name}' is created. Do you want to refresh device list using this IoT Hub?`,
-                            { title: "Yes" },
-                            { title: "No", isCloseAffordance: true },
-                        ).then((selection) => {
-                            if (selection.title === "Yes") {
-                                this.updateIoTHubConnectionString(newIotHubConnectionString);
-                            }
-                        });
-                    } else {
-                        vscode.window.showInformationMessage(`IoT Hub '${name}' is created.`);
-                        this.updateIoTHubConnectionString(newIotHubConnectionString);
+                    if (!callByExternal) {
+                        const currentIotHubConnectionString = Utility.getConnectionStringWithId(Constants.IotHubConnectionStringKey);
+                        if (currentIotHubConnectionString) {
+                            vscode.window.showInformationMessage<vscode.MessageItem>(`IoT Hub '${name}' is created. Do you want to refresh device list using this IoT Hub?`,
+                                { title: "Yes" },
+                                { title: "No", isCloseAffordance: true },
+                            ).then((selection) => {
+                                if (selection.title === "Yes") {
+                                    this.updateIoTHubConnectionString(newIotHubConnectionString);
+                                }
+                            });
+                        } else {
+                            vscode.window.showInformationMessage(`IoT Hub '${name}' is created.`);
+                            this.updateIoTHubConnectionString(newIotHubConnectionString);
+                        }
                     }
                     (iotHubDescription as any).iotHubConnectionString = newIotHubConnectionString;
                     TelemetryClient.sendEvent(Constants.IoTHubAICreateDoneEvent, { Result: "Success" });
@@ -108,7 +110,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         });
     }
 
-    public async selectIoTHub(): Promise<IotHubDescription> {
+    public async selectIoTHub(callByExternal: boolean = false): Promise<IotHubDescription> {
         TelemetryClient.sendEvent("General.Select.IoTHub.Start");
         if (!(await this.waitForLogin(this.selectIoTHub))) {
             return;
@@ -121,9 +123,13 @@ export class IoTHubResourceExplorer extends BaseExplorer {
             const iotHubItems = this.loadIoTHubItems(subscriptionItem);
             const iotHubItem = await vscode.window.showQuickPick(iotHubItems, { placeHolder: "Select IoT Hub", ignoreFocusOut: true });
             if (iotHubItem) {
-                vscode.window.showInformationMessage(`Selected IoT Hub [${iotHubItem.label}]. Refreshing the device list...`);
+                if (!callByExternal) {
+                    vscode.window.showInformationMessage(`Selected IoT Hub [${iotHubItem.label}]. Refreshing the device list...`);
+                }
                 const iotHubConnectionString = await this.getIoTHubConnectionString(subscriptionItem, iotHubItem.iotHubDescription);
-                await this.updateIoTHubConnectionString(iotHubConnectionString);
+                if (!callByExternal) {
+                    await this.updateIoTHubConnectionString(iotHubConnectionString);
+                }
                 (iotHubItem.iotHubDescription as any).iotHubConnectionString = iotHubConnectionString;
                 TelemetryClient.sendEvent("AZ.Select.IoTHub.Done");
                 return iotHubItem.iotHubDescription;
