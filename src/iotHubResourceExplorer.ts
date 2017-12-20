@@ -81,7 +81,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
             };
             return client.iotHubResource.createOrUpdate(resourceGroupItem.resourceGroup.name, name, iotHubCreateParams)
                 .then(async (iotHubDescription) => {
-                    const newIotHubConnectionString = await this.getIoTHubConnectionString(subscriptionItem, iotHubDescription)
+                    const newIotHubConnectionString = await this.getIoTHubConnectionString(subscriptionItem, iotHubDescription);
                     const currentIotHubConnectionString = Utility.getConnectionStringWithId(Constants.IotHubConnectionStringKey);
                     if (currentIotHubConnectionString) {
                         vscode.window.showInformationMessage<vscode.MessageItem>(`IoT Hub '${name}' is created. Do you want to refresh device list using this IoT Hub?`,
