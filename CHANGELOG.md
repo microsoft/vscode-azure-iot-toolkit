@@ -1,3 +1,12 @@
+### 0.5.0 (2017-12-25)
+* [Added] Create IoT Hub
+* [Added] Create Edge device
+* [Added] Show different icons for Edge devices
+* [Added] Add command for iotedgectl login
+* [Added] Code snippet for Edge module and route authoring
+* [Added] List Edge Moudles
+* [Added] View Module Twin
+
 ### 0.4.3 (2017-12-06)
 * [Added] Add Command Palette integration for several commands
 
