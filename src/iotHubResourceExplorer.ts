@@ -23,7 +23,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         this.accountApi = vscode.extensions.getExtension<AzureAccount>("ms-vscode.azure-account")!.exports;
     }
 
-    public async createIoTHub(): Promise<{iotHubDescription: IotHubDescription, iotHubConnectionString: string}> {
+    public async createIoTHub(): Promise<IotHubDescription> {
         TelemetryClient.sendEvent(Constants.IoTHubAICreateStartEvent);
         if (!(await this.waitForLogin(this.createIoTHub))) {
             return;
@@ -96,8 +96,9 @@ export class IoTHubResourceExplorer extends BaseExplorer {
                         vscode.window.showInformationMessage(`IoT Hub '${name}' is created.`);
                         this.updateIoTHubConnectionString(newIotHubConnectionString);
                     }
+                    (iotHubDescription as any).iotHubConnectionString = newIotHubConnectionString;
                     TelemetryClient.sendEvent(Constants.IoTHubAICreateDoneEvent, { Result: "Success" });
-                    return {iotHubDescription, iotHubConnectionString: newIotHubConnectionString};
+                    return iotHubDescription;
                 })
                 .catch((err) => {
                     let errorMessage: string;
@@ -115,7 +116,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         });
     }
 
-    public async selectIoTHub() {
+    public async selectIoTHub(): Promise<IotHubDescription> {
         TelemetryClient.sendEvent("General.Select.IoTHub.Start");
         if (!(await this.waitForLogin(this.selectIoTHub))) {
             return;
@@ -131,7 +132,9 @@ export class IoTHubResourceExplorer extends BaseExplorer {
                 vscode.window.showInformationMessage(`Selected IoT Hub [${iotHubItem.label}]. Refreshing the device list...`);
                 const iotHubConnectionString = await this.getIoTHubConnectionString(subscriptionItem, iotHubItem.iotHubDescription);
                 await this.updateIoTHubConnectionString(iotHubConnectionString);
+                (iotHubItem.iotHubDescription as any).iotHubConnectionString = iotHubConnectionString;
                 TelemetryClient.sendEvent("AZ.Select.IoTHub.Done");
+                return iotHubItem.iotHubDescription;
             }
         }
     }

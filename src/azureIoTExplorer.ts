@@ -89,8 +89,8 @@ export class AzureIoTExplorer {
         return this._iotHubResourceExplorer.createIoTHub();
     }
 
-    public selectIoTHub(): void {
-        this._iotHubResourceExplorer.selectIoTHub();
+    public selectIoTHub() {
+        return this._iotHubResourceExplorer.selectIoTHub();
     }
 
     public copyIoTHubConnectionString(): void {
