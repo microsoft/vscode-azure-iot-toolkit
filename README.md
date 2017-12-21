@@ -73,6 +73,8 @@ Instead of copying and pasting to set IoT Hub Connection String, you could sign 
 | iotMonitorC2DMessage | Monitor C2D message from IoT Hub |
 | iotCallDirectMethods | Send direct methods to device |
 | iotReceiveDirectMethods | Receive direct methods from IoT Hub |
+| edgeModule | Add Edge module in Edge deployment manifest |
+| edgeRoute | Add Edge route in Edge deployment manifest |
 
 ![Snippet](https://github.com/formulahendry/vscode-azure-iot-toolkit/raw/master/images/snippet.gif)
 
