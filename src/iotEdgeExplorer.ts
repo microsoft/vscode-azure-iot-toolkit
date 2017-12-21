@@ -239,7 +239,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
         "type": "docker"
     },
     "deviceConnectionString": "${connectionString}",
-    "homeDir": "${path.join(os.platform() === "win32" ? process.env.PROGRAMDATA : "/var/lib/", "azure_iot_edge").replace(/\\/g, "\\\\")}",
+    "homeDir": "${(os.platform() === "win32" ? path.join(path.join(process.env.PROGRAMDATA, "azure-iot-edge"), "config") : path.join("/etc", "azure_iot_edge")).replace(/\\/g, "\\\\")}",
     "hostName": "${fqdn().toLowerCase()}",
     "logLevel": "info",
     "schemaVersion": "1",
