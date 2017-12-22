@@ -156,8 +156,13 @@ export class Utility {
     }
 
     public static async getModuleItems(iotHubConnectionString: string, deviceId: string, context: vscode.ExtensionContext) {
+        /**
+         * modules: contains connection state of each module
+         * edgeAgent.properties.reported: contains runtime status of each module
+         */
         const [modules, edgeAgent] = await Promise.all([Utility.getModules(iotHubConnectionString, deviceId), Utility.getModuleTwin(iotHubConnectionString, deviceId, "$edgeAgent")]);
         const reportedTwin = (edgeAgent as any).properties.reported;
+        // Only return modules that exist in edgeAgent.properties.reported
         return modules.map((module) => {
             const isConnected = module.connectionState === "Connected";
             const state = isConnected ? "on" : "off";
