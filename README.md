@@ -6,10 +6,14 @@ Interact with Azure IoT Hub, IoT Device Management, IoT Edge Management, IoT Hub
 
 ## Device Explorer
 
+* IoT Hub management
+    * Create IoT Hub
+    * Select IoT Hub
 * Device management
     * List devices
     * Get device info
-    * Create device
+    * Create IoT device
+    * Create Edge device
     * Delete device
 * Interact with Azure IoT Hub
     * Send D2C message to IoT Hub
@@ -19,6 +23,8 @@ Interact with Azure IoT Hub, IoT Device Management, IoT Edge Management, IoT Hub
     * Invoke Direct Method
     * Get/update Device Twin
 * Interact with Azure IoT Edge <sup>Preview</sup> (Install [Azure IoT Edge](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.azure-iot-edge) for more IoT Edge support)
+    * List Edge Moudles
+    * View Module Twin
     * Manage Edge runtime
     * Create deployment for Edge device
     * Generate Edge setup configuration file
@@ -67,6 +73,8 @@ Instead of copying and pasting to set IoT Hub Connection String, you could sign 
 | iotMonitorC2DMessage | Monitor C2D message from IoT Hub |
 | iotCallDirectMethods | Send direct methods to device |
 | iotReceiveDirectMethods | Receive direct methods from IoT Hub |
+| edgeModule | Add Edge module in Edge deployment manifest |
+| edgeRoute | Add Edge route in Edge deployment manifest |
 
 ![Snippet](https://github.com/formulahendry/vscode-azure-iot-toolkit/raw/master/images/snippet.gif)
 

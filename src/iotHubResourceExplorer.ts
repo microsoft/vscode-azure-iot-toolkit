@@ -99,8 +99,16 @@ export class IoTHubResourceExplorer extends BaseExplorer {
                     return iotHubDescription;
                 })
                 .catch((err) => {
-                    vscode.window.showErrorMessage(err.message);
-                    TelemetryClient.sendEvent(Constants.IoTHubAICreateDoneEvent, { Result: "Fail", Message: err.message });
+                    let errorMessage: string;
+                    if (err.message) {
+                        errorMessage = err.message;
+                    } else if (err.body && err.body.message) {
+                        errorMessage = err.body.message;
+                    } else {
+                        errorMessage = "Error occurred when creating IoT Hub.";
+                    }
+                    vscode.window.showErrorMessage(errorMessage);
+                    TelemetryClient.sendEvent(Constants.IoTHubAICreateDoneEvent, { Result: "Fail", Message: errorMessage });
                     return Promise.reject(err);
                 });
         });

@@ -4,7 +4,7 @@
 * [Added] Show different icons for Edge devices
 * [Added] Command to log in to container registry for Edge
 * [Added] Code snippet for Edge module and route authoring
-* [Added] List Edge Moudles
+* [Added] List Edge Modules
 * [Added] View Module Twin
 
 ### 0.4.3 (2017-12-06)
