@@ -108,7 +108,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
                         errorMessage = "Error occurred when creating IoT Hub.";
                     }
                     vscode.window.showErrorMessage(errorMessage);
-                    TelemetryClient.sendEvent(Constants.IoTHubAICreateDoneEvent, { Result: "Fail", Message: err.message });
+                    TelemetryClient.sendEvent(Constants.IoTHubAICreateDoneEvent, { Result: "Fail", Message: errorMessage });
                     return Promise.reject(err);
                 });
         });

@@ -162,20 +162,17 @@ export class Utility {
             const isConnected = module.connectionState === "Connected";
             const state = isConnected ? "on" : "off";
             const iconPath = context.asAbsolutePath(path.join("resources", `module-${state}.svg`));
-            if (isConnected) {
-                if (module.moduleId.startsWith("$")) {
-                    const moduleId = module.moduleId.substring(1);
-                    if (reportedTwin.systemModules && reportedTwin.systemModules[moduleId]) {
-                        return new ModuleItem(deviceId, module.moduleId, reportedTwin.systemModules[moduleId].runtimeStatus, iconPath);
-                    }
-                } else {
-                    if (reportedTwin.modules && reportedTwin.modules[module.moduleId]) {
-                        return new ModuleItem(deviceId, module.moduleId, reportedTwin.modules[module.moduleId].runtimeStatus, iconPath);
-                    }
+            if (module.moduleId.startsWith("$")) {
+                const moduleId = module.moduleId.substring(1);
+                if (reportedTwin.systemModules && reportedTwin.systemModules[moduleId]) {
+                    return new ModuleItem(deviceId, module.moduleId, isConnected ? reportedTwin.systemModules[moduleId].runtimeStatus : null, iconPath);
+                }
+            } else {
+                if (reportedTwin.modules && reportedTwin.modules[module.moduleId]) {
+                    return new ModuleItem(deviceId, module.moduleId, isConnected ? reportedTwin.modules[module.moduleId].runtimeStatus : null, iconPath);
                 }
             }
-            return new ModuleItem(deviceId, module.moduleId, null, iconPath);
-        });
+        }).filter((module) => module);
     }
 
     public static async getModules(iotHubConnectionString: string, deviceId: string): Promise<any[]> {
