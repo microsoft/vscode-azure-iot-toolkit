@@ -156,26 +156,28 @@ export class Utility {
     }
 
     public static async getModuleItems(iotHubConnectionString: string, deviceId: string, context: vscode.ExtensionContext) {
+        /**
+         * modules: contains connection state of each module
+         * edgeAgent.properties.reported: contains runtime status of each module
+         */
         const [modules, edgeAgent] = await Promise.all([Utility.getModules(iotHubConnectionString, deviceId), Utility.getModuleTwin(iotHubConnectionString, deviceId, "$edgeAgent")]);
         const reportedTwin = (edgeAgent as any).properties.reported;
+        // Only return modules that exist in edgeAgent.properties.reported
         return modules.map((module) => {
             const isConnected = module.connectionState === "Connected";
             const state = isConnected ? "on" : "off";
             const iconPath = context.asAbsolutePath(path.join("resources", `module-${state}.svg`));
-            if (isConnected) {
-                if (module.moduleId.startsWith("$")) {
-                    const moduleId = module.moduleId.substring(1);
-                    if (reportedTwin.systemModules && reportedTwin.systemModules[moduleId]) {
-                        return new ModuleItem(deviceId, module.moduleId, reportedTwin.systemModules[moduleId].runtimeStatus, iconPath);
-                    }
-                } else {
-                    if (reportedTwin.modules && reportedTwin.modules[module.moduleId]) {
-                        return new ModuleItem(deviceId, module.moduleId, reportedTwin.modules[module.moduleId].runtimeStatus, iconPath);
-                    }
+            if (module.moduleId.startsWith("$")) {
+                const moduleId = module.moduleId.substring(1);
+                if (reportedTwin.systemModules && reportedTwin.systemModules[moduleId]) {
+                    return new ModuleItem(deviceId, module.moduleId, isConnected ? reportedTwin.systemModules[moduleId].runtimeStatus : null, iconPath);
+                }
+            } else {
+                if (reportedTwin.modules && reportedTwin.modules[module.moduleId]) {
+                    return new ModuleItem(deviceId, module.moduleId, isConnected ? reportedTwin.modules[module.moduleId].runtimeStatus : null, iconPath);
                 }
             }
-            return new ModuleItem(deviceId, module.moduleId, null, iconPath);
-        });
+        }).filter((module) => module);
     }
 
     public static async getModules(iotHubConnectionString: string, deviceId: string): Promise<any[]> {

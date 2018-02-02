@@ -102,10 +102,10 @@ export class IoTHubResourceExplorer extends BaseExplorer {
             return client.iotHubResource.createOrUpdate(resourceGroupItem.resourceGroup.name, name, iotHubCreateParams)
                 .then(async (iotHubDescription) => {
                     const newIotHubConnectionString = await this.getIoTHubConnectionString(subscriptionItem, iotHubDescription);
-                    clearInterval(intervalSetting);
-                    channel.appendLine('');
                     if (!callByExternal) {
                         const currentIotHubConnectionString = Utility.getConnectionStringWithId(Constants.IotHubConnectionStringKey);
+                        clearInterval(intervalSetting);
+                        channel.appendLine('');
                         if (currentIotHubConnectionString) {
                             vscode.window.showInformationMessage<vscode.MessageItem>(`IoT Hub '${name}' is created. Do you want to refresh device list using this IoT Hub?`,
                                 { title: "Yes" },
@@ -125,6 +125,14 @@ export class IoTHubResourceExplorer extends BaseExplorer {
                     return iotHubDescription;
                 })
                 .catch((err) => {
+                    let errorMessage: string;
+                    if (err.message) {
+                        errorMessage = err.message;
+                    } else if (err.body && err.body.message) {
+                        errorMessage = err.body.message;
+                    } else {
+                        errorMessage = "Error occurred when creating IoT Hub.";
+                    }
                     clearInterval(intervalSetting);
                     channel.appendLine('');
                     vscode.window.showErrorMessage(err.message);

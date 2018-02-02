@@ -114,8 +114,9 @@ export class DeviceExplorer extends BaseExplorer {
 
     private done(op: string, label: string, hostName: string = null) {
         return (err, deviceInfo, res) => {
+            const eventName = `AZ.${label.replace(/\s/g, ".")}.${op}`;
             if (err) {
-                TelemetryClient.sendEvent(`AZ.${label.replace(/\s/g, ".")}.${op}`, { Result: "Fail" });
+                TelemetryClient.sendEvent(eventName, { Result: "Fail" });
                 this.outputLine(label, `[${op}] error: ${err.toString()}`);
             }
             if (res) {
@@ -126,7 +127,7 @@ export class DeviceExplorer extends BaseExplorer {
                         vscode.commands.executeCommand("azure-iot-toolkit.refresh");
                     }
                 }
-                TelemetryClient.sendEvent(`AZ.${label}.${op}`, { Result: result });
+                TelemetryClient.sendEvent(eventName, { Result: result });
                 this.outputLine(label, `[${op}][${result}] status: ${res.statusCode} ${res.statusMessage}`);
             }
             if (deviceInfo) {

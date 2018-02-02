@@ -67,10 +67,10 @@ export class JsonCompletionItemProvider implements vscode.CompletionItemProvider
 
         const sinks: string[] = ["${4|$upstream"];
         if (moduleIds.length === 0) {
-            sinks.push(`BrokeredEndpoint(/modules/{moduleId}/inputs/{input})`);
+            sinks.push(`BrokeredEndpoint(\\"/modules/{moduleId}/inputs/{input}\\")`);
         } else {
             for (const moduleId of moduleIds) {
-                sinks.push(`BrokeredEndpoint(/modules/${moduleId}/inputs/{input})`);
+                sinks.push(`BrokeredEndpoint(\\"/modules/${moduleId}/inputs/{input}\\")`);
             }
         }
 
