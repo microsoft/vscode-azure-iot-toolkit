@@ -85,8 +85,8 @@ export class AzureIoTExplorer {
         this._iotHubDeviceTwinExplorer.updateDeviceTwin();
     }
 
-    public async createIoTHub(callByExternal: boolean = false) {
-        return this._iotHubResourceExplorer.createIoTHub(callByExternal);
+    public async createIoTHub(callByExternal: boolean = false, outputChannel?: vscode.OutputChannel) {
+        return this._iotHubResourceExplorer.createIoTHub(callByExternal, outputChannel);
     }
 
     public selectIoTHub(callByExternal: boolean = false) {
