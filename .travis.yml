@@ -13,7 +13,7 @@ install:
 - npm install -g vsce
 script:
 - npm run tslint
-- vsce package
+- echo "y" | vsce package
 - npm test --silent
 deploy:
 - provider: releases

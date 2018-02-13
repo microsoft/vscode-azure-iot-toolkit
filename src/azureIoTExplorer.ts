@@ -61,16 +61,16 @@ export class AzureIoTExplorer {
         this._deviceExplorer.listDevice();
     }
 
-    public getDevice(deviceItem: DeviceItem): void {
-        this._deviceExplorer.getDevice(deviceItem);
+    public async getDevice(deviceItem: DeviceItem, iotHubConnectionString?: string) {
+        return this._deviceExplorer.getDevice(deviceItem, iotHubConnectionString);
     }
 
-    public async createDevice(edgeDevice: boolean = false) {
-        await this._deviceExplorer.createDevice(edgeDevice);
+    public async createDevice(edgeDevice: boolean = false, iotHubConnectionString?: string) {
+        return this._deviceExplorer.createDevice(edgeDevice, iotHubConnectionString);
     }
 
     public async deleteDevice(deviceItem?: DeviceItem) {
-        await this._deviceExplorer.deleteDevice(deviceItem);
+        return this._deviceExplorer.deleteDevice(deviceItem);
     }
 
     public invokeDeviceMethod(deviceItem: DeviceItem): void {

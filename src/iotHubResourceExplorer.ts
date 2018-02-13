@@ -23,9 +23,9 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         this.accountApi = vscode.extensions.getExtension<AzureAccount>("ms-vscode.azure-account")!.exports;
     }
 
-    public async createIoTHub(callByExternal: boolean = false): Promise<IotHubDescription> {
+    public async createIoTHub(callByExternal: boolean = false, outputChannel: vscode.OutputChannel = this._outputChannel): Promise<IotHubDescription> {
         TelemetryClient.sendEvent(Constants.IoTHubAICreateStartEvent);
-        if (!(await this.waitForLogin(this.createIoTHub))) {
+        if (!(await this.waitForLogin(this.createIoTHub, callByExternal, outputChannel))) {
             return;
         }
 
@@ -36,11 +36,14 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         if (!subscriptionItem) {
             return;
         }
+        outputChannel.show();
+        outputChannel.appendLine(`Subscription selected: ${subscriptionItem.label}`);
 
         const resourceGroupItem = await this.getOrCreateResourceGroup(subscriptionItem);
         if (!resourceGroupItem) {
             return;
         }
+        outputChannel.appendLine(`Resource Group selected: ${resourceGroupItem.label}`);
 
         const locationItem = await vscode.window.showQuickPick(
             this.getLocationItems(subscriptionItem),
@@ -49,6 +52,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         if (!locationItem) {
             return;
         }
+        outputChannel.appendLine(`Location selected: ${locationItem.label}`);
 
         const sku = await vscode.window.showQuickPick(
             ["F1", "S1", "S2", "S3"],
@@ -57,6 +61,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         if (!sku) {
             return;
         }
+        outputChannel.appendLine(`SKU selected: ${sku}`);
 
         const name = await this.getIoTHubName(subscriptionItem);
         if (!name) {
@@ -67,6 +72,11 @@ export class IoTHubResourceExplorer extends BaseExplorer {
             title: `Creating IoT Hub '${name}'`,
             location: vscode.ProgressLocation.Window,
         }, async (progress) => {
+            outputChannel.appendLine(`Creating IoT Hub: ${name}`);
+            const intervalID = setInterval(() => {
+                outputChannel.append(".");
+            }, 1000);
+
             const { session, subscription } = subscriptionItem;
             const client = new IoTHubClient(session.credentials, subscription.subscriptionId);
             const iotHubCreateParams = {
@@ -81,6 +91,8 @@ export class IoTHubResourceExplorer extends BaseExplorer {
             };
             return client.iotHubResource.createOrUpdate(resourceGroupItem.resourceGroup.name, name, iotHubCreateParams)
                 .then(async (iotHubDescription) => {
+                    clearInterval(intervalID);
+                    outputChannel.appendLine("");
                     const newIotHubConnectionString = await this.getIoTHubConnectionString(subscriptionItem, iotHubDescription);
                     if (!callByExternal) {
                         const currentIotHubConnectionString = Utility.getConnectionStringWithId(Constants.IotHubConnectionStringKey);
@@ -99,10 +111,12 @@ export class IoTHubResourceExplorer extends BaseExplorer {
                         }
                     }
                     (iotHubDescription as any).iotHubConnectionString = newIotHubConnectionString;
-                    TelemetryClient.sendEvent(Constants.IoTHubAICreateDoneEvent, { Result: "Success" });
+                    TelemetryClient.sendEvent(Constants.IoTHubAICreateDoneEvent, { Result: "Success" }, newIotHubConnectionString);
                     return iotHubDescription;
                 })
                 .catch((err) => {
+                    clearInterval(intervalID);
+                    outputChannel.appendLine("");
                     let errorMessage: string;
                     if (err.message) {
                         errorMessage = err.message;
@@ -120,7 +134,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 
     public async selectIoTHub(callByExternal: boolean = false): Promise<IotHubDescription> {
         TelemetryClient.sendEvent("General.Select.IoTHub.Start");
-        if (!(await this.waitForLogin(this.selectIoTHub))) {
+        if (!(await this.waitForLogin(this.selectIoTHub, callByExternal))) {
             return;
         }
         TelemetryClient.sendEvent("General.Select.Subscription.Start");
@@ -139,7 +153,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
                     await this.updateIoTHubConnectionString(iotHubConnectionString);
                 }
                 (iotHubItem.iotHubDescription as any).iotHubConnectionString = iotHubConnectionString;
-                TelemetryClient.sendEvent("AZ.Select.IoTHub.Done");
+                TelemetryClient.sendEvent("AZ.Select.IoTHub.Done", undefined, iotHubConnectionString);
                 return iotHubItem.iotHubDescription;
             }
         }
@@ -160,13 +174,13 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         }
     }
 
-    private async waitForLogin(callback): Promise<boolean> {
+    private async waitForLogin(callback, ...args: any[]): Promise<boolean> {
         if (!(await this.accountApi.waitForLogin())) {
             TelemetryClient.sendEvent("General.AskForAzureLogin");
             const subscription = this.accountApi.onStatusChanged(() => {
                 subscription.dispose();
                 callback = callback.bind(this);
-                callback();
+                callback(...args);
             });
             vscode.commands.executeCommand("azure-account.askForLogin");
             return false;
