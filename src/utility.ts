@@ -195,14 +195,16 @@ export class Utility {
         return (await axios.request(config)).data;
     }
 
-    public static async getInputDevice(deviceItem: DeviceItem, eventName: string, onlyEdgeDevice: boolean = false): Promise<DeviceItem> {
+    public static async getInputDevice(deviceItem: DeviceItem, eventName: string, onlyEdgeDevice: boolean = false, iotHubConnectionString?: string): Promise<DeviceItem> {
         if (!deviceItem) {
             if (eventName) {
                 TelemetryClient.sendEvent(eventName, { entry: "commandPalette" });
             }
-            const iotHubConnectionString: string = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
             if (!iotHubConnectionString) {
-                return null;
+                iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
+                if (!iotHubConnectionString) {
+                    return null;
+                }
             }
 
             const deviceList: Promise<DeviceItem[]> = Utility.getFilteredDeviceList(iotHubConnectionString, onlyEdgeDevice);

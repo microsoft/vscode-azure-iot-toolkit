@@ -41,7 +41,7 @@ export class DeviceExplorer extends BaseExplorer {
             }
         }
 
-        deviceItem = await Utility.getInputDevice(deviceItem, "AZ.Device.Get.Start");
+        deviceItem = await Utility.getInputDevice(deviceItem, "AZ.Device.Get.Start", false, iotHubConnectionString);
         if (!deviceItem) {
             return;
         }
