@@ -51,7 +51,7 @@ export class DeviceExplorer extends BaseExplorer {
         outputChannel.show();
         this.outputLine(label, `Querying device [${deviceItem.deviceId}]...`, outputChannel);
         return new Promise((resolve, reject) => {
-            registry.get(deviceItem.deviceId, this.done("Get", label, resolve, reject, hostName, outputChannel));
+            registry.get(deviceItem.deviceId, this.done("Get", label, resolve, reject, hostName, outputChannel, iotHubConnectionString));
         });
     }
 
@@ -84,7 +84,7 @@ export class DeviceExplorer extends BaseExplorer {
         outputChannel.show();
         this.outputLine(label, `Creating ${label} '${device.deviceId}'`, outputChannel);
         return new Promise((resolve, reject) => {
-            registry.create(device, this.done("Create", label, resolve, reject, hostName, outputChannel));
+            registry.create(device, this.done("Create", label, resolve, reject, hostName, outputChannel, iotHubConnectionString));
         });
     }
 
@@ -122,11 +122,11 @@ export class DeviceExplorer extends BaseExplorer {
         });
     }
 
-    private done(op: string, label: string, resolve, reject, hostName: string = null, outputChannel: vscode.OutputChannel = this._outputChannel) {
+    private done(op: string, label: string, resolve, reject, hostName: string = null, outputChannel: vscode.OutputChannel = this._outputChannel, iotHubConnectionString?: string) {
         return (err, deviceInfo, res) => {
             const eventName = `AZ.${label.replace(/\s/g, ".")}.${op}`;
             if (err) {
-                TelemetryClient.sendEvent(eventName, { Result: "Fail" });
+                TelemetryClient.sendEvent(eventName, { Result: "Fail" }, iotHubConnectionString);
                 this.outputLine(label, `[${op}] error: ${err.toString()}`, outputChannel);
                 reject(err);
             }
@@ -138,7 +138,7 @@ export class DeviceExplorer extends BaseExplorer {
                         vscode.commands.executeCommand("azure-iot-toolkit.refresh");
                     }
                 }
-                TelemetryClient.sendEvent(eventName, { Result: result });
+                TelemetryClient.sendEvent(eventName, { Result: result }, iotHubConnectionString);
                 this.outputLine(label, `[${op}][${result}] status: ${res.statusCode} ${res.statusMessage}`, outputChannel);
             }
             if (deviceInfo) {
