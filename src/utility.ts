@@ -17,9 +17,9 @@ export class Utility {
         return vscode.workspace.getConfiguration("azure-iot-toolkit");
     }
 
-    public static async getConnectionString(id: string, name: string) {
+    public static async getConnectionString(id: string, name: string, askForConnectionString: boolean = true) {
         const connectionString = this.getConnectionStringWithId(id);
-        if (!connectionString && Utility.getConfiguration().get<boolean>(Constants.ShowConnectionStringInputBoxKey)) {
+        if (!connectionString && askForConnectionString) {
             return this.setConnectionString(id, name);
         }
         return connectionString;
@@ -30,6 +30,7 @@ export class Utility {
         return vscode.window.showInputBox({
             prompt: `${name}`,
             placeHolder: Constants.ConnectionStringFormat[id],
+            ignoreFocusOut: true,
         }).then(async (value: string) => {
             if (value !== undefined) {
                 if (this.isValidConnectionString(id, value)) {
@@ -196,7 +197,9 @@ export class Utility {
 
     public static async getInputDevice(deviceItem: DeviceItem, eventName: string, onlyEdgeDevice: boolean = false): Promise<DeviceItem> {
         if (!deviceItem) {
-            TelemetryClient.sendEvent(eventName, { entry: "commandPalette" });
+            if (eventName) {
+                TelemetryClient.sendEvent(eventName, { entry: "commandPalette" });
+            }
             const iotHubConnectionString: string = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
             if (!iotHubConnectionString) {
                 return null;
@@ -206,7 +209,9 @@ export class Utility {
             deviceItem = await vscode.window.showQuickPick(deviceList, { placeHolder: "Select an IoT Hub device" });
             return deviceItem;
         } else {
-            TelemetryClient.sendEvent(eventName, { entry: "contextMenu" });
+            if (eventName) {
+                TelemetryClient.sendEvent(eventName, { entry: "contextMenu" });
+            }
             return deviceItem;
         }
     }

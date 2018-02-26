@@ -399,6 +399,12 @@
           "group": "navigation"
         }
       ],
+      "explorer/context": [
+        {
+          "when": "resourceFilename == deployment.json",
+          "command": "azure-iot-toolkit.createDeployment"
+        }
+      ],
       "commandPalette": [
         {
           "command": "azure-iot-toolkit.getModuleTwin",
@@ -434,11 +440,6 @@
           "type": "boolean",
           "default": false,
           "description": "Whether to stringify device-to-cloud messages."
-        },
-        "azure-iot-toolkit.showConnectionStringInputBox": {
-          "type": "boolean",
-          "default": true,
-          "description": "Whether to show Connection String Input Box on startup."
         },
         "azure-iot-toolkit.showIoTHubInfo": {
           "type": "boolean",

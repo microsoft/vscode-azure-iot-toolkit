@@ -4,8 +4,11 @@ import { AzureIoTExplorer } from "./azureIoTExplorer";
 import { DeviceTree } from "./deviceTree";
 import { Executor } from "./executor";
 import { JsonCompletionItemProvider } from "./jsonCompletionItemProvider";
+import { TelemetryClient } from "./telemetryClient";
 
 export function activate(context: vscode.ExtensionContext) {
+    TelemetryClient.sendEvent("extensionActivated");
+
     let azureIoTExplorer = new AzureIoTExplorer(context);
     let deviceTree = new DeviceTree(context);
 

@@ -10,11 +10,13 @@ import iothub = require("azure-iothub");
 export class DeviceTree implements vscode.TreeDataProvider<vscode.TreeItem> {
     public _onDidChangeTreeData: vscode.EventEmitter<vscode.TreeItem | undefined> = new vscode.EventEmitter<vscode.TreeItem | undefined>();
     public readonly onDidChangeTreeData: vscode.Event<vscode.TreeItem | undefined> = this._onDidChangeTreeData.event;
+    private askForConnectionString = false;
 
     constructor(private context: vscode.ExtensionContext) {
     }
 
     public refresh(element): void {
+        this.askForConnectionString = true;
         this._onDidChangeTreeData.fire(element);
         TelemetryClient.sendEvent("AZ.Refresh");
     }
@@ -33,7 +35,8 @@ export class DeviceTree implements vscode.TreeDataProvider<vscode.TreeItem> {
     }
 
     public async getChildren(element?: vscode.TreeItem): Promise<vscode.TreeItem[]> {
-        let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
+        let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle, this.askForConnectionString);
+        this.askForConnectionString = false;
         if (!iotHubConnectionString) {
             return;
         }
