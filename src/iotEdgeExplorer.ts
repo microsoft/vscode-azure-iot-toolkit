@@ -20,7 +20,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
         super(outputChannel);
     }
 
-    public async createDeployment(input: DeviceItem) {
+    public async createDeployment(input: DeviceItem | vscode.Uri) {
         TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployStartEvent);
 
         let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);

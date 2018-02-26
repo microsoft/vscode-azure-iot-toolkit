@@ -96,8 +96,8 @@ export function activate(context: vscode.ExtensionContext) {
         await azureIoTExplorer.createDevice(true);
     }));
 
-    let createDeployment = vscode.commands.registerCommand("azure-iot-toolkit.createDeployment", (DeviceItem) => {
-        azureIoTExplorer.createDeployment(DeviceItem);
+    let createDeployment = vscode.commands.registerCommand("azure-iot-toolkit.createDeployment", (input) => {
+        azureIoTExplorer.createDeployment(input);
     });
 
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.setupEdge", (DeviceItem) => {
