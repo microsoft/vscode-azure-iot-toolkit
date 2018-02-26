@@ -32,7 +32,7 @@ export class DeviceExplorer extends BaseExplorer {
         });
     }
 
-    public async getDevice(deviceItem: DeviceItem, iotHubConnectionString?: string) {
+    public async getDevice(deviceItem: DeviceItem, iotHubConnectionString?: string, outputChannel: vscode.OutputChannel = this._outputChannel) {
         let label = "Device";
         if (!iotHubConnectionString) {
             iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
@@ -48,14 +48,14 @@ export class DeviceExplorer extends BaseExplorer {
 
         let hostName = Utility.getHostName(iotHubConnectionString);
         let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
-        this._outputChannel.show();
-        this.outputLine(label, `Querying device [${deviceItem.deviceId}]...`);
+        outputChannel.show();
+        this.outputLine(label, `Querying device [${deviceItem.deviceId}]...`, outputChannel);
         return new Promise((resolve, reject) => {
-            registry.get(deviceItem.deviceId, this.done("Get", label, resolve, reject, hostName));
+            registry.get(deviceItem.deviceId, this.done("Get", label, resolve, reject, hostName, outputChannel));
         });
     }
 
-    public async createDevice(edgeDevice: boolean = false, iotHubConnectionString?: string) {
+    public async createDevice(edgeDevice: boolean = false, iotHubConnectionString?: string, outputChannel: vscode.OutputChannel = this._outputChannel) {
         if (!iotHubConnectionString) {
             iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
             if (!iotHubConnectionString) {
@@ -81,10 +81,10 @@ export class DeviceExplorer extends BaseExplorer {
             };
         }
 
-        this._outputChannel.show();
-        this.outputLine(label, `Creating ${label} '${device.deviceId}'`);
+        outputChannel.show();
+        this.outputLine(label, `Creating ${label} '${device.deviceId}'`, outputChannel);
         return new Promise((resolve, reject) => {
-            registry.create(device, this.done("Create", label, resolve, reject, hostName));
+            registry.create(device, this.done("Create", label, resolve, reject, hostName, outputChannel));
         });
     }
 
@@ -122,12 +122,12 @@ export class DeviceExplorer extends BaseExplorer {
         });
     }
 
-    private done(op: string, label: string, resolve, reject, hostName: string = null) {
+    private done(op: string, label: string, resolve, reject, hostName: string = null, outputChannel: vscode.OutputChannel = this._outputChannel) {
         return (err, deviceInfo, res) => {
             const eventName = `AZ.${label.replace(/\s/g, ".")}.${op}`;
             if (err) {
                 TelemetryClient.sendEvent(eventName, { Result: "Fail" });
-                this.outputLine(label, `[${op}] error: ${err.toString()}`);
+                this.outputLine(label, `[${op}] error: ${err.toString()}`, outputChannel);
                 reject(err);
             }
             if (res) {
@@ -139,7 +139,7 @@ export class DeviceExplorer extends BaseExplorer {
                     }
                 }
                 TelemetryClient.sendEvent(eventName, { Result: result });
-                this.outputLine(label, `[${op}][${result}] status: ${res.statusCode} ${res.statusMessage}`);
+                this.outputLine(label, `[${op}][${result}] status: ${res.statusCode} ${res.statusMessage}`, outputChannel);
             }
             if (deviceInfo) {
                 if (deviceInfo.authentication.SymmetricKey.primaryKey != null) {
@@ -149,7 +149,7 @@ export class DeviceExplorer extends BaseExplorer {
                 if (deviceInfo.authentication.x509Thumbprint.primaryThumbprint != null) {
                     deviceInfo.connectionString = ConnectionString.createWithX509Certificate(hostName, deviceInfo.deviceId);
                 }
-                this.outputLine(label, `[${op}] device info: ${JSON.stringify(deviceInfo, null, 2)}`);
+                this.outputLine(label, `[${op}] device info: ${JSON.stringify(deviceInfo, null, 2)}`, outputChannel);
                 resolve(deviceInfo);
             }
             resolve();
