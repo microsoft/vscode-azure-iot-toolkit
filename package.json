@@ -49,7 +49,6 @@
     "onCommand:azure-iot-toolkit.uninstallEdge",
     "onCommand:azure-iot-toolkit.loginToContainerRegistry",
     "onCommand:azure-iot-toolkit.generateEdgeSetupConfig",
-    "onCommand:azure-iot-toolkit.generateEdgeDeploymentConfig",
     "onCommand:azure-iot-toolkit.createIoTHub"
   ],
   "main": "./out/src/extension",
@@ -210,11 +209,6 @@
       {
         "command": "azure-iot-toolkit.generateEdgeSetupConfig",
         "title": "Generate Edge setup configuration file",
-        "category": "Edge"
-      },
-      {
-        "command": "azure-iot-toolkit.generateEdgeDeploymentConfig",
-        "title": "Generate Edge deployment manifest",
         "category": "Edge"
       },
       {

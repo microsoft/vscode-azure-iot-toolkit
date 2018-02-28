@@ -105,7 +105,7 @@ export class AzureIoTExplorer {
         this._snippetManager.replaceConnectionString(event);
     }
 
-    public createDeployment(input: DeviceItem | vscode.Uri): void {
+    public createDeployment(input?: DeviceItem | vscode.Uri): void {
         this._iotEdgeExplorer.createDeployment(input);
     }
 
@@ -139,10 +139,6 @@ export class AzureIoTExplorer {
 
     public async generateEdgeSetupConfig(deviceItem: DeviceItem) {
         this._iotEdgeExplorer.generateEdgeSetupConfig(deviceItem);
-    }
-
-    public async generateEdgeDeploymentConfig() {
-        this._iotEdgeExplorer.generateEdgeDeploymentConfig();
     }
 
     public async getModuleTwin(moduleItem: ModuleItem) {
