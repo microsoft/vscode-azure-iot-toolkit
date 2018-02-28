@@ -128,10 +128,11 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         const subscriptionItem = await vscode.window.showQuickPick(subscriptionItems, { placeHolder: "Select Subscription", ignoreFocusOut: true });
         if (subscriptionItem) {
             TelemetryClient.sendEvent("General.Select.Subscription.Done");
+            outputChannel.show();
+            outputChannel.appendLine(`Subscription selected: ${subscriptionItem.label}`);
             const iotHubItems = this.loadIoTHubItems(subscriptionItem);
             const iotHubItem = await vscode.window.showQuickPick(iotHubItems, { placeHolder: "Select IoT Hub", ignoreFocusOut: true });
             if (iotHubItem) {
-                outputChannel.show();
                 outputChannel.appendLine(`IoT Hub selected: ${iotHubItem.label}`);
                 const iotHubConnectionString = await this.getIoTHubConnectionString(subscriptionItem, iotHubItem.iotHubDescription);
                 await this.updateIoTHubConnectionString(iotHubConnectionString);

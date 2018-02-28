@@ -61,12 +61,12 @@ export class AzureIoTExplorer {
         this._deviceExplorer.listDevice();
     }
 
-    public async getDevice(deviceItem: DeviceItem, iotHubConnectionString?: string) {
-        return this._deviceExplorer.getDevice(deviceItem, iotHubConnectionString);
+    public async getDevice(deviceItem: DeviceItem, iotHubConnectionString?: string, outputChannel?: vscode.OutputChannel) {
+        return this._deviceExplorer.getDevice(deviceItem, iotHubConnectionString, outputChannel);
     }
 
-    public async createDevice(edgeDevice: boolean = false, iotHubConnectionString?: string) {
-        return this._deviceExplorer.createDevice(edgeDevice, iotHubConnectionString);
+    public async createDevice(edgeDevice: boolean = false, iotHubConnectionString?: string, outputChannel?: vscode.OutputChannel) {
+        return this._deviceExplorer.createDevice(edgeDevice, iotHubConnectionString, outputChannel);
     }
 
     public async deleteDevice(deviceItem?: DeviceItem) {
