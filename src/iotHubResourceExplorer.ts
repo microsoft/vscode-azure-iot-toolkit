@@ -54,14 +54,20 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         }
         outputChannel.appendLine(`Location selected: ${locationItem.label}`);
 
+        const skuMap = {
+            "F1 Free": "F1",
+            "S1 Standard": "S1",
+            "S2 Standard": "S2",
+            "S3 Standard": "S3",
+        };
         const sku = await vscode.window.showQuickPick(
-            ["F1", "S1", "S2", "S3"],
-            { placeHolder: "Select SKU for your IoT Hub...", ignoreFocusOut: true },
+            Object.keys(skuMap),
+            { placeHolder: "Select pricing and scale tier for your IoT Hub...", ignoreFocusOut: true },
         );
         if (!sku) {
             return;
         }
-        outputChannel.appendLine(`SKU selected: ${sku}`);
+        outputChannel.appendLine(`Pricing and scale tier selected: ${sku}`);
 
         const name = await this.getIoTHubName(subscriptionItem);
         if (!name) {
@@ -85,7 +91,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
                 resourcegroup: resourceGroupItem.resourceGroup.name,
                 sku:
                     {
-                        name: sku,
+                        name: skuMap[sku],
                         capacity: 1,
                     },
             };
