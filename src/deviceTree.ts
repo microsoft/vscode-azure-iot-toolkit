@@ -33,7 +33,7 @@ export class DeviceTree implements vscode.TreeDataProvider<vscode.TreeItem> {
     }
 
     public async getChildren(element?: vscode.TreeItem): Promise<vscode.TreeItem[]> {
-        let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
+        let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle, false);
         if (!iotHubConnectionString) {
             return;
         }

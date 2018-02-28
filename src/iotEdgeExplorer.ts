@@ -20,24 +20,36 @@ export class IoTEdgeExplorer extends BaseExplorer {
         super(outputChannel);
     }
 
-    public async createDeployment(deviceItem: DeviceItem) {
-        deviceItem = await Utility.getInputDevice(deviceItem, Constants.IoTHubAIEdgeDeployStartEvent, true);
-
-        if (!deviceItem) {
-            return;
-        }
+    public async createDeployment(input?: DeviceItem | vscode.Uri) {
+        TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployStartEvent);
 
         let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
             return;
         }
 
-        const deploymentJson = await this.getDeploymentJson();
+        let from = "none";
+        let deviceItem;
+        if (input instanceof DeviceItem) {
+            deviceItem = input;
+            from = "device";
+        }
+        deviceItem = await Utility.getInputDevice(deviceItem, null, true);
+        if (!deviceItem) {
+            return;
+        }
+
+        let filePath;
+        if (input instanceof vscode.Uri) {
+            filePath = input.fsPath;
+            from = "file";
+        }
+        const deploymentJson = await this.getDeploymentJson(filePath);
         if (!deploymentJson) {
             return;
         }
 
-        this.deploy(iotHubConnectionString, deviceItem.deviceId, deploymentJson);
+        this.deploy(iotHubConnectionString, deviceItem.deviceId, deploymentJson, from);
     }
 
     public async setupEdge(deviceItem: DeviceItem) {
@@ -150,23 +162,6 @@ export class IoTEdgeExplorer extends BaseExplorer {
         }
     }
 
-    public async generateEdgeDeploymentConfig() {
-        TelemetryClient.sendEvent("Edge.GenerateDeploymentConfig.Start");
-        const configContent: string = this.generateEdgeDeploymentConfigContent();
-        const configPath: vscode.Uri = await vscode.window.showSaveDialog({
-            defaultUri: Utility.getDefaultPath("deployment.json"),
-            saveLabel: "Save Edge Deployment Manifest",
-            filters: {
-                JSON: ["json"],
-            },
-        });
-
-        if (configPath) {
-            Utility.writeFile(configPath, configContent);
-            TelemetryClient.sendEvent("Edge.GenerateDeploymentConfig.Done");
-        }
-    }
-
     public async getModuleTwin(moduleItem: ModuleItem) {
         TelemetryClient.sendEvent(Constants.IoTHubAIGetModuleTwinStartEvent);
         const iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
@@ -185,40 +180,43 @@ export class IoTEdgeExplorer extends BaseExplorer {
         }
     }
 
-    private async getDeploymentJson(): Promise<string> {
-        const filePathUri: vscode.Uri[] = await vscode.window.showOpenDialog({
-            openLabel: "Select Edge Deployment Manifest",
-            filters: {
-                JSON: ["json"],
-            },
-            defaultUri: Utility.getDefaultPath(),
-        });
-        if (!filePathUri) {
-            return "";
+    private async getDeploymentJson(filePath: string): Promise<string> {
+        if (!filePath) {
+            const filePathUri: vscode.Uri[] = await vscode.window.showOpenDialog({
+                openLabel: "Select Edge Deployment Manifest",
+                filters: {
+                    JSON: ["json"],
+                },
+                defaultUri: Utility.getDefaultPath(),
+            });
+            if (!filePathUri) {
+                return "";
+            }
+            filePath = filePathUri[0].fsPath;
         }
-        const filePath = filePathUri[0].fsPath;
         return fs.readFileSync(filePath, "utf8");
     }
 
-    private deploy(iotHubConnectionString: string, deviceId: string, deploymentJson: string) {
+    private deploy(iotHubConnectionString: string, deviceId: string, deploymentJson: string, from: string) {
         const label = "Edge";
         this._outputChannel.show();
         this.outputLine(label, `Start deployment to [${deviceId}]`);
 
         const url = `/devices/${deviceId}/applyConfigurationContent?api-version=${Constants.IoTHubApiVersion}`;
         const config = Utility.generateIoTHubAxiosRequestConfig(iotHubConnectionString, url, "post", stripJsonComments(deploymentJson));
+        const entry = from === "none" ? "commandPalette" : "contextMenu";
 
         axios.request(config)
             .then((response) => {
                 this.outputLine(label, "Deployment succeeded.");
-                TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployDoneEvent, { Result: "Success" });
+                TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployDoneEvent, { Result: "Success", entry, from });
             })
             .catch((err) => {
                 this.outputLine(label, `Deployment failed. ${err}`);
                 if (err && err.response && err.response.data && err.response.data.Message) {
                     this.outputLine(label, err.response.data.Message);
                 }
-                TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployDoneEvent, { Result: "Fail", Message: err });
+                TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployDoneEvent, { Result: "Fail", Message: err, entry, from });
             });
     }
 
@@ -253,66 +251,6 @@ export class IoTEdgeExplorer extends BaseExplorer {
             "selfSigned": {
                 "forceNoPasswords": true,
                 "forceRegenerate": false
-            }
-        }
-    }
-}`;
-    }
-
-    private generateEdgeDeploymentConfigContent(): string {
-        return `{
-    "moduleContent": {
-        "$edgeAgent": {
-            "properties.desired": {
-                "schemaVersion": "1.0",
-                "runtime": {
-                    "type": "docker",
-                    "settings": {
-                        "minDockerVersion": "v1.25",
-                        "loggingOptions": ""
-                    }
-                },
-                "systemModules": {
-                    "edgeAgent": {
-                        "type": "docker",
-                        "settings": {
-                            "image": "microsoft/azureiotedge-agent:1.0-preview",
-                            "createOptions": ""
-                        }
-                    },
-                    "edgeHub": {
-                        "type": "docker",
-                        "status": "running",
-                        "restartPolicy": "always",
-                        "settings": {
-                            "image": "microsoft/azureiotedge-hub:1.0-preview",
-                            "createOptions": ""
-                        }
-                    }
-                },
-                "modules": {
-                    "SampleModule": {
-                        "version": "1.0",
-                        "type": "docker",
-                        "status": "running",
-                        "restartPolicy": "always",
-                        "settings": {
-                            "image": "<registry>/<image>:<tag>",
-                            "createOptions": "{}"
-                        }
-                    }
-                }
-            }
-        },
-        "$edgeHub": {
-            "properties.desired": {
-                "schemaVersion": "1.0",
-                "routes": {
-                    "route": "FROM /* INTO $upstream"
-                },
-                "storeAndForwardConfiguration": {
-                    "timeToLiveSecs": 7200
-                }
             }
         }
     }

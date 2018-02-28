@@ -4,8 +4,11 @@ import { AzureIoTExplorer } from "./azureIoTExplorer";
 import { DeviceTree } from "./deviceTree";
 import { Executor } from "./executor";
 import { JsonCompletionItemProvider } from "./jsonCompletionItemProvider";
+import { TelemetryClient } from "./telemetryClient";
 
 export function activate(context: vscode.ExtensionContext) {
+    TelemetryClient.sendEvent("extensionActivated");
+
     let azureIoTExplorer = new AzureIoTExplorer(context);
     let deviceTree = new DeviceTree(context);
 
@@ -93,8 +96,8 @@ export function activate(context: vscode.ExtensionContext) {
         await azureIoTExplorer.createDevice(true);
     }));
 
-    let createDeployment = vscode.commands.registerCommand("azure-iot-toolkit.createDeployment", (DeviceItem) => {
-        azureIoTExplorer.createDeployment(DeviceItem);
+    let createDeployment = vscode.commands.registerCommand("azure-iot-toolkit.createDeployment", (input) => {
+        azureIoTExplorer.createDeployment(input);
     });
 
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.setupEdge", (DeviceItem) => {
@@ -127,10 +130,6 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.generateEdgeSetupConfig", async (DeviceItem) => {
         await azureIoTExplorer.generateEdgeSetupConfig(DeviceItem);
-    }));
-
-    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.generateEdgeDeploymentConfig", async () => {
-        await azureIoTExplorer.generateEdgeDeploymentConfig();
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.getModuleTwin", async (moduleItem) => {
