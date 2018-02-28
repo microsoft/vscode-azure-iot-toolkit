@@ -23,9 +23,9 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         this.accountApi = vscode.extensions.getExtension<AzureAccount>("ms-vscode.azure-account")!.exports;
     }
 
-    public async createIoTHub(callByExternal: boolean = false, outputChannel: vscode.OutputChannel = this._outputChannel): Promise<IotHubDescription> {
+    public async createIoTHub(outputChannel: vscode.OutputChannel = this._outputChannel): Promise<IotHubDescription> {
         TelemetryClient.sendEvent(Constants.IoTHubAICreateStartEvent);
-        if (!(await this.waitForLogin(this.createIoTHub, callByExternal, outputChannel))) {
+        if (!(await this.waitForLogin(this.createIoTHub, outputChannel))) {
             return;
         }
 
@@ -118,9 +118,9 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         });
     }
 
-    public async selectIoTHub(callByExternal: boolean = false, outputChannel: vscode.OutputChannel = this._outputChannel): Promise<IotHubDescription> {
+    public async selectIoTHub(outputChannel: vscode.OutputChannel = this._outputChannel): Promise<IotHubDescription> {
         TelemetryClient.sendEvent("General.Select.IoTHub.Start");
-        if (!(await this.waitForLogin(this.selectIoTHub, callByExternal))) {
+        if (!(await this.waitForLogin(this.selectIoTHub, outputChannel))) {
             return;
         }
         TelemetryClient.sendEvent("General.Select.Subscription.Start");
