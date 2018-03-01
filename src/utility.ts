@@ -36,7 +36,7 @@ export class Utility {
                 if (this.isValidConnectionString(id, value)) {
                     TelemetryClient.sendEvent("General.SetConfig.Done", { Result: "Success" });
                     let config = Utility.getConfiguration();
-                    config.update(id, value, true);
+                    await config.update(id, value, true);
                 } else {
                     TelemetryClient.sendEvent("General.SetConfig.Done", { Result: "Fail" });
                     value = null;

@@ -235,29 +235,29 @@
           "group": "azure-iot-toolkit@1"
         },
         {
-          "command": "azure-iot-toolkit.startMonitorIoTHubMessage",
+          "command": "azure-iot-toolkit.createEdgeDevice",
           "when": "view == iotHubDevices",
           "group": "azure-iot-toolkit@2"
         },
         {
-          "command": "azure-iot-toolkit.setIoTHubConnectionString",
+          "command": "azure-iot-toolkit.startMonitorIoTHubMessage",
           "when": "view == iotHubDevices",
           "group": "azure-iot-toolkit@3"
         },
         {
-          "command": "azure-iot-toolkit.selectIoTHub",
+          "command": "azure-iot-toolkit.setIoTHubConnectionString",
           "when": "view == iotHubDevices",
           "group": "azure-iot-toolkit@4"
         },
         {
-          "command": "azure-iot-toolkit.copyIoTHubConnectionString",
+          "command": "azure-iot-toolkit.selectIoTHub",
           "when": "view == iotHubDevices",
           "group": "azure-iot-toolkit@5"
         },
         {
-          "command": "azure-iot-toolkit.createEdgeDevice",
+          "command": "azure-iot-toolkit.copyIoTHubConnectionString",
           "when": "view == iotHubDevices",
-          "group": "azure-iot-toolkit-edge@1"
+          "group": "azure-iot-toolkit@6"
         }
       ],
       "view/item/context": [

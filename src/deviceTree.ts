@@ -35,7 +35,7 @@ export class DeviceTree implements vscode.TreeDataProvider<vscode.TreeItem> {
     public async getChildren(element?: vscode.TreeItem): Promise<vscode.TreeItem[]> {
         let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle, false);
         if (!iotHubConnectionString) {
-            return;
+            return this.getDefaultTreeItems();
         }
 
         if (element && element.contextValue === "edge") {
@@ -64,10 +64,26 @@ export class DeviceTree implements vscode.TreeDataProvider<vscode.TreeItem> {
         }
     }
 
+    private getDefaultTreeItems(): vscode.TreeItem[] {
+        const items = [];
+        items.push(this.createCommandItem("Set IoT Hub Connection String", "azure-iot-toolkit.setIoTHubConnectionString"));
+        items.push(this.createCommandItem("Select IoT Hub", "azure-iot-toolkit.selectIoTHub"));
+        return items;
+    }
+
     private getErrorMessageTreeItems(item: string, error: string): vscode.TreeItem[] {
         const items = [];
         items.push(new vscode.TreeItem(`Failed to list ${item}`));
         items.push(new vscode.TreeItem(`Error: ${error}`));
         return items;
+    }
+
+    private createCommandItem(label: string, command: string): vscode.TreeItem {
+        const commandItem = new vscode.TreeItem(label);
+        commandItem.command = {
+            command,
+            title: "",
+        };
+        return commandItem;
     }
 }
