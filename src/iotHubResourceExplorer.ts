@@ -180,14 +180,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
     }
 
     private async loadSubscriptionItems(api: AzureAccount) {
-        const subscriptionItems: SubscriptionItem[] = [];
-        for (const session of api.sessions) {
-            const credentials = session.credentials;
-            const subscriptionClient = new SubscriptionClient(credentials);
-            const subscriptions = await this.listAll(subscriptionClient.subscriptions, subscriptionClient.subscriptions.list());
-            subscriptionItems.push(...subscriptions.map((subscription) => new SubscriptionItem(subscription, session)));
-        }
-        subscriptionItems.sort((a, b) => a.label.localeCompare(b.label));
+        const subscriptionItems: SubscriptionItem[] = api.filters.map((filter) => new SubscriptionItem(filter.subscription, filter.session));
         TelemetryClient.sendEvent("General.Load.Subscription", { SubscriptionCount: subscriptionItems.length.toString() });
         return subscriptionItems;
     }
@@ -215,14 +208,6 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         return client.iotHubResource.getKeysForKeyName(iotHubDescription.resourcegroup, iotHubDescription.name, "iothubowner").then((result) => {
             return `HostName=${iotHubDescription.properties.hostName};SharedAccessKeyName=${result.keyName};SharedAccessKey=${result.primaryKey}`;
         });
-    }
-
-    private async listAll<T>(client: { listNext(nextPageLink: string): Promise<IPartialList<T>>; }, first: Promise<IPartialList<T>>): Promise<T[]> {
-        const all: T[] = [];
-        for (let list = await first; list.length || list.nextLink; list = list.nextLink ? await client.listNext(list.nextLink) : []) {
-            all.push(...list);
-        }
-        return all;
     }
 
     private async getOrCreateResourceGroup(subscriptionItem: SubscriptionItem): Promise<ResourceGroupItem> {
