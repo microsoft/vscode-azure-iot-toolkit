@@ -180,6 +180,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
     }
 
     private async loadSubscriptionItems(api: AzureAccount) {
+        await api.waitForFilters();
         const subscriptionItems: SubscriptionItem[] = api.filters.map((filter) => new SubscriptionItem(filter.subscription, filter.session));
         TelemetryClient.sendEvent("General.Load.Subscription", { SubscriptionCount: subscriptionItems.length.toString() });
         return subscriptionItems;
