@@ -24,8 +24,8 @@ export function activate(context: vscode.ExtensionContext) {
         deviceTree.setIoTHubConnectionString();
     }));
 
-    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.getDevice", (DeviceItem) => {
-        azureIoTExplorer.getDevice(DeviceItem);
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.getDevice", async (DeviceItem) => {
+        return azureIoTExplorer.getDevice(DeviceItem);
     }));
 
     let sendD2CMessage = vscode.commands.registerCommand("azure-iot-toolkit.sendD2CMessage", (DeviceItem) => {
@@ -57,7 +57,7 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     let createDevice = vscode.commands.registerCommand("azure-iot-toolkit.createDevice", async () => {
-        await azureIoTExplorer.createDevice();
+        return azureIoTExplorer.createDevice();
     });
 
     let deleteDevice = vscode.commands.registerCommand("azure-iot-toolkit.deleteDevice", async (DeviceItem) => {

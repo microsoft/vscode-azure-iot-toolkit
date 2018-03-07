@@ -23,9 +23,9 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         this.accountApi = vscode.extensions.getExtension<AzureAccount>("ms-vscode.azure-account")!.exports;
     }
 
-    public async createIoTHub(): Promise<IotHubDescription> {
+    public async createIoTHub(outputChannel: vscode.OutputChannel = this._outputChannel): Promise<IotHubDescription> {
         TelemetryClient.sendEvent(Constants.IoTHubAICreateStartEvent);
-        if (!(await this.waitForLogin(this.createIoTHub))) {
+        if (!(await this.waitForLogin())) {
             return;
         }
 
@@ -36,11 +36,14 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         if (!subscriptionItem) {
             return;
         }
+        outputChannel.show();
+        outputChannel.appendLine(`Subscription selected: ${subscriptionItem.label}`);
 
         const resourceGroupItem = await this.getOrCreateResourceGroup(subscriptionItem);
         if (!resourceGroupItem) {
             return;
         }
+        outputChannel.appendLine(`Resource Group selected: ${resourceGroupItem.label}`);
 
         const locationItem = await vscode.window.showQuickPick(
             this.getLocationItems(subscriptionItem),
@@ -49,14 +52,22 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         if (!locationItem) {
             return;
         }
+        outputChannel.appendLine(`Location selected: ${locationItem.label}`);
 
+        const skuMap = {
+            "F1 Free": "F1",
+            "S1 Standard": "S1",
+            "S2 Standard": "S2",
+            "S3 Standard": "S3",
+        };
         const sku = await vscode.window.showQuickPick(
-            ["F1", "S1", "S2", "S3"],
-            { placeHolder: "Select SKU for your IoT Hub...", ignoreFocusOut: true },
+            Object.keys(skuMap),
+            { placeHolder: "Select pricing and scale tier for your IoT Hub...", ignoreFocusOut: true },
         );
         if (!sku) {
             return;
         }
+        outputChannel.appendLine(`Pricing and scale tier selected: ${sku}`);
 
         const name = await this.getIoTHubName(subscriptionItem);
         if (!name) {
@@ -67,6 +78,11 @@ export class IoTHubResourceExplorer extends BaseExplorer {
             title: `Creating IoT Hub '${name}'`,
             location: vscode.ProgressLocation.Window,
         }, async (progress) => {
+            outputChannel.appendLine(`Creating IoT Hub: ${name}`);
+            const intervalID = setInterval(() => {
+                outputChannel.append(".");
+            }, 1000);
+
             const { session, subscription } = subscriptionItem;
             const client = new IoTHubClient(session.credentials, subscription.subscriptionId);
             const iotHubCreateParams = {
@@ -75,30 +91,24 @@ export class IoTHubResourceExplorer extends BaseExplorer {
                 resourcegroup: resourceGroupItem.resourceGroup.name,
                 sku:
                     {
-                        name: sku,
+                        name: skuMap[sku],
                         capacity: 1,
                     },
             };
             return client.iotHubResource.createOrUpdate(resourceGroupItem.resourceGroup.name, name, iotHubCreateParams)
-                .then((iotHubDescription) => {
-                    const iotHubConnectionString = Utility.getConnectionStringWithId(Constants.IotHubConnectionStringKey);
-                    if (iotHubConnectionString) {
-                        vscode.window.showInformationMessage<vscode.MessageItem>(`IoT Hub '${name}' is created. Do you want to refresh device list using this IoT Hub?`,
-                            { title: "Yes" },
-                            { title: "No", isCloseAffordance: true },
-                        ).then((selection) => {
-                            if (selection.title === "Yes") {
-                                this.updateIoTHubConnectionString(subscriptionItem, iotHubDescription);
-                            }
-                        });
-                    } else {
-                        vscode.window.showInformationMessage(`IoT Hub '${name}' is created.`);
-                        this.updateIoTHubConnectionString(subscriptionItem, iotHubDescription);
-                    }
-                    TelemetryClient.sendEvent(Constants.IoTHubAICreateDoneEvent, { Result: "Success" });
+                .then(async (iotHubDescription) => {
+                    clearInterval(intervalID);
+                    outputChannel.appendLine("");
+                    const newIotHubConnectionString = await this.getIoTHubConnectionString(subscriptionItem, iotHubDescription);
+                    outputChannel.appendLine(`IoT Hub '${name}' is created.`);
+                    await this.updateIoTHubConnectionString(newIotHubConnectionString);
+                    (iotHubDescription as any).iotHubConnectionString = newIotHubConnectionString;
+                    TelemetryClient.sendEvent(Constants.IoTHubAICreateDoneEvent, { Result: "Success" }, newIotHubConnectionString);
                     return iotHubDescription;
                 })
                 .catch((err) => {
+                    clearInterval(intervalID);
+                    outputChannel.appendLine("");
                     let errorMessage: string;
                     if (err.message) {
                         errorMessage = err.message;
@@ -107,16 +117,16 @@ export class IoTHubResourceExplorer extends BaseExplorer {
                     } else {
                         errorMessage = "Error occurred when creating IoT Hub.";
                     }
-                    vscode.window.showErrorMessage(errorMessage);
+                    outputChannel.appendLine(errorMessage);
                     TelemetryClient.sendEvent(Constants.IoTHubAICreateDoneEvent, { Result: "Fail", Message: errorMessage });
                     return Promise.reject(err);
                 });
         });
     }
 
-    public async selectIoTHub() {
+    public async selectIoTHub(outputChannel: vscode.OutputChannel = this._outputChannel): Promise<IotHubDescription> {
         TelemetryClient.sendEvent("General.Select.IoTHub.Start");
-        if (!(await this.waitForLogin(this.selectIoTHub))) {
+        if (!(await this.waitForLogin())) {
             return;
         }
         TelemetryClient.sendEvent("General.Select.Subscription.Start");
@@ -124,12 +134,17 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         const subscriptionItem = await vscode.window.showQuickPick(subscriptionItems, { placeHolder: "Select Subscription", ignoreFocusOut: true });
         if (subscriptionItem) {
             TelemetryClient.sendEvent("General.Select.Subscription.Done");
+            outputChannel.show();
+            outputChannel.appendLine(`Subscription selected: ${subscriptionItem.label}`);
             const iotHubItems = this.loadIoTHubItems(subscriptionItem);
             const iotHubItem = await vscode.window.showQuickPick(iotHubItems, { placeHolder: "Select IoT Hub", ignoreFocusOut: true });
             if (iotHubItem) {
-                vscode.window.showInformationMessage(`Selected IoT Hub [${iotHubItem.label}]. Refreshing the device list...`);
-                await this.updateIoTHubConnectionString(subscriptionItem, iotHubItem.iotHubDescription);
-                TelemetryClient.sendEvent("AZ.Select.IoTHub.Done");
+                outputChannel.appendLine(`IoT Hub selected: ${iotHubItem.label}`);
+                const iotHubConnectionString = await this.getIoTHubConnectionString(subscriptionItem, iotHubItem.iotHubDescription);
+                await this.updateIoTHubConnectionString(iotHubConnectionString);
+                (iotHubItem.iotHubDescription as any).iotHubConnectionString = iotHubConnectionString;
+                TelemetryClient.sendEvent("AZ.Select.IoTHub.Done", undefined, iotHubConnectionString);
+                return iotHubItem.iotHubDescription;
             }
         }
     }
@@ -149,30 +164,19 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         }
     }
 
-    private async waitForLogin(callback): Promise<boolean> {
+    private async waitForLogin(): Promise<boolean> {
         if (!(await this.accountApi.waitForLogin())) {
             TelemetryClient.sendEvent("General.AskForAzureLogin");
-            const subscription = this.accountApi.onStatusChanged(() => {
-                subscription.dispose();
-                callback = callback.bind(this);
-                callback();
-            });
-            vscode.commands.executeCommand("azure-account.askForLogin");
-            return false;
+            await vscode.commands.executeCommand("azure-account.askForLogin");
+            return this.accountApi.waitForLogin();
         } else {
             return true;
         }
     }
 
     private async loadSubscriptionItems(api: AzureAccount) {
-        const subscriptionItems: SubscriptionItem[] = [];
-        for (const session of api.sessions) {
-            const credentials = session.credentials;
-            const subscriptionClient = new SubscriptionClient(credentials);
-            const subscriptions = await this.listAll(subscriptionClient.subscriptions, subscriptionClient.subscriptions.list());
-            subscriptionItems.push(...subscriptions.map((subscription) => new SubscriptionItem(subscription, session)));
-        }
-        subscriptionItems.sort((a, b) => a.label.localeCompare(b.label));
+        await api.waitForFilters();
+        const subscriptionItems: SubscriptionItem[] = api.filters.map((filter) => new SubscriptionItem(filter.subscription, filter.session));
         TelemetryClient.sendEvent("General.Load.Subscription", { SubscriptionCount: subscriptionItems.length.toString() });
         return subscriptionItems;
     }
@@ -188,8 +192,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         return iotHubItems;
     }
 
-    private async updateIoTHubConnectionString(subscriptionItem: SubscriptionItem, iotHubDescription: IotHubDescription) {
-        const iotHubConnectionString = await this.getIoTHubConnectionString(subscriptionItem, iotHubDescription);
+    private async updateIoTHubConnectionString(iotHubConnectionString: string) {
         const config = Utility.getConfiguration();
         await config.update(Constants.IotHubConnectionStringKey, iotHubConnectionString, true);
         vscode.commands.executeCommand("azure-iot-toolkit.refresh");
@@ -201,14 +204,6 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         return client.iotHubResource.getKeysForKeyName(iotHubDescription.resourcegroup, iotHubDescription.name, "iothubowner").then((result) => {
             return `HostName=${iotHubDescription.properties.hostName};SharedAccessKeyName=${result.keyName};SharedAccessKey=${result.primaryKey}`;
         });
-    }
-
-    private async listAll<T>(client: { listNext(nextPageLink: string): Promise<IPartialList<T>>; }, first: Promise<IPartialList<T>>): Promise<T[]> {
-        const all: T[] = [];
-        for (let list = await first; list.length || list.nextLink; list = list.nextLink ? await client.listNext(list.nextLink) : []) {
-            all.push(...list);
-        }
-        return all;
     }
 
     private async getOrCreateResourceGroup(subscriptionItem: SubscriptionItem): Promise<ResourceGroupItem> {

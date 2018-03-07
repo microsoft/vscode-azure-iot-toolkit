@@ -14,12 +14,12 @@ export class BaseExplorer {
         this._outputChannel = outputChannel;
     }
 
-    protected output(label: string, message: string): void {
-        this._outputChannel.append(`[${label}] ${message}`);
+    protected output(label: string, message: string, outputChannel: vscode.OutputChannel = this._outputChannel): void {
+        outputChannel.append(`[${label}] ${message}`);
     }
 
-    protected outputLine(label: string, message: string): void {
-        this._outputChannel.appendLine(`[${label}] ${message}`);
+    protected outputLine(label: string, message: string, outputChannel: vscode.OutputChannel = this._outputChannel): void {
+        outputChannel.appendLine(`[${label}] ${message}`);
     }
 
     protected printError(outputChannel: vscode.OutputChannel, label: string) {

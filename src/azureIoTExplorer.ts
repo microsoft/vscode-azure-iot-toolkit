@@ -61,16 +61,16 @@ export class AzureIoTExplorer {
         this._deviceExplorer.listDevice();
     }
 
-    public getDevice(deviceItem: DeviceItem): void {
-        this._deviceExplorer.getDevice(deviceItem);
+    public async getDevice(deviceItem: DeviceItem, iotHubConnectionString?: string, outputChannel?: vscode.OutputChannel) {
+        return this._deviceExplorer.getDevice(deviceItem, iotHubConnectionString, outputChannel);
     }
 
-    public async createDevice(edgeDevice: boolean = false) {
-        await this._deviceExplorer.createDevice(edgeDevice);
+    public async createDevice(edgeDevice: boolean = false, iotHubConnectionString?: string, outputChannel?: vscode.OutputChannel) {
+        return this._deviceExplorer.createDevice(edgeDevice, iotHubConnectionString, outputChannel);
     }
 
     public async deleteDevice(deviceItem?: DeviceItem) {
-        await this._deviceExplorer.deleteDevice(deviceItem);
+        return this._deviceExplorer.deleteDevice(deviceItem);
     }
 
     public invokeDeviceMethod(deviceItem: DeviceItem): void {
@@ -85,12 +85,12 @@ export class AzureIoTExplorer {
         this._iotHubDeviceTwinExplorer.updateDeviceTwin();
     }
 
-    public async createIoTHub() {
-        return this._iotHubResourceExplorer.createIoTHub();
+    public async createIoTHub(outputChannel?: vscode.OutputChannel) {
+        return this._iotHubResourceExplorer.createIoTHub(outputChannel);
     }
 
-    public selectIoTHub(): void {
-        this._iotHubResourceExplorer.selectIoTHub();
+    public selectIoTHub(outputChannel?: vscode.OutputChannel) {
+        return this._iotHubResourceExplorer.selectIoTHub(outputChannel);
     }
 
     public copyIoTHubConnectionString(): void {

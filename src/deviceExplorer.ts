@@ -32,29 +32,35 @@ export class DeviceExplorer extends BaseExplorer {
         });
     }
 
-    public async getDevice(deviceItem: DeviceItem) {
+    public async getDevice(deviceItem: DeviceItem, iotHubConnectionString?: string, outputChannel: vscode.OutputChannel = this._outputChannel) {
         let label = "Device";
-        let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
-            return;
+            iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
+            if (!iotHubConnectionString) {
+                return;
+            }
         }
 
-        deviceItem = await Utility.getInputDevice(deviceItem, "AZ.Device.Get.Start");
+        deviceItem = await Utility.getInputDevice(deviceItem, "AZ.Device.Get.Start", false, iotHubConnectionString);
         if (!deviceItem) {
             return;
         }
 
         let hostName = Utility.getHostName(iotHubConnectionString);
         let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
-        this._outputChannel.show();
-        this.outputLine(label, `Querying device [${deviceItem.deviceId}]...`);
-        registry.get(deviceItem.deviceId, this.done("Get", label, hostName));
+        outputChannel.show();
+        this.outputLine(label, `Querying device [${deviceItem.deviceId}]...`, outputChannel);
+        return new Promise((resolve, reject) => {
+            registry.get(deviceItem.deviceId, this.done("Get", label, resolve, reject, hostName, outputChannel, iotHubConnectionString));
+        });
     }
 
-    public async createDevice(edgeDevice: boolean = false) {
-        const iotHubConnectionString: string = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
+    public async createDevice(edgeDevice: boolean = false, iotHubConnectionString?: string, outputChannel: vscode.OutputChannel = this._outputChannel) {
         if (!iotHubConnectionString) {
-            return;
+            iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
+            if (!iotHubConnectionString) {
+                return;
+            }
         }
 
         const label: string = edgeDevice ? "Edge Device" : "Device";
@@ -75,9 +81,11 @@ export class DeviceExplorer extends BaseExplorer {
             };
         }
 
-        this._outputChannel.show();
-        this.outputLine(label, `Creating ${label} '${device.deviceId}'`);
-        registry.create(device, this.done("Create", label, hostName));
+        outputChannel.show();
+        this.outputLine(label, `Creating ${label} '${device.deviceId}'`, outputChannel);
+        return new Promise((resolve, reject) => {
+            registry.create(device, this.done("Create", label, resolve, reject, hostName, outputChannel, iotHubConnectionString));
+        });
     }
 
     public async deleteDevice(deviceItem?: DeviceItem) {
@@ -90,7 +98,7 @@ export class DeviceExplorer extends BaseExplorer {
 
         deviceItem = await Utility.getInputDevice(deviceItem, "AZ.Device.Delete.Start");
         if (deviceItem && deviceItem.label) {
-            await this.deleteDeviceById(deviceItem.label, label, registry);
+            return this.deleteDeviceById(deviceItem.label, label, registry);
         }
     }
 
@@ -106,18 +114,21 @@ export class DeviceExplorer extends BaseExplorer {
         return deviceId;
     }
 
-    private deleteDeviceById(deviceId: string, label: string, registry: iothub.Registry): void {
+    private async deleteDeviceById(deviceId: string, label: string, registry: iothub.Registry) {
         this._outputChannel.show();
         this.outputLine(label, `Deleting device '${deviceId}'`);
-        registry.delete(deviceId, this.done("Delete", label));
+        return new Promise((resolve, reject) => {
+            registry.delete(deviceId, this.done("Delete", label, resolve, reject));
+        });
     }
 
-    private done(op: string, label: string, hostName: string = null) {
+    private done(op: string, label: string, resolve, reject, hostName: string = null, outputChannel: vscode.OutputChannel = this._outputChannel, iotHubConnectionString?: string) {
         return (err, deviceInfo, res) => {
             const eventName = `AZ.${label.replace(/\s/g, ".")}.${op}`;
             if (err) {
-                TelemetryClient.sendEvent(eventName, { Result: "Fail" });
-                this.outputLine(label, `[${op}] error: ${err.toString()}`);
+                TelemetryClient.sendEvent(eventName, { Result: "Fail" }, iotHubConnectionString);
+                this.outputLine(label, `[${op}] error: ${err.toString()}`, outputChannel);
+                reject(err);
             }
             if (res) {
                 let result = "Fail";
@@ -127,19 +138,21 @@ export class DeviceExplorer extends BaseExplorer {
                         vscode.commands.executeCommand("azure-iot-toolkit.refresh");
                     }
                 }
-                TelemetryClient.sendEvent(eventName, { Result: result });
-                this.outputLine(label, `[${op}][${result}] status: ${res.statusCode} ${res.statusMessage}`);
+                TelemetryClient.sendEvent(eventName, { Result: result }, iotHubConnectionString);
+                this.outputLine(label, `[${op}][${result}] status: ${res.statusCode} ${res.statusMessage}`, outputChannel);
             }
             if (deviceInfo) {
                 if (deviceInfo.authentication.SymmetricKey.primaryKey != null) {
-                    deviceInfo.connectionStringWithSharedAccessKey = ConnectionString.createWithSharedAccessKey(hostName,
+                    deviceInfo.connectionString = ConnectionString.createWithSharedAccessKey(hostName,
                         deviceInfo.deviceId, deviceInfo.authentication.SymmetricKey.primaryKey);
                 }
                 if (deviceInfo.authentication.x509Thumbprint.primaryThumbprint != null) {
-                    deviceInfo.connectionStringWithX509Certificate = ConnectionString.createWithX509Certificate(hostName, deviceInfo.deviceId);
+                    deviceInfo.connectionString = ConnectionString.createWithX509Certificate(hostName, deviceInfo.deviceId);
                 }
-                this.outputLine(label, `[${op}] device info: ${JSON.stringify(deviceInfo, null, 2)}`);
+                this.outputLine(label, `[${op}] device info: ${JSON.stringify(deviceInfo, null, 2)}`, outputChannel);
+                resolve(deviceInfo);
             }
+            resolve();
         };
     }
 }
