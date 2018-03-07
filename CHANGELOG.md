@@ -4,14 +4,14 @@
     * Return IoT Hub Connection String in create/select IoT Hub APIs
     * Use Output Channel for showing output
     * Add iotHubConnectionString parameter in create/select device APIs
-    * Add Output Channel parameter in create/select IoT Hub and create/select device APIs
+    * Add outputChannel parameter in create/select IoT Hub and create/select device APIs
 * Show default command items ("Set IoT Hub Connection String", "Select IoT Hub")  in device tree when IoT Hub Connection String is not set
-* Deploy Edge device via file
+* Create Edge deployment via file
 
 ### Changed
 * Always refresh device tree after creating IoT Hub
-* Improve sku naming
-* Only list filtered subscrptions
+* Improve SKU naming
+* Only list filtered subscriptions
 * Sort commands in View title menu
 * Not show Connection String Input Box on startup
 * Rename explorer to 'Azure IoT Hub Devices'
