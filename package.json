@@ -57,7 +57,7 @@
       "explorer": [
         {
           "id": "iotHubDevices",
-          "name": "IoT Hub Devices"
+          "name": "Azure IoT Hub Devices"
         }
       ]
     },
