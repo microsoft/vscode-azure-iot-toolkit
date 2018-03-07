@@ -17,7 +17,7 @@
 * Rename explorer to 'Azure IoT Hub Devices'
 
 ## 0.5.0 (2017-12-25)
-* Create IoT Hub
+* [Added] Create IoT Hub
 * [Added] Create Edge device
 * [Added] Show different icons for Edge devices
 * [Added] Command to log in to container registry for Edge
