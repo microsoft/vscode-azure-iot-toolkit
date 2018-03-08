@@ -1,4 +1,22 @@
-### 0.5.0 (2017-12-25)
+## 0.6.0 (2018-03-??)
+### Added 
+* Expose APIs for dependent extensions to use
+    * Return IoT Hub Connection String in create/select IoT Hub APIs
+    * Use Output Channel for showing output
+    * Add iotHubConnectionString parameter in create/select device APIs
+    * Add outputChannel parameter in create/select IoT Hub and create/select device APIs
+* Show default command items ("Set IoT Hub Connection String", "Select IoT Hub")  in device tree when IoT Hub Connection String is not set
+* Create Edge deployment via file
+
+### Changed
+* Always refresh device tree after creating IoT Hub
+* Improve SKU naming
+* Only list filtered subscriptions
+* Sort commands in View title menu
+* Not show Connection String Input Box on startup
+* Rename explorer to 'Azure IoT Hub Devices'
+
+## 0.5.0 (2017-12-25)
 * [Added] Create IoT Hub
 * [Added] Create Edge device
 * [Added] Show different icons for Edge devices
@@ -7,96 +25,96 @@
 * [Added] List Edge Modules
 * [Added] View Module Twin
 
-### 0.4.3 (2017-12-06)
+## 0.4.3 (2017-12-06)
 * [Added] Add Command Palette integration for several commands
 
-### 0.4.2 (2017-11-15)
+## 0.4.2 (2017-11-15)
 * [Fixed] Stop monitoring D2C message and show friendly message when there is error
 
-### 0.4.1 (2017-11-14)
+## 0.4.1 (2017-11-14)
 * [Fixed] Handle terminal closed
 * [Fixed] Set eventHubClient as null when there is error
 
-### 0.4.0 (2017-11-13)
+## 0.4.0 (2017-11-13)
 * [Added] Add support for IoT Edge
 * [Added] Monitor D2C message per device
 * [Changed] Show application properties when monitoring D2C message
 * [Changed] Show device id when monitoring D2C message
 * [Changed] Sort devices by device id in device tree
 
-### 0.3.0 (2017-10-17)
+## 0.3.0 (2017-10-17)
 * [Added] Select IoT Hub with Azure login
 * [Added] Copy connection string
 * [Changed] Refresh device list right after device is created or deleted
 * [Changed] Show error message in device tree explorer instead of pop-up when failing to list devices
 
-### 0.2.3 (2017-09-25)
+## 0.2.3 (2017-09-25)
 * Add option to hide Connection String Input Box and IoT Hub info
 
-### 0.2.2 (2017-09-13)
+## 0.2.2 (2017-09-13)
 * Show IoT Hub info when user does not enter connection string
 * Handle the case when user enters an invalid connection string
 * Context menu to set IoT Hub Connection String
 * Improve wording for 'Monitoring stopped'
 
-### 0.2.1 (2017-08-24)
+## 0.2.1 (2017-08-24)
 * Add 'Azure' category
 * Handle devices with X.509 cert
 
-### 0.2.0 (2017-08-21)
+## 0.2.0 (2017-08-21)
 * Migrate as official extension
 
-### 0.1.4 (2017-08-09)
+## 0.1.4 (2017-08-09)
 * Invoke Direct Method
 * Get/update Device Twin
 * Remove IoT Hub commands from editor context menu
 
-### 0.1.3 (2017-06-28)
+## 0.1.3 (2017-06-28)
 * Make stringifying D2C messages optional
 
-### 0.1.2 (2017-06-23)
+## 0.1.2 (2017-06-23)
 * Show different icon for connected devices
 
-### 0.1.1 (2017-06-15)
+## 0.1.1 (2017-06-15)
 * Add 'Send/monitor C2D message' into context menu of Device Explorer
 
-### 0.1.0 (2017-06-09)
+## 0.1.0 (2017-06-09)
 * Device Explorer
 * Code snippet for Direct Methods
 
-### 0.0.11 (2017-03-10)
+## 0.0.11 (2017-03-10)
 * Send/monitor C2D message
 * Code snippet for C2D message
 
-### 0.0.10 (2017-03-06)
+## 0.0.10 (2017-03-06)
 * JavaScript code snippet to send/monitor D2C message
 
-### 0.0.9 (2017-02-28)
+## 0.0.9 (2017-02-28)
 * Show verbose info when monitoring messages
 * Output refinement for JSON object
 
-### 0.0.8 (2017-02-27)
+## 0.0.8 (2017-02-27)
 * Send messages to Azure Event Hub
 * Monitor Event Hub messages
 
-### 0.0.7
+## 0.0.7
 * Show detailed info when listing devices
 
-### 0.0.6
+## 0.0.6
 * Deploy and run in remote machine
 
-### 0.0.5
+## 0.0.5
 * Include device-discovery-cli into extension
 
-### 0.0.4
+## 0.0.4
 * Add instruction if device-discovery-cli is not installed 
 
-### 0.0.3
+## 0.0.3
 * Discover Ethernet, USB serial, WiFi devices
 
-### 0.0.2
+## 0.0.2
 * Device management (List, Create, Delete)
 
-### 0.0.1
+## 0.0.1
 * Send messages to Azure IoT Hub
 * Monitor device-to-cloud messages

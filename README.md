@@ -32,7 +32,7 @@ Interact with Azure IoT Hub, IoT Device Management, IoT Edge Management, IoT Hub
 
 ### Prerequisites
 
-1. In Explorer of VS Code, click "IoT Hub Devices" in the bottom left corner.
+1. In Explorer of VS Code, click "Azure IoT Hub Devices" in the bottom left corner.
 
   ![Click Device Explorer](https://github.com/formulahendry/vscode-azure-iot-toolkit/raw/master/images/device-explorer-click.png)
 
