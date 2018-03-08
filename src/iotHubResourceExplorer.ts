@@ -273,7 +273,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
     private validateIoTHubName(name: string): string {
         const min = 3;
         const max = 50;
-        if (name.length < min || name.length > max) {
+        if (!name || name.length < min || name.length > max) {
             return `The name must be between ${min} and ${max} characters long.`;
         }
         if (name.match(/[^a-zA-Z0-9-]/)) {
@@ -318,7 +318,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
     private validateResourceGroupName(name: string): string {
         const min = 1;
         const max = 90;
-        if (name.length < min || name.length > max) {
+        if (!name || name.length < min || name.length > max) {
             return `The name must be between ${min} and ${max} characters long.`;
         }
         if (name.match(/[^a-zA-Z0-9\.\_\-\(\)]/)) {
