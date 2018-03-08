@@ -1,4 +1,4 @@
-## 0.6.0 (2018-03-??)
+## 0.6.0 (2018-03-09)
 ### Added 
 * Expose APIs for dependent extensions to use
     * Return IoT Hub Connection String in create/select IoT Hub APIs
@@ -15,6 +15,8 @@
 * Sort commands in View title menu
 * Not show Connection String Input Box on startup
 * Rename explorer to 'Azure IoT Hub Devices'
+* Move Edge code snippets to [Azure IoT Edge](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.azure-iot-edge) extension
+* The "Generate Edge deployment manifest" command is replaced by [Azure IoT Edge](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.azure-iot-edge) extension's "Generate IoT Edge deployment manifest file" command
 
 ## 0.5.0 (2017-12-25)
 * [Added] Create IoT Hub
