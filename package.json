@@ -64,47 +64,47 @@
     "commands": [
       {
         "command": "azure-iot-toolkit.sendD2CMessage",
-        "title": "Send D2C message to IoT Hub",
+        "title": "Send D2C Message to IoT Hub",
         "category": "IoT"
       },
       {
         "command": "azure-iot-toolkit.startMonitorIoTHubMessage",
-        "title": "Start monitoring D2C message",
+        "title": "Start Monitoring D2C Message",
         "category": "IoT"
       },
       {
         "command": "azure-iot-toolkit.stopMonitorIoTHubMessage",
-        "title": "Stop monitoring D2C message",
+        "title": "Stop Monitoring D2C Message",
         "category": "IoT"
       },
       {
         "command": "azure-iot-toolkit.sendC2DMessage",
-        "title": "Send C2D message to device",
+        "title": "Send C2D Message to Device",
         "category": "IoT"
       },
       {
         "command": "azure-iot-toolkit.startMonitorC2DMessage",
-        "title": "Start monitoring C2D message",
+        "title": "Start Monitoring C2D Message",
         "category": "IoT"
       },
       {
         "command": "azure-iot-toolkit.stopMonitorC2DMessage",
-        "title": "Stop monitoring C2D message",
+        "title": "Stop Monitoring C2D Message",
         "category": "IoT"
       },
       {
         "command": "azure-iot-toolkit.listDevice",
-        "title": "List device",
+        "title": "List Device",
         "category": "IoT"
       },
       {
         "command": "azure-iot-toolkit.createDevice",
-        "title": "Create device",
+        "title": "Create Device",
         "category": "IoT"
       },
       {
         "command": "azure-iot-toolkit.deleteDevice",
-        "title": "Delete device",
+        "title": "Delete Device",
         "category": "IoT"
       },
       {
@@ -154,47 +154,47 @@
       },
       {
         "command": "azure-iot-toolkit.createEdgeDevice",
-        "title": "Create Edge device",
+        "title": "Create IoT Edge Device",
         "category": "Edge"
       },
       {
         "command": "azure-iot-toolkit.createDeployment",
-        "title": "Create deployment for Edge device",
+        "title": "Create Deployment for IoT Edge Device",
         "category": "Edge"
       },
       {
         "command": "azure-iot-toolkit.setupEdge",
-        "title": "Setup Edge",
+        "title": "Setup IoT Edge",
         "category": "Edge"
       },
       {
         "command": "azure-iot-toolkit.setupEdgeFromConfig",
-        "title": "Setup Edge using configuration file",
+        "title": "Setup IoT Edge Using Configuration File",
         "category": "Edge"
       },
       {
         "command": "azure-iot-toolkit.startEdge",
-        "title": "Start Edge",
+        "title": "Start IoT Edge",
         "category": "Edge"
       },
       {
         "command": "azure-iot-toolkit.stopEdge",
-        "title": "Stop Edge",
+        "title": "Stop IoT Edge",
         "category": "Edge"
       },
       {
         "command": "azure-iot-toolkit.restartEdge",
-        "title": "Restart Edge",
+        "title": "Restart IoT Edge",
         "category": "Edge"
       },
       {
         "command": "azure-iot-toolkit.uninstallEdge",
-        "title": "Uninstall Edge",
+        "title": "Uninstall IoT Edge",
         "category": "Edge"
       },
       {
         "command": "azure-iot-toolkit.loginToContainerRegistry",
-        "title": "Log in to container registry",
+        "title": "Log in to Container Registry",
         "category": "Edge"
       },
       {
@@ -208,7 +208,7 @@
       },
       {
         "command": "azure-iot-toolkit.generateEdgeSetupConfig",
-        "title": "Generate Edge setup configuration file",
+        "title": "Generate IoT Edge Setup Configuration File",
         "category": "Edge"
       },
       {
