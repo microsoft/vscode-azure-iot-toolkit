@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-mport * as assert from "assert";
+import * as assert from "assert";
 import * as vscode from "vscode";
 import { Constants } from "../src/constants";
 import { Utility } from "../src/utility";
