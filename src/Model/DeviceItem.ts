@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
 import { Command, QuickPickItem, TreeItem } from "vscode";
 
 export class DeviceItem extends TreeItem implements QuickPickItem {

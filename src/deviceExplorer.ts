@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
 "use strict";
 import { ConnectionString } from "azure-iot-device";
 import * as vscode from "vscode";

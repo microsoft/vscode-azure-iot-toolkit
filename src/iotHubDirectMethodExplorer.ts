@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
 "use strict";
 import { Message } from "azure-iot-common";
 import { Client as ServiceClient } from "azure-iothub";

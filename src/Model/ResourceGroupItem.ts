@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
 import { ResourceModels } from "azure-arm-resource";
 import { QuickPickItem } from "vscode";
 

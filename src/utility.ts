@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
 "use strict";
 import axios, { AxiosRequestConfig } from "axios";
 import { ConnectionString as DeviceConnectionString } from "azure-iot-device";
