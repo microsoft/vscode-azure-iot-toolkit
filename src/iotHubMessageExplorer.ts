@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
 "use strict";
 import { Client as EventHubClient } from "azure-event-hubs";
 import { Client, Message } from "azure-iot-device";
