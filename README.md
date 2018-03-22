@@ -33,19 +33,19 @@ Interact with Azure IoT Hub, IoT Device Management, IoT Edge Management, IoT Hub
 
 1. In Explorer of VS Code, click "Azure IoT Hub Devices" in the bottom left corner.
 
-  ![Click Device Explorer](https://github.com/formulahendry/vscode-azure-iot-toolkit/raw/master/images/device-explorer-click.png)
+  ![Click Device Explorer](images/device-explorer-click.png)
 
 2. Click "Set IoT Hub Connection String" in context menu.
 
-  ![Set Connection String](https://github.com/formulahendry/vscode-azure-iot-toolkit/raw/master/images/set-connection-string.png)
+  ![Set Connection String](images/set-connection-string.png)
 
 3. An input box will pop up, then enter your IoT Hub Connection String (It is one-time configuration, and please make sure it is **IoT Hub Connection String** not **Device Connection String**. The format is `HostName=<my-hub>.azure-devices.net;SharedAccessKeyName=<my-policy>;SharedAccessKey=<my-policy-key>`).
 
-  ![Enter Connection String](https://github.com/formulahendry/vscode-azure-iot-toolkit/raw/master/images/enter-connection-string.png)
+  ![Enter Connection String](images/enter-connection-string.png)
 
 4. The device list will be shown.
 
-  ![Device Explorer](https://github.com/formulahendry/vscode-azure-iot-toolkit/raw/master/images/device-explorer.png)
+  ![Device Explorer](images/device-explorer.png)
 
 **NOTE**: You could also go to **File** > **Preferences** > **Settings** (**Code** > **Preferences** > **Settings** on Mac), update the config of `azure-iot-toolkit.iotHubConnectionString` to change your IoT Hub Connection String.
 
@@ -55,7 +55,7 @@ Instead of copying and pasting to set IoT Hub Connection String, you could sign 
 
 1. Click "Select IoT Hub" in context menu.
 
-  ![Select IoT Hub](https://github.com/formulahendry/vscode-azure-iot-toolkit/raw/master/images/select-iot-hub.png)
+  ![Select IoT Hub](images/select-iot-hub.png)
 
 2. If you have not signed in to Azure, a pop-up will show to let you sign in to Azure.
 3. After you sign in, your Azure Subscription list will be shown, then select an Azure Subscription.
@@ -73,7 +73,7 @@ Instead of copying and pasting to set IoT Hub Connection String, you could sign 
 | iotCallDirectMethods | Send direct methods to device |
 | iotReceiveDirectMethods | Receive direct methods from IoT Hub |
 
-![Snippet](https://github.com/formulahendry/vscode-azure-iot-toolkit/raw/master/images/snippet.gif)
+![Snippet](images/snippet.gif)
 
 > After code snippet is created, you need to install corresponding npm package (e.g. [azure-iot-device-mqtt](https://www.npmjs.com/package/azure-iot-device-mqtt)) to run the code snippet.
 > If you want to 'Run Code' directly, you need to install [Code Runner](https://marketplace.visualstudio.com/items?itemName=formulahendry.code-runner).
