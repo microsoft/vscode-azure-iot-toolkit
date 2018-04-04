@@ -103,7 +103,7 @@
       },
       {
         "command": "azure-iot-toolkit.listDevice",
-        "title": "List Device",
+        "title": "List Devices",
         "category": "Azure IoT Hub"
       },
       {
