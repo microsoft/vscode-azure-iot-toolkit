@@ -74,142 +74,142 @@
       {
         "command": "azure-iot-toolkit.sendD2CMessage",
         "title": "Send D2C Message to IoT Hub",
-        "category": "IoT"
+        "category": "Azure IoT Hub"
       },
       {
         "command": "azure-iot-toolkit.startMonitorIoTHubMessage",
         "title": "Start Monitoring D2C Message",
-        "category": "IoT"
+        "category": "Azure IoT Hub"
       },
       {
         "command": "azure-iot-toolkit.stopMonitorIoTHubMessage",
         "title": "Stop Monitoring D2C Message",
-        "category": "IoT"
+        "category": "Azure IoT Hub"
       },
       {
         "command": "azure-iot-toolkit.sendC2DMessage",
         "title": "Send C2D Message to Device",
-        "category": "IoT"
+        "category": "Azure IoT Hub"
       },
       {
         "command": "azure-iot-toolkit.startMonitorC2DMessage",
         "title": "Start Monitoring C2D Message",
-        "category": "IoT"
+        "category": "Azure IoT Hub"
       },
       {
         "command": "azure-iot-toolkit.stopMonitorC2DMessage",
         "title": "Stop Monitoring C2D Message",
-        "category": "IoT"
+        "category": "Azure IoT Hub"
       },
       {
         "command": "azure-iot-toolkit.listDevice",
-        "title": "List Device",
-        "category": "IoT"
+        "title": "List Devices",
+        "category": "Azure IoT Hub"
       },
       {
         "command": "azure-iot-toolkit.createDevice",
         "title": "Create Device",
-        "category": "IoT"
+        "category": "Azure IoT Hub"
       },
       {
         "command": "azure-iot-toolkit.deleteDevice",
         "title": "Delete Device",
-        "category": "IoT"
+        "category": "Azure IoT Hub"
       },
       {
         "command": "azure-iot-toolkit.invokeDeviceMethod",
         "title": "Invoke Direct Method",
-        "category": "IoT"
+        "category": "Azure IoT Hub"
       },
       {
         "command": "azure-iot-toolkit.getDevice",
         "title": "Get Device Info",
-        "category": "IoT"
+        "category": "Azure IoT Hub"
       },
       {
         "command": "azure-iot-toolkit.getDeviceTwin",
         "title": "Get Device Twin",
-        "category": "IoT"
+        "category": "Azure IoT Hub"
       },
       {
         "command": "azure-iot-toolkit.updateDeviceTwin",
         "title": "Update Device Twin",
-        "category": "IoT"
+        "category": "Azure IoT Hub"
       },
       {
         "command": "azure-iot-toolkit.setIoTHubConnectionString",
         "title": "Set IoT Hub Connection String",
-        "category": "IoT"
+        "category": "Azure IoT Hub"
       },
       {
         "command": "azure-iot-toolkit.createIoTHub",
         "title": "Create IoT Hub",
-        "category": "IoT"
+        "category": "Azure IoT Hub"
       },
       {
         "command": "azure-iot-toolkit.selectIoTHub",
         "title": "Select IoT Hub",
-        "category": "IoT"
+        "category": "Azure IoT Hub"
       },
       {
         "command": "azure-iot-toolkit.copyIoTHubConnectionString",
         "title": "Copy IoT Hub Connection String",
-        "category": "IoT"
+        "category": "Azure IoT Hub"
       },
       {
         "command": "azure-iot-toolkit.copyDeviceConnectionString",
         "title": "Copy Device Connection String",
-        "category": "IoT"
+        "category": "Azure IoT Hub"
       },
       {
         "command": "azure-iot-toolkit.createEdgeDevice",
         "title": "Create IoT Edge Device",
-        "category": "Edge"
+        "category": "Azure IoT Edge"
       },
       {
         "command": "azure-iot-toolkit.createDeployment",
         "title": "Create Deployment for IoT Edge Device",
-        "category": "Edge"
+        "category": "Azure IoT Edge"
       },
       {
         "command": "azure-iot-toolkit.setupEdge",
         "title": "Setup IoT Edge",
-        "category": "Edge"
+        "category": "Azure IoT Edge"
       },
       {
         "command": "azure-iot-toolkit.setupEdgeFromConfig",
         "title": "Setup IoT Edge Using Configuration File",
-        "category": "Edge"
+        "category": "Azure IoT Edge"
       },
       {
         "command": "azure-iot-toolkit.startEdge",
         "title": "Start IoT Edge",
-        "category": "Edge"
+        "category": "Azure IoT Edge"
       },
       {
         "command": "azure-iot-toolkit.stopEdge",
         "title": "Stop IoT Edge",
-        "category": "Edge"
+        "category": "Azure IoT Edge"
       },
       {
         "command": "azure-iot-toolkit.restartEdge",
         "title": "Restart IoT Edge",
-        "category": "Edge"
+        "category": "Azure IoT Edge"
       },
       {
         "command": "azure-iot-toolkit.uninstallEdge",
         "title": "Uninstall IoT Edge",
-        "category": "Edge"
+        "category": "Azure IoT Edge"
       },
       {
         "command": "azure-iot-toolkit.loginToContainerRegistry",
         "title": "Log in to Container Registry",
-        "category": "Edge"
+        "category": "Azure IoT Edge"
       },
       {
         "command": "azure-iot-toolkit.refresh",
         "title": "Refresh",
-        "category": "IoT",
+        "category": "Azure IoT Hub",
         "icon": {
           "light": "resources/light/refresh.svg",
           "dark": "resources/dark/refresh.svg"
@@ -218,12 +218,12 @@
       {
         "command": "azure-iot-toolkit.generateEdgeSetupConfig",
         "title": "Generate IoT Edge Setup Configuration File",
-        "category": "Edge"
+        "category": "Azure IoT Edge"
       },
       {
         "command": "azure-iot-toolkit.getModuleTwin",
         "title": "Get Module Twin",
-        "category": "Edge"
+        "category": "Azure IoT Edge"
       }
     ],
     "menus": {
