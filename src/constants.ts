@@ -5,7 +5,6 @@
 
 export class Constants {
     public static ExtensionId = "vsciot-vscode.azure-iot-toolkit";
-    public static AIKey = "d8505d40-fc60-45f8-98b3-3bcd5c23843d";
     public static CampaignID = "vsciottoolkit";
 
     public static IoTHub = "IoT Hub";

@@ -4,6 +4,7 @@
   "description": "Interact with Azure IoT Hub, IoT Device Management, IoT Edge Management, IoT Hub Code Snippets",
   "version": "0.6.0",
   "publisher": "vsciot-vscode",
+  "aiKey": "0caaff90-cc1c-4def-b64c-3ef33615bc9b",
   "icon": "logo.png",
   "engines": {
     "vscode": "^1.17.0"
