@@ -1,7 +1,7 @@
 ## 0.6.1 (2018-04-??)
 ### Changed
 * Add 'Azure' to command category
-* Improve wording to align with IoT Edge extension
+* Improve wording to align with Azure IoT Edge extension
 * Upgrade 'ms-rest' and 'ms-rest-azure' npm to resolve security issue in moment.js
 
 ## 0.6.0 (2018-03-09)
