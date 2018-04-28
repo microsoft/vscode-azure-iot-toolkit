@@ -203,8 +203,9 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         do {
             const start = new Date().getTime();
             iotHubItem = await vscode.window.showQuickPick(iotHubItems, { placeHolder: "Select IoT Hub", ignoreFocusOut: true });
-            // Retry if showQuickPick retrun 'undefined' within 300 ms
-            if (iotHubItem === undefined && (new Date().getTime() - start < 300)) {
+            // If user press 'Esc', the showQuickPick would also return 'undefined'
+            // So we will retry only if showQuickPick retrun 'undefined' within 500 ms (Mostly not triggered by user pressing 'Esc')
+            if (iotHubItem === undefined && (new Date().getTime() - start < 500)) {
                 retryCount--;
             } else {
                 return iotHubItem;
