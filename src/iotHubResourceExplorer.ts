@@ -140,7 +140,17 @@ export class IoTHubResourceExplorer extends BaseExplorer {
             outputChannel.show();
             outputChannel.appendLine(`Subscription selected: ${subscriptionItem.label}`);
             const iotHubItems = this.loadIoTHubItems(subscriptionItem);
-            const iotHubItem = await vscode.window.showQuickPick(iotHubItems, { placeHolder: "Select IoT Hub", ignoreFocusOut: true });
+            const iotHubItem = await vscode.window.showQuickPick(iotHubItems, { placeHolder: "Select IoT Hub", ignoreFocusOut: true })
+                .then((value) => {
+                    console.log(`~~~[${new Date().toISOString()}]showQuickPick resolve:`);
+                    console.log(`~~~[${new Date().toISOString()}]value:` + value);
+                    return value;
+                }, (error) => {
+                    console.log(`~~~[${new Date().toISOString()}]showQuickPick error:`);
+                    console.log(error);
+                    vscode.window.showWarningMessage(error);
+                    return Promise.reject(error);
+                });
             if (iotHubItem) {
                 outputChannel.appendLine(`IoT Hub selected: ${iotHubItem.label}`);
                 const iotHubConnectionString = await this.getIoTHubConnectionString(subscriptionItem, iotHubItem.iotHubDescription);
@@ -185,6 +195,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
     }
 
     private async loadIoTHubItems(subscriptionItem: SubscriptionItem) {
+        console.log(`~~~[${new Date().toISOString()}]loadIoTHubItems.start`);
         const iotHubItems: IotHubItem[] = [];
         const { session, subscription } = subscriptionItem;
         const client = new IoTHubClient(session.credentials, subscription.subscriptionId);
@@ -192,6 +203,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         iotHubItems.push(...iotHubs.map((iotHub) => new IotHubItem(iotHub)));
         iotHubItems.sort((a, b) => a.label.localeCompare(b.label));
         TelemetryClient.sendEvent("General.Load.IoTHub", { IoTHubCount: iotHubItems.length.toString() });
+        console.log(`~~~[${new Date().toISOString()}]loadIoTHubItems.length:` + iotHubItems.length);
         return iotHubItems;
     }
 
