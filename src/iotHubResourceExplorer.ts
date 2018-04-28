@@ -139,8 +139,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
             TelemetryClient.sendEvent("General.Select.Subscription.Done");
             outputChannel.show();
             outputChannel.appendLine(`Subscription selected: ${subscriptionItem.label}`);
-            const iotHubItems = this.loadIoTHubItems(subscriptionItem);
-            const iotHubItem = await vscode.window.showQuickPick(iotHubItems, { placeHolder: "Select IoT Hub", ignoreFocusOut: true });
+            const iotHubItem = await this.selectIoTHubItem(subscriptionItem);
             if (iotHubItem) {
                 outputChannel.appendLine(`IoT Hub selected: ${iotHubItem.label}`);
                 const iotHubConnectionString = await this.getIoTHubConnectionString(subscriptionItem, iotHubItem.iotHubDescription);
@@ -193,6 +192,25 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         iotHubItems.sort((a, b) => a.label.localeCompare(b.label));
         TelemetryClient.sendEvent("General.Load.IoTHub", { IoTHubCount: iotHubItems.length.toString() });
         return iotHubItems;
+    }
+
+    private async selectIoTHubItem(subscriptionItem: SubscriptionItem): Promise<IotHubItem> {
+        const iotHubItems = this.loadIoTHubItems(subscriptionItem);
+        let retryCount = 3;
+        let iotHubItem;
+        // Sometimes showQuickPick of VS Code would return 'undefined' and disappear immediately without waiting for Promise is resolved
+        // Workaround here to add retry logic
+        do {
+            const start = new Date().getTime();
+            iotHubItem = await vscode.window.showQuickPick(iotHubItems, { placeHolder: "Select IoT Hub", ignoreFocusOut: true });
+            // Retry if showQuickPick retrun 'undefined' within 300 ms
+            if (iotHubItem === undefined && (new Date().getTime() - start < 300)) {
+                retryCount--;
+            } else {
+                return iotHubItem;
+            }
+        } while (retryCount > 0)
+        return iotHubItem;
     }
 
     private async updateIoTHubConnectionString(iotHubConnectionString: string) {
