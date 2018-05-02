@@ -210,7 +210,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
             } else {
                 return iotHubItem;
             }
-        } while (retryCount > 0)
+        } while (retryCount > 0);
         return iotHubItem;
     }
 
