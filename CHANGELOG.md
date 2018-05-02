@@ -1,8 +1,9 @@
-## 0.6.1 (2018-04-??)
+## 0.6.1 (2018-05-02)
 ### Changed
 * Add 'Azure' to command category
 * Improve wording to align with Azure IoT Edge extension
 * Upgrade 'ms-rest' and 'ms-rest-azure' npm to resolve security issue in moment.js
+* Fix [#83](https://github.com/Microsoft/vscode-azure-iot-toolkit/issues/83): Add retry logic for listing IoT Hub to work around showQuickPick issue
 
 ## 0.6.0 (2018-03-09)
 ### Added 
