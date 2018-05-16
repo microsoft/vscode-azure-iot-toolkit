@@ -185,14 +185,14 @@ export class Utility {
     }
 
     public static async getModules(iotHubConnectionString: string, deviceId: string): Promise<any[]> {
-        const url = `/devices/${deviceId}/modules?api-version=${Constants.IoTHubApiVersion}`;
+        const url = `/devices/${encodeURIComponent(deviceId)}/modules?api-version=${Constants.IoTHubApiVersion}`;
         const config = Utility.generateIoTHubAxiosRequestConfig(iotHubConnectionString, url, "get");
 
         return (await axios.request(config)).data;
     }
 
     public static async getModuleTwin(iotHubConnectionString: string, deviceId: string, moduleId: string): Promise<string> {
-        const url = `/twins/${deviceId}/modules/${moduleId}?api-version=${Constants.IoTHubApiVersion}`;
+        const url = `/twins/${encodeURIComponent(deviceId)}/modules/${moduleId}?api-version=${Constants.IoTHubApiVersion}`;
         const config = Utility.generateIoTHubAxiosRequestConfig(iotHubConnectionString, url, "get");
 
         return (await axios.request(config)).data;
