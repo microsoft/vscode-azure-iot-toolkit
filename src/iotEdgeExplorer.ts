@@ -205,7 +205,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
         this._outputChannel.show();
         this.outputLine(label, `Start deployment to [${deviceId}]`);
 
-        const url = `/devices/${deviceId}/applyConfigurationContent?api-version=${Constants.IoTHubApiVersion}`;
+        const url = `/devices/${encodeURIComponent(deviceId)}/applyConfigurationContent?api-version=${Constants.IoTHubApiVersion}`;
         const config = Utility.generateIoTHubAxiosRequestConfig(iotHubConnectionString, url, "post", stripJsonComments(deploymentJson));
         const entry = from === "none" ? "commandPalette" : "contextMenu";
 
