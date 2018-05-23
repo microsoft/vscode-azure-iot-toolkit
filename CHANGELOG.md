@@ -1,4 +1,4 @@
-## 0.6.2 (2018-05-??)
+## 0.6.2 (2018-05-23)
 ### Changed
 * Update dependent npm to fix security vulnerability
 * Fix [#89](https://github.com/Microsoft/vscode-azure-iot-toolkit/issues/89): Could not create device when device id contains '#'
