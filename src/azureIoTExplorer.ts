@@ -145,6 +145,10 @@ export class AzureIoTExplorer {
     }
 
     public async getModuleTwin(moduleItem: ModuleItem) {
-        this._iotEdgeExplorer.getModuleTwin(moduleItem);
+        await this._iotEdgeExplorer.getModuleTwin(moduleItem);
+    }
+
+    public async updateModuleTwin() {
+        await this._iotEdgeExplorer.updateModuleTwin();
     }
 }

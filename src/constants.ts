@@ -2,6 +2,8 @@
 // Licensed under the MIT license.
 
 "user strict";
+import * as os from "os";
+import * as path from "path";
 
 export class Constants {
     public static ExtensionId = "vsciot-vscode.azure-iot-toolkit";
@@ -21,6 +23,7 @@ export class Constants {
 
     public static IoTHubDirectMethodLabel = "DirectMethod";
     public static IoTHubDeviceTwinLabel = "DeviceTwin";
+    public static IoTHubModuleTwinLabel = "ModuleTwin";
 
     public static IoTHubAILoadDeviceTreeEvent = "AZ.LoadDeviceTree";
     public static IoTHubAIStartMonitorEvent = "AZ.D2C.startMonitoring";
@@ -41,6 +44,10 @@ export class Constants {
     public static IoTHubAICreateDoneEvent = "AZ.IoTHub.Create.Done";
     public static IoTHubAIGetModuleTwinStartEvent = "AZ.Edge.ModuleTwin.Get.Start";
     public static IoTHubAIGetModuleTwinDoneEvent = "AZ.Edge.ModuleTwin.Get.Done";
+    public static IoTHubAIUpdateModuleTwinStartEvent = "AZ.Edge.ModuleTwin.Update.Start";
+    public static IoTHubAIUpdateModuleTwinDoneEvent = "AZ.Edge.ModuleTwin.Update.Done";
+    public static ModuleTwinJosnFileName = "azure-iot-module-twin.json";
+    public static ModuleTwinJosnFilePath = path.join(os.tmpdir(), Constants.ModuleTwinJosnFileName);
     public static IoTHubAILoadModuleTreeStartEvent = "AZ.Edge.LoadModuleTree.Start";
     public static IoTHubAILoadModuleTreeDoneEvent = "AZ.Edge.LoadModuleTree.Done";
 

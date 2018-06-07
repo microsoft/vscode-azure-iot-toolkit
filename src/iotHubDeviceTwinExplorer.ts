@@ -57,24 +57,19 @@ export class IotHubDeviceTwinExplorer extends BaseExplorer {
     }
 
     public async updateDeviceTwin() {
+        TelemetryClient.sendEvent(Constants.IoTHubAIUpdateDeviceTwinEvent);
         let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
             return;
         }
 
-        TelemetryClient.sendEvent(Constants.IoTHubAIUpdateDeviceTwinEvent);
-        const activeTextEditor = vscode.window.activeTextEditor;
-        if (!activeTextEditor || !activeTextEditor.document || !activeTextEditor.document.fileName.endsWith(deviceTwinJosnFileName)) {
-            vscode.window.showWarningMessage(`Please open ${deviceTwinJosnFileName} and try again.`);
-            return;
-        }
-
         try {
-            this._outputChannel.show();
-            let document = activeTextEditor.document;
-            await document.save();
-            let deviceTwinContent = activeTextEditor.document.getText();
+            let deviceTwinContent = await Utility.readFromActiveFile(deviceTwinJosnFileName);
+            if (!deviceTwinContent) {
+                return;
+            }
             let deviceTwinJson = JSON.parse(deviceTwinContent);
+            this._outputChannel.show();
             this.outputLine(Constants.IoTHubDeviceTwinLabel, `Update Device Twin for [${deviceTwinJson.deviceId}]...`);
             let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
             registry.updateTwin(deviceTwinJson.deviceId, deviceTwinContent, deviceTwinJson.etag, (err) => {

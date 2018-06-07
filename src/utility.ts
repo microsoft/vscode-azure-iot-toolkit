@@ -198,6 +198,24 @@ export class Utility {
         return (await axios.request(config)).data;
     }
 
+    public static async updateModuleTwin(iotHubConnectionString: string, deviceId: string, moduleId: string, twin: any): Promise<string> {
+        const url = `/twins/${encodeURIComponent(deviceId)}/modules/${moduleId}?api-version=${Constants.IoTHubApiVersion}`;
+        const config = Utility.generateIoTHubAxiosRequestConfig(iotHubConnectionString, url, "put", twin);
+
+        return (await axios.request(config)).data;
+    }
+
+    public static async readFromActiveFile(fileName: string): Promise<string> {
+        const activeTextEditor = vscode.window.activeTextEditor;
+        if (!activeTextEditor || !activeTextEditor.document || path.basename(activeTextEditor.document.fileName) !== fileName) {
+            vscode.window.showWarningMessage(`Please open ${fileName} and try again.`);
+            return "";
+        }
+        const document = activeTextEditor.document;
+        await document.save();
+        return document.getText();
+    }
+
     public static async getInputDevice(deviceItem: DeviceItem, eventName: string, onlyEdgeDevice: boolean = false, iotHubConnectionString?: string): Promise<DeviceItem> {
         if (!deviceItem) {
             if (eventName) {
