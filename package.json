@@ -131,7 +131,7 @@
       },
       {
         "command": "azure-iot-toolkit.getDeviceTwin",
-        "title": "Get/Update Device Twin",
+        "title": "Edit Device Twin",
         "category": "Azure IoT Hub"
       },
       {
@@ -225,7 +225,7 @@
       },
       {
         "command": "azure-iot-toolkit.getModuleTwin",
-        "title": "Get/Update Module Twin",
+        "title": "Edit Module Twin",
         "category": "Azure IoT Edge"
       },
       {
