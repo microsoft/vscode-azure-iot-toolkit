@@ -21,10 +21,10 @@ Interact with Azure IoT Hub, IoT Device Management, IoT Edge Management, IoT Hub
     * Send C2D message to device
     * Monitor C2D message from IoT Hub
     * Invoke Direct Method
-    * Get/update Device Twin
+    * Edit Device Twin
 * Interact with Azure IoT Edge <sup>Preview</sup> (Install [Azure IoT Edge](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.azure-iot-edge) for more IoT Edge support)
     * List Edge Moudles
-    * View Module Twin
+    * Edit Module Twin
     * Manage Edge runtime
     * Create deployment for Edge device
     * Generate Edge setup configuration file

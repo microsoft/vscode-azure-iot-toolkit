@@ -59,7 +59,9 @@
     "onCommand:azure-iot-toolkit.uninstallEdge",
     "onCommand:azure-iot-toolkit.loginToContainerRegistry",
     "onCommand:azure-iot-toolkit.generateEdgeSetupConfig",
-    "onCommand:azure-iot-toolkit.createIoTHub"
+    "onCommand:azure-iot-toolkit.createIoTHub",
+    "onCommand:azure-iot-toolkit.getModuleTwin",
+    "onCommand:azure-iot-toolkit.updateModuleTwin"
   ],
   "main": "./out/src/extension",
   "contributes": {
@@ -129,7 +131,7 @@
       },
       {
         "command": "azure-iot-toolkit.getDeviceTwin",
-        "title": "Get Device Twin",
+        "title": "Edit Device Twin",
         "category": "Azure IoT Hub"
       },
       {
@@ -223,7 +225,12 @@
       },
       {
         "command": "azure-iot-toolkit.getModuleTwin",
-        "title": "Get Module Twin",
+        "title": "Edit Module Twin",
+        "category": "Azure IoT Edge"
+      },
+      {
+        "command": "azure-iot-toolkit.updateModuleTwin",
+        "title": "Update Module Twin",
         "category": "Azure IoT Edge"
       }
     ],
@@ -400,6 +407,11 @@
         {
           "when": "resourceFilename == azure-iot-device-twin.json",
           "command": "azure-iot-toolkit.updateDeviceTwin",
+          "group": "navigation"
+        },
+        {
+          "when": "resourceFilename == azure-iot-module-twin.json",
+          "command": "azure-iot-toolkit.updateModuleTwin",
           "group": "navigation"
         }
       ],

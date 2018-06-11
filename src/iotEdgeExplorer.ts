@@ -166,6 +166,37 @@ export class IoTEdgeExplorer extends BaseExplorer {
     }
 
     public async getModuleTwin(moduleItem: ModuleItem) {
+        if (moduleItem) {
+            await this.getModuleTwinById(moduleItem.deviceId, moduleItem.moduleId);
+        }
+    }
+
+    public async updateModuleTwin() {
+        TelemetryClient.sendEvent(Constants.IoTHubAIUpdateModuleTwinStartEvent);
+        const iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
+        if (!iotHubConnectionString) {
+            return;
+        }
+
+        try {
+            const moduleTwinContent = await Utility.readFromActiveFile(Constants.ModuleTwinJosnFileName);
+            if (!moduleTwinContent) {
+                return;
+            }
+            const moduleTwinJson = JSON.parse(moduleTwinContent);
+            this._outputChannel.show();
+            this.outputLine(Constants.IoTHubModuleTwinLabel, `Update Module Twin for [${moduleTwinJson.deviceId}][${moduleTwinJson.moduleId}]...`);
+            await Utility.updateModuleTwin(iotHubConnectionString, moduleTwinJson.deviceId, moduleTwinJson.moduleId, moduleTwinContent);
+            this.outputLine(Constants.IoTHubModuleTwinLabel, `Module Twin updated successfully`);
+            TelemetryClient.sendEvent(Constants.IoTHubAIUpdateModuleTwinDoneEvent, { Result: "Success" });
+            await this.getModuleTwinById(moduleTwinJson.deviceId, moduleTwinJson.moduleId);
+        } catch (error) {
+            this.outputLine(Constants.IoTHubModuleTwinLabel, `Failed to update Module Twin: ${error}`);
+            TelemetryClient.sendEvent(Constants.IoTHubAIUpdateModuleTwinDoneEvent, { Result: "Fail", Message: error });
+        }
+    }
+
+    private async getModuleTwinById(deviceId: string, moduleId: string) {
         TelemetryClient.sendEvent(Constants.IoTHubAIGetModuleTwinStartEvent);
         const iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
@@ -173,12 +204,16 @@ export class IoTEdgeExplorer extends BaseExplorer {
         }
 
         try {
-            const content = await Utility.getModuleTwin(iotHubConnectionString, moduleItem.deviceId, moduleItem.moduleId);
-            const textDocument = await vscode.workspace.openTextDocument({ content: JSON.stringify(content, null, 4), language: "json" });
-            vscode.window.showTextDocument(textDocument);
-            TelemetryClient.sendEvent(Constants.IoTHubAIGetModuleTwinDoneEvent, { Result: "Success"});
+            const twin = await Utility.getModuleTwin(iotHubConnectionString, deviceId, moduleId);
+            Utility.writeJson(Constants.ModuleTwinJosnFilePath, twin);
+            const document = await vscode.workspace.openTextDocument(Constants.ModuleTwinJosnFilePath);
+            if (document.isDirty) {
+                throw new Error(`Your ${Constants.ModuleTwinJosnFileName} has unsaved changes. Please close or save the file. Then try again.`);
+            }
+            vscode.window.showTextDocument(document);
+            TelemetryClient.sendEvent(Constants.IoTHubAIGetModuleTwinDoneEvent, { Result: "Success" });
         } catch (error) {
-            vscode.window.showErrorMessage(`Failed to get Module Twin: ${error}`);
+            this.outputLine(Constants.IoTHubModuleTwinLabel, `Failed to get Module Twin: ${error}`);
             TelemetryClient.sendEvent(Constants.IoTHubAIGetModuleTwinDoneEvent, { Result: "Fail", Message: error });
         }
     }

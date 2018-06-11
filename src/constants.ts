@@ -2,6 +2,9 @@
 // Licensed under the MIT license.
 
 "user strict";
+import * as os from "os";
+import * as path from "path";
+import * as vscode from "vscode";
 
 export class Constants {
     public static ExtensionId = "vsciot-vscode.azure-iot-toolkit";
@@ -21,6 +24,7 @@ export class Constants {
 
     public static IoTHubDirectMethodLabel = "DirectMethod";
     public static IoTHubDeviceTwinLabel = "DeviceTwin";
+    public static IoTHubModuleTwinLabel = "ModuleTwin";
 
     public static IoTHubAILoadDeviceTreeEvent = "AZ.LoadDeviceTree";
     public static IoTHubAIStartMonitorEvent = "AZ.D2C.startMonitoring";
@@ -35,12 +39,18 @@ export class Constants {
     public static IoTHubAIGetDeviceTwinStartEvent = "AZ.DeviceTwin.Get.Start";
     public static IoTHubAIGetDeviceTwinDoneEvent = "AZ.DeviceTwin.Get.Done";
     public static IoTHubAIUpdateDeviceTwinEvent = "AZ.DeviceTwin.Update";
+    public static DeviceTwinJosnFileName = "azure-iot-device-twin.json";
+    public static DeviceTwinJosnFilePath: string;
     public static IoTHubAIEdgeDeployStartEvent = "Edge.Deploy.Start";
     public static IoTHubAIEdgeDeployDoneEvent = "AZ.Edge.Deploy.Done";
     public static IoTHubAICreateStartEvent = "General.IoTHub.Create.Start";
     public static IoTHubAICreateDoneEvent = "AZ.IoTHub.Create.Done";
     public static IoTHubAIGetModuleTwinStartEvent = "AZ.Edge.ModuleTwin.Get.Start";
     public static IoTHubAIGetModuleTwinDoneEvent = "AZ.Edge.ModuleTwin.Get.Done";
+    public static IoTHubAIUpdateModuleTwinStartEvent = "AZ.Edge.ModuleTwin.Update.Start";
+    public static IoTHubAIUpdateModuleTwinDoneEvent = "AZ.Edge.ModuleTwin.Update.Done";
+    public static ModuleTwinJosnFileName = "azure-iot-module-twin.json";
+    public static ModuleTwinJosnFilePath: string;
     public static IoTHubAILoadModuleTreeStartEvent = "AZ.Edge.LoadModuleTree.Start";
     public static IoTHubAILoadModuleTreeDoneEvent = "AZ.Edge.LoadModuleTree.Done";
 
@@ -59,4 +69,12 @@ export class Constants {
     public static ShowIoTHubInfoKey = "showIoTHubInfo";
     public static ShowConnectionStringInputBoxKey = "showConnectionStringInputBox";
     public static IoTHubApiVersion = "2017-11-08-preview";
+
+    public static initialize(context: vscode.ExtensionContext) {
+        const directory = context.storagePath ? context.storagePath : os.tmpdir();
+        Constants.ModuleTwinJosnFilePath = path.join(directory, Constants.ModuleTwinJosnFileName);
+        Constants.DeviceTwinJosnFilePath = path.join(directory, Constants.DeviceTwinJosnFileName);
+    }
+
+    private static a;
 }

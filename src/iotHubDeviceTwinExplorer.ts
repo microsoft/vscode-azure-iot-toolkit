@@ -13,9 +13,6 @@ import { DeviceItem } from "./Model/DeviceItem";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
-const deviceTwinJosnFileName = "azure-iot-device-twin.json";
-const deviceTwinJosnFilePath = path.join(os.tmpdir(), deviceTwinJosnFileName);
-
 export class IotHubDeviceTwinExplorer extends BaseExplorer {
     constructor(outputChannel: vscode.OutputChannel) {
         super(outputChannel);
@@ -44,10 +41,10 @@ export class IotHubDeviceTwinExplorer extends BaseExplorer {
                 this.outputLine(Constants.IoTHubDeviceTwinLabel, `Failed to get Device Twin: ${err.message}`);
             } else {
                 this.outputLine(Constants.IoTHubDeviceTwinLabel, `Device Twin retrieved successfully`);
-                fs.writeFileSync(deviceTwinJosnFilePath, `${JSON.stringify(twin, null, 4)}`);
-                vscode.workspace.openTextDocument(deviceTwinJosnFilePath).then((document: vscode.TextDocument) => {
+                Utility.writeJson(Constants.DeviceTwinJosnFilePath, twin);
+                vscode.workspace.openTextDocument(Constants.DeviceTwinJosnFilePath).then((document: vscode.TextDocument) => {
                     if (document.isDirty) {
-                        vscode.window.showWarningMessage(`Your ${deviceTwinJosnFileName} has unsaved changes. \
+                        vscode.window.showWarningMessage(`Your ${Constants.DeviceTwinJosnFileName} has unsaved changes. \
                         Please close or save the file. Then try again.`);
                     }
                     vscode.window.showTextDocument(document);
@@ -57,24 +54,19 @@ export class IotHubDeviceTwinExplorer extends BaseExplorer {
     }
 
     public async updateDeviceTwin() {
+        TelemetryClient.sendEvent(Constants.IoTHubAIUpdateDeviceTwinEvent);
         let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
             return;
         }
 
-        TelemetryClient.sendEvent(Constants.IoTHubAIUpdateDeviceTwinEvent);
-        const activeTextEditor = vscode.window.activeTextEditor;
-        if (!activeTextEditor || !activeTextEditor.document || !activeTextEditor.document.fileName.endsWith(deviceTwinJosnFileName)) {
-            vscode.window.showWarningMessage(`Please open ${deviceTwinJosnFileName} and try again.`);
-            return;
-        }
-
         try {
-            this._outputChannel.show();
-            let document = activeTextEditor.document;
-            await document.save();
-            let deviceTwinContent = activeTextEditor.document.getText();
+            let deviceTwinContent = await Utility.readFromActiveFile(Constants.DeviceTwinJosnFileName);
+            if (!deviceTwinContent) {
+                return;
+            }
             let deviceTwinJson = JSON.parse(deviceTwinContent);
+            this._outputChannel.show();
             this.outputLine(Constants.IoTHubDeviceTwinLabel, `Update Device Twin for [${deviceTwinJson.deviceId}]...`);
             let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
             registry.updateTwin(deviceTwinJson.deviceId, deviceTwinContent, deviceTwinJson.etag, (err) => {
