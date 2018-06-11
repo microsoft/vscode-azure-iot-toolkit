@@ -1,3 +1,7 @@
+## 0.6.3 (2018-06-??)
+### Added 
+* Add command for updating Module Twin
+
 ## 0.6.2 (2018-05-23)
 ### Changed
 * Update dependent npm to fix security vulnerability
