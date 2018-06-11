@@ -4,6 +4,7 @@
 "use strict";
 import * as vscode from "vscode";
 import { AzureIoTExplorer } from "./azureIoTExplorer";
+import { Constants } from "./constants";
 import { DeviceTree } from "./deviceTree";
 import { Executor } from "./executor";
 import { TelemetryClient } from "./telemetryClient";
@@ -11,6 +12,7 @@ import { TelemetryClient } from "./telemetryClient";
 export function activate(context: vscode.ExtensionContext) {
     TelemetryClient.sendEvent("extensionActivated");
 
+    Constants.initialize(context);
     let azureIoTExplorer = new AzureIoTExplorer(context);
     let deviceTree = new DeviceTree(context);
 

@@ -205,7 +205,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 
         try {
             const twin = await Utility.getModuleTwin(iotHubConnectionString, deviceId, moduleId);
-            fs.writeFileSync(Constants.ModuleTwinJosnFilePath, `${JSON.stringify(twin, null, 4)}`);
+            Utility.writeJson(Constants.ModuleTwinJosnFilePath, twin);
             const document = await vscode.workspace.openTextDocument(Constants.ModuleTwinJosnFilePath);
             if (document.isDirty) {
                 throw new Error(`Your ${Constants.ModuleTwinJosnFileName} has unsaved changes. Please close or save the file. Then try again.`);

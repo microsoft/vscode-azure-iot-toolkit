@@ -216,6 +216,14 @@ export class Utility {
         return document.getText();
     }
 
+    public static writeJson(filePath: string, data) {
+        const directory = path.dirname(filePath);
+        if (!fs.existsSync(directory)) {
+            fs.mkdirSync(directory);
+        }
+        fs.writeFileSync(filePath, `${JSON.stringify(data, null, 4)}`);
+    }
+
     public static async getInputDevice(deviceItem: DeviceItem, eventName: string, onlyEdgeDevice: boolean = false, iotHubConnectionString?: string): Promise<DeviceItem> {
         if (!deviceItem) {
             if (eventName) {
