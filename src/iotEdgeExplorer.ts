@@ -179,12 +179,15 @@ export class IoTEdgeExplorer extends BaseExplorer {
         }
 
         try {
+            this._outputChannel.show();
             const moduleTwinContent = await Utility.readFromActiveFile(Constants.ModuleTwinJosnFileName);
             if (!moduleTwinContent) {
                 return;
             }
             const moduleTwinJson = JSON.parse(moduleTwinContent);
-            this._outputChannel.show();
+            if (moduleTwinJson.moduleId.startsWith("$")) {
+                throw new Error("Azure IoT Edge system modules are readonly and cannot be modified. Changes can be submitted via deploying a configuration.");
+            }
             this.outputLine(Constants.IoTHubModuleTwinLabel, `Update Module Twin for [${moduleTwinJson.deviceId}][${moduleTwinJson.moduleId}]...`);
             await Utility.updateModuleTwin(iotHubConnectionString, moduleTwinJson.deviceId, moduleTwinJson.moduleId, moduleTwinContent);
             this.outputLine(Constants.IoTHubModuleTwinLabel, `Module Twin updated successfully`);
