@@ -1,4 +1,4 @@
-## 0.6.3 (2018-06-??)
+## 0.6.3 (2018-06-12)
 ### Added 
 * Add command for updating Module Twin
 

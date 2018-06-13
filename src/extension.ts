@@ -7,6 +7,8 @@ import { AzureIoTExplorer } from "./azureIoTExplorer";
 import { Constants } from "./constants";
 import { DeviceTree } from "./deviceTree";
 import { Executor } from "./executor";
+import { DeviceTwinCodeLensProvider } from "./providers/deviceTwinCodeLensProvider";
+import { ModuleTwinCodeLensProvider } from "./providers/moduleTwinCodeLensProvider";
 import { TelemetryClient } from "./telemetryClient";
 
 export function activate(context: vscode.ExtensionContext) {
@@ -17,6 +19,9 @@ export function activate(context: vscode.ExtensionContext) {
     let deviceTree = new DeviceTree(context);
 
     vscode.window.registerTreeDataProvider("iotHubDevices", deviceTree);
+
+    context.subscriptions.push(vscode.languages.registerCodeLensProvider({pattern: `**/${Constants.ModuleTwinJosnFileName}`}, new ModuleTwinCodeLensProvider()));
+    context.subscriptions.push(vscode.languages.registerCodeLensProvider({pattern: `**/${Constants.DeviceTwinJosnFileName}`}, new DeviceTwinCodeLensProvider()));
 
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.refresh", (element) => {
         deviceTree.refresh(element);
