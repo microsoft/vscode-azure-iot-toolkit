@@ -122,6 +122,10 @@ Whether to show IoT Hub info when IoT Hub Connection String is not set (default 
 }
 ```
 
+## Resources
+- [Channel 9 video: Walkthrough of Azure IoT Toolkit extension](https://channel9.msdn.com/Shows/Internet-of-Things-Show/Azure-IoT-Toolkit-extension-for-Visual-Studio-Code)
+- [Handy Tool When You Develop With Azure IoT](https://blogs.msdn.microsoft.com/iotdev/2017/09/01/handy-tool-when-you-develop-with-azure-iot/)
+
 
 
 ## Data/Telemetry
