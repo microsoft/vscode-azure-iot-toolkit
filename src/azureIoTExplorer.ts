@@ -112,38 +112,6 @@ export class AzureIoTExplorer {
         this._iotEdgeExplorer.createDeployment(input);
     }
 
-    public setupEdge(deviceItem: DeviceItem): void {
-        this._iotEdgeExplorer.setupEdge(deviceItem);
-    }
-
-    public setupEdgeFromConfig(): void {
-        this._iotEdgeExplorer.setupEdgeFromConfig();
-    }
-
-    public startEdge(): void {
-        this._iotEdgeExplorer.startEdge();
-    }
-
-    public stopEdge(): void {
-        this._iotEdgeExplorer.stopEdge();
-    }
-
-    public restartEdge(): void {
-        this._iotEdgeExplorer.restartEdge();
-    }
-
-    public uninstallEdge(): void {
-        this._iotEdgeExplorer.uninstallEdge();
-    }
-
-    public loginToContainerRegistry(): void {
-        this._iotEdgeExplorer.loginToContainerRegistry();
-    }
-
-    public async generateEdgeSetupConfig(deviceItem: DeviceItem) {
-        this._iotEdgeExplorer.generateEdgeSetupConfig(deviceItem);
-    }
-
     public async getModuleTwin(moduleItem: ModuleItem) {
         await this._iotEdgeExplorer.getModuleTwin(moduleItem);
     }
