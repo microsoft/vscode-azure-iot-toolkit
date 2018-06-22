@@ -9,12 +9,14 @@ Interact with Azure IoT Hub, IoT Device Management, IoT Edge Management, IoT Hub
 * IoT Hub management
     * Create IoT Hub
     * Select IoT Hub
+    * Copy IoT Hub Connection String
 * Device management
     * List devices
     * Get device info
     * Create IoT device
     * Create Edge device
     * Delete device
+    * Copy Device Connection String
 * Interact with Azure IoT Hub
     * Send D2C message to IoT Hub
     * Monitor IoT Hub D2C message
@@ -25,9 +27,7 @@ Interact with Azure IoT Hub, IoT Device Management, IoT Edge Management, IoT Hub
 * Interact with Azure IoT Edge <sup>Preview</sup> (Install [Azure IoT Edge](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.azure-iot-edge) for more IoT Edge support)
     * List Edge Moudles
     * Edit Module Twin
-    * Manage Edge runtime
     * Create deployment for Edge device
-    * Generate Edge setup configuration file
 
 ### Prerequisites
 

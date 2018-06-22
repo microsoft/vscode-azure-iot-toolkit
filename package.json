@@ -51,14 +51,6 @@
     "onCommand:azure-iot-toolkit.copyDeviceConnectionString",
     "onCommand:azure-iot-toolkit.createEdgeDevice",
     "onCommand:azure-iot-toolkit.createDeployment",
-    "onCommand:azure-iot-toolkit.setupEdge",
-    "onCommand:azure-iot-toolkit.setupEdgeFromConfig",
-    "onCommand:azure-iot-toolkit.startEdge",
-    "onCommand:azure-iot-toolkit.stopEdge",
-    "onCommand:azure-iot-toolkit.restartEdge",
-    "onCommand:azure-iot-toolkit.uninstallEdge",
-    "onCommand:azure-iot-toolkit.loginToContainerRegistry",
-    "onCommand:azure-iot-toolkit.generateEdgeSetupConfig",
     "onCommand:azure-iot-toolkit.createIoTHub",
     "onCommand:azure-iot-toolkit.getModuleTwin",
     "onCommand:azure-iot-toolkit.updateModuleTwin"
@@ -175,41 +167,6 @@
         "category": "Azure IoT Edge"
       },
       {
-        "command": "azure-iot-toolkit.setupEdge",
-        "title": "Setup IoT Edge",
-        "category": "Azure IoT Edge"
-      },
-      {
-        "command": "azure-iot-toolkit.setupEdgeFromConfig",
-        "title": "Setup IoT Edge Using Configuration File",
-        "category": "Azure IoT Edge"
-      },
-      {
-        "command": "azure-iot-toolkit.startEdge",
-        "title": "Start IoT Edge",
-        "category": "Azure IoT Edge"
-      },
-      {
-        "command": "azure-iot-toolkit.stopEdge",
-        "title": "Stop IoT Edge",
-        "category": "Azure IoT Edge"
-      },
-      {
-        "command": "azure-iot-toolkit.restartEdge",
-        "title": "Restart IoT Edge",
-        "category": "Azure IoT Edge"
-      },
-      {
-        "command": "azure-iot-toolkit.uninstallEdge",
-        "title": "Uninstall IoT Edge",
-        "category": "Azure IoT Edge"
-      },
-      {
-        "command": "azure-iot-toolkit.loginToContainerRegistry",
-        "title": "Log in to Container Registry",
-        "category": "Azure IoT Edge"
-      },
-      {
         "command": "azure-iot-toolkit.refresh",
         "title": "Refresh",
         "category": "Azure IoT Hub",
@@ -217,11 +174,6 @@
           "light": "resources/light/refresh.svg",
           "dark": "resources/dark/refresh.svg"
         }
-      },
-      {
-        "command": "azure-iot-toolkit.generateEdgeSetupConfig",
-        "title": "Generate IoT Edge Setup Configuration File",
-        "category": "Azure IoT Edge"
       },
       {
         "command": "azure-iot-toolkit.getModuleTwin",
@@ -374,19 +326,9 @@
           "group": "azure-iot-toolkit-edge@0"
         },
         {
-          "command": "azure-iot-toolkit.setupEdge",
-          "when": "view == iotHubDevices && viewItem == edge",
-          "group": "azure-iot-toolkit-edge@1"
-        },
-        {
-          "command": "azure-iot-toolkit.generateEdgeSetupConfig",
-          "when": "view == iotHubDevices && viewItem == edge",
-          "group": "azure-iot-toolkit-edge@2"
-        },
-        {
           "command": "azure-iot-toolkit.refresh",
           "when": "view == iotHubDevices && viewItem == edge",
-          "group": "azure-iot-toolkit-edge@3"
+          "group": "azure-iot-toolkit-edge@1"
         },
         {
           "command": "azure-iot-toolkit.getModuleTwin",

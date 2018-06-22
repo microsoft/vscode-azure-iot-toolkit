@@ -107,38 +107,6 @@ export function activate(context: vscode.ExtensionContext) {
         azureIoTExplorer.createDeployment(input);
     });
 
-    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.setupEdge", (DeviceItem) => {
-        azureIoTExplorer.setupEdge(DeviceItem);
-    }));
-
-    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.setupEdgeFromConfig", () => {
-        azureIoTExplorer.setupEdgeFromConfig();
-    }));
-
-    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.startEdge", () => {
-        azureIoTExplorer.startEdge();
-    }));
-
-    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.stopEdge", () => {
-        azureIoTExplorer.stopEdge();
-    }));
-
-    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.restartEdge", () => {
-        azureIoTExplorer.restartEdge();
-    }));
-
-    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.uninstallEdge", () => {
-        azureIoTExplorer.uninstallEdge();
-    }));
-
-    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.loginToContainerRegistry", () => {
-        azureIoTExplorer.loginToContainerRegistry();
-    }));
-
-    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.generateEdgeSetupConfig", async (DeviceItem) => {
-        await azureIoTExplorer.generateEdgeSetupConfig(DeviceItem);
-    }));
-
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.getModuleTwin", async (moduleItem) => {
         await azureIoTExplorer.getModuleTwin(moduleItem);
     }));
