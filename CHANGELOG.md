@@ -1,3 +1,11 @@
+## 1.0.0 (2018-06-27)
+### Added 
+* Add CodeLens to update Device Twin and Module Twin
+* Show warning message when user selects deployment.template.json to do deployment
+
+### Removed
+* Remove iotedgectl related commands which are retired in IoT Edge GA
+
 ## 0.6.3 (2018-06-12)
 ### Added 
 * Add command for updating Module Twin
