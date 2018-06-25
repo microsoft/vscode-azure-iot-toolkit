@@ -1,6 +1,6 @@
 # Azure IoT Toolkit
 
-[![Join the chat at https://gitter.im/Microsoft/azure-iot-toolkit](https://badges.gitter.im/Microsoft/azure-iot-toolkit.svg)](https://gitter.im/Microsoft/azure-iot-toolkit?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/Microsoft/azure-iot-toolkit](https://badges.gitter.im/Microsoft/azure-iot-toolkit.svg)](https://gitter.im/Microsoft/azure-iot-toolkit?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Marketplace Version](https://vsmarketplacebadge.apphb.com/version-short/vsciot-vscode.azure-iot-toolkit.svg)](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.azure-iot-toolkit)
 
 Interact with Azure IoT Hub, IoT Device Management, IoT Edge Management, IoT Hub Code Snippets.
 
@@ -24,7 +24,7 @@ Interact with Azure IoT Hub, IoT Device Management, IoT Edge Management, IoT Hub
     * Monitor C2D message from IoT Hub
     * Invoke Direct Method
     * Edit Device Twin
-* Interact with Azure IoT Edge <sup>Preview</sup> (Install [Azure IoT Edge](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.azure-iot-edge) for more IoT Edge support)
+* Interact with Azure IoT Edge (Install [Azure IoT Edge](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.azure-iot-edge) for more IoT Edge support)
     * List Edge Moudles
     * Edit Module Twin
     * Create deployment for Edge device
