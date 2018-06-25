@@ -4,7 +4,6 @@
 "use strict";
 import axios from "axios";
 import * as iothub from "azure-iothub";
-import * as fqdn from "fqdn-multi";
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
