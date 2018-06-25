@@ -4,7 +4,6 @@
 "use strict";
 import axios from "axios";
 import * as iothub from "azure-iothub";
-import * as fqdn from "fqdn-multi";
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
@@ -124,6 +123,10 @@ export class IoTEdgeExplorer extends BaseExplorer {
                 return "";
             }
             filePath = filePathUri[0].fsPath;
+        }
+        if (path.basename(filePath) === "deployment.template.json") {
+            vscode.window.showWarningMessage("Please select 'deployment.json' under 'config' folder for deployment.");
+            return "";
         }
         return fs.readFileSync(filePath, "utf8");
     }
