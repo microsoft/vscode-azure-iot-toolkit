@@ -444,7 +444,6 @@
     "azure-iot-device-mqtt": "1.1.7",
     "azure-iothub": "^1.3.0",
     "clipboardy": "^1.1.4",
-    "fqdn-multi": "^0.1.1",
     "ms-rest": "^2.3.2",
     "ms-rest-azure": "^2.5.5",
     "strip-json-comments": "^2.0.1",

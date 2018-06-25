@@ -125,6 +125,10 @@ export class IoTEdgeExplorer extends BaseExplorer {
             }
             filePath = filePathUri[0].fsPath;
         }
+        if (path.basename(filePath) === "deployment.template.json") {
+            vscode.window.showWarningMessage("Please select 'deployment.json' under 'config' folder for deployment.");
+            return "";
+        }
         return fs.readFileSync(filePath, "utf8");
     }
 
