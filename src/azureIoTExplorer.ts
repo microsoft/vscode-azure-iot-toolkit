@@ -119,4 +119,12 @@ export class AzureIoTExplorer {
     public async updateModuleTwin() {
         await this._iotEdgeExplorer.updateModuleTwin();
     }
+
+    public generateSasTokenForIotHub(): void {
+        this._iotHubResourceExplorer.generateSasTokenForIotHub();
+    }
+
+    public generateSasTokenForDevice(deviceItem: DeviceItem): void {
+        this._iotHubResourceExplorer.generateSasTokenForDevice(deviceItem);
+    }
 }

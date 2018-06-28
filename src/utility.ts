@@ -3,7 +3,7 @@
 
 "use strict";
 import axios, { AxiosRequestConfig } from "axios";
-import { ConnectionString as DeviceConnectionString } from "azure-iot-device";
+import { ConnectionString as DeviceConnectionString, SharedAccessSignature as DeviceSharedAccessSignature } from "azure-iot-device";
 import { ConnectionString, Registry, SharedAccessSignature } from "azure-iothub";
 import * as crypto from "crypto";
 import * as fs from "fs";
@@ -93,10 +93,16 @@ export class Utility {
         return crypto.createHash("sha256").update(data).digest("hex");
     }
 
-    public static generateSasTokenForService(iotHubConnectionString: string): string {
+    public static generateSasTokenForService(iotHubConnectionString: string, expiryInHours = 1): string {
         const connectionString = ConnectionString.parse(iotHubConnectionString);
-        const expiry = Math.floor(Date.now() / 1000) + 3600;
+        const expiry = Math.floor(Date.now() / 1000) + expiryInHours * 60 * 60;
         return SharedAccessSignature.create(connectionString.HostName, connectionString.SharedAccessKeyName, connectionString.SharedAccessKey, expiry).toString();
+    }
+
+    public static generateSasTokenForDevice(deviceConnectionString: string, expiryInHours = 1): string {
+        const connectionString = DeviceConnectionString.parse(deviceConnectionString);
+        const expiry = Math.floor(Date.now() / 1000) + expiryInHours * 60 * 60;
+        return DeviceSharedAccessSignature.create(connectionString.HostName, connectionString.DeviceId, connectionString.SharedAccessKey, expiry).toString();
     }
 
     public static adjustTerminalCommand(command: string): string {

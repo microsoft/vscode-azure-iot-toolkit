@@ -166,6 +166,32 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         }
     }
 
+    public async generateSasTokenForIotHub() {
+        TelemetryClient.sendEvent("AZ.Generate.SasToken.Service");
+        const iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
+        if (iotHubConnectionString) {
+            this.generateSasToken(Utility.generateSasTokenForService, iotHubConnectionString, "IoT Hub");
+        }
+    }
+
+    public async generateSasTokenForDevice(deviceItem: DeviceItem) {
+        deviceItem = await Utility.getInputDevice(deviceItem, "AZ.Generate.SasToken.Device");
+        if (deviceItem && deviceItem.connectionString) {
+            this.generateSasToken(Utility.generateSasTokenForDevice, deviceItem.connectionString, deviceItem.deviceId);
+        }
+    }
+
+    private async generateSasToken(sasTokenFunction: (connectionString: string, expiryInHours: number) => string, connectionString: string, target: string) {
+        const expiryInHours = await vscode.window.showInputBox({ prompt: `Enter expiration time (hours)`, ignoreFocusOut: true });
+        if (expiryInHours && !isNaN(parseFloat(expiryInHours))) {
+            const sasToken = sasTokenFunction(connectionString, parseFloat(expiryInHours));
+            clipboardy.write(sasToken);
+            this._outputChannel.show();
+            this.outputLine("SASToken", `SAS token for [${target}] is generated and copied to clipboard:`);
+            this._outputChannel.appendLine(sasToken);
+        }
+    }
+
     private async waitForLogin(): Promise<boolean> {
         if (!(await this.accountApi.waitForLogin())) {
             TelemetryClient.sendEvent("General.AskForAzureLogin");

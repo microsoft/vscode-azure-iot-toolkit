@@ -115,6 +115,14 @@ export function activate(context: vscode.ExtensionContext) {
         await azureIoTExplorer.updateModuleTwin();
     }));
 
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.generateSasTokenForIotHub", () => {
+        azureIoTExplorer.generateSasTokenForIotHub();
+    }));
+
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.generateSasTokenForDevice", (DeviceItem) => {
+        azureIoTExplorer.generateSasTokenForDevice(DeviceItem);
+    }));
+
     vscode.workspace.onDidChangeTextDocument((event) => azureIoTExplorer.replaceConnectionString(event));
 
     context.subscriptions.push(vscode.window.onDidCloseTerminal((closedTerminal: vscode.Terminal) => {
