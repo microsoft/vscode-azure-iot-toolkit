@@ -54,6 +54,23 @@ export class IoTEdgeExplorer extends BaseExplorer {
         this.deploy(iotHubConnectionString, deviceItem.deviceId, deploymentJson, from);
     }
 
+    public async createDeploymentAtScale(fileuri?: vscode.Uri) {
+        TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployAtScaleStartEvent);
+
+        const iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
+        if (!iotHubConnectionString) {
+            return;
+        }
+
+        const filePath = fileuri ? fileuri.fsPath : undefined;
+        const deploymentJson = await this.getDeploymentJson(filePath);
+        if (!deploymentJson) {
+            return;
+        }
+
+        this.deployAtScale(iotHubConnectionString, deploymentJson);
+    }
+
     public async getModuleTwin(moduleItem: ModuleItem) {
         if (moduleItem) {
             await this.getModuleTwinById(moduleItem.deviceId, moduleItem.moduleId);
@@ -152,5 +169,46 @@ export class IoTEdgeExplorer extends BaseExplorer {
                 }
                 TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployDoneEvent, { Result: "Fail", Message: err, entry, from });
             });
+    }
+
+    private async deployAtScale(iotHubConnectionString: string, deploymentJson: string) {
+        const deploymentId = await vscode.window.showInputBox({ prompt: "The name of the deployment", ignoreFocusOut: true });
+        if (!deploymentId) {
+            return;
+        }
+
+        const targetCondition = await vscode.window.showInputBox({
+            prompt: "A target condition to determine which devices will be targeted with this deployment",
+            placeHolder: "e.g. tags.environment='test' or properties.desired.devicemodel='4000x'",
+            ignoreFocusOut: true,
+        });
+        if (!targetCondition) {
+            return;
+        }
+
+        const deploymentConfiguration = {
+            id: deploymentId,
+            content: {
+                modulesContent: JSON.parse(stripJsonComments(deploymentJson)).moduleContent,
+            },
+            schemaVersion: "1.0",
+            targetCondition,
+        };
+
+        const label = "Edge";
+        this._outputChannel.show();
+        this.outputLine(label, `Start deployment with id [${deploymentId}]`);
+
+        const registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
+        registry.addConfiguration(deploymentConfiguration, (err) => {
+            if (err) {
+                this.outputLine(label, `Deployment failed. ${err}`);
+                TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployAtScaleDoneEvent, { Result: "Fail", Message: err.message });
+
+            } else {
+                this.outputLine(label, "Deployment succeeded.");
+                TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployAtScaleDoneEvent, { Result: "Success" });
+            }
+        });
     }
 }

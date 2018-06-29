@@ -51,6 +51,7 @@
     "onCommand:azure-iot-toolkit.copyDeviceConnectionString",
     "onCommand:azure-iot-toolkit.createEdgeDevice",
     "onCommand:azure-iot-toolkit.createDeployment",
+    "onCommand:azure-iot-toolkit.createDeploymentAtScale",
     "onCommand:azure-iot-toolkit.createIoTHub",
     "onCommand:azure-iot-toolkit.getModuleTwin",
     "onCommand:azure-iot-toolkit.updateModuleTwin",
@@ -166,6 +167,11 @@
       {
         "command": "azure-iot-toolkit.createDeployment",
         "title": "Create Deployment for IoT Edge Device",
+        "category": "Azure IoT Edge"
+      },
+      {
+        "command": "azure-iot-toolkit.createDeploymentAtScale",
+        "title": "Create Deployment for IoT Edge Device at scale",
         "category": "Azure IoT Edge"
       },
       {
@@ -469,7 +475,7 @@
     "azure-iot-common": "^1.7.0",
     "azure-iot-device": "^1.7.0",
     "azure-iot-device-mqtt": "^1.7.0",
-    "azure-iothub": "^1.3.0",
+    "azure-iothub": "^1.7.0",
     "clipboardy": "^1.1.4",
     "ms-rest": "^2.3.2",
     "ms-rest-azure": "^2.5.5",
