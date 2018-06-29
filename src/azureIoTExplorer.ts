@@ -112,8 +112,8 @@ export class AzureIoTExplorer {
         this._iotEdgeExplorer.createDeployment(input);
     }
 
-    public createDeploymentAtScale(fileRui?: vscode.Uri): void {
-        this._iotEdgeExplorer.createDeploymentAtScale(fileRui);
+    public createDeploymentAtScale(fileUri?: vscode.Uri): void {
+        this._iotEdgeExplorer.createDeploymentAtScale(fileUri);
     }
 
     public async getModuleTwin(moduleItem: ModuleItem) {

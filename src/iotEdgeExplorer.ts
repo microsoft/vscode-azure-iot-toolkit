@@ -54,7 +54,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
         this.deploy(iotHubConnectionString, deviceItem.deviceId, deploymentJson, from);
     }
 
-    public async createDeploymentAtScale(fileuri?: vscode.Uri) {
+    public async createDeploymentAtScale(fileUri?: vscode.Uri) {
         TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployAtScaleStartEvent);
 
         const iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
@@ -62,7 +62,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
             return;
         }
 
-        const filePath = fileuri ? fileuri.fsPath : undefined;
+        const filePath = fileUri ? fileUri.fsPath : undefined;
         const deploymentJson = await this.getDeploymentJson(filePath);
         if (!deploymentJson) {
             return;
