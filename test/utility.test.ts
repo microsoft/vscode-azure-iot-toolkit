@@ -41,4 +41,14 @@ suite("Utility Tests ", () => {
             done();
         });
     });
+
+    test("should be able to generate SAS Token for IoT Hub", () => {
+        let sasTokenForService = Utility.generateSasTokenForService(TestConstants.IotHubConnectionString, 10);
+        assert.equal(/^SharedAccessSignature sr=iot-hub-test.azure-devices.net&sig=.+&skn=iothubowner&se=.+$/.test(sasTokenForService), true);
+    });
+
+    test("should be able to generate SAS Token for Device", () => {
+        let sasTokenForDevice = Utility.generateSasTokenForDevice(TestConstants.DeviceConnectionString, 10);
+        assert.equal(/^SharedAccessSignature sr=iot-hub-test.azure-devices.net%2Fdevices%2Fdevice1&sig=.+&se=.+$/.test(sasTokenForDevice), true);
+    });
 });
