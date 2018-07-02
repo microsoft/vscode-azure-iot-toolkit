@@ -223,7 +223,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
                 if (!value) {
                     return "The value should not be empty.";
                 }
-                if (!/^(deviceId|tags\..+|properties\.reported\..+).*=.+$/.test(value)) {
+                if (!Utility.isValidTargetCondition(value)) {
                     return "Valid conditions specify a either a deviceId (e.g. deviceId='{id}'), \
                     one or more device twin tag criteria (e.g. tags.environment = 'prod' AND tags.location = 'westus'), \
                     or reported property criteria (e.g. properties.reported.lastStatus='200').";
