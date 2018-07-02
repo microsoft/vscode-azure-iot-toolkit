@@ -166,12 +166,12 @@
       },
       {
         "command": "azure-iot-toolkit.createDeployment",
-        "title": "Create Deployment for IoT Edge Device",
+        "title": "Create Deployment for Single Device",
         "category": "Azure IoT Edge"
       },
       {
         "command": "azure-iot-toolkit.createDeploymentAtScale",
-        "title": "Create Deployment for IoT Edge Device at scale",
+        "title": "Create Deployment at Scale",
         "category": "Azure IoT Edge"
       },
       {
@@ -393,7 +393,13 @@
       "explorer/context": [
         {
           "when": "resourceFilename == deployment.json",
-          "command": "azure-iot-toolkit.createDeployment"
+          "command": "azure-iot-toolkit.createDeployment",
+          "group": "azure-iot-toolkit-edge@0 "
+        },
+        {
+          "when": "resourceFilename == deployment.json",
+          "command": "azure-iot-toolkit.createDeploymentAtScale",
+          "group": "azure-iot-toolkit-edge@1"
         }
       ],
       "commandPalette": [
