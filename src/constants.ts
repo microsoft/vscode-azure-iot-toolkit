@@ -43,6 +43,8 @@ export class Constants {
     public static DeviceTwinJosnFilePath: string;
     public static IoTHubAIEdgeDeployStartEvent = "Edge.Deploy.Start";
     public static IoTHubAIEdgeDeployDoneEvent = "AZ.Edge.Deploy.Done";
+    public static IoTHubAIEdgeDeployAtScaleStartEvent = "Edge.DeployAtScale.Start";
+    public static IoTHubAIEdgeDeployAtScaleDoneEvent = "AZ.Edge.DeployAtScale.Done";
     public static IoTHubAICreateStartEvent = "General.IoTHub.Create.Start";
     public static IoTHubAICreateDoneEvent = "AZ.IoTHub.Create.Done";
     public static IoTHubAIGetModuleTwinStartEvent = "AZ.Edge.ModuleTwin.Get.Start";

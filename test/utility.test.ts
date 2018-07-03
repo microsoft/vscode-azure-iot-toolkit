@@ -51,4 +51,18 @@ suite("Utility Tests ", () => {
         let sasTokenForDevice = Utility.generateSasTokenForDevice(TestConstants.DeviceConnectionString, 10);
         assert.equal(/^SharedAccessSignature sr=iot-hub-test.azure-devices.net%2Fdevices%2Fdevice1&sig=.+&se=.+$/.test(sasTokenForDevice), true);
     });
+
+    test("should be able to validate target condition", () => {
+        assert.equal(Utility.isValidTargetCondition("tags.city='Shanghai'"), true);
+
+        assert.equal(Utility.isValidTargetCondition("properties.reported.lastStatus='200'"), true);
+
+        assert.equal(Utility.isValidTargetCondition("deviceId='device1'"), true);
+
+        assert.equal(Utility.isValidTargetCondition("properties.desired.lastStatus='200'"), false);
+
+        assert.equal(Utility.isValidTargetCondition("tags.='Shanghai'"), false);
+
+        assert.equal(Utility.isValidTargetCondition("tag.stauts='200'"), false);
+    });
 });

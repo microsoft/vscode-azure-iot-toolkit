@@ -107,6 +107,10 @@ export function activate(context: vscode.ExtensionContext) {
         azureIoTExplorer.createDeployment(input);
     });
 
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.createDeploymentAtScale", (fileUri) => {
+        azureIoTExplorer.createDeploymentAtScale(fileUri);
+    }));
+
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.getModuleTwin", async (moduleItem) => {
         await azureIoTExplorer.getModuleTwin(moduleItem);
     }));

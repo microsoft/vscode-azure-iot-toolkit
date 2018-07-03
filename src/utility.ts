@@ -271,6 +271,10 @@ export class Utility {
         });
     }
 
+    public static isValidTargetCondition(value: string): boolean {
+        return /^(deviceId|tags\..+|properties\.reported\..+).*=.+$/.test(value);
+    }
+
     private static async getFilteredDeviceList(iotHubConnectionString: string, onlyEdgeDevice: boolean): Promise<DeviceItem[]> {
         if (onlyEdgeDevice) {
             const [deviceList, edgeDeviceIdSet] = await Promise.all([Utility.getIoTDeviceList(iotHubConnectionString), Utility.getEdgeDeviceIdSet(iotHubConnectionString)]);

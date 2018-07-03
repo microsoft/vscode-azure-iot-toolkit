@@ -54,6 +54,23 @@ export class IoTEdgeExplorer extends BaseExplorer {
         this.deploy(iotHubConnectionString, deviceItem.deviceId, deploymentJson, from);
     }
 
+    public async createDeploymentAtScale(fileUri?: vscode.Uri) {
+        TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployAtScaleStartEvent);
+
+        const iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
+        if (!iotHubConnectionString) {
+            return;
+        }
+
+        const filePath = fileUri ? fileUri.fsPath : undefined;
+        const deploymentJson = await this.getDeploymentJson(filePath);
+        if (!deploymentJson) {
+            return;
+        }
+
+        this.deployAtScale(iotHubConnectionString, deploymentJson);
+    }
+
     public async getModuleTwin(moduleItem: ModuleItem) {
         if (moduleItem) {
             await this.getModuleTwinById(moduleItem.deviceId, moduleItem.moduleId);
@@ -124,20 +141,30 @@ export class IoTEdgeExplorer extends BaseExplorer {
             }
             filePath = filePathUri[0].fsPath;
         }
+
         if (path.basename(filePath) === "deployment.template.json") {
             vscode.window.showWarningMessage("Please select 'deployment.json' under 'config' folder for deployment.");
             return "";
         }
-        return fs.readFileSync(filePath, "utf8");
+
+        const content = stripJsonComments(fs.readFileSync(filePath, "utf8"));
+        try {
+            JSON.parse(content);
+        } catch (error) {
+            vscode.window.showErrorMessage("Failed to parse deployment manifest: " + error.toString());
+            return "";
+        }
+
+        return content;
     }
 
     private deploy(iotHubConnectionString: string, deviceId: string, deploymentJson: string, from: string) {
         const label = "Edge";
         this._outputChannel.show();
-        this.outputLine(label, `Start deployment to [${deviceId}]`);
+        this.outputLine(label, `Start deployment to device [${deviceId}]`);
 
         const url = `/devices/${encodeURIComponent(deviceId)}/applyConfigurationContent?api-version=${Constants.IoTHubApiVersion}`;
-        const config = Utility.generateIoTHubAxiosRequestConfig(iotHubConnectionString, url, "post", stripJsonComments(deploymentJson));
+        const config = Utility.generateIoTHubAxiosRequestConfig(iotHubConnectionString, url, "post", deploymentJson);
         const entry = from === "none" ? "commandPalette" : "contextMenu";
 
         axios.request(config)
@@ -152,5 +179,85 @@ export class IoTEdgeExplorer extends BaseExplorer {
                 }
                 TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployDoneEvent, { Result: "Fail", Message: err, entry, from });
             });
+    }
+
+    private async deployAtScale(iotHubConnectionString: string, deploymentJson: string) {
+        const deploymentJsonObject = JSON.parse(deploymentJson);
+        let modulesContent;
+        if (deploymentJsonObject.moduleContent) {
+            modulesContent = deploymentJsonObject.moduleContent;
+        } else if (deploymentJsonObject.content && deploymentJsonObject.content.modulesContent) {
+            modulesContent = deploymentJsonObject.content.modulesContent;
+        }
+        if (!modulesContent) {
+            vscode.window.showWarningMessage("Deployment manifest is invalid.");
+            return;
+        }
+
+        const deploymentId = await vscode.window.showInputBox({
+            prompt: "Deployment id",
+            placeHolder: "The name of the deployment",
+            ignoreFocusOut: true,
+            validateInput: (value: string) => {
+                if (!value) {
+                    return "The value should not be empty.";
+                }
+                if (value.length > 128) {
+                    return "Up to 128 characters are allowed.";
+                }
+                if (!/^[a-z0-9-:+%_#*?!(),=@;']+$/.test(value)) {
+                    return "Lowercase letters, numbers and the following characters are allowed [ -:+%_#*?!(),=@;' ].";
+                }
+                return undefined;
+            },
+        });
+        if (!deploymentId) {
+            return;
+        }
+
+        const targetCondition = await vscode.window.showInputBox({
+            prompt: "A target condition to determine which devices will be targeted with this deployment",
+            placeHolder: "e.g. tags.environment='test', properties.reported.devicemodel='4000x', or deviceId='{id}'",
+            ignoreFocusOut: true,
+            validateInput: (value: string) => {
+                if (!value) {
+                    return "The value should not be empty.";
+                }
+                if (!Utility.isValidTargetCondition(value)) {
+                    return "Valid conditions specify a either a deviceId (e.g. deviceId='{id}'), \
+                    one or more device twin tag criteria (e.g. tags.environment = 'prod' AND tags.location = 'westus'), \
+                    or reported property criteria (e.g. properties.reported.lastStatus='200').";
+                }
+                return undefined;
+            },
+        });
+        if (!targetCondition) {
+            return;
+        }
+
+        const deploymentConfiguration = {
+            id: deploymentId,
+            content: {
+                modulesContent,
+            },
+            schemaVersion: "1.0",
+            targetCondition,
+        };
+
+        const label = "Edge";
+        this._outputChannel.show();
+        this.outputLine(label, `Start deployment with deployment id [${deploymentId}] and target condition [${targetCondition}]`);
+
+        const registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
+        registry.addConfiguration(deploymentConfiguration, (err) => {
+            if (err) {
+                this.outputLine(label, `Deployment failed. ${err}`);
+                TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployAtScaleDoneEvent, { Result: "Fail", Message: err.message });
+
+            } else {
+                this.outputLine(label, "Deployment succeeded.");
+                TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployAtScaleDoneEvent, { Result: "Success" });
+            }
+        });
     }
 }
