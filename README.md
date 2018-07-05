@@ -4,12 +4,6 @@
 
 Interact with Azure IoT Hub, IoT Device Management, IoT Edge Management, IoT Hub Code Snippets.
 
-# Azure IoT Toolkit
-
-[![Join the chat at https://gitter.im/Microsoft/azure-iot-toolkit](https://badges.gitter.im/Microsoft/azure-iot-toolkit.svg)](https://gitter.im/Microsoft/azure-iot-toolkit?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Marketplace Version](https://vsmarketplacebadge.apphb.com/version-short/vsciot-vscode.azure-iot-toolkit.svg)](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.azure-iot-toolkit)
-
-Interact with Azure IoT Hub, IoT Device Management, IoT Edge Management, IoT Hub Code Snippets.
-
 - [Azure IoT Toolkit](#azure-iot-toolkit)
     - [Prerequisites](#prerequisites)
     - [Command Palette](#command-palette)
