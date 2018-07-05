@@ -54,6 +54,8 @@ Interact with Azure IoT Hub, IoT Device Management, IoT Edge Management, IoT Hub
 
 **NOTE**: You could also go to **File** > **Preferences** > **Settings** (**Code** > **Preferences** > **Settings** on Mac), update the config of `azure-iot-toolkit.iotHubConnectionString` to change your IoT Hub Connection String.
 
+[[back]](#azure-iot-toolkit)
+
 ### Sign in to Azure
 
 Instead of copying and pasting to set IoT Hub Connection String, you could sign in to Azure to select IoT Hub from your Azure Subscription.
@@ -67,10 +69,14 @@ Instead of copying and pasting to set IoT Hub Connection String, you could sign 
 4. Your IoT Hub list will be shown, then select an IoT Hub.
 5. The device list will be shown.
 
+[[back]](#azure-iot-toolkit)
+
 ## Command Palette
 For any features listed above, you always have not only visual way (like right-click on something), but also CLI way using VSC command palette. Open it at **View > Command Palette...** and type **>Azure IoT**, you will have all the possible command shown in the auto-filling list.
 
 ![command-palette](images/commandpalette.gif)
+
+[[back]](#azure-iot-toolkit)
 
 ## IoT Hub management
 ### Create IoT Hub
@@ -80,6 +86,8 @@ Click **... > Create IoT Hub** at **AZURE IOT HUB DEVICES** tab, then select sub
 
 ![create hub](images/createhub.gif)
 
+[[back]](#azure-iot-toolkit)
+
 ### Select IoT Hub
 Command: **Azure IoT Hub: Select IoT Hub**
 
@@ -87,12 +95,16 @@ Click **... > Select IoT Hub** at **AZURE IOT HUB DEVICES** tab,  then select su
 
 ![select hub](images/selecthub.gif)
 
+[[back]](#azure-iot-toolkit)
+
 ### Copy IoT Hub Connection String
 Command: **Azure IoT Hub: Copy IoT Hub Connection String**
 
 Click **... > Copy IoT Hub Connection String** at **AZURE IOT HUB DEVICES** tab, the connection string of your current IoT Hub will be copy to your clipboard.
 
 ![copy string](images/copystring.gif)
+
+[[back]](#azure-iot-toolkit)
 
 ## Device management
 
@@ -103,12 +115,16 @@ Click **... > Create Device** at **AZURE IOT HUB DEVICES** tab, enter device ID 
 
 ![create device](images/createdevice.gif)
 
+[[back]](#azure-iot-toolkit)
+
 ### Create Edge device
 Command: **Azure IoT Edge: Create IoT Edge Device**
 
 Click **... > Create IoT Edge Device** at **AZURE IOT HUB DEVICES** tab, enter device ID and the new Edge device will be created in a few seconds.
 
 ![create device](images/createedgedevice.gif)
+
+[[back]](#azure-iot-toolkit)
 
 ### List devices
 Command: **Azure IoT Hub: List Devices**
@@ -117,12 +133,16 @@ You can click refresh button at **AZURE IOT HUB DEVICES** tab to trigger **List 
 
 ![list device](images/listdevice.gif)
 
+[[back]](#azure-iot-toolkit)
+
 ### Get device info
 Command: **Azure IoT Hub: Get Device Info**
 
 Right-click your device and select **Get Device Info**, results will be shown in **OUTPUT > Azure IoT Toolkit** view.
 
 ![get device info](images/getdeviceinfo.gif)
+
+[[back]](#azure-iot-toolkit)
 
 ### Copy Device Connection String
 Command: **Azure IoT Hub: Copy Device Connection String**
@@ -131,12 +151,16 @@ Right-click your device and select **Copy Device Connection String**, the connec
 
 ![copy device string](images/copydevicestring.gif)
 
+[[back]](#azure-iot-toolkit)
+
 ### Delete device
 Command: **Azure IoT Hub: Delete Device**
 
 Right-click your device and select **Delete Device**, the selected device will be deleted in a few seconds.
 
 ![delete device](images/deletedevice.gif)
+
+[[back]](#azure-iot-toolkit)
 
 ## Interact with Azure IoT Hub
 
@@ -146,6 +170,8 @@ Command: **Azure IoT Hub: Send D2C message to IoT Hub**
 Right-click your device and select **Send D2C message to IoT Hub**, then enter the message, results will be shown in **OUTPUT > Azure IoT Toolkit** view.
 
 ![send d2c](images/sendd2c.gif)
+
+[[back]](#azure-iot-toolkit)
 
 ### Monitor IoT Hub D2C message
 Command: **Azure IoT Hub: Start Monitoring D2C Message**
@@ -157,12 +183,16 @@ To stop monitoring, right-click the **OUTPUT** view and select **Stop Monitoring
 
 ![monitor d2c](images/monitord2c.gif)
 
+[[back]](#azure-iot-toolkit)
+
 ### Send C2D message to device
 Command: **Azure IoT Hub: Send C2D message to Device**
 
 Right-click your device and select **Send C2D message to Device**, then enter the message, results will be shown in **OUTPUT > Azure IoT Toolkit** view.
 
 ![send c2d](images/sendc2d.gif)
+
+[[back]](#azure-iot-toolkit)
 
 ### Monitor IoT Hub C2D message
 Command: **Azure IoT Hub: Start Monitoring C2D Message**
@@ -174,12 +204,16 @@ To stop monitoring, right-click the **OUTPUT** view and select **Stop Monitoring
 
 ![monitor c2d](images/monitorc2d.gif)
 
+[[back]](#azure-iot-toolkit)
+
 ### Edit Device Twin
 Command: **Azure IoT Hub: Edit Device Twin**
 
 Right-click your device and select **Edit Device Twin**, edit the device twin, then right-click in the editor and select **Update Device Twin** to take effect.
 
 ![edit twin](images/edittwin.gif)
+
+[[back]](#azure-iot-toolkit)
 
 ### Invoke Direct Method
 Command: **Azure IoT Hub: Invoke Direct Method**
@@ -188,6 +222,8 @@ Right-click your device and select **Invoke Direct Method**, then enter the meth
 You can follow the [tutorial](https://docs.microsoft.com/en-us/azure/iot-hub/quickstart-control-device-node) to learn how to create direct method on your IoT device.
 
 ![invoke](images/invoke.gif)
+
+[[back]](#azure-iot-toolkit)
 
 ## Interact with Azure IoT Edge
 
@@ -198,12 +234,16 @@ Right-click your edge device and select **Refresh** to trigger **List Edge Modul
 
 ![list module](images/listmodule.gif)
 
+[[back]](#azure-iot-toolkit)
+
 ### Create deployment for Edge device
 Command: **Azure IoT Edge: Create Deployment for IoT Edge Device**
 
 Right-click your edge device and select **Create Deployment for IoT Edge Device**, then select Edge Deployment Manifest in the pop-up window, results will be shown in **OUTPUT > Azure IoT Toolkit** view. Wait for your device to start all your modules and refresh to see new modules.
 
 ![deploy](images/deploy.gif)
+
+[[back]](#azure-iot-toolkit)
 
 ### Edit Module Twin
 Command: **Azure IoT Edge: Update Module Twin**
@@ -213,6 +253,8 @@ Right-click your edge module and select **Edit Module Twin**, edit the module tw
 **Note:** Azure IoT Edge system modules are read-only and cannot be modified. Changes can be submitted via deploying a configuration.
 
 ![edit module twin](images/editmoduletwin.gif)
+
+[[back]](#azure-iot-toolkit)
 
 
 
@@ -231,6 +273,8 @@ Right-click your edge module and select **Edit Module Twin**, edit the module tw
 
 > After code snippet is created, you need to install corresponding npm package (e.g. [azure-iot-device-mqtt](https://www.npmjs.com/package/azure-iot-device-mqtt)) to run the code snippet.
 > If you want to 'Run Code' directly, you need to install [Code Runner](https://marketplace.visualstudio.com/items?itemName=formulahendry.code-runner).
+
+[[back]](#azure-iot-toolkit)
 
 ## Configuration
 
@@ -276,11 +320,13 @@ Whether to show IoT Hub info when IoT Hub Connection String is not set (default 
 }
 ```
 
+[[back]](#azure-iot-toolkit)
+
 ## Resources
 - [Channel 9 video: Walkthrough of Azure IoT Toolkit extension](https://channel9.msdn.com/Shows/Internet-of-Things-Show/Azure-IoT-Toolkit-extension-for-Visual-Studio-Code)
 - [Handy Tool When You Develop With Azure IoT](https://blogs.msdn.microsoft.com/iotdev/2017/09/01/handy-tool-when-you-develop-with-azure-iot/)
 
-
+[[back]](#azure-iot-toolkit)
 
 ## Telemetry
 This project collects usage data and sends it to Microsoft to help improve our products and services. Read our [privacy statement](http://go.microsoft.com/fwlink/?LinkId=521839) to learn more. 
