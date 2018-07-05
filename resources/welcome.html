@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics_debug.js', 'ga');
+
+        ga('create', 'UA-121803709-1', {
+            'cookieDomain': 'none'
+        });
+        ga("set", "checkProtocolTask", null);
+        ga("set", "checkStorageTask", null);
+        ga('set', 'page', 'WelcomePage');
+        ga('send', 'pageview');
+    </script>
+    <!-- End Google Analytics -->
+
+    <style type="text/css">
+        body {
+            padding: 10px 20px;
+            line-height: 22px
+        }
+
+        img {
+            max-width: 100%;
+            max-height: 100%
+        }
+
+        a {
+            text-decoration: none
+        }
+
+        a:focus,
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: 1px solid -webkit-focus-ring-color;
+            outline-offset: -1px
+        }
+
+        hr {
+            border: 0;
+            height: 2px;
+            border-bottom: 2px solid
+        }
+
+        h1 {
+            padding-bottom: .3em;
+            line-height: 1.2;
+            border-bottom-width: 1px;
+            border-bottom-style: solid
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-weight: 400
+        }
+
+        a:hover {
+            text-decoration: underline
+        }
+
+        table {
+            border-collapse: collapse
+        }
+
+        table>thead>tr>th {
+            text-align: left
+        }
+
+        table>thead>tr>th,
+        table>thead>tr>td,
+        table>tbody>tr>th,
+        table>tbody>tr>td {
+            padding: 5px 10px
+        }
+
+        blockquote {
+            margin: 0 7px 0 5px;
+            padding: 0 16px 0 10px;
+            border-left: 5px solid
+        }
+
+        code {
+            font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+            font-size: 14px;
+            line-height: 19px
+        }
+
+        .mac code {
+            font-size: 12px;
+            line-height: 18px
+        }
+
+        code>div {
+            padding: 16px;
+            border-radius: 3px;
+            overflow: auto
+        }
+
+        .monaco-tokenized-source {
+            white-space: pre
+        }
+
+        /** Theming */
+
+        .vscode-light {
+            color: #1e1e1e
+        }
+
+        .vscode-dark {
+            color: #ddd
+        }
+
+        .vscode-high-contrast {
+            color: #fff
+        }
+
+        .vscode-light code {
+            color: #a31515
+        }
+
+        .vscode-dark code {
+            color: #d7ba7d
+        }
+
+        .vscode-light code>div {
+            background-color: rgba(220, 220, 220, .4)
+        }
+
+        .vscode-dark code>div {
+            background-color: rgba(10, 10, 10, .4)
+        }
+
+        .vscode-high-contrast code>div {
+            background-color: #000
+        }
+
+        .vscode-high-contrast h1 {
+            border-color: #000
+        }
+
+        .vscode-light table>thead>tr>th {
+            border-color: rgba(0, 0, 0, .69)
+        }
+
+        .vscode-dark table>thead>tr>th {
+            border-color: rgba(255, 255, 255, .69)
+        }
+
+        .vscode-light h1,
+        .vscode-light hr,
+        .vscode-light table>tbody>tr+tr>td {
+            border-color: rgba(0, 0, 0, .18)
+        }
+
+        .vscode-dark h1,
+        .vscode-dark hr,
+        .vscode-dark table>tbody>tr+tr>td {
+            border-color: rgba(255, 255, 255, 0.18)
+        }
+
+        .vscode-light blockquote,
+        .vscode-dark blockquote {
+            background: rgba(127, 127, 127, .1);
+            border-color: rgba(0, 122, 204, .5)
+        }
+
+        .vscode-high-contrast blockquote {
+            background: transparent;
+            border-color: #fff
+        }
+
+        .main-content {
+            width: 65%;
+            vertical-align: top
+        }
+
+        .sidebar {
+            vertical-align: top
+        }
+
+        .footer {
+            padding: 25px;
+            text-align: center
+        }
+
+        .vscode-light table>tbody>tr>td.sidebar {
+            background-color: rgba(0, 0, 0, 0.1);
+            border-radius: 10px
+        }
+
+        .vscode-dark table>tbody>tr>td.sidebar {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px
+        }
+
+        .vscode-light a {
+            color: #4080D0
+        }
+
+        .vscode-dark a {
+            color: #a2c1e8
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <div>
+            <h1>Azure IoT Toolkit Extension for VS Code</h1>
+            <p id="p1">a</p>
+        </div>
+        <table>
+            <tr>
+                <td class="main-content">
+                    <table>
+                        <tr>
+                            <td>
+                                <div>
+                                    <h2 class="caption">Quickstarts</h2>
+                                    <div>
+                                        <a href="command:azure-iot-toolkit.callFromHtml?%22azure-iot-toolkit.setIoTHubConnectionString%22">Set IoT Hub Connection String</a>
+                                    </div>
+                                    <div>
+                                        <a href="command:azure-iot-toolkit.callFromHtml?%22azure-iot-toolkit.createIoTHub%22">Create IoT Hub</a>
+                                    </div>
+                                    <div>
+                                        <a href="command:azure-iot-toolkit.callFromHtml?%22azure-iot-toolkit.selectIoTHub%22">Select IoT Hub</a>
+                                    </div>
+                                    <h2>Set IoT Hub Connection String</h2>
+                                    <div>
+                                        <ol>
+                                            <li>
+                                                <p>In Explorer of VS Code, click "Azure IoT Hub Devices" in the bottom left
+                                                    corner.
+                                                </p>
+                                                <p>
+                                                    <img src="https://github.com/Microsoft/vscode-azure-iot-toolkit/raw/master/images/device-explorer-click.png" alt="Click Device Explorer"
+                                                    />
+                                                </p>
+                                            </li>
+
+                                            <li>
+                                                <p>Click "Set IoT Hub Connection String" in context menu.</p>
+                                                <p>
+                                                    <img src="https://github.com/Microsoft/vscode-azure-iot-toolkit/raw/master/images/set-connection-string.png" alt="Set Connection String"
+                                                    />
+                                                </p>
+                                            </li>
+                                            <li>
+                                                <p>An input box will pop up, then enter your IoT Hub Connection String (It is
+                                                    one-time configuration, and please make sure it is
+                                                    <strong>IoT Hub Connection String</strong> not
+                                                    <strong>Device Connection String</strong>. The format is
+                                                    <code>HostName=&lt;my-hub&gt;.azure-devices.net;SharedAccessKeyName=&lt;my-policy&gt;;SharedAccessKey=&lt;my-policy-key&gt;</code>).</p>
+                                                <p>
+                                                    <img src="https://github.com/Microsoft/vscode-azure-iot-toolkit/raw/master/images/enter-connection-string.png" alt="Enter Connection String"
+                                                    />
+                                                </p>
+                                            </li>
+                                            <li>
+                                                <p>The device list will be shown.</p>
+                                                <p>
+                                                    <img src="https://github.com/Microsoft/vscode-azure-iot-toolkit/raw/master/images/device-explorer.png" alt="Device Explorer"
+                                                    />
+                                                </p>
+                                            </li>
+                                        </ol>
+                                    </div>
+                                    <h2>Sign in to Azure and Create IoT Hub</h2>
+                                    <div>
+                                        <p>Instead of copying and pasting to set IoT Hub Connection String, you could sign in
+                                            to Azure to select IoT Hub from your Azure Subscription.</p>
+
+                                        <ol>
+                                            <li>
+                                                <p>Click "Select IoT Hub" in context menu.</p>
+
+                                                <p>
+                                                    <img src="https://github.com/Microsoft/vscode-azure-iot-toolkit/raw/master/images/select-iot-hub.png" alt="Select IoT Hub"
+                                                    />
+                                                </p>
+                                            </li>
+
+                                            <li>
+                                                <p>If you have not signed in to Azure, a pop-up will show to let you sign in
+                                                    to Azure.</p>
+                                            </li>
+
+                                            <li>
+                                                <p>After you sign in, your Azure Subscription list will be shown, then select
+                                                    an Azure Subscription.</p>
+                                            </li>
+
+                                            <li>
+                                                <p>Your IoT Hub list will be shown, then select an IoT Hub.</p>
+                                            </li>
+
+                                            <li>
+                                                <p>The device list will be shown.</p>
+                                            </li>
+                                        </ol>
+                                    </div>
+                                    <h2 class="caption">Send device-to-cloud message</h2>
+                                    <div>Thank you for installing the C/C++ extension. In the June update, we focused on workspace
+                                        configuration improvements.
+                                        <br/>
+                                        <br/> We dramatically improved the performance of recursive includes (e.g. using
+                                        <code>${workspaceFolder}/**</code> in your
+                                        <code>includePath</code>), we will prompt you to use compile_commands.json if it is found
+                                        in your workspace, and we made the
+                                        <code>browse.path</code> setting optional in the case that it is identical to your
+                                        <code>includePath</code>.
+                                        <br/>
+                                        <br/> Additional features and bug fixes are detailed in the
+                                        <a href="https://github.com/Microsoft/vscode-cpptools/releases">full release notes</a>.
+                                    </div>
+                                    <h2 class="caption">Monitor device-to-cloud message</h2>
+                                    <div>Thank you for installing the C/C++ extension. In the June update, we focused on workspace
+                                        configuration improvements.
+                                        <br/>
+                                        <br/> We dramatically improved the performance of recursive includes (e.g. using
+                                        <code>${workspaceFolder}/**</code> in your
+                                        <code>includePath</code>), we will prompt you to use compile_commands.json if it is found
+                                        in your workspace, and we made the
+                                        <code>browse.path</code> setting optional in the case that it is identical to your
+                                        <code>includePath</code>.
+                                        <br/>
+                                        <br/> Additional features and bug fixes are detailed in the
+                                        <a href="https://github.com/Microsoft/vscode-cpptools/releases">full release notes</a>.
+                                    </div>
+                                    <div>Thank you for installing the C/C++ extension. In the June update, we focused on workspace
+                                        configuration improvements.
+                                        <br/>
+                                        <br/> We dramatically improved the performance of recursive includes (e.g. using
+                                        <code>${workspaceFolder}/**</code> in your
+                                        <code>includePath</code>), we will prompt you to use compile_commands.json if it is found
+                                        in your workspace, and we made the
+                                        <code>browse.path</code> setting optional in the case that it is identical to your
+                                        <code>includePath</code>.
+                                        <br/>
+                                        <br/> Additional features and bug fixes are detailed in the
+                                        <a href="https://github.com/Microsoft/vscode-cpptools/releases">full release notes</a>.
+                                    </div>
+                                    <div>Thank you for installing the C/C++ extension. In the June update, we focused on workspace
+                                        configuration improvements.
+                                        <br/>
+                                        <br/> We dramatically improved the performance of recursive includes (e.g. using
+                                        <code>${workspaceFolder}/**</code> in your
+                                        <code>includePath</code>), we will prompt you to use compile_commands.json if it is found
+                                        in your workspace, and we made the
+                                        <code>browse.path</code> setting optional in the case that it is identical to your
+                                        <code>includePath</code>.
+                                        <br/>
+                                        <br/> Additional features and bug fixes are detailed in the
+                                        <a href="https://github.com/Microsoft/vscode-cpptools/releases">full release notes</a>.
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td class="sidebar">
+                    <table>
+                        <tr>
+                            <td>
+                                <div>
+                                    <h3 class="caption">Getting Started</h3>
+                                    <div>
+                                        <a href="https://github.com/Microsoft/vscode-cpptools/blob/master/Documentation/Getting%20started%20with%20IntelliSense%20configuration.md">Configuring IntelliSense</a>
+                                    </div>
+                                    <div>
+                                        <a href="https://github.com/Microsoft/vscode-cpptools/blob/master/launch.md">Configuring Debugging</a>
+                                    </div>
+                                    <div>
+                                        <a href="https://github.com/Microsoft/vscode-cpptools/blob/master/Documentation/LanguageServer/MinGW.md">IntelliSense for MinGW projects</a>
+                                    </div>
+                                    <div>
+                                        <a href="https://github.com/Microsoft/vscode-cpptools/blob/master/Documentation/LanguageServer/Windows%20Subsystem%20for%20Linux.md">IntelliSense for Windows Subsystem for Linux projects</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div>
+                                    <h3 class="caption">Resources</h3>
+                                    <div>
+                                        <a href="https://blogs.msdn.microsoft.com/iotdev/2017/09/01/handy-tool-when-you-develop-with-azure-iot/">Handy Tool When You Develop With Azure IoT</a>
+                                    </div>
+                                    <div>
+                                        <a href="https://blogs.msdn.microsoft.com/iotdev/2018/06/30/azure-iot-toolkit-for-visual-studio-code-generally-available-for-managing-azure-iot-hub-and-devices-with-ease/">Azure IoT Toolkit for Visual Studio Code generally available for managing Azure IoT
+                                            Hub and Devices with ease</a>
+                                    </div>
+                                    <div>
+                                        <a href="https://blogs.msdn.microsoft.com/vcblog/2018/02/20/visual-studio-code-cc-extension-feb-2018-update/">February 2018 Update</a>
+                                    </div>
+                                    <div>
+                                        <a href="https://blogs.msdn.microsoft.com/vcblog/2016/03/31/cc-extension-for-visual-studio-code/">C/C++ Extension anouncement</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" class="footer">
+                    <div>
+                        Having trouble with the extension? -
+                        <a href="https://github.com/Microsoft/vscode-cpptools/tree/master/Documentation">Browse the documentation</a> -
+                        <a href="https://www.github.com/Microsoft/vscode-cpptools/issues">Report an issue</a>
+                    </div>
+                </td>
+            </tr>
+
+        </table>
+    </div>
+    <script>
+        const elements = document.getElementsByTagName("a");
+        for (let i = 0; i < elements.length; i++) {
+            elements[i].onclick = (event) => {
+                console.log(event);
+                ga('send', 'event', 'link', 'click', event.target.href);
+            }
+        }
+    </script>
+</body>
+
+</html>

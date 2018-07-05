@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 "use strict";
+import * as path from "path";
 import * as vscode from "vscode";
 import { DeviceExplorer } from "./deviceExplorer";
 import { IoTEdgeExplorer } from "./iotEdgeExplorer";
@@ -24,7 +25,7 @@ export class AzureIoTExplorer {
     private _iotHubResourceExplorer: IoTHubResourceExplorer;
     private _iotEdgeExplorer: IoTEdgeExplorer;
 
-    constructor(context: vscode.ExtensionContext) {
+    constructor(private context: vscode.ExtensionContext) {
         let outputChannel = vscode.window.createOutputChannel("Azure IoT Toolkit");
         this._iotHubC2DMessageExplorer = new IotHubC2DMessageExplorer(outputChannel);
         this._iotHubMessageExplorer = new IoTHubMessageExplorer(outputChannel);
@@ -130,5 +131,14 @@ export class AzureIoTExplorer {
 
     public generateSasTokenForDevice(deviceItem: DeviceItem): void {
         this._iotHubResourceExplorer.generateSasTokenForDevice(deviceItem);
+    }
+
+    public checkAndShowWelcomePage(): void {
+        this.showWelcomePage();
+    }
+
+    public showWelcomePage(): void {
+        vscode.commands.executeCommand("vscode.previewHtml", vscode.Uri.file(this.context.asAbsolutePath(path.join("resources", "welcome.html"))),
+            vscode.ViewColumn.One, "Welcome to Azure IoT Toolkit");
     }
 }

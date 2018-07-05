@@ -10,6 +10,7 @@ import { Executor } from "./executor";
 import { DeviceTwinCodeLensProvider } from "./providers/deviceTwinCodeLensProvider";
 import { ModuleTwinCodeLensProvider } from "./providers/moduleTwinCodeLensProvider";
 import { TelemetryClient } from "./telemetryClient";
+import { Utility } from "./utility";
 
 export function activate(context: vscode.ExtensionContext) {
     TelemetryClient.sendEvent("extensionActivated");
@@ -19,9 +20,10 @@ export function activate(context: vscode.ExtensionContext) {
     let deviceTree = new DeviceTree(context);
 
     vscode.window.registerTreeDataProvider("iotHubDevices", deviceTree);
+    azureIoTExplorer.checkAndShowWelcomePage();
 
-    context.subscriptions.push(vscode.languages.registerCodeLensProvider({pattern: `**/${Constants.ModuleTwinJosnFileName}`}, new ModuleTwinCodeLensProvider()));
-    context.subscriptions.push(vscode.languages.registerCodeLensProvider({pattern: `**/${Constants.DeviceTwinJosnFileName}`}, new DeviceTwinCodeLensProvider()));
+    context.subscriptions.push(vscode.languages.registerCodeLensProvider({ pattern: `**/${Constants.ModuleTwinJosnFileName}` }, new ModuleTwinCodeLensProvider()));
+    context.subscriptions.push(vscode.languages.registerCodeLensProvider({ pattern: `**/${Constants.DeviceTwinJosnFileName}` }, new DeviceTwinCodeLensProvider()));
 
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.refresh", (element) => {
         deviceTree.refresh(element);
@@ -125,6 +127,16 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.generateSasTokenForDevice", (DeviceItem) => {
         azureIoTExplorer.generateSasTokenForDevice(DeviceItem);
+    }));
+
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.showWelcomePage", () => {
+        TelemetryClient.sendEvent("General.ShowWelcomePage");
+        azureIoTExplorer.showWelcomePage();
+    }));
+
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.callFromHtml", (command: string) => {
+        TelemetryClient.sendEvent("General.CallFromHtml", { command });
+        vscode.commands.executeCommand(command);
     }));
 
     vscode.workspace.onDidChangeTextDocument((event) => azureIoTExplorer.replaceConnectionString(event));
