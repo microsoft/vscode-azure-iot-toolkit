@@ -11,6 +11,7 @@ export class Constants {
     public static CampaignID = "vsciottoolkit";
 
     public static IoTHub = "IoT Hub";
+    public static IsWelcomePageShown = "IsWelcomePageShown";
 
     public static DeviceConnectionStringKey = "deviceConnectionString";
     public static IotHubConnectionStringKey = "iotHubConnectionString";
@@ -57,6 +58,7 @@ export class Constants {
     public static IoTHubAILoadModuleTreeDoneEvent = "AZ.Edge.LoadModuleTree.Done";
 
     public static IoTHubAIStartLoadDeviceTreeEvent = "General.StartLoadDeviceTree";
+    public static IoTHubAIShowWelcomePagetEvent = "General.WelcomePage.Show";
 
     public static ConnectionStringFormat = {
         [Constants.IotHubConnectionStringKey]: "HostName=<my-hostname>;SharedAccessKeyName=<my-policy>;SharedAccessKey=<my-policy-key>",

@@ -2,30 +2,6 @@
 <html>
 
 <head>
-    <!-- Google Analytics -->
-    <script>
-        (function (i, s, o, g, r, a, m) {
-            i['GoogleAnalyticsObject'] = r;
-            i[r] = i[r] || function () {
-                (i[r].q = i[r].q || []).push(arguments)
-            }, i[r].l = 1 * new Date();
-            a = s.createElement(o),
-                m = s.getElementsByTagName(o)[0];
-            a.async = 1;
-            a.src = g;
-            m.parentNode.insertBefore(a, m)
-        })(window, document, 'script', 'https://www.google-analytics.com/analytics_debug.js', 'ga');
-
-        ga('create', 'UA-121803709-1', {
-            'cookieDomain': 'none'
-        });
-        ga("set", "checkProtocolTask", null);
-        ga("set", "checkStorageTask", null);
-        ga('set', 'page', 'WelcomePage');
-        ga('send', 'pageview');
-    </script>
-    <!-- End Google Analytics -->
-
     <style type="text/css">
         body {
             padding: 10px 20px;
@@ -221,7 +197,6 @@
     <div>
         <div>
             <h1>Azure IoT Toolkit Extension for VS Code</h1>
-            <p id="p1">a</p>
         </div>
         <table>
             <tr>
@@ -232,13 +207,13 @@
                                 <div>
                                     <h2 class="caption">Quickstarts</h2>
                                     <div>
-                                        <a href="command:azure-iot-toolkit.callFromHtml?%22azure-iot-toolkit.setIoTHubConnectionString%22">Set IoT Hub Connection String</a>
+                                        <a href="command:azure-iot-toolkit.setIoTHubConnectionString">Set IoT Hub Connection String</a>
                                     </div>
                                     <div>
-                                        <a href="command:azure-iot-toolkit.callFromHtml?%22azure-iot-toolkit.createIoTHub%22">Create IoT Hub</a>
+                                        <a href="command:azure-iot-toolkit.createIoTHub">Create IoT Hub</a>
                                     </div>
                                     <div>
-                                        <a href="command:azure-iot-toolkit.callFromHtml?%22azure-iot-toolkit.selectIoTHub%22">Select IoT Hub</a>
+                                        <a href="command:azure-iot-toolkit.selectIoTHub">Select IoT Hub</a>
                                     </div>
                                     <h2>Set IoT Hub Connection String</h2>
                                     <div>
@@ -380,16 +355,19 @@
                                 <div>
                                     <h3 class="caption">Getting Started</h3>
                                     <div>
-                                        <a href="https://github.com/Microsoft/vscode-cpptools/blob/master/Documentation/Getting%20started%20with%20IntelliSense%20configuration.md">Configuring IntelliSense</a>
+                                        <a href="https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.azure-iot-toolkit">Marketplace</a>
                                     </div>
                                     <div>
-                                        <a href="https://github.com/Microsoft/vscode-cpptools/blob/master/launch.md">Configuring Debugging</a>
+                                        <a href="https://github.com/Microsoft/vscode-azure-iot-toolkit">Repository</a>
                                     </div>
                                     <div>
-                                        <a href="https://github.com/Microsoft/vscode-cpptools/blob/master/Documentation/LanguageServer/MinGW.md">IntelliSense for MinGW projects</a>
+                                        <a href="https://github.com/Microsoft/vscode-azure-iot-toolkit/issues">Issues</a>
                                     </div>
                                     <div>
-                                        <a href="https://github.com/Microsoft/vscode-cpptools/blob/master/Documentation/LanguageServer/Windows%20Subsystem%20for%20Linux.md">IntelliSense for Windows Subsystem for Linux projects</a>
+                                        <a href="https://gitter.im/Microsoft/azure-iot-toolkit">Gitter</a>
+                                    </div>
+                                    <div>
+                                        <a href="https://marketplace.visualstudio.com/items/vsciot-vscode.azure-iot-toolkit/changelog">Changelog</a>
                                     </div>
                                 </div>
                             </td>
@@ -399,17 +377,13 @@
                                 <div>
                                     <h3 class="caption">Resources</h3>
                                     <div>
+                                        <a href="https://channel9.msdn.com/Shows/Internet-of-Things-Show/Azure-IoT-Toolkit-extension-for-Visual-Studio-Code">Channel 9 video: Walkthrough of Azure IoT Toolkit extension</a>
+                                    </div>
+                                    <div>
                                         <a href="https://blogs.msdn.microsoft.com/iotdev/2017/09/01/handy-tool-when-you-develop-with-azure-iot/">Handy Tool When You Develop With Azure IoT</a>
                                     </div>
                                     <div>
-                                        <a href="https://blogs.msdn.microsoft.com/iotdev/2018/06/30/azure-iot-toolkit-for-visual-studio-code-generally-available-for-managing-azure-iot-hub-and-devices-with-ease/">Azure IoT Toolkit for Visual Studio Code generally available for managing Azure IoT
-                                            Hub and Devices with ease</a>
-                                    </div>
-                                    <div>
-                                        <a href="https://blogs.msdn.microsoft.com/vcblog/2018/02/20/visual-studio-code-cc-extension-feb-2018-update/">February 2018 Update</a>
-                                    </div>
-                                    <div>
-                                        <a href="https://blogs.msdn.microsoft.com/vcblog/2016/03/31/cc-extension-for-visual-studio-code/">C/C++ Extension anouncement</a>
+                                        <a href="https://blogs.msdn.microsoft.com/iotdev/2018/06/30/azure-iot-toolkit-for-visual-studio-code-generally-available-for-managing-azure-iot-hub-and-devices-with-ease/">Azure IoT Toolkit for Visual Studio Code generally available for managing Azure IoT Hub and Devices with ease</a>
                                     </div>
                                 </div>
                             </td>
@@ -430,11 +404,14 @@
         </table>
     </div>
     <script>
+        const vscode = acquireVsCodeApi();
         const elements = document.getElementsByTagName("a");
         for (let i = 0; i < elements.length; i++) {
             elements[i].onclick = (event) => {
                 console.log(event);
-                ga('send', 'event', 'link', 'click', event.target.href);
+                vscode.postMessage({
+                    href: event.target.href
+                })
             }
         }
     </script>

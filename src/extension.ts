@@ -130,13 +130,8 @@ export function activate(context: vscode.ExtensionContext) {
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.showWelcomePage", () => {
-        TelemetryClient.sendEvent("General.ShowWelcomePage");
+        TelemetryClient.sendEvent(Constants.IoTHubAIShowWelcomePagetEvent, { trigger: "manual" });
         azureIoTExplorer.showWelcomePage();
-    }));
-
-    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.callFromHtml", (command: string) => {
-        TelemetryClient.sendEvent("General.CallFromHtml", { command });
-        vscode.commands.executeCommand(command);
     }));
 
     vscode.workspace.onDidChangeTextDocument((event) => azureIoTExplorer.replaceConnectionString(event));
