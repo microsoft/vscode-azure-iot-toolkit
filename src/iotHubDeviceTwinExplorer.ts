@@ -41,10 +41,10 @@ export class IotHubDeviceTwinExplorer extends BaseExplorer {
                 this.outputLine(Constants.IoTHubDeviceTwinLabel, `Failed to get Device Twin: ${err.message}`);
             } else {
                 this.outputLine(Constants.IoTHubDeviceTwinLabel, `Device Twin retrieved successfully`);
-                Utility.writeJson(Constants.DeviceTwinJosnFilePath, twin);
-                vscode.workspace.openTextDocument(Constants.DeviceTwinJosnFilePath).then((document: vscode.TextDocument) => {
+                Utility.writeJson(Constants.DeviceTwinJsonFilePath, twin);
+                vscode.workspace.openTextDocument(Constants.DeviceTwinJsonFilePath).then((document: vscode.TextDocument) => {
                     if (document.isDirty) {
-                        vscode.window.showWarningMessage(`Your ${Constants.DeviceTwinJosnFileName} has unsaved changes. \
+                        vscode.window.showWarningMessage(`Your ${Constants.DeviceTwinJsonFileName} has unsaved changes. \
                         Please close or save the file. Then try again.`);
                     }
                     vscode.window.showTextDocument(document);
@@ -62,7 +62,7 @@ export class IotHubDeviceTwinExplorer extends BaseExplorer {
 
         try {
             this._outputChannel.show();
-            let deviceTwinContent = await Utility.readFromActiveFile(Constants.DeviceTwinJosnFileName);
+            let deviceTwinContent = await Utility.readFromActiveFile(Constants.DeviceTwinJsonFileName);
             if (!deviceTwinContent) {
                 return;
             }

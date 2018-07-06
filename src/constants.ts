@@ -39,8 +39,8 @@ export class Constants {
     public static IoTHubAIGetDeviceTwinStartEvent = "AZ.DeviceTwin.Get.Start";
     public static IoTHubAIGetDeviceTwinDoneEvent = "AZ.DeviceTwin.Get.Done";
     public static IoTHubAIUpdateDeviceTwinEvent = "AZ.DeviceTwin.Update";
-    public static DeviceTwinJosnFileName = "azure-iot-device-twin.json";
-    public static DeviceTwinJosnFilePath: string;
+    public static DeviceTwinJsonFileName = "azure-iot-device-twin.json";
+    public static DeviceTwinJsonFilePath: string;
     public static IoTHubAIEdgeDeployStartEvent = "Edge.Deploy.Start";
     public static IoTHubAIEdgeDeployDoneEvent = "AZ.Edge.Deploy.Done";
     public static IoTHubAIEdgeDeployAtScaleStartEvent = "Edge.DeployAtScale.Start";
@@ -51,8 +51,8 @@ export class Constants {
     public static IoTHubAIGetModuleTwinDoneEvent = "AZ.Edge.ModuleTwin.Get.Done";
     public static IoTHubAIUpdateModuleTwinStartEvent = "AZ.Edge.ModuleTwin.Update.Start";
     public static IoTHubAIUpdateModuleTwinDoneEvent = "AZ.Edge.ModuleTwin.Update.Done";
-    public static ModuleTwinJosnFileName = "azure-iot-module-twin.json";
-    public static ModuleTwinJosnFilePath: string;
+    public static ModuleTwinJsonFileName = "azure-iot-module-twin.json";
+    public static ModuleTwinJsonFilePath: string;
     public static IoTHubAILoadModuleTreeStartEvent = "AZ.Edge.LoadModuleTree.Start";
     public static IoTHubAILoadModuleTreeDoneEvent = "AZ.Edge.LoadModuleTree.Done";
 
@@ -74,8 +74,8 @@ export class Constants {
 
     public static initialize(context: vscode.ExtensionContext) {
         const directory = context.storagePath ? context.storagePath : os.tmpdir();
-        Constants.ModuleTwinJosnFilePath = path.join(directory, Constants.ModuleTwinJosnFileName);
-        Constants.DeviceTwinJosnFilePath = path.join(directory, Constants.DeviceTwinJosnFileName);
+        Constants.ModuleTwinJsonFilePath = path.join(directory, Constants.ModuleTwinJsonFileName);
+        Constants.DeviceTwinJsonFilePath = path.join(directory, Constants.DeviceTwinJsonFileName);
     }
 
     private static a;

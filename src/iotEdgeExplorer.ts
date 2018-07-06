@@ -97,7 +97,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 
         try {
             this._outputChannel.show();
-            const moduleTwinContent = await Utility.readFromActiveFile(Constants.ModuleTwinJosnFileName);
+            const moduleTwinContent = await Utility.readFromActiveFile(Constants.ModuleTwinJsonFileName);
             if (!moduleTwinContent) {
                 return;
             }
@@ -125,10 +125,10 @@ export class IoTEdgeExplorer extends BaseExplorer {
 
         try {
             const twin = await Utility.getModuleTwin(iotHubConnectionString, deviceId, moduleId);
-            Utility.writeJson(Constants.ModuleTwinJosnFilePath, twin);
-            const document = await vscode.workspace.openTextDocument(Constants.ModuleTwinJosnFilePath);
+            Utility.writeJson(Constants.ModuleTwinJsonFilePath, twin);
+            const document = await vscode.workspace.openTextDocument(Constants.ModuleTwinJsonFilePath);
             if (document.isDirty) {
-                throw new Error(`Your ${Constants.ModuleTwinJosnFileName} has unsaved changes. Please close or save the file. Then try again.`);
+                throw new Error(`Your ${Constants.ModuleTwinJsonFileName} has unsaved changes. Please close or save the file. Then try again.`);
             }
             vscode.window.showTextDocument(document);
             TelemetryClient.sendEvent(Constants.IoTHubAIGetModuleTwinDoneEvent, { Result: "Success" });
