@@ -72,14 +72,14 @@ export class IoTEdgeExplorer extends BaseExplorer {
     }
 
     public async setupIotedgehubdev(deviceItem: DeviceItem) {
-        deviceItem = await Utility.getInputDevice(deviceItem, "Edge.Setup.Start", true);
+        deviceItem = await Utility.getInputDevice(deviceItem, "Edge.SetupIotedgehubdev.Start", true);
 
         if (!deviceItem) {
             return;
         }
 
         Executor.runInTerminal(Utility.adjustTerminalCommand(`iotedgehubdev setup -c "${deviceItem.connectionString}"`));
-        TelemetryClient.sendEvent("AZ.Edge.Setup.Done");
+        TelemetryClient.sendEvent("AZ.Edge.SetupIotedgehubdev.Done");
     }
 
     public async getModuleTwin(moduleItem: ModuleItem) {
