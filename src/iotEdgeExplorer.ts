@@ -71,6 +71,17 @@ export class IoTEdgeExplorer extends BaseExplorer {
         this.deployAtScale(iotHubConnectionString, deploymentJson);
     }
 
+    public async setupIotedgehubdev(deviceItem: DeviceItem) {
+        deviceItem = await Utility.getInputDevice(deviceItem, "Edge.Setup.Start", true);
+
+        if (!deviceItem) {
+            return;
+        }
+
+        Executor.runInTerminal(Utility.adjustTerminalCommand(`iotedgehubdev setup -c "${deviceItem.connectionString}"`));
+        TelemetryClient.sendEvent("AZ.Edge.Setup.Done");
+    }
+
     public async getModuleTwin(moduleItem: ModuleItem) {
         if (moduleItem) {
             await this.getModuleTwinById(moduleItem.deviceId, moduleItem.moduleId);

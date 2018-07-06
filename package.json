@@ -2,7 +2,7 @@
   "name": "azure-iot-toolkit",
   "displayName": "Azure IoT Toolkit",
   "description": "Interact with Azure IoT Hub, IoT Device Management, IoT Edge Management, IoT Hub Code Snippets",
-  "version": "1.0.0",
+  "version": "1.0.0-iotedgehubdev",
   "publisher": "vsciot-vscode",
   "aiKey": "0caaff90-cc1c-4def-b64c-3ef33615bc9b",
   "icon": "logo.png",
@@ -52,6 +52,7 @@
     "onCommand:azure-iot-toolkit.createEdgeDevice",
     "onCommand:azure-iot-toolkit.createDeployment",
     "onCommand:azure-iot-toolkit.createDeploymentAtScale",
+    "onCommand:azure-iot-toolkit.setupIotedgehubdev",
     "onCommand:azure-iot-toolkit.createIoTHub",
     "onCommand:azure-iot-toolkit.getModuleTwin",
     "onCommand:azure-iot-toolkit.updateModuleTwin",
@@ -172,6 +173,11 @@
       {
         "command": "azure-iot-toolkit.createDeploymentAtScale",
         "title": "Create Deployment at Scale",
+        "category": "Azure IoT Edge"
+      },
+      {
+        "command": "azure-iot-toolkit.setupIotedgehubdev",
+        "title": "Setup iotedgehubdev",
         "category": "Azure IoT Edge"
       },
       {
@@ -359,9 +365,14 @@
           "group": "azure-iot-toolkit-edge@0"
         },
         {
-          "command": "azure-iot-toolkit.refresh",
+          "command": "azure-iot-toolkit.setupIotedgehubdev",
           "when": "view == iotHubDevices && viewItem == edge",
           "group": "azure-iot-toolkit-edge@1"
+        },
+        {
+          "command": "azure-iot-toolkit.refresh",
+          "when": "view == iotHubDevices && viewItem == edge",
+          "group": "azure-iot-toolkit-edge@2"
         },
         {
           "command": "azure-iot-toolkit.getModuleTwin",
@@ -471,7 +482,7 @@
     "mocha": "^5.1.1",
     "tslint": "^4.5.1",
     "typescript": "^2.2.1",
-    "vscode": "^1.1.17"
+    "vscode": "^1.1.18"
   },
   "dependencies": {
     "axios": "^0.16.2",
@@ -484,7 +495,7 @@
     "azure-iothub": "^1.7.0",
     "clipboardy": "^1.1.4",
     "ms-rest": "^2.3.2",
-    "ms-rest-azure": "^2.5.5",
+    "ms-rest-azure": "^2.5.7",
     "strip-json-comments": "^2.0.1",
     "vscode-extension-telemetry": "0.0.8"
   },

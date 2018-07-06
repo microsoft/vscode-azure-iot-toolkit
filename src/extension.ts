@@ -20,8 +20,8 @@ export function activate(context: vscode.ExtensionContext) {
 
     vscode.window.registerTreeDataProvider("iotHubDevices", deviceTree);
 
-    context.subscriptions.push(vscode.languages.registerCodeLensProvider({pattern: `**/${Constants.ModuleTwinJosnFileName}`}, new ModuleTwinCodeLensProvider()));
-    context.subscriptions.push(vscode.languages.registerCodeLensProvider({pattern: `**/${Constants.DeviceTwinJosnFileName}`}, new DeviceTwinCodeLensProvider()));
+    context.subscriptions.push(vscode.languages.registerCodeLensProvider({ pattern: `**/${Constants.ModuleTwinJosnFileName}` }, new ModuleTwinCodeLensProvider()));
+    context.subscriptions.push(vscode.languages.registerCodeLensProvider({ pattern: `**/${Constants.DeviceTwinJosnFileName}` }, new DeviceTwinCodeLensProvider()));
 
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.refresh", (element) => {
         deviceTree.refresh(element);
@@ -109,6 +109,10 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.createDeploymentAtScale", (fileUri) => {
         azureIoTExplorer.createDeploymentAtScale(fileUri);
+    }));
+
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.setupIotedgehubdev", (DeviceItem) => {
+        azureIoTExplorer.setupIotedgehubdev(DeviceItem);
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.getModuleTwin", async (moduleItem) => {

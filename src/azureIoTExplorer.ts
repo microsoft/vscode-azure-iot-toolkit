@@ -116,6 +116,10 @@ export class AzureIoTExplorer {
         this._iotEdgeExplorer.createDeploymentAtScale(fileUri);
     }
 
+    public setupIotedgehubdev(deviceItem: DeviceItem): void {
+        this._iotEdgeExplorer.setupIotedgehubdev(deviceItem);
+    }
+
     public async getModuleTwin(moduleItem: ModuleItem) {
         await this._iotEdgeExplorer.getModuleTwin(moduleItem);
     }
