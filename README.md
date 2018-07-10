@@ -5,6 +5,7 @@
 Interact with Azure IoT Hub, IoT Device Management, IoT Edge Management, IoT Hub Code Snippets.
 
 ## Device Explorer
+The [Wiki page](https://github.com/Microsoft/vscode-azure-iot-toolkit/wiki) includes a comprehensive getting started guide as well as  detailed usage instructions of the following features:
 
 * IoT Hub management
     * Create IoT Hub
