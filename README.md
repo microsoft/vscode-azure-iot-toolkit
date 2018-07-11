@@ -26,7 +26,7 @@ The [Wiki page](https://github.com/Microsoft/vscode-azure-iot-toolkit/wiki) incl
     * Invoke Direct Method
     * Edit Device Twin
 * Interact with Azure IoT Edge (Install [Azure IoT Edge](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.azure-iot-edge) for more IoT Edge support)
-    * List Edge Moudles
+    * List Edge Modules
     * Edit Module Twin
     * Create deployment for Edge device
 
