@@ -35,7 +35,9 @@ export class WelcomePage {
                     retainContextWhenHidden: true,
                 },
             );
-            this.panel.webview.html = fs.readFileSync(this.context.asAbsolutePath(path.join("resources", "welcome.html")), "utf8");
+            let html = fs.readFileSync(this.context.asAbsolutePath(path.join("resources", "welcome", "index.html")), "utf8");
+            html = html.replace(/{{root}}/g, vscode.Uri.file(this.context.asAbsolutePath(".")).with({ scheme: "vscode-resource" }).toString());
+            this.panel.webview.html = html;
             this.panel.onDidDispose(() => {
                 this.panel = undefined;
                 const duration = (new Date().getTime() - startTime.getTime()) / 1000;
