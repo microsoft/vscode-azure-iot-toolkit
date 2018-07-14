@@ -38,13 +38,17 @@ header p {
 
 /*#region main-content*/
 
+#content {
+    display: table;
+}
+
 #title-area,
 #main-content {
     padding-left: 50px;
 }
 
 #main-content {
-    max-width: 70%;
+    max-width: 75%;
     float: left;
     padding-right: 40px
 }
@@ -62,9 +66,13 @@ header p {
 }
 
 .interactive {
-    background: #2B2B2B;
+    background-color: #2B2B2B;
     min-height: 139px;
     margin-top: 10px
+}
+
+.interactive:hover {
+    background-color: #303030;
 }
 
 .interactive>div {
@@ -109,10 +117,11 @@ header p {
     text-align: center;
     line-height: 20px;
     padding-top: 12px;
+    border-radius: 4px;
 }
 
 .interactive a:hover {
-    background: #007ACC;
+    background-color: #007ACC;
 }
 
 .detail {
@@ -131,15 +140,20 @@ header p {
     color: #D4D4D4;
 }
 
-#main-content p {}
-
 /*#endregion main-content*/
 
 /*#region sidebar*/
 
 #sidebar {
     float: left;
-    max-width: 30%;
+    max-width: 20%;
+    position: sticky;
+    top: 30px;
+}
+
+#sidebar h3 {
+    margin-top: 30px;
+    margin-bottom: 10px;
 }
 
 /*#endregion sidebar*/
