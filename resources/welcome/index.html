@@ -4,6 +4,7 @@
 <head>
     <link rel="stylesheet" href="{{root}}/resources/welcome/main.css">
     <link rel="stylesheet" href="E:\IoT\vscode-azure-iot-toolkit\resources\welcome\main.css">
+    <link rel="stylesheet" href="D:\code\vscode-azure-iot-toolkit\resources\welcome\main.css">
 </head>
 
 <body class="vscode-dark">
@@ -20,22 +21,35 @@
                     <h2>Quickstarts</h2>
                     <div class="interactive">
                         <div>
+                            <div class="arrow"></div>
                             <h3>Select IoT Hub</h3>
-                            <p>Click button to select IoT Hub. Expand For detailed instruction.</p>
+                            <p class="description">Click button to select IoT Hub. Expand For detailed instruction.</p>
                             <a href="command:azure-iot-toolkit.selectIoTHub">Select IoT Hub</a>
-                            <div>
-                                sasasas
-                            </div>
                         </div>
-
+                        <div class="detail">
+                            sasasas
+                            <p>The device list will be shown.</p>
+                            <p>
+                                <img src="https://github.com/Microsoft/vscode-azure-iot-toolkit/raw/master/images/device-explorer.png" alt="Device Explorer"
+                                />
+                            </p>
+                        </div>
                     </div>
                     <div class="interactive">
                         <div>
+                            <div class="arrow"></div>
                             <h3>Create IoT Hub</h3>
-                            <p>Click button to select IoT Hub. Expand For detailed instruction.</p>
+                            <p class="description">Click button to create IoT Hub. Expand For detailed instruction.</p>
                             <a href="command:azure-iot-toolkit.createIoTHub">Create IoT Hub</a>
                         </div>
-
+                        <div class="detail">
+                            sasasas
+                            <p>The device list will be shown.</p>
+                            <p>
+                                <img src="https://github.com/Microsoft/vscode-azure-iot-toolkit/raw/master/images/device-explorer.png" alt="Device Explorer"
+                                />
+                            </p>
+                        </div>
                     </div>
                 </div>
                 <div id="tutorial">
@@ -202,6 +216,10 @@
             </div>
         </div>
     </div>
+    <script type="text/javascript" src="{{root}}/resources/welcome/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="D:\code\vscode-azure-iot-toolkit\resources\welcome\jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="{{root}}/resources/welcome/main.js"></script>
+    <script type="text/javascript" src="D:\code\vscode-azure-iot-toolkit\resources\welcome\main.js"></script>
     <script>
         const vscode = acquireVsCodeApi();
         const elements = document.getElementsByTagName("a");

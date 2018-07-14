@@ -2,6 +2,10 @@
     box-sizing: border-box;
 }
 
+a {
+    text-decoration: none;
+}
+
 header,
 #content {
     max-width: 1300px;
@@ -59,13 +63,60 @@ header p {
 
 .interactive {
     background: #2B2B2B;
-    height: 139px;
+    min-height: 139px;
     margin-top: 10px
 }
 
 .interactive>div {
     margin-left: 20px;
     padding-top: 20px;
+}
+
+.arrow {
+    float: right;
+    margin-top: 17px;
+    margin-right: 30px;
+    width: 20px;
+    height: 20px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: transparent #D4D4D4 #D4D4D4 transparent;
+    transform: rotate(45deg);
+}
+
+.arrow-up {
+    margin-top: 31px;
+    transform: rotate(225deg);
+}
+
+.interactive .description {
+    margin-top: 5px;
+    margin-bottom: 10px;
+    font-size: 15px;
+    color: #999999;
+    letter-spacing: 0.05px;
+    text-align: left;
+    line-height: 20px;
+}
+
+.interactive a {
+    display: block;
+    width: 200px;
+    height: 44px;
+    background-color: #0062A3;
+    font-size: 15px;
+    color: #FFFFFF;
+    text-align: center;
+    line-height: 20px;
+    padding-top: 12px;
+}
+
+.interactive a:hover {
+    background: #007ACC;
+}
+
+.detail {
+    display: none;
 }
 
 #main-content h3 {
@@ -80,9 +131,7 @@ header p {
     color: #D4D4D4;
 }
 
-#main-content p {
-    
-}
+#main-content p {}
 
 /*#endregion main-content*/
 
