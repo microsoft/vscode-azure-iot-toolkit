@@ -19,4 +19,14 @@ function main() {
             $(event.currentTarget).find(".arrow").toggleClass("arrow-up")
         }
     });
+
+    $(window).scroll(() => {
+        let offset = 250;
+        let duration = 600;
+        if ($(this).scrollTop() >= offset) {
+            $('#back-to-top').fadeIn(duration);
+        } else {
+            $('#back-to-top').fadeOut(duration);
+        }
+    });
 }
