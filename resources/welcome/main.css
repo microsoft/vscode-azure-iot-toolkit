@@ -53,7 +53,8 @@ header p {
     margin-bottom: 0;
 }
 
-.vscode-dark header p {
+.vscode-dark header p,
+header p {
     color: #999999;
 }
 
@@ -90,7 +91,8 @@ header p {
     margin-top: 10px
 }
 
-.vscode-dark .interactive {
+.vscode-dark .interactive,
+.interactive {
     background-color: #2B2B2B;
 }
 
@@ -98,7 +100,8 @@ header p {
     background-color: #F7F7F7;
 }
 
-.vscode-dark .interactive:hover {
+.vscode-dark .interactive:hover,
+.interactive:hover {
     background-color: #303030;
 }
 
@@ -121,7 +124,8 @@ header p {
     transform: rotate(45deg);
 }
 
-.vscode-dark .arrow {
+.vscode-dark .arrow,
+.arrow {
     border-color: transparent #D4D4D4 #D4D4D4 transparent;
 }
 
@@ -142,7 +146,8 @@ header p {
     line-height: 20px;
 }
 
-.vscode-dark .interactive .description {
+.vscode-dark .interactive .description,
+.interactive .description {
     color: #999999;
 }
 
@@ -154,7 +159,6 @@ header p {
     display: block;
     width: 200px;
     height: 44px;
-    
     font-size: 15px;
     color: #FFFFFF;
     text-align: center;
@@ -163,7 +167,8 @@ header p {
     border-radius: 4px;
 }
 
-.vscode-dark .interactive a {
+.vscode-dark .interactive a,
+.interactive a {
     background-color: #0062A3;
 }
 
@@ -171,7 +176,8 @@ header p {
     background-color: #007ACC;
 }
 
-.vscode-dark .interactive a:hover {
+.vscode-dark .interactive a:hover,
+.interactive a:hover {
     background-color: #007ACC;
 }
 
@@ -251,7 +257,8 @@ footer {
     text-decoration: none;
 }
 
-.vscode-dark #back-to-top {
+.vscode-dark #back-to-top,
+#back-to-top {
     color: #D4D4D4;
     background-color: #2B2B2B;
 }
@@ -261,7 +268,8 @@ footer {
     background-color: #E7E7E7;
 }
 
-.vscode-dark #back-to-top:hover {
+.vscode-dark #back-to-top:hover,
+#back-to-top:hover {
     background-color: #303030;
 }
 
