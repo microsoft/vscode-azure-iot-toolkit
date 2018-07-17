@@ -1,0 +1,288 @@
+* {
+    box-sizing: border-box;
+    font-family: "Segoe UI";
+    font-size: 15px;
+}
+
+.vscode-dark {
+    color: #D4D4D4;
+}
+
+.vscode-light {
+    color: #333333;
+}
+
+h1,
+h2,
+h3 {
+    font-weight: normal;
+}
+
+a {
+    text-decoration: none;
+}
+
+img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+ol,
+ul {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+li {
+    margin-bottom: 3px;
+}
+
+header,
+#content {
+    max-width: 1300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+h1 {
+    font-size: 36px;
+    font-family: "Segoe UI Semibold";
+    line-height: 44px;
+    margin-bottom: 0;
+}
+
+header p {
+    font-size: 24px;
+    text-align: left;
+    line-height: 28px;
+    margin-top: 10px;
+    margin-bottom: 0;
+}
+
+.vscode-dark header p,
+header p {
+    color: #999999;
+}
+
+.vscode-light header p {
+    color: #666666;
+}
+
+/*#region main-content*/
+
+#content {
+    display: table;
+}
+
+#title-area,
+#main-content {
+    padding-left: 50px;
+}
+
+#main-content {
+    max-width: 75%;
+    float: left;
+    padding-right: 40px
+}
+
+#main-content h2 {
+    font-size: 32px;
+    font-family: "Segoe UI Light";
+    line-height: 38px;
+    margin-top: 30px;
+    margin-bottom: 0;
+}
+
+.interactive {
+    margin-top: 10px
+}
+
+.vscode-dark .interactive,
+.interactive {
+    background-color: #2B2B2B;
+}
+
+.vscode-light .interactive {
+    background-color: #F7F7F7;
+}
+
+.vscode-dark .interactive:hover,
+.interactive:hover {
+    background-color: #303030;
+}
+
+.vscode-light .interactive:hover {
+    background-color: #F0F0F0;
+}
+
+.interactive>div {
+    padding: 20px;
+}
+
+.arrow {
+    float: right;
+    margin-top: 17px;
+    margin-right: 30px;
+    width: 20px;
+    height: 20px;
+    border-width: 2px;
+    border-style: solid;
+    transform: rotate(45deg);
+}
+
+.vscode-dark .arrow,
+.arrow {
+    border-color: transparent #D4D4D4 #D4D4D4 transparent;
+}
+
+.vscode-light .arrow {
+    border-color: transparent #333333 #333333 transparent;
+}
+
+.arrow-up {
+    margin-top: 31px;
+    transform: rotate(225deg);
+}
+
+.interactive .description {
+    margin-top: 5px;
+    margin-bottom: 10px;
+    font-size: 15px;
+    text-align: left;
+    line-height: 20px;
+}
+
+.vscode-dark .interactive .description,
+.interactive .description {
+    color: #999999;
+}
+
+.vscode-light .interactive .description {
+    color: #666666;
+}
+
+.interactive a {
+    display: block;
+    width: 200px;
+    height: 44px;
+    font-size: 15px;
+    color: #FFFFFF;
+    text-align: center;
+    line-height: 20px;
+    padding-top: 12px;
+    border-radius: 4px;
+}
+
+.vscode-dark .interactive a,
+.interactive a {
+    background-color: #0062A3;
+}
+
+.vscode-light .interactive a {
+    background-color: #007ACC;
+}
+
+.vscode-dark .interactive a:hover,
+.interactive a:hover {
+    background-color: #007ACC;
+}
+
+.vscode-light .interactive a:hover {
+    background-color: #0062A3;
+}
+
+.detail {
+    display: none;
+    padding-top: 0 !important;
+}
+
+.detail img {
+    margin-top: 15px;
+}
+
+.interactive h3 {
+    font-size: 20px;
+    text-align: left;
+    line-height: 20px;
+    margin: 0;
+}
+
+#tutorial h3 {
+    font-family: "Segoe UI Light";
+    font-size: 20px;
+    text-align: left;
+    line-height: 28px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+footer {
+    padding-top: 60px;
+    padding-bottom: 40px;
+    text-align: center
+}
+
+/*#endregion main-content*/
+
+/*#region sidebar*/
+
+#sidebar {
+    float: left;
+    max-width: 20%;
+    position: sticky;
+    top: 30px;
+}
+
+#sidebar h3 {
+    margin-top: 30px;
+    margin-bottom: 10px;
+    font-size: 20px;
+    line-height: 24px;
+}
+
+#resources>div {
+    margin-top: 9px;
+}
+
+/*#endregion sidebar*/
+
+#back-to-top {
+    display: none;
+    position: fixed;
+    bottom: 40px;
+    right: 100px;
+    z-index: 9999;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    padding-top: 6px;
+    font-size: 28px;
+    cursor: pointer;
+    border: 0;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.vscode-dark #back-to-top,
+#back-to-top {
+    color: #D4D4D4;
+    background-color: #2B2B2B;
+}
+
+.vscode-light #back-to-top {
+    color: #333333;
+    background-color: #E7E7E7;
+}
+
+.vscode-dark #back-to-top:hover,
+#back-to-top:hover {
+    background-color: #303030;
+}
+
+.vscode-light #back-to-top:hover {
+    background-color: #E0E0E0;
+}
+
+.vscode-dark {
+    background-color: #1E1E1E;
+}

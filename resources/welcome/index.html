@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="{{root}}/resources/welcome/main.css">
+</head>
+
+<body class="vscode-dark">
+    <header>
+        <div id="title-area">
+            <h1>Azure IoT Toolkit Extension</h1>
+            <p>Interact with Azure IoT Hub, IoT Device Management, IoT Edge Management, IoT Hub Code Snippets.</p>
+        </div>
+    </header>
+    <div id="content">
+        <div id="main-content">
+            <div>
+                <div id="quickstarts">
+                    <h2>Quick Starts</h2>
+                    <div class="interactive" id="select-iot-hub">
+                        <div>
+                            <div class="arrow"></div>
+                            <h3>Select IoT Hub if you have existing one</h3>
+                            <p class="description">Click below button to select IoT Hub via command, or expand for alternative instructions.</p>
+                            <a href="command:azure-iot-toolkit.selectIoTHub">Select IoT Hub</a>
+                        </div>
+                        <div class="detail">
+                            To select IoT Hub, click above button, or follow below steps.
+                            <ol>
+                                <li>
+                                    <div>In Explorer of VS Code, click "Azure IoT Hub Devices" tab in the bottom left corner.</div>
+                                    <img src="https://raw.githubusercontent.com/Microsoft/vscode-azure-iot-toolkit/master/images/device-explorer-click.png">
+                                </li>
+                                <li>
+                                    <div>Click "Select IoT Hub" in context menu.</div>
+                                    <img src="https://raw.githubusercontent.com/Microsoft/vscode-azure-iot-toolkit/master/images/select-iot-hub.png">
+                                </li>
+                                <li>
+                                    <div>If you have not signed in to Azure, a pop-up will show in the bottom right corner to
+                                        let you sign in to Azure.</div>
+                                    <img src="https://raw.githubusercontent.com/wiki/Microsoft/vscode-azure-iot-toolkit/images/sign-in-first.png">
+                                </li>
+                                <li>
+                                    <div>After you sign in, your Azure Subscription list will be shown, then select Azure Subscription
+                                        and IoT Hub.</div>
+                                </li>
+                                <li>
+                                    <div>The device list will be shown in "Azure IoT Hub Devices" tab in a few seconds.</div>
+                                    <img src="https://raw.githubusercontent.com/Microsoft/vscode-azure-iot-toolkit/master/images/device-explorer.png">
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div class="interactive" id="create-iot-hub">
+                        <div>
+                            <div class="arrow"></div>
+                            <h3>Create IoT Hub if you don't have one</h3>
+                            <p class="description">Click below button to create IoT Hub via command, or expand for alternative instructions.</p>
+                            <a href="command:azure-iot-toolkit.createIoTHub">Create IoT Hub</a>
+                        </div>
+                        <div class="detail">
+                            To create IoT Hub, click above button, or follow below steps.
+                            <ol>
+                                <li>
+                                    <div>In Explorer of VS Code, click "Azure IoT Hub Devices" tab in the bottom left corner.</div>
+                                    <img src="https://raw.githubusercontent.com/Microsoft/vscode-azure-iot-toolkit/master/images/device-explorer-click.png">
+                                </li>
+                                <li>
+                                    <div>Click "Create IoT Hub" in context menu.</div>
+                                    <img src="https://raw.githubusercontent.com/wiki/Microsoft/vscode-azure-iot-toolkit/images/createhubmenu.png">
+                                </li>
+                                <li>
+                                    <div>If you have not signed in to Azure, a pop-up will show in the bottom right corner to
+                                        let you sign in to Azure.</div>
+                                    <img src="https://raw.githubusercontent.com/wiki/Microsoft/vscode-azure-iot-toolkit/images/sign-in-first.png">
+                                </li>
+                                <li>After you sign in, select subscription, resource group, location, pricing tier and enter
+                                    the name of your IoT Hub.</li>
+                                <li>
+                                    <div>IoT Hub will be created in a few minutes.</div>
+                                    <img src="https://raw.githubusercontent.com/wiki/Microsoft/vscode-azure-iot-toolkit/images/createhub.gif" alt="create hub">
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                <div id="tutorial">
+                    <h2>Say Hello to Azure IoT Hub in 1 Minute</h2>
+                    <ul>
+                        <li>
+                            <a href="#register-device">Register a device</a>
+                        </li>
+                        <li>
+                            <a href="#send-d2c">Say Hello to IoT Hub (Send device-to-cloud message)</a>
+                        </li>
+                        <li>
+                            <a href="#monitor-d2c">Monitor device-to-cloud (D2C) message</a>
+                        </li>
+                    </ul>
+                    <h3 id="register-device">Register a device</h3>
+                    A device must
+                    <span> </span>be registered
+                    <span> </span>with your IoT hub before it can connect.
+                    <ol>
+                        <li>Click
+                            <span> </span>
+                            <strong>... &gt; Create Device</strong>
+                            <span> </span>at
+                            <span> </span>
+                            <strong>AZURE IOT HUB DEVICES</strong>
+                            <span> </span>tab, or type
+                            <span> </span>
+                            <strong>Azure IoT Hub: Create Device</strong>
+                            <span> </span>in
+                            <span> </span>Command Palette.</li>
+                        <li>Enter device ID
+                            <span></span>and press
+                            <span> </span>
+                            <strong>Enter</strong>.</li>
+                        <li>Wait a few seconds until the new device is created.</li>
+                    </ol>
+                    <img src="https://raw.githubusercontent.com/wiki/Microsoft/vscode-azure-iot-toolkit/images/createdevice.gif" alt="create device"
+                    />
+                    <h3 id="send-d2c">Say Hello to IoT Hub (Send device-to-cloud message)</h3>
+                    <ol>
+                        <li>Right-click your device and select
+                            <strong>Send D2C message to IoT Hub</strong>
+                        </li>
+                        <li>Enter the message you want to send</li>
+                        <li>Results will be shown in
+                            <strong>OUTPUT &gt; Azure IoT Toolkit</strong> view.</li>
+                    </ol>
+                    <img src="https://raw.githubusercontent.com/wiki/Microsoft/vscode-azure-iot-toolkit/images/sendd2c.gif" alt="send d2c" />
+                    <h3 id="monitor-d2c">Monitor device-to-cloud (D2C) message</h3>
+                    While you could send message to your IoT Hub, it is also possible to
+                    <span> </span>monitor those message
+                    <span> </span>in VS Code.
+                    <ol>
+                        <li>Right-click your device and select
+                            <span> </span>
+                            <strong>Start Monitoring D2C Message</strong>.</li>
+                    </ol>
+                    <img src="https://raw.githubusercontent.com/wiki/Microsoft/vscode-azure-iot-toolkit/images/startmonitor.png" alt="start monitor"
+                    />
+                    <ol start="2">
+                        <li>The monitored messages will be shown in
+                            <span> </span>
+                            <strong>OUTPUT &gt; Azure IoT Toolkit</strong>
+                            <span> </span>view.</li>
+                        <li>To stop monitoring, right-click the
+                            <span> </span>
+                            <strong>OUTPUT</strong>
+                            <span> </span>view and select
+                            <span> </span>
+                            <strong>Stop Monitoring D2C Message</strong>.</li>
+                    </ol>
+                    <img src="https://raw.githubusercontent.com/wiki/Microsoft/vscode-azure-iot-toolkit/images/stopmonitor.png" alt="stop monitor"
+                    />
+                </div>
+            </div>
+            <footer>
+                <div>
+                    Having trouble with the extension? -
+                    <a href="https://github.com/microsoft/vscode-azure-iot-toolkit/wiki">Browse the documentation</a> -
+                    <a href="https://github.com/Microsoft/vscode-azure-iot-toolkit/issues">Report an issue</a> -
+                    <a href="https://gitter.im/Microsoft/azure-iot-toolkit">Contact us on Gitter</a>
+                </div>
+            </footer>
+        </div>
+        <div id="sidebar">
+            <div>
+                <h3>Quick Links</h3>
+                <div>
+                    <a href="https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.azure-iot-toolkit">Marketplace</a>
+                </div>
+                <div>
+                    <a href="https://github.com/Microsoft/vscode-azure-iot-toolkit">Repository</a>
+                </div>
+                <div>
+                    <a href="https://github.com/Microsoft/vscode-azure-iot-toolkit/issues">Issues</a>
+                </div>
+                <div>
+                    <a href="https://github.com/Microsoft/vscode-azure-iot-toolkit/wikit">Wiki</a>
+                </div>
+                <div>
+                    <a href="https://gitter.im/Microsoft/azure-iot-toolkit">Gitter</a>
+                </div>
+                <div>
+                    <a href="https://marketplace.visualstudio.com/items/vsciot-vscode.azure-iot-toolkit/changelog">Changelog</a>
+                </div>
+            </div>
+            <div id="resources">
+                <h3>Resources</h3>
+                <div>
+                    <a href="https://channel9.msdn.com/Shows/Internet-of-Things-Show/Azure-IoT-Toolkit-extension-for-Visual-Studio-Code">Channel 9 video: Walkthrough of Azure IoT Toolkit extension</a>
+                </div>
+                <div>
+                    <a href="https://github.com/Microsoft/vscode-azure-iot-toolkit/wiki/Quickstart-Node.js">Create and control an IoT device connected to an IoT hub (Node.js)</a>
+                </div>
+                <div>
+                    <a href="https://github.com/Microsoft/vscode-azure-iot-toolkit/wiki/Quickstart-.NET">Create and control an IoT device connected to an IoT hub (.NET)</a>
+                </div>
+                <div>
+                    <a href="https://blogs.msdn.microsoft.com/iotdev/2017/09/01/handy-tool-when-you-develop-with-azure-iot/">Handy Tool When You Develop With Azure IoT</a>
+                </div>
+                <div>
+                    <a href="https://blogs.msdn.microsoft.com/iotdev/2018/06/30/azure-iot-toolkit-for-visual-studio-code-generally-available-for-managing-azure-iot-hub-and-devices-with-ease/">Azure IoT Toolkit for Visual Studio Code generally available for managing Azure IoT Hub and Devices with
+                        ease
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="#" id="back-to-top">&uarr;</a>
+    <script type="text/javascript" src="{{root}}/resources/welcome/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="{{root}}/resources/welcome/main.js"></script>
+</body>
+
+</html>

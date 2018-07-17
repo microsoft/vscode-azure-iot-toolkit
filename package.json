@@ -2,12 +2,12 @@
   "name": "azure-iot-toolkit",
   "displayName": "Azure IoT Toolkit",
   "description": "Interact with Azure IoT Hub, IoT Device Management, IoT Edge Management, IoT Hub Code Snippets",
-  "version": "1.0.0",
+  "version": "1.1.0-rc",
   "publisher": "vsciot-vscode",
   "aiKey": "0caaff90-cc1c-4def-b64c-3ef33615bc9b",
   "icon": "logo.png",
   "engines": {
-    "vscode": "^1.17.0"
+    "vscode": "^1.23.0"
   },
   "license": "SEE LICENSE IN LICENSE.txt",
   "repository": {
@@ -56,7 +56,8 @@
     "onCommand:azure-iot-toolkit.getModuleTwin",
     "onCommand:azure-iot-toolkit.updateModuleTwin",
     "onCommand:azure-iot-toolkit.generateSasTokenForDevice",
-    "onCommand:azure-iot-toolkit.generateSasTokenForIotHub"
+    "onCommand:azure-iot-toolkit.generateSasTokenForIotHub",
+    "onCommand:azure-iot-toolkit.showWelcomePage"
   ],
   "main": "./out/src/extension",
   "contributes": {
@@ -175,6 +176,11 @@
         "category": "Azure IoT Edge"
       },
       {
+        "command": "azure-iot-toolkit.showWelcomePage",
+        "title": "Show Welcome Page",
+        "category": "Azure IoT Hub"
+      },
+      {
         "command": "azure-iot-toolkit.refresh",
         "title": "Refresh",
         "category": "Azure IoT Hub",
@@ -212,44 +218,49 @@
           "group": "navigation"
         },
         {
-          "command": "azure-iot-toolkit.createIoTHub",
+          "command": "azure-iot-toolkit.showWelcomePage",
           "when": "view == iotHubDevices",
           "group": "azure-iot-toolkit@0"
         },
         {
-          "command": "azure-iot-toolkit.createDevice",
+          "command": "azure-iot-toolkit.createIoTHub",
           "when": "view == iotHubDevices",
           "group": "azure-iot-toolkit@1"
         },
         {
-          "command": "azure-iot-toolkit.createEdgeDevice",
+          "command": "azure-iot-toolkit.createDevice",
           "when": "view == iotHubDevices",
           "group": "azure-iot-toolkit@2"
         },
         {
-          "command": "azure-iot-toolkit.startMonitorIoTHubMessage",
+          "command": "azure-iot-toolkit.createEdgeDevice",
           "when": "view == iotHubDevices",
           "group": "azure-iot-toolkit@3"
         },
         {
-          "command": "azure-iot-toolkit.setIoTHubConnectionString",
+          "command": "azure-iot-toolkit.startMonitorIoTHubMessage",
           "when": "view == iotHubDevices",
           "group": "azure-iot-toolkit@4"
         },
         {
-          "command": "azure-iot-toolkit.selectIoTHub",
+          "command": "azure-iot-toolkit.setIoTHubConnectionString",
           "when": "view == iotHubDevices",
           "group": "azure-iot-toolkit@5"
         },
         {
-          "command": "azure-iot-toolkit.copyIoTHubConnectionString",
+          "command": "azure-iot-toolkit.selectIoTHub",
           "when": "view == iotHubDevices",
           "group": "azure-iot-toolkit@6"
         },
         {
-          "command": "azure-iot-toolkit.generateSasTokenForIotHub",
+          "command": "azure-iot-toolkit.copyIoTHubConnectionString",
           "when": "view == iotHubDevices",
           "group": "azure-iot-toolkit@7"
+        },
+        {
+          "command": "azure-iot-toolkit.generateSasTokenForIotHub",
+          "when": "view == iotHubDevices",
+          "group": "azure-iot-toolkit@8"
         }
       ],
       "view/item/context": [

@@ -13,6 +13,7 @@ import { IoTHubResourceExplorer } from "./iotHubResourceExplorer";
 import { DeviceItem } from "./Model/DeviceItem";
 import { ModuleItem } from "./Model/ModuleItem";
 import { SnippetManager } from "./snippetManager";
+import { WelcomePage } from "./welcomePage";
 
 export class AzureIoTExplorer {
     private _iotHubC2DMessageExplorer: IotHubC2DMessageExplorer;
@@ -23,8 +24,9 @@ export class AzureIoTExplorer {
     private _iotHubDeviceTwinExplorer: IotHubDeviceTwinExplorer;
     private _iotHubResourceExplorer: IoTHubResourceExplorer;
     private _iotEdgeExplorer: IoTEdgeExplorer;
+    private _welcomePage: WelcomePage;
 
-    constructor(context: vscode.ExtensionContext) {
+    constructor(private context: vscode.ExtensionContext) {
         let outputChannel = vscode.window.createOutputChannel("Azure IoT Toolkit");
         this._iotHubC2DMessageExplorer = new IotHubC2DMessageExplorer(outputChannel);
         this._iotHubMessageExplorer = new IoTHubMessageExplorer(outputChannel);
@@ -34,6 +36,7 @@ export class AzureIoTExplorer {
         this._iotHubDeviceTwinExplorer = new IotHubDeviceTwinExplorer(outputChannel);
         this._iotHubResourceExplorer = new IoTHubResourceExplorer(outputChannel);
         this._iotEdgeExplorer = new IoTEdgeExplorer(outputChannel);
+        this._welcomePage = new WelcomePage(this.context);
     }
 
     public sendD2CMessage(deviceItem?: DeviceItem): void {
@@ -130,5 +133,13 @@ export class AzureIoTExplorer {
 
     public generateSasTokenForDevice(deviceItem: DeviceItem): void {
         this._iotHubResourceExplorer.generateSasTokenForDevice(deviceItem);
+    }
+
+    public checkAndShowWelcomePage(): void {
+        this._welcomePage.checkAndShow();
+    }
+
+    public showWelcomePage(): void {
+        this._welcomePage.show();
     }
 }

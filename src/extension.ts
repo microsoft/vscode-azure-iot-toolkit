@@ -19,9 +19,10 @@ export function activate(context: vscode.ExtensionContext) {
     let deviceTree = new DeviceTree(context);
 
     vscode.window.registerTreeDataProvider("iotHubDevices", deviceTree);
+    azureIoTExplorer.checkAndShowWelcomePage();
 
-    context.subscriptions.push(vscode.languages.registerCodeLensProvider({pattern: `**/${Constants.ModuleTwinJosnFileName}`}, new ModuleTwinCodeLensProvider()));
-    context.subscriptions.push(vscode.languages.registerCodeLensProvider({pattern: `**/${Constants.DeviceTwinJosnFileName}`}, new DeviceTwinCodeLensProvider()));
+    context.subscriptions.push(vscode.languages.registerCodeLensProvider({ pattern: `**/${Constants.ModuleTwinJosnFileName}` }, new ModuleTwinCodeLensProvider()));
+    context.subscriptions.push(vscode.languages.registerCodeLensProvider({ pattern: `**/${Constants.DeviceTwinJosnFileName}` }, new DeviceTwinCodeLensProvider()));
 
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.refresh", (element) => {
         deviceTree.refresh(element);
@@ -125,6 +126,11 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.generateSasTokenForDevice", (DeviceItem) => {
         azureIoTExplorer.generateSasTokenForDevice(DeviceItem);
+    }));
+
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.showWelcomePage", () => {
+        TelemetryClient.sendEvent(Constants.IoTHubAIShowWelcomePagetEvent, { trigger: "manual" });
+        azureIoTExplorer.showWelcomePage();
     }));
 
     vscode.workspace.onDidChangeTextDocument((event) => azureIoTExplorer.replaceConnectionString(event));
