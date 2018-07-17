@@ -87,7 +87,6 @@ header p {
 }
 
 .interactive {
-    min-height: 139px;
     margin-top: 10px
 }
 
@@ -108,8 +107,7 @@ header p {
 }
 
 .interactive>div {
-    margin-left: 20px;
-    padding-top: 20px;
+    padding: 20px;
 }
 
 .arrow {
@@ -183,8 +181,7 @@ header p {
 
 .detail {
     display: none;
-    padding-right: 20px;
-    padding-bottom: 20px;
+    padding-top: 0 !important;
 }
 
 .detail img {
@@ -207,6 +204,12 @@ header p {
     margin-bottom: 10px;
 }
 
+footer {
+    padding-top: 60px;
+    padding-bottom: 40px;
+    text-align: center
+}
+
 /*#endregion main-content*/
 
 /*#region sidebar*/
@@ -225,13 +228,11 @@ header p {
     line-height: 24px;
 }
 
-/*#endregion sidebar*/
-
-footer {
-    padding-top: 60px;
-    padding-bottom: 30px;
-    text-align: center
+#resources>div {
+    margin-top: 9px;
 }
+
+/*#endregion sidebar*/
 
 #back-to-top {
     display: none;
@@ -268,6 +269,6 @@ footer {
     background-color: #E0E0E0;
 }
 
-.vscode-dark {
+/* .vscode-dark {
     background-color: #1E1E1E;
-}
+} */
