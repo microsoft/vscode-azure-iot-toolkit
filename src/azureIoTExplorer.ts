@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 "use strict";
-import * as path from "path";
 import * as vscode from "vscode";
 import { DeviceExplorer } from "./deviceExplorer";
 import { IoTEdgeExplorer } from "./iotEdgeExplorer";
