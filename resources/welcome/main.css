@@ -12,6 +12,12 @@
     color: #333333;
 }
 
+h1,
+h2,
+h3 {
+    font-weight: normal;
+}
+
 a {
     text-decoration: none;
 }
@@ -277,6 +283,6 @@ footer {
     background-color: #E0E0E0;
 }
 
-/* .vscode-dark {
+.vscode-dark {
     background-color: #1E1E1E;
-} */
+}
