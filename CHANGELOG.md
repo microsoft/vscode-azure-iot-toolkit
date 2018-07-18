@@ -1,3 +1,14 @@
+## 1.1.0 (2018-07-18)
+### Added 
+* Generate SAS Token for IoT Hub 
+* Generate SAS Token for Device
+* Create Deployment for IoT Edge Device at Scale
+* Add welcome page
+* Add [wiki page](https://github.com/Microsoft/vscode-azure-iot-toolkit/wiki)
+
+### Fixed
+* [#92](https://github.com/Microsoft/vscode-azure-iot-toolkit/issues/92): Invoke Direct Method will fail when device name contains’#’
+
 ## 1.0.0 (2018-06-27)
 ### Added 
 * Add CodeLens to update Device Twin and Module Twin
