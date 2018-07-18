@@ -11,6 +11,7 @@ The [Wiki page](https://github.com/Microsoft/vscode-azure-iot-toolkit/wiki) incl
     * Create IoT Hub
     * Select IoT Hub
     * Copy IoT Hub Connection String
+    * Generate SAS Token for IoT Hub
 * Device management
     * List devices
     * Get device info
@@ -18,6 +19,7 @@ The [Wiki page](https://github.com/Microsoft/vscode-azure-iot-toolkit/wiki) incl
     * Create Edge device
     * Delete device
     * Copy Device Connection String
+    * Generate SAS Token for Device
 * Interact with Azure IoT Hub
     * Send D2C message to IoT Hub
     * Monitor IoT Hub D2C message
@@ -28,7 +30,8 @@ The [Wiki page](https://github.com/Microsoft/vscode-azure-iot-toolkit/wiki) incl
 * Interact with Azure IoT Edge (Install [Azure IoT Edge](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.azure-iot-edge) for more IoT Edge support)
     * List Edge Moudles
     * Edit Module Twin
-    * Create deployment for Edge device
+    * Create deployment for Single Device
+    * Create Deployment at Scale
 
 ### Prerequisites
 
@@ -125,7 +128,10 @@ Whether to show IoT Hub info when IoT Hub Connection String is not set (default 
 
 ## Resources
 - [Channel 9 video: Walkthrough of Azure IoT Toolkit extension](https://channel9.msdn.com/Shows/Internet-of-Things-Show/Azure-IoT-Toolkit-extension-for-Visual-Studio-Code)
+- [Create and control an IoT device connected to an IoT hub (Node.js)](https://github.com/Microsoft/vscode-azure-iot-toolkit/wiki/Quickstart-Node.js)
+- [Create and control an IoT device connected to an IoT hub (.NET)](https://github.com/Microsoft/vscode-azure-iot-toolkit/wiki/Quickstart-.NET)
 - [Handy Tool When You Develop With Azure IoT](https://blogs.msdn.microsoft.com/iotdev/2017/09/01/handy-tool-when-you-develop-with-azure-iot/)
+- [Azure IoT Toolkit for Visual Studio Code generally available for managing Azure IoT Hub and Devices with ease](https://blogs.msdn.microsoft.com/iotdev/2018/06/30/azure-iot-toolkit-for-visual-studio-code-generally-available-for-managing-azure-iot-hub-and-devices-with-ease/)
 
 
 
