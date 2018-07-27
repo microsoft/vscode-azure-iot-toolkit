@@ -187,6 +187,7 @@ export class Utility {
                     return new ModuleItem(deviceId, module.moduleId, isConnected ? reportedTwin.modules[module.moduleId].runtimeStatus : null, iconPath);
                 }
             }
+            return new ModuleItem(deviceId, module.moduleId, null , iconPath);
         }).filter((module) => module);
     }
 
