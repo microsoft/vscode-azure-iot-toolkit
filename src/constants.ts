@@ -72,7 +72,7 @@ export class Constants {
 
     public static ShowIoTHubInfoKey = "showIoTHubInfo";
     public static ShowConnectionStringInputBoxKey = "showConnectionStringInputBox";
-    public static IoTHubApiVersion = "2017-11-08-preview";
+    public static IoTHubApiVersion = "2018-06-30";
 
     public static initialize(context: vscode.ExtensionContext) {
         const directory = context.storagePath ? context.storagePath : os.tmpdir();
