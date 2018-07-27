@@ -147,9 +147,15 @@ export class IoTEdgeExplorer extends BaseExplorer {
             return "";
         }
 
-        const content = stripJsonComments(fs.readFileSync(filePath, "utf8"));
+        let content = stripJsonComments(fs.readFileSync(filePath, "utf8"));
         try {
-            JSON.parse(content);
+            let contentJson = JSON.parse(content);
+            // Backward compatibility for old schema using 'moduleContent'
+            if (!contentJson.modulesContent && contentJson.moduleContent) {
+                contentJson.modulesContent = contentJson.moduleContent;
+                delete contentJson.moduleContent;
+                content = JSON.stringify(contentJson, null, 2)
+            }
         } catch (error) {
             vscode.window.showErrorMessage("Failed to parse deployment manifest: " + error.toString());
             return "";
@@ -184,8 +190,8 @@ export class IoTEdgeExplorer extends BaseExplorer {
     private async deployAtScale(iotHubConnectionString: string, deploymentJson: string) {
         const deploymentJsonObject = JSON.parse(deploymentJson);
         let modulesContent;
-        if (deploymentJsonObject.moduleContent) {
-            modulesContent = deploymentJsonObject.moduleContent;
+        if (deploymentJsonObject.modulesContent) {
+            modulesContent = deploymentJsonObject.modulesContent;
         } else if (deploymentJsonObject.content && deploymentJsonObject.content.modulesContent) {
             modulesContent = deploymentJsonObject.content.modulesContent;
         }
