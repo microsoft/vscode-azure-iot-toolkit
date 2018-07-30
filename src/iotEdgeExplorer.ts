@@ -154,7 +154,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
             if (!contentJson.modulesContent && contentJson.moduleContent) {
                 contentJson.modulesContent = contentJson.moduleContent;
                 delete contentJson.moduleContent;
-                content = JSON.stringify(contentJson, null, 2)
+                content = JSON.stringify(contentJson, null, 2);
             }
         } catch (error) {
             vscode.window.showErrorMessage("Failed to parse deployment manifest: " + error.toString());

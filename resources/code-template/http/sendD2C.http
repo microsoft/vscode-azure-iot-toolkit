@@ -1,0 +1,1 @@
+curl -X POST "https://{{iotHubHostName}}/devices/{{deviceId}}/messages/events?api-version=2018-06-30" -H "authorization: {{deviceSasToken}}" -d "Hello IoT Hub"
