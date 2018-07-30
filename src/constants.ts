@@ -13,8 +13,8 @@ enum TemplateLanguage {
 }
 
 enum TemplateType {
-    SendD2C = "Send cloud-to-device message",
-    MonitorD2C = "Monitor cloud-to-device message",
+    SendD2C = "Send device-to-cloud message",
+    MonitorD2C = "Monitor device-to-cloud message",
 }
 
 export class Constants {
