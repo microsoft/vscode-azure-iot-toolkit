@@ -39,7 +39,7 @@ export class AzureIoTExplorer {
         this._iotHubResourceExplorer = new IoTHubResourceExplorer(outputChannel);
         this._iotEdgeExplorer = new IoTEdgeExplorer(outputChannel);
         this._welcomePage = new WelcomePage(this.context);
-        this._codeManager = new CodeManager(this.context, outputChannel);
+        this._codeManager = new CodeManager(this.context);
     }
 
     public sendD2CMessage(deviceItem?: DeviceItem): void {

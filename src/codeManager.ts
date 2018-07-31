@@ -5,15 +5,13 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
-import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
 import { DeviceItem } from "./Model/DeviceItem";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
-export class CodeManager extends BaseExplorer {
-    constructor(private context: vscode.ExtensionContext, outputChannel: vscode.OutputChannel) {
-        super(outputChannel);
+export class CodeManager {
+    constructor(private context: vscode.ExtensionContext) {
     }
 
     public async generateCode(deviceItem: DeviceItem) {
