@@ -6,6 +6,17 @@ import * as os from "os";
 import * as path from "path";
 import * as vscode from "vscode";
 
+enum TemplateLanguage {
+    Node = "Node.js",
+    Python = "Python",
+    HTTP = "HTTP",
+}
+
+enum TemplateType {
+    SendD2C = "Send device-to-cloud message",
+    MonitorD2C = "Monitor device-to-cloud message",
+}
+
 export class Constants {
     public static ExtensionId = "vsciot-vscode.azure-iot-toolkit";
     public static CampaignID = "vsciottoolkit";
@@ -74,11 +85,28 @@ export class Constants {
     public static ShowConnectionStringInputBoxKey = "showConnectionStringInputBox";
     public static IoTHubApiVersion = "2018-06-30";
 
+    public static CodeTemplates = {
+        [TemplateLanguage.Node]: {
+            [TemplateType.SendD2C]: "node/sendD2C.js",
+            [TemplateType.MonitorD2C]: "node/monitorD2C.js",
+        },
+        [TemplateLanguage.Python]: {
+            [TemplateType.SendD2C]: "python/sendD2C.py",
+        },
+        [TemplateLanguage.HTTP]: {
+            [TemplateType.SendD2C]: "http/sendD2C.http",
+        },
+    };
+
+    public static LanguageIds = {
+        [TemplateLanguage.Node]: "javascript",
+        [TemplateLanguage.Python]: "python",
+        [TemplateLanguage.HTTP]: "http",
+    };
+
     public static initialize(context: vscode.ExtensionContext) {
         const directory = context.storagePath ? context.storagePath : os.tmpdir();
         Constants.ModuleTwinJosnFilePath = path.join(directory, Constants.ModuleTwinJosnFileName);
         Constants.DeviceTwinJosnFilePath = path.join(directory, Constants.DeviceTwinJosnFileName);
     }
-
-    private static a;
 }

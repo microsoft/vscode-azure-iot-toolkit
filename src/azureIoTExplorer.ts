@@ -3,6 +3,7 @@
 
 "use strict";
 import * as vscode from "vscode";
+import { CodeManager } from "./codeManager";
 import { DeviceExplorer } from "./deviceExplorer";
 import { IoTEdgeExplorer } from "./iotEdgeExplorer";
 import { IotHubC2DMessageExplorer } from "./iotHubC2DMessageExplorer";
@@ -25,6 +26,7 @@ export class AzureIoTExplorer {
     private _iotHubResourceExplorer: IoTHubResourceExplorer;
     private _iotEdgeExplorer: IoTEdgeExplorer;
     private _welcomePage: WelcomePage;
+    private _codeManager: CodeManager;
 
     constructor(private context: vscode.ExtensionContext) {
         let outputChannel = vscode.window.createOutputChannel("Azure IoT Toolkit");
@@ -37,6 +39,7 @@ export class AzureIoTExplorer {
         this._iotHubResourceExplorer = new IoTHubResourceExplorer(outputChannel);
         this._iotEdgeExplorer = new IoTEdgeExplorer(outputChannel);
         this._welcomePage = new WelcomePage(this.context);
+        this._codeManager = new CodeManager(this.context);
     }
 
     public sendD2CMessage(deviceItem?: DeviceItem): void {
@@ -141,5 +144,9 @@ export class AzureIoTExplorer {
 
     public showWelcomePage(): void {
         this._welcomePage.show();
+    }
+
+    public generateCode(deviceItem: DeviceItem): void {
+        this._codeManager.generateCode(deviceItem);
     }
 }
