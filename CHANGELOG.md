@@ -1,3 +1,7 @@
+## 1.1.1 (2018-08-01)
+### Updated 
+* Update vscode-extension-telemetry npm to latest version (0.0.18) 
+
 ## 1.1.0 (2018-07-18)
 ### Added 
 * Generate SAS Token for IoT Hub 
