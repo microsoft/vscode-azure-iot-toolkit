@@ -53,6 +53,8 @@ suite("Utility Tests ", () => {
     });
 
     test("should be able to validate target condition", () => {
+        assert.equal(Utility.isValidTargetCondition("*"), true);
+
         assert.equal(Utility.isValidTargetCondition("tags.city='Shanghai'"), true);
 
         assert.equal(Utility.isValidTargetCondition("properties.reported.lastStatus='200'"), true);

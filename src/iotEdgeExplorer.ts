@@ -122,6 +122,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
             vscode.window.showTextDocument(document);
             TelemetryClient.sendEvent(Constants.IoTHubAIGetModuleTwinDoneEvent, { Result: "Success" });
         } catch (error) {
+            this._outputChannel.show();
             this.outputLine(Constants.IoTHubModuleTwinLabel, `Failed to get Module Twin: ${error}`);
             TelemetryClient.sendEvent(Constants.IoTHubAIGetModuleTwinDoneEvent, { Result: "Fail", Message: error });
         }

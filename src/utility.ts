@@ -194,6 +194,7 @@ export class Utility {
                         isConnected && reportedTwin ? this.getModuleRuntimeStatus(module.moduleId, reportedTwin.modules) : undefined, iconPath, "edge-module");
                 }
             }
+            // If a Module does not exist in desired properties of edgeAgent, then it is a Module Identity.
             return new ModuleItem(deviceId, module.moduleId, null, iconPath, "module");
         }).filter((module) => module);
     }
@@ -280,7 +281,7 @@ export class Utility {
     }
 
     public static isValidTargetCondition(value: string): boolean {
-        return /^(deviceId|tags\..+|properties\.reported\..+).*=.+$/.test(value);
+        return /^(\*|((deviceId|tags\..+|properties\.reported\..+).*=.+))$/.test(value);
     }
 
     private static async getFilteredDeviceList(iotHubConnectionString: string, onlyEdgeDevice: boolean): Promise<DeviceItem[]> {
