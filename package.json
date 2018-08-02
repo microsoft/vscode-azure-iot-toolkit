@@ -393,6 +393,10 @@
         {
           "command": "azure-iot-toolkit.getModuleTwin",
           "when": "view == iotHubDevices && viewItem == module"
+        },
+        {
+          "command": "azure-iot-toolkit.getModuleTwin",
+          "when": "view == iotHubDevices && viewItem == edge-module"
         }
       ],
       "editor/context": [

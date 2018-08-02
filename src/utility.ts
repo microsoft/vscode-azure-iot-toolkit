@@ -171,22 +171,31 @@ export class Utility {
          * edgeAgent.properties.reported: contains runtime status of each module
          */
         const [modules, edgeAgent] = await Promise.all([Utility.getModules(iotHubConnectionString, deviceId), Utility.getModuleTwin(iotHubConnectionString, deviceId, "$edgeAgent")]);
+        const desiredTwin = (edgeAgent as any).properties.desired;
         const reportedTwin = (edgeAgent as any).properties.reported;
-        // Only return modules that exist in edgeAgent.properties.reported
+
         return modules.map((module) => {
-            const isConnected = module.connectionState === "Connected";
+            let isConnected = module.connectionState === "Connected";
+            // Due to https://github.com/Azure/iotedge/issues/39, use $edgeAgent's connectionState for $edgeHub as workaround
+            if (module.moduleId === "$edgeHub") {
+                isConnected = (edgeAgent as any).connectionState === "Connected";
+            }
             const state = isConnected ? "on" : "off";
             const iconPath = context.asAbsolutePath(path.join("resources", `module-${state}.svg`));
             if (module.moduleId.startsWith("$")) {
                 const moduleId = module.moduleId.substring(1);
-                if (reportedTwin.systemModules && reportedTwin.systemModules[moduleId]) {
-                    return new ModuleItem(deviceId, module.moduleId, isConnected ? reportedTwin.systemModules[moduleId].runtimeStatus : null, iconPath);
+                if (desiredTwin.systemModules && desiredTwin.systemModules[moduleId]) {
+                    return new ModuleItem(deviceId, module.moduleId,
+                        isConnected && reportedTwin ? this.getModuleRuntimeStatus(moduleId, reportedTwin.systemModules) : undefined, iconPath, "edge-module");
                 }
             } else {
-                if (reportedTwin.modules && reportedTwin.modules[module.moduleId]) {
-                    return new ModuleItem(deviceId, module.moduleId, isConnected ? reportedTwin.modules[module.moduleId].runtimeStatus : null, iconPath);
+                if (desiredTwin.modules && desiredTwin.modules[module.moduleId]) {
+                    return new ModuleItem(deviceId, module.moduleId,
+                        isConnected && reportedTwin ? this.getModuleRuntimeStatus(module.moduleId, reportedTwin.modules) : undefined, iconPath, "edge-module");
                 }
             }
+            // If a Module does not exist in desired properties of edgeAgent, then it is a Module Identity.
+            return new ModuleItem(deviceId, module.moduleId, null, iconPath, "module");
         }).filter((module) => module);
     }
 
@@ -272,7 +281,7 @@ export class Utility {
     }
 
     public static isValidTargetCondition(value: string): boolean {
-        return /^(deviceId|tags\..+|properties\.reported\..+).*=.+$/.test(value);
+        return /^(\*|((deviceId|tags\..+|properties\.reported\..+).*=.+))$/.test(value);
     }
 
     private static async getFilteredDeviceList(iotHubConnectionString: string, onlyEdgeDevice: boolean): Promise<DeviceItem[]> {
@@ -377,5 +386,13 @@ export class Utility {
             return false;
         }
         return Constants.ConnectionStringRegex[id].test(value);
+    }
+
+    private static getModuleRuntimeStatus(moduleId: string, modules): string {
+        if (modules && modules[moduleId]) {
+            return modules[moduleId].runtimeStatus;
+        } else {
+            return undefined;
+        }
     }
 }
