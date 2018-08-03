@@ -1,5 +1,16 @@
+## 1.2.0 (2018-08-07)
+### Added
+* Generate Code for Node.js, Python or REST API
+* Show Module Identities for IoT Edge device
+
+### Changed
+* Support new schema of deployment.json
+
+### Fixed
+* Allow '*' for target condition of IoT Edge device deployment
+
 ## 1.1.1 (2018-08-01)
-### Updated 
+### Changed 
 * Update vscode-extension-telemetry npm to latest version (0.0.18) 
 
 ## 1.1.0 (2018-07-18)
