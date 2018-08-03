@@ -2,7 +2,7 @@
 
 [![Join the chat at https://gitter.im/Microsoft/azure-iot-toolkit](https://badges.gitter.im/Microsoft/azure-iot-toolkit.svg)](https://gitter.im/Microsoft/azure-iot-toolkit?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Marketplace Version](https://vsmarketplacebadge.apphb.com/version-short/vsciot-vscode.azure-iot-toolkit.svg)](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.azure-iot-toolkit)
 
-Interact with Azure IoT Hub, IoT Device Management, IoT Edge Management, IoT Hub Code Snippets.
+Interact with Azure IoT Hub, IoT Device Management, IoT Edge Management, IoT Hub Code Generation.
 
 ## Device Explorer
 The [Wiki page](https://github.com/Microsoft/vscode-azure-iot-toolkit/wiki) includes a comprehensive getting started guide as well as  detailed usage instructions of the following features:
@@ -21,6 +21,7 @@ The [Wiki page](https://github.com/Microsoft/vscode-azure-iot-toolkit/wiki) incl
     * Copy Device Connection String
     * Generate SAS Token for Device
 * Interact with Azure IoT Hub
+    * Generate Code for Node.js, Python or REST API
     * Send D2C message to IoT Hub
     * Monitor IoT Hub D2C message
     * Send C2D message to device
@@ -28,7 +29,7 @@ The [Wiki page](https://github.com/Microsoft/vscode-azure-iot-toolkit/wiki) incl
     * Invoke Direct Method
     * Edit Device Twin
 * Interact with Azure IoT Edge (Install [Azure IoT Edge](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.azure-iot-edge) for more IoT Edge support)
-    * List Edge Moudles
+    * List Moudles 
     * Edit Module Twin
     * Create deployment for Single Device
     * Create Deployment at Scale
@@ -65,6 +66,10 @@ Instead of copying and pasting to set IoT Hub Connection String, you could sign 
 3. After you sign in, your Azure Subscription list will be shown, then select an Azure Subscription.
 4. Your IoT Hub list will be shown, then select an IoT Hub.
 5. The device list will be shown.
+
+## Code Generation
+
+![Code Generation](images/code-generation.gif)
 
 ## Code Snippets
 
@@ -130,6 +135,7 @@ Whether to show IoT Hub info when IoT Hub Connection String is not set (default 
 - [Channel 9 video: Walkthrough of Azure IoT Toolkit extension](https://channel9.msdn.com/Shows/Internet-of-Things-Show/Azure-IoT-Toolkit-extension-for-Visual-Studio-Code)
 - [Create an IoT hub using the Azure IoT Toolkit for Visual Studio Code](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-create-use-iot-toolkit)
 - [Use Azure IoT Toolkit to send and receive messages between your device and IoT Hub](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-vscode-iot-toolkit-cloud-device-messaging)
+- [Use Azure IoT Toolkit for Azure IoT Hub device management](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-device-management-iot-toolkit)
 - [Use VS Code as IoT Hub Device Simulator](https://blogs.msdn.microsoft.com/iotdev/2018/07/12/use-vs-code-as-iot-hub-device-simulator-say-hello-to-azure-iot-hub-in-5-minutes/)
 - [Use VS Code to call Azure IoT Hub REST APIs](https://blogs.msdn.microsoft.com/iotdev/2018/07/19/call-azure-iot-hub-rest-apis-in-vs-code/)
 - [Create and control an IoT device connected to an IoT hub (Node.js)](https://github.com/Microsoft/vscode-azure-iot-toolkit/wiki/Quickstart-Node.js)
