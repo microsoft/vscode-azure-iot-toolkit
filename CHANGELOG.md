@@ -3,11 +3,8 @@
 * Generate Code for Node.js, Python or REST API
 * Show Module Identities for IoT Edge device
 
-### Changed
-* Support new schema of deployment.json
-
 ### Fixed
-* Allow '*' for target condition of IoT Edge device deployment
+* Allow `*` for target condition of IoT Edge device deployment
 
 ## 1.1.1 (2018-08-01)
 ### Changed 
