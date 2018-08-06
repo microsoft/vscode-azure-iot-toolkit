@@ -68,9 +68,11 @@ export class DeviceTree implements vscode.TreeDataProvider<vscode.TreeItem> {
     }
 
     private getDefaultTreeItems(): vscode.TreeItem[] {
+        TelemetryClient.sendEvent("General.Load.DefaultTreeItems");
         const items = [];
         items.push(this.createCommandItem("Set IoT Hub Connection String", "azure-iot-toolkit.setIoTHubConnectionString"));
         items.push(this.createCommandItem("Select IoT Hub", "azure-iot-toolkit.selectIoTHub"));
+        items.push(this.createCommandItem("Create IoT Hub", "azure-iot-toolkit.createIoTHub"));
         return items;
     }
 
