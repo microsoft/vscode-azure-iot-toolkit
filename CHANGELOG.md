@@ -1,4 +1,4 @@
-## 1.2.0 (2018-08-07)
+## 1.2.0 (2018-08-08)
 ### Added
 * Generate Code for Node.js, Python or REST API
 * Show Module Identities for IoT Edge device
