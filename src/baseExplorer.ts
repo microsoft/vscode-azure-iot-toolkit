@@ -67,11 +67,13 @@ export class BaseExplorer {
 
     protected startMonitor(label: string, consumerGroup: string, deviceItem?: DeviceItem) {
         if (this._eventHubClient) {
+            const monitorD2CBeforeNowInMinutes = Utility.getConfiguration().get<number>("monitorD2CBeforeNowInMinutes");
+            const startAfterTime = new Date(Date.now() - 1000 * 60 * monitorD2CBeforeNowInMinutes);
             this._eventHubClient.open()
                 .then(this._eventHubClient.getPartitionIds.bind(this._eventHubClient))
                 .then((partitionIds: any) => {
                     return partitionIds.map((partitionId) => {
-                        return this._eventHubClient.createReceiver(consumerGroup, partitionId, { startAfterTime: Date.now() })
+                        return this._eventHubClient.createReceiver(consumerGroup, partitionId, { startAfterTime })
                             .then((receiver) => {
                                 this.outputLine(label, `Created partition receiver [${partitionId}] for consumerGroup [${consumerGroup}]`);
                                 receiver.on("errorReceived", this.printError(this._outputChannel, label));
