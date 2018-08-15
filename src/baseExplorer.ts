@@ -60,7 +60,8 @@ export class BaseExplorer {
             } else {
                 result = body;
             }
-            this.outputLine(label, `Message received from [${message.annotations["iothub-connection-device-id"]}]:`);
+            const timeMessage = message.enqueuedTimeUtc ? ` at ${message.enqueuedTimeUtc.toLocaleTimeString("en-US")}` : "";
+            this.outputLine(label, `Message received from [${message.annotations["iothub-connection-device-id"]}]${timeMessage}:`);
             this._outputChannel.appendLine(JSON.stringify(result, null, 2));
         };
     };
