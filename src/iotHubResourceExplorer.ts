@@ -2,8 +2,8 @@
 // Licensed under the MIT license.
 
 "use strict";
+import { IotHubClient } from "azure-arm-iothub";
 import { ResourceManagementClient, ResourceModels, SubscriptionClient, SubscriptionModels } from "azure-arm-resource";
-import IoTHubClient = require("azure-arm-iothub");
 import * as clipboardy from "clipboardy";
 import * as vscode from "vscode";
 import { IotHubDescription } from "../node_modules/azure-arm-iothub/lib/models";
@@ -58,10 +58,13 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         outputChannel.appendLine(`Location selected: ${locationItem.label}`);
 
         const skuMap = {
-            "F1 Free": "F1",
-            "S1 Standard": "S1",
-            "S2 Standard": "S2",
-            "S3 Standard": "S3",
+            "S1: Standard tier": "S1",
+            "S2: Standard tier": "S2",
+            "S3: Standard tier": "S3",
+            "B1: Basic tier": "B1",
+            "B2: Basic tier": "B2",
+            "B3: Basic tier": "B3",
+            "F1: Free tier": "F1",
         };
         const sku = await vscode.window.showQuickPick(
             Object.keys(skuMap),
@@ -87,7 +90,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
             }, 1000);
 
             const { session, subscription } = subscriptionItem;
-            const client = new IoTHubClient(session.credentials, subscription.subscriptionId);
+            const client = new IotHubClient(session.credentials, subscription.subscriptionId);
             const iotHubCreateParams = {
                 location: locationItem.location.name,
                 subscriptionid: subscription.subscriptionId,
@@ -212,7 +215,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
     private async loadIoTHubItems(subscriptionItem: SubscriptionItem) {
         const iotHubItems: IotHubItem[] = [];
         const { session, subscription } = subscriptionItem;
-        const client = new IoTHubClient(session.credentials, subscription.subscriptionId);
+        const client = new IotHubClient(session.credentials, subscription.subscriptionId);
         const iotHubs = await client.iotHubResource.listBySubscription();
         iotHubItems.push(...iotHubs.map((iotHub) => new IotHubItem(iotHub)));
         iotHubItems.sort((a, b) => a.label.localeCompare(b.label));
@@ -248,8 +251,8 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 
     private async getIoTHubConnectionString(subscriptionItem: SubscriptionItem, iotHubDescription: IotHubDescription) {
         const { session, subscription } = subscriptionItem;
-        const client = new IoTHubClient(session.credentials, subscription.subscriptionId);
-        return client.iotHubResource.getKeysForKeyName(iotHubDescription.resourcegroup, iotHubDescription.name, "iothubowner").then((result) => {
+        const client = new IotHubClient(session.credentials, subscription.subscriptionId);
+        return client.iotHubResource.getKeysForKeyName(Utility.getResourceGroupNameFromId(iotHubDescription.id), iotHubDescription.name, "iothubowner").then((result) => {
             return `HostName=${iotHubDescription.properties.hostName};SharedAccessKeyName=${result.keyName};SharedAccessKey=${result.primaryKey}`;
         });
     }
@@ -290,7 +293,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
     }
 
     private async getIoTHubName(subscriptionItem: SubscriptionItem): Promise<string> {
-        const client = new IoTHubClient(subscriptionItem.session.credentials, subscriptionItem.subscription.subscriptionId);
+        const client = new IotHubClient(subscriptionItem.session.credentials, subscriptionItem.subscription.subscriptionId);
 
         while (true) {
             const accountName = await vscode.window.showInputBox({
