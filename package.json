@@ -459,6 +459,11 @@
           "default": "$Default",
           "description": "IoT Hub Consumer Group"
         },
+        "azure-iot-toolkit.monitorD2CBeforeNowInMinutes": {
+          "type": "number",
+          "default": 0,
+          "description": "The time span (in minutes) of monitoring D2C message before current time."
+        },
         "azure-iot-toolkit.showVerboseMessage": {
           "type": "boolean",
           "default": false,
