@@ -284,6 +284,11 @@ export class Utility {
         return /^(\*|((deviceId|tags\..+|properties\.reported\..+).*=.+))$/.test(value);
     }
 
+    public static getResourceGroupNameFromId(resourceId: string): string {
+        let result = /resourceGroups\/([^/]+)\//.exec(resourceId);
+        return result[1];
+    }
+
     private static async getFilteredDeviceList(iotHubConnectionString: string, onlyEdgeDevice: boolean): Promise<DeviceItem[]> {
         if (onlyEdgeDevice) {
             const [deviceList, edgeDeviceIdSet] = await Promise.all([Utility.getIoTDeviceList(iotHubConnectionString), Utility.getEdgeDeviceIdSet(iotHubConnectionString)]);
