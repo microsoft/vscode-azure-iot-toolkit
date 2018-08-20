@@ -1,2 +1,2 @@
 1. Run `mvn clean package` to install the required libraries and build the simulated device application.
-2. RUn `java -jar target/simulated-device-1.0.0-with-deps.jar` to run the simulated device application.
+2. Run `java -jar target/simulated-device-1.0.0-with-deps.jar` to run the simulated device application.
