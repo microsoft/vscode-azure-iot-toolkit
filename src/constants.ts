@@ -7,9 +7,14 @@ import * as path from "path";
 import * as vscode from "vscode";
 
 enum TemplateLanguage {
-    Node = "Node.js",
-    Python = "Python",
+    CSharp = "C#",
+    Go = "Go",
     HTTP = "HTTP",
+    Java = "Java",
+    Node = "Node.js",
+    PHP = "PHP",
+    Python = "Python",
+    Ruby = "Ruby",
 }
 
 enum TemplateType {
@@ -86,22 +91,40 @@ export class Constants {
     public static IoTHubApiVersion = "2018-06-30";
 
     public static CodeTemplates = {
-        [TemplateLanguage.Node]: {
-            [TemplateType.SendD2C]: "node/sendD2C.js",
-            [TemplateType.MonitorD2C]: "node/monitorD2C.js",
+        [TemplateLanguage.CSharp]: {
+            [TemplateType.SendD2C]: "csharp/sendD2C",
         },
-        [TemplateLanguage.Python]: {
-            [TemplateType.SendD2C]: "python/sendD2C.py",
+        [TemplateLanguage.Go]: {
+            [TemplateType.SendD2C]: "go/sendD2C.go",
         },
         [TemplateLanguage.HTTP]: {
             [TemplateType.SendD2C]: "http/sendD2C.http",
         },
+        [TemplateLanguage.Java]: {
+            [TemplateType.SendD2C]: "java/sendD2C",
+        },
+        [TemplateLanguage.Node]: {
+            [TemplateType.SendD2C]: "node/sendD2C.js",
+            [TemplateType.MonitorD2C]: "node/monitorD2C.js",
+        },
+        [TemplateLanguage.PHP]: {
+            [TemplateType.SendD2C]: "php/sendD2C.php",
+        },
+        [TemplateLanguage.Python]: {
+            [TemplateType.SendD2C]: "python/sendD2C.py",
+        },
+        [TemplateLanguage.Ruby]: {
+            [TemplateType.SendD2C]: "ruby/sendD2C.rb",
+        },
     };
 
     public static LanguageIds = {
-        [TemplateLanguage.Node]: "javascript",
-        [TemplateLanguage.Python]: "python",
+        [TemplateLanguage.Go]: "go",
         [TemplateLanguage.HTTP]: "http",
+        [TemplateLanguage.Node]: "javascript",
+        [TemplateLanguage.PHP]: "php",
+        [TemplateLanguage.Python]: "python",
+        [TemplateLanguage.Ruby]: "ruby",
     };
 
     public static initialize(context: vscode.ExtensionContext) {
