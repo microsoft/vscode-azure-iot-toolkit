@@ -58,7 +58,9 @@
     "onCommand:azure-iot-toolkit.generateSasTokenForDevice",
     "onCommand:azure-iot-toolkit.generateSasTokenForIotHub",
     "onCommand:azure-iot-toolkit.showWelcomePage",
-    "onCommand:azure-iot-toolkit.generateCode"
+    "onCommand:azure-iot-toolkit.generateCode",
+    "onCommand:azure-iot-toolkit.createModule",
+    "onCommand:azure-iot-toolkit.deleteModule"
   ],
   "main": "./out/src/extension",
   "contributes": {
@@ -193,12 +195,12 @@
       {
         "command": "azure-iot-toolkit.getModuleTwin",
         "title": "Edit Module Twin",
-        "category": "Azure IoT Edge"
+        "category": "Azure IoT Hub"
       },
       {
         "command": "azure-iot-toolkit.updateModuleTwin",
         "title": "Update Module Twin",
-        "category": "Azure IoT Edge"
+        "category": "Azure IoT Hub"
       },
       {
         "command": "azure-iot-toolkit.generateSasTokenForDevice",
@@ -213,6 +215,16 @@
       {
         "command": "azure-iot-toolkit.generateCode",
         "title": "Generate Code",
+        "category": "Azure IoT Hub"
+      },
+      {
+        "command": "azure-iot-toolkit.createModule",
+        "title": "Create Module",
+        "category": "Azure IoT Hub"
+      },
+      {
+        "command": "azure-iot-toolkit.deleteModule",
+        "title": "Delete Module",
         "category": "Azure IoT Hub"
       }
     ],
@@ -321,9 +333,14 @@
           "group": "azure-iot-toolkit@9"
         },
         {
-          "command": "azure-iot-toolkit.deleteDevice",
+          "command": "azure-iot-toolkit.createModule",
           "when": "view == iotHubDevices && viewItem == device",
           "group": "azure-iot-toolkit@10"
+        },
+        {
+          "command": "azure-iot-toolkit.deleteDevice",
+          "when": "view == iotHubDevices && viewItem == device",
+          "group": "azure-iot-toolkit@11"
         },
         {
           "command": "azure-iot-toolkit.generateCode",
@@ -376,9 +393,14 @@
           "group": "azure-iot-toolkit@9"
         },
         {
-          "command": "azure-iot-toolkit.deleteDevice",
+          "command": "azure-iot-toolkit.createModule",
           "when": "view == iotHubDevices && viewItem == edge",
           "group": "azure-iot-toolkit@10"
+        },
+        {
+          "command": "azure-iot-toolkit.deleteDevice",
+          "when": "view == iotHubDevices && viewItem == edge",
+          "group": "azure-iot-toolkit@11"
         },
         {
           "command": "azure-iot-toolkit.createDeployment",
@@ -392,11 +414,17 @@
         },
         {
           "command": "azure-iot-toolkit.getModuleTwin",
-          "when": "view == iotHubDevices && viewItem == module"
+          "when": "view == iotHubDevices && viewItem == module",
+          "group": "azure-iot-toolkit@0"
         },
         {
           "command": "azure-iot-toolkit.getModuleTwin",
           "when": "view == iotHubDevices && viewItem == edge-module"
+        },
+        {
+          "command": "azure-iot-toolkit.deleteModule",
+          "when": "view == iotHubDevices && viewItem == module",
+          "group": "azure-iot-toolkit@1"
         }
       ],
       "editor/context": [
@@ -436,6 +464,10 @@
       "commandPalette": [
         {
           "command": "azure-iot-toolkit.getModuleTwin",
+          "when": "never"
+        },
+        {
+          "command": "azure-iot-toolkit.deleteModule",
           "when": "never"
         }
       ]

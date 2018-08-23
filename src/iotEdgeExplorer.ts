@@ -73,7 +73,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 
     public async getModuleTwin(moduleItem: ModuleItem) {
         if (moduleItem) {
-            await this.getModuleTwinById(moduleItem.deviceId, moduleItem.moduleId);
+            await this.getModuleTwinById(moduleItem.deviceId, moduleItem.moduleId, moduleItem.contextValue);
         }
     }
 
@@ -105,8 +105,8 @@ export class IoTEdgeExplorer extends BaseExplorer {
         }
     }
 
-    private async getModuleTwinById(deviceId: string, moduleId: string) {
-        TelemetryClient.sendEvent(Constants.IoTHubAIGetModuleTwinStartEvent);
+    private async getModuleTwinById(deviceId: string, moduleId: string, moduleType: string = "unknown") {
+        TelemetryClient.sendEvent(Constants.IoTHubAIGetModuleTwinStartEvent, { moduleType });
         const iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
             return;

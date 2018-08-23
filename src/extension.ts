@@ -137,6 +137,14 @@ export function activate(context: vscode.ExtensionContext) {
         azureIoTExplorer.generateCode(DeviceItem);
     }));
 
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.createModule", (DeviceItem) => {
+        azureIoTExplorer.createModule(DeviceItem);
+    }));
+
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.deleteModule", (moduleItem) => {
+        azureIoTExplorer.deleteModule(moduleItem);
+    }));
+
     vscode.workspace.onDidChangeTextDocument((event) => azureIoTExplorer.replaceConnectionString(event));
 
     context.subscriptions.push(vscode.window.onDidCloseTerminal((closedTerminal: vscode.Terminal) => {
