@@ -1,7 +1,7 @@
 ## 1.3.0 (2018-08-29)
 ### Added
 * Generate Code for C#, Go, Java, PHP or Ruby
-* Module Management (List, create, delete module)
+* Module Management (List, Create, Delete module)
 * Add configuration to set start time for monitoring D2C message
 * Support creating IoT Hub with basic tier
 
