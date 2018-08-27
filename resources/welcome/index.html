@@ -96,6 +96,9 @@
                         <li>
                             <a href="#monitor-d2c">Monitor device-to-cloud (D2C) message</a>
                         </li>
+                        <li>
+                            <a href="#generate-app">Generate Azure IoT application</a>
+                        </li>
                     </ul>
                     <h3 id="register-device">Register a device</h3>
                     A device must
@@ -156,12 +159,23 @@
                     </ol>
                     <img src="https://raw.githubusercontent.com/wiki/Microsoft/vscode-azure-iot-toolkit/images/stopmonitor.png" alt="stop monitor"
                     />
+                    <h3 id="generate-app">Generate Azure IoT application</h3>
+                    You could also use your favorite programing language (e.g. C#, Go, Java, Node.js, PHP, Python and Ruby) to <a href="https://blogs.msdn.microsoft.com/iotdev/2018/08/08/quickly-build-your-azure-iot-application-in-vs-code-with-node-js-python-or-rest-api/">quickly generate an Azure IoT application</a>.
+                    <ol>
+                        <li>Right-click your device and select
+                            <strong>Generate Code</strong>
+                        </li>
+                        <li>In language list, select <strong>Node.js</strong></li>
+                        <li>In code template list, select <strong>Send device-to-cloud message</strong></li>
+                        <li>The JavaScript will be generated immediately. The device connection string is also automatically filled in.</li>
+                    </ol>
+                    <img src="https://raw.githubusercontent.com/Microsoft/vscode-azure-iot-toolkit/master/images/code-generation.gif" alt="generate app" />
                 </div>
             </div>
             <footer>
                 <div>
                     Having trouble with the extension? -
-                    <a href="https://github.com/microsoft/vscode-azure-iot-toolkit/wiki">Browse the documentation</a> -
+                    <a href="https://github.com/Microsoft/vscode-azure-iot-toolkit/wiki">Browse the documentation</a> -
                     <a href="https://github.com/Microsoft/vscode-azure-iot-toolkit/issues">Report an issue</a> -
                     <a href="https://gitter.im/Microsoft/azure-iot-toolkit">Contact us on Gitter</a>
                 </div>
@@ -193,6 +207,9 @@
                 <h3>Resources</h3>
                 <div>
                     <a href="https://channel9.msdn.com/Shows/Internet-of-Things-Show/Azure-IoT-Toolkit-extension-for-Visual-Studio-Code">Channel 9 video: Walkthrough of Azure IoT Toolkit extension</a>
+                </div>
+                <div>
+                    <a href="https://blogs.msdn.microsoft.com/iotdev/2018/08/08/quickly-build-your-azure-iot-application-in-vs-code-with-node-js-python-or-rest-api/">Quickly build your Azure IoT application with Node.js, Python or REST API</a>
                 </div>
                 <div>
                     <a href="https://github.com/Microsoft/vscode-azure-iot-toolkit/wiki/Quickstart-Node.js">Create and control an IoT device connected to an IoT hub (Node.js)</a>
