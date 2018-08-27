@@ -20,8 +20,13 @@ The [Wiki page](https://github.com/Microsoft/vscode-azure-iot-toolkit/wiki) incl
     * Delete device
     * Copy Device Connection String
     * Generate SAS Token for Device
+* Module management
+    * List Moudles
+    * Create Module
+    * Edit Module Twin
+    * Delete Module
 * Interact with Azure IoT Hub
-    * Generate Code for Node.js, Python or REST API
+    * Generate Code for C#, Go, Java, Node.js, PHP, Python, Ruby or REST API
     * Send D2C message to IoT Hub
     * Monitor IoT Hub D2C message
     * Send C2D message to device
@@ -107,6 +112,13 @@ IoT Hub Consumer Group (default is `"$Default"`):
 ```json
 {
     "azure-iot-toolkit.iotHubConsumerGroup": "$Default"
+}
+```
+
+The time span (in minutes) of monitoring D2C message before current time (default is `0`):
+```json
+{
+    "azure-iot-toolkit.monitorD2CBeforeNowInMinutes": 0
 }
 ```
 
