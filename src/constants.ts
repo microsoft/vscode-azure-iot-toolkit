@@ -64,14 +64,20 @@ export class Constants {
     public static IoTHubAIEdgeDeployAtScaleDoneEvent = "AZ.Edge.DeployAtScale.Done";
     public static IoTHubAICreateStartEvent = "General.IoTHub.Create.Start";
     public static IoTHubAICreateDoneEvent = "AZ.IoTHub.Create.Done";
-    public static IoTHubAIGetModuleTwinStartEvent = "AZ.Edge.ModuleTwin.Get.Start";
-    public static IoTHubAIGetModuleTwinDoneEvent = "AZ.Edge.ModuleTwin.Get.Done";
-    public static IoTHubAIUpdateModuleTwinStartEvent = "AZ.Edge.ModuleTwin.Update.Start";
-    public static IoTHubAIUpdateModuleTwinDoneEvent = "AZ.Edge.ModuleTwin.Update.Done";
+    public static IoTHubAIGetModuleTwinStartEvent = "AZ.ModuleTwin.Get.Start";
+    public static IoTHubAIGetModuleTwinDoneEvent = "AZ.ModuleTwin.Get.Done";
+    public static IoTHubAIUpdateModuleTwinStartEvent = "AZ.ModuleTwin.Update.Start";
+    public static IoTHubAIUpdateModuleTwinDoneEvent = "AZ.ModuleTwin.Update.Done";
     public static ModuleTwinJosnFileName = "azure-iot-module-twin.json";
     public static ModuleTwinJosnFilePath: string;
-    public static IoTHubAILoadModuleTreeStartEvent = "AZ.Edge.LoadModuleTree.Start";
-    public static IoTHubAILoadModuleTreeDoneEvent = "AZ.Edge.LoadModuleTree.Done";
+    public static IoTHubAILoadModuleTreeStartEvent = "AZ.LoadModuleTree.Start";
+    public static IoTHubAILoadModuleTreeDoneEvent = "AZ.LoadModuleTree.Done";
+    public static IoTHubAILoadEdgeModuleTreeStartEvent = "AZ.Edge.LoadModuleTree.Start";
+    public static IoTHubAILoadEdgeModuleTreeDoneEvent = "AZ.Edge.LoadModuleTree.Done";
+    public static IoTHubAICreateModuleStartEvent = "AZ.Module.Create.Start";
+    public static IoTHubAICreateModuleDoneEvent = "AZ.Module.Create.Done";
+    public static IoTHubAIDeleteModuleStartEvent = "AZ.Module.Delete.Start";
+    public static IoTHubAIDeleteModuleDoneEvent = "AZ.Module.Delete.Done";
 
     public static IoTHubAIStartLoadDeviceTreeEvent = "General.StartLoadDeviceTree";
     public static IoTHubAIShowWelcomePagetEvent = "General.WelcomePage.Show";

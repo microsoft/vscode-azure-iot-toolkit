@@ -2,14 +2,17 @@
 // Licensed under the MIT license.
 
 import { Command, TreeItem } from "vscode";
+import { DeviceItem } from "./DeviceItem";
 
 export class ModuleItem extends TreeItem {
+    public readonly deviceId: string;
     constructor(
-        public readonly deviceId: string,
+        public readonly deviceItem: DeviceItem,
         public readonly moduleId: string,
         public readonly runtimeStatus: string,
         public readonly iconPath: string,
         public readonly contextValue: string) {
         super(runtimeStatus ? `${moduleId} (${runtimeStatus})` : moduleId);
+        this.deviceId = deviceItem.deviceId;
     }
 }

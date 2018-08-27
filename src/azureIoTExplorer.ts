@@ -10,6 +10,7 @@ import { IotHubC2DMessageExplorer } from "./iotHubC2DMessageExplorer";
 import { IotHubDeviceTwinExplorer } from "./iotHubDeviceTwinExplorer";
 import { IotHubDirectMethodExplorer } from "./iotHubDirectMethodExplorer";
 import { IoTHubMessageExplorer } from "./iotHubMessageExplorer";
+import { IotHubModuleExplorer } from "./iotHubModuleExplorer";
 import { IoTHubResourceExplorer } from "./iotHubResourceExplorer";
 import { DeviceItem } from "./Model/DeviceItem";
 import { ModuleItem } from "./Model/ModuleItem";
@@ -27,6 +28,7 @@ export class AzureIoTExplorer {
     private _iotEdgeExplorer: IoTEdgeExplorer;
     private _welcomePage: WelcomePage;
     private _codeManager: CodeManager;
+    private _iotHubModuleExplorer: IotHubModuleExplorer;
 
     constructor(private context: vscode.ExtensionContext) {
         let outputChannel = vscode.window.createOutputChannel("Azure IoT Toolkit");
@@ -40,6 +42,7 @@ export class AzureIoTExplorer {
         this._iotEdgeExplorer = new IoTEdgeExplorer(outputChannel);
         this._welcomePage = new WelcomePage(this.context);
         this._codeManager = new CodeManager(this.context);
+        this._iotHubModuleExplorer = new IotHubModuleExplorer(outputChannel);
     }
 
     public sendD2CMessage(deviceItem?: DeviceItem): void {
@@ -148,5 +151,13 @@ export class AzureIoTExplorer {
 
     public generateCode(deviceItem: DeviceItem): void {
         this._codeManager.generateCode(deviceItem);
+    }
+
+    public createModule(deviceItem: DeviceItem): void {
+        this._iotHubModuleExplorer.createModule(deviceItem);
+    }
+
+    public deleteModule(moduleItem: ModuleItem): void {
+        this._iotHubModuleExplorer.deleteModule(moduleItem);
     }
 }

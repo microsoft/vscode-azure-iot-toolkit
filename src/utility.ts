@@ -165,12 +165,25 @@ export class Utility {
         };
     }
 
-    public static async getModuleItems(iotHubConnectionString: string, deviceId: string, context: vscode.ExtensionContext) {
+    public static async getModuleItems(iotHubConnectionString: string, deviceItem: DeviceItem, context: vscode.ExtensionContext) {
+        const modules = await Utility.getModules(iotHubConnectionString, deviceItem.deviceId);
+        return modules.map((module) => {
+            const isConnected = module.connectionState === "Connected";
+            const state = isConnected ? "on" : "off";
+            const iconPath = context.asAbsolutePath(path.join("resources", `module-${state}.svg`));
+            return new ModuleItem(deviceItem, module.moduleId, null, iconPath, "module");
+        });
+    }
+
+    public static async getModuleItemsForEdge(iotHubConnectionString: string, deviceItem: DeviceItem, context: vscode.ExtensionContext) {
         /**
          * modules: contains connection state of each module
          * edgeAgent.properties.reported: contains runtime status of each module
          */
-        const [modules, edgeAgent] = await Promise.all([Utility.getModules(iotHubConnectionString, deviceId), Utility.getModuleTwin(iotHubConnectionString, deviceId, "$edgeAgent")]);
+        const [modules, edgeAgent] = await Promise.all([
+            Utility.getModules(iotHubConnectionString, deviceItem.deviceId),
+            Utility.getModuleTwin(iotHubConnectionString, deviceItem.deviceId, "$edgeAgent"),
+        ]);
         const desiredTwin = (edgeAgent as any).properties.desired;
         const reportedTwin = (edgeAgent as any).properties.reported;
 
@@ -185,17 +198,17 @@ export class Utility {
             if (module.moduleId.startsWith("$")) {
                 const moduleId = module.moduleId.substring(1);
                 if (desiredTwin.systemModules && desiredTwin.systemModules[moduleId]) {
-                    return new ModuleItem(deviceId, module.moduleId,
+                    return new ModuleItem(deviceItem, module.moduleId,
                         isConnected && reportedTwin ? this.getModuleRuntimeStatus(moduleId, reportedTwin.systemModules) : undefined, iconPath, "edge-module");
                 }
             } else {
                 if (desiredTwin.modules && desiredTwin.modules[module.moduleId]) {
-                    return new ModuleItem(deviceId, module.moduleId,
+                    return new ModuleItem(deviceItem, module.moduleId,
                         isConnected && reportedTwin ? this.getModuleRuntimeStatus(module.moduleId, reportedTwin.modules) : undefined, iconPath, "edge-module");
                 }
             }
             // If a Module does not exist in desired properties of edgeAgent, then it is a Module Identity.
-            return new ModuleItem(deviceId, module.moduleId, null, iconPath, "module");
+            return new ModuleItem(deviceItem, module.moduleId, null, iconPath, "module");
         }).filter((module) => module);
     }
 
@@ -270,8 +283,6 @@ export class Utility {
             if (edgeDeviceIdSet.has(device.deviceId)) {
                 deviceType = "edge";
                 device.contextValue = "edge";
-                device.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
-                device.command = null;
             } else {
                 deviceType = "device";
             }
@@ -323,11 +334,6 @@ export class Utility {
                         devices.push(new DeviceItem(device.deviceId,
                             deviceConnectionString,
                             null,
-                            {
-                                command: "azure-iot-toolkit.getDevice",
-                                title: "",
-                                arguments: [device],
-                            },
                             device.connectionState.toString(),
                             null));
                     });

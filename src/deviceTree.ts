@@ -42,10 +42,23 @@ export class DeviceTree implements vscode.TreeDataProvider<vscode.TreeItem> {
         }
 
         if (element && element.contextValue === "edge") {
+            TelemetryClient.sendEvent(Constants.IoTHubAILoadEdgeModuleTreeStartEvent);
+            try {
+                const moduleList: vscode.TreeItem[] = await Utility.getModuleItemsForEdge(iotHubConnectionString, element as DeviceItem, this.context);
+                TelemetryClient.sendEvent(Constants.IoTHubAILoadEdgeModuleTreeDoneEvent, { Result: "Success" });
+                return moduleList;
+            } catch (err) {
+                TelemetryClient.sendEvent(Constants.IoTHubAILoadEdgeModuleTreeDoneEvent, { Result: "Fail", Message: err.message });
+                return this.getErrorMessageTreeItems("modules", err.message);
+            }
+        } else if (element && element.contextValue === "device") {
             TelemetryClient.sendEvent(Constants.IoTHubAILoadModuleTreeStartEvent);
             try {
-                const moduleList: vscode.TreeItem[] = await Utility.getModuleItems(iotHubConnectionString, (element as DeviceItem).deviceId, this.context);
+                const moduleList: vscode.TreeItem[] = await Utility.getModuleItems(iotHubConnectionString, element as DeviceItem, this.context);
                 TelemetryClient.sendEvent(Constants.IoTHubAILoadModuleTreeDoneEvent, { Result: "Success" });
+                if (moduleList.length === 0) {
+                    moduleList.push(new vscode.TreeItem(`No modules`));
+                }
                 return moduleList;
             } catch (err) {
                 TelemetryClient.sendEvent(Constants.IoTHubAILoadModuleTreeDoneEvent, { Result: "Fail", Message: err.message });
