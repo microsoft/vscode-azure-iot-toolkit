@@ -209,7 +209,7 @@ export class Utility {
             }
             const moduleType = module.moduleId.startsWith("$") ? "edge-module" : "module";
             // If Module Id starts with "$", then it is a IoT Edge System Module.
-            // Oterwise, if a Module does not exist in desired properties of edgeAgent, then it is a Module Identity.
+            // Otherwise, if a Module does not exist in desired properties of edgeAgent, then it is a Module Identity.
             return new ModuleItem(deviceItem, module.moduleId, null, iconPath, moduleType);
         }).filter((module) => module);
     }
