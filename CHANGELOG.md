@@ -1,4 +1,4 @@
-## 1.3.0 (2018-08-29)
+## 1.3.0 (2018-08-28)
 ### Added
 * Generate Code for C#, Go, Java, PHP or Ruby
 * Module Management (List, Create, Delete module)
