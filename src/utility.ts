@@ -215,10 +215,17 @@ export class Utility {
     }
 
     public static async getModules(iotHubConnectionString: string, deviceId: string): Promise<any[]> {
-        const url = `/devices/${encodeURIComponent(deviceId)}/modules?api-version=${Constants.IoTHubApiVersion}`;
-        const config = Utility.generateIoTHubAxiosRequestConfig(iotHubConnectionString, url, "get");
+        const registry: Registry = Registry.fromConnectionString(iotHubConnectionString);
 
-        return (await axios.request(config)).data;
+        return new Promise<any[]>((resolve, reject) => {
+            registry.getModulesOnDevice(deviceId, (err, modules) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(modules);
+                }
+            });
+        });
     }
 
     public static async getModuleTwin(iotHubConnectionString: string, deviceId: string, moduleId: string): Promise<string> {
