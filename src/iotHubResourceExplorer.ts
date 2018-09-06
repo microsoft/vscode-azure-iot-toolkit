@@ -258,9 +258,9 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 
     private async getOrSelectSubscriptionItem(outputChannel: vscode.OutputChannel, subscriptionId: string): Promise<SubscriptionItem> {
         if (subscriptionId) {
-            let azureResourceFilter = this.accountApi.filters.find((filter) => filter.subscription.subscriptionId === subscriptionId);
-            if (azureResourceFilter) {
-                return new SubscriptionItem(azureResourceFilter.subscription, azureResourceFilter.session);
+            let azureSubscription = this.accountApi.subscriptions.find((subscription) => subscription.subscription.subscriptionId === subscriptionId);
+            if (azureSubscription) {
+                return new SubscriptionItem(azureSubscription.subscription, azureSubscription.session);
             }
         } else {
             const subscriptionItem = await vscode.window.showQuickPick(
