@@ -242,6 +242,25 @@ export class IoTEdgeExplorer extends BaseExplorer {
             return;
         }
 
+        const priority = await vscode.window.showInputBox({
+            prompt: "Deployment priority (Higher values indicate higher priority)",
+            value: "10",
+            ignoreFocusOut: true,
+            validateInput: (value: string) => {
+                if (!value) {
+                    return "The value should not be empty.";
+                }
+                const floatValue = parseFloat(value);
+                if (!Number.isInteger(floatValue) || floatValue < 0) {
+                    return "Deployment priority should be a positive integer";
+                }
+                return undefined;
+            },
+        });
+        if (!priority) {
+            return;
+        }
+
         const deploymentConfiguration = {
             id: deploymentId,
             content: {
@@ -249,6 +268,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
             },
             schemaVersion: "1.0",
             targetCondition,
+            priority: parseInt(priority, 10),
         };
 
         const label = "Edge";
