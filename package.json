@@ -41,6 +41,7 @@
     "onCommand:azure-iot-toolkit.createDevice",
     "onCommand:azure-iot-toolkit.deleteDevice",
     "onCommand:azure-iot-toolkit.invokeDeviceMethod",
+    "onCommand:azure-iot-toolkit.invokeModuleDirectMethod",
     "onCommand:azure-iot-toolkit.getDevice",
     "onCommand:azure-iot-toolkit.getDeviceTwin",
     "onCommand:azure-iot-toolkit.updateDeviceTwin",
@@ -120,7 +121,12 @@
       },
       {
         "command": "azure-iot-toolkit.invokeDeviceMethod",
-        "title": "Invoke Direct Method",
+        "title": "Invoke Device Direct Method",
+        "category": "Azure IoT Hub"
+      },
+      {
+        "command": "azure-iot-toolkit.invokeModuleDirectMethod",
+        "title": "Invoke Module Direct Method",
         "category": "Azure IoT Hub"
       },
       {
@@ -419,12 +425,23 @@
         },
         {
           "command": "azure-iot-toolkit.getModuleTwin",
-          "when": "view == iotHubDevices && viewItem == edge-module"
+          "when": "view == iotHubDevices && viewItem == edge-module",
+          "group": "azure-iot-toolkit@0"
+        },
+        {
+          "command": "azure-iot-toolkit.invokeModuleDirectMethod",
+          "when": "view == iotHubDevices && viewItem == module",
+          "group": "azure-iot-toolkit@1"
+        },
+        {
+          "command": "azure-iot-toolkit.invokeModuleDirectMethod",
+          "when": "view == iotHubDevices && viewItem == edge-module",
+          "group": "azure-iot-toolkit@1"
         },
         {
           "command": "azure-iot-toolkit.deleteModule",
           "when": "view == iotHubDevices && viewItem == module",
-          "group": "azure-iot-toolkit@1"
+          "group": "azure-iot-toolkit@2"
         }
       ],
       "editor/context": [
@@ -468,6 +485,10 @@
         },
         {
           "command": "azure-iot-toolkit.deleteModule",
+          "when": "never"
+        },
+        {
+          "command": "azure-iot-toolkit.invokeModuleDirectMethod",
           "when": "never"
         }
       ]
