@@ -73,8 +73,12 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     let invokeDeviceMethod = vscode.commands.registerCommand("azure-iot-toolkit.invokeDeviceMethod", (DeviceItem) => {
-        azureIoTExplorer.invokeDeviceMethod(DeviceItem);
+        azureIoTExplorer.invokeDeviceDirectMethod(DeviceItem);
     });
+
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.invokeModuleDirectMethod", (moduleItem) => {
+        azureIoTExplorer.invokeModuleDirectMethod(moduleItem);
+    }));
 
     let getDeviceTwin = vscode.commands.registerCommand("azure-iot-toolkit.getDeviceTwin", (DeviceItem) => {
         azureIoTExplorer.getDeviceTwin(DeviceItem);

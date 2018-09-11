@@ -85,8 +85,12 @@ export class AzureIoTExplorer {
         return this._deviceExplorer.deleteDevice(deviceItem);
     }
 
-    public invokeDeviceMethod(deviceItem: DeviceItem): void {
-        this._iotHubDirectMethodExplorer.invokeDeviceMethod(deviceItem);
+    public invokeDeviceDirectMethod(deviceItem: DeviceItem): void {
+        this._iotHubDirectMethodExplorer.invokeDeviceDirectMethod(deviceItem);
+    }
+
+    public invokeModuleDirectMethod(moduleItem: ModuleItem): void {
+        this._iotHubDirectMethodExplorer.invokeModuleDirectMethod(moduleItem);
     }
 
     public getDeviceTwin(deviceItem: DeviceItem): void {
