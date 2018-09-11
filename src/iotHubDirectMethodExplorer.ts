@@ -43,7 +43,7 @@ export class IotHubDirectMethodExplorer extends BaseExplorer {
     }
 
     private invokeDirectMethod(iotHubConnectionString: string, deviceId: string, moduleId?: string) {
-        const target = moduleId ?  `[${deviceId}]-[${moduleId}]` : `[${deviceId}]`;
+        const target = moduleId ?  `[${deviceId}/${moduleId}]` : `[${deviceId}]`;
 
         vscode.window.showInputBox({ prompt: `Enter [Method Name] sent to ${target}`, ignoreFocusOut: true }).then((methodName: string) => {
             if (methodName === undefined) {
