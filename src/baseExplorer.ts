@@ -38,7 +38,9 @@ export class BaseExplorer {
 
     protected printMessage(outputChannel: vscode.OutputChannel, label: string, deviceItem?: DeviceItem) {
         return (message) => {
-            if (deviceItem && deviceItem.deviceId !== message.annotations["iothub-connection-device-id"]) {
+            const deviceId = message.annotations["iothub-connection-device-id"];
+            const moduleId = message.annotations["iothub-connection-module-id"];
+            if (deviceItem && deviceItem.deviceId !== deviceId) {
                 return;
             }
             let config = Utility.getConfiguration();
@@ -61,7 +63,8 @@ export class BaseExplorer {
                 result = body;
             }
             const timeMessage = message.enqueuedTimeUtc ? `[${message.enqueuedTimeUtc.toLocaleTimeString("en-US")}] ` : "";
-            this.outputLine(label, `${timeMessage}Message received from [${message.annotations["iothub-connection-device-id"]}]:`);
+            const messageSource = moduleId ? `${deviceId}/${moduleId}` : deviceId;
+            this.outputLine(label, `${timeMessage}Message received from [${messageSource}]:`);
             this._outputChannel.appendLine(JSON.stringify(result, null, 2));
         };
     };
