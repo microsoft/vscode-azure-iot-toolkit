@@ -1,6 +1,7 @@
 ## 1.4.0 (2018-09-19)
 ### Added
 * Support Module direct method
+* Show Module id when monitoring D2C message
 * Let user input the priority for IoT Edge deployment
 * Support passing subscriptionId and resourceGroupName to createIoTHub API
 * Support passing subscriptionId to selectIoTHub API
