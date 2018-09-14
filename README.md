@@ -24,6 +24,7 @@ The [Wiki page](https://github.com/Microsoft/vscode-azure-iot-toolkit/wiki) incl
     * List Moudles
     * Create Module
     * Edit Module Twin
+    * Invoke Module Direct Method
     * Delete Module
 * Interact with Azure IoT Hub
     * Generate Code for C#, Go, Java, Node.js, PHP, Python, Ruby or REST API
@@ -31,7 +32,7 @@ The [Wiki page](https://github.com/Microsoft/vscode-azure-iot-toolkit/wiki) incl
     * Monitor IoT Hub D2C message
     * Send C2D message to device
     * Monitor C2D message from IoT Hub
-    * Invoke Direct Method
+    * Invoke Device Direct Method
     * Edit Device Twin
 * Interact with Azure IoT Edge (Install [Azure IoT Edge](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.azure-iot-edge) for more IoT Edge support)
     * List Moudles 
