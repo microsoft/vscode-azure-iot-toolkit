@@ -3,6 +3,7 @@
 
 "use strict";
 import * as iothub from "azure-iothub";
+import * as clipboardy from "clipboardy";
 import * as vscode from "vscode";
 import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
@@ -14,6 +15,31 @@ import { Utility } from "./utility";
 export class IotHubModuleExplorer extends BaseExplorer {
     constructor(outputChannel: vscode.OutputChannel) {
         super(outputChannel);
+    }
+
+    public async getModule(moduleItem: ModuleItem) {
+        TelemetryClient.sendEvent(Constants.IoTHubAIGetModuleStartEvent);
+        const label = "Module";
+        const iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
+        if (!iotHubConnectionString) {
+            return;
+        }
+
+        const registry: iothub.Registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
+
+        this._outputChannel.show();
+        this.outputLine(label, `Querying module [${moduleItem.deviceId}/${moduleItem.moduleId}]...`);
+
+        registry.getModule(moduleItem.deviceId, moduleItem.moduleId, (err: Error, module?: iothub.Module) => {
+            if (err) {
+                this.outputLine(label, `Error: ${err.message}`);
+                TelemetryClient.sendEvent(Constants.IoTHubAIDGetModuleDoneEvent, { Result: "Fail", Message: err.message });
+            }
+            if (module) {
+                this.outputLine(label, `Module info: ${JSON.stringify(module, null, 2)}`);
+                TelemetryClient.sendEvent(Constants.IoTHubAIDGetModuleDoneEvent, { Result: "Success" });
+            }
+        });
     }
 
     public async createModule(deviceItem?: DeviceItem) {
@@ -48,6 +74,13 @@ export class IotHubModuleExplorer extends BaseExplorer {
                 TelemetryClient.sendEvent(Constants.IoTHubAICreateModuleDoneEvent, { Result: "Success" });
             }
         });
+    }
+
+    public copyModuleConnectionString(moduleItem: ModuleItem) {
+        TelemetryClient.sendEvent("AZ.Copy.ModuleConnectionString");
+        if (moduleItem.connectionString) {
+            clipboardy.write(moduleItem.connectionString);
+        }
     }
 
     public async deleteModule(moduleItem: ModuleItem) {

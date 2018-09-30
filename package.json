@@ -61,7 +61,9 @@
     "onCommand:azure-iot-toolkit.showWelcomePage",
     "onCommand:azure-iot-toolkit.generateCode",
     "onCommand:azure-iot-toolkit.createModule",
-    "onCommand:azure-iot-toolkit.deleteModule"
+    "onCommand:azure-iot-toolkit.deleteModule",
+    "onCommand:azure-iot-toolkit.getModule",
+    "onCommand:azure-iot-toolkit.copyModuleConnectionString"
   ],
   "main": "./out/src/extension",
   "contributes": {
@@ -231,6 +233,16 @@
       {
         "command": "azure-iot-toolkit.deleteModule",
         "title": "Delete Module",
+        "category": "Azure IoT Hub"
+      },
+      {
+        "command": "azure-iot-toolkit.getModule",
+        "title": "Get Module Info",
+        "category": "Azure IoT Hub"
+      },
+      {
+        "command": "azure-iot-toolkit.copyModuleConnectionString",
+        "title": "Copy Module Connection String",
         "category": "Azure IoT Hub"
       }
     ],
@@ -419,29 +431,49 @@
           "group": "azure-iot-toolkit-edge@1"
         },
         {
-          "command": "azure-iot-toolkit.getModuleTwin",
-          "when": "view == iotHubDevices && viewItem == module",
+          "command": "azure-iot-toolkit.getModule",
+          "when": " view == iotHubDevices && viewItem == module",
+          "group": "azure-iot-toolkit@0"
+        },
+        {
+          "command": "azure-iot-toolkit.getModule",
+          "when": " view == iotHubDevices && viewItem == edge-module",
           "group": "azure-iot-toolkit@0"
         },
         {
           "command": "azure-iot-toolkit.getModuleTwin",
-          "when": "view == iotHubDevices && viewItem == edge-module",
-          "group": "azure-iot-toolkit@0"
-        },
-        {
-          "command": "azure-iot-toolkit.invokeModuleDirectMethod",
           "when": "view == iotHubDevices && viewItem == module",
           "group": "azure-iot-toolkit@1"
         },
         {
-          "command": "azure-iot-toolkit.invokeModuleDirectMethod",
+          "command": "azure-iot-toolkit.getModuleTwin",
           "when": "view == iotHubDevices && viewItem == edge-module",
           "group": "azure-iot-toolkit@1"
+        },
+        {
+          "command": "azure-iot-toolkit.invokeModuleDirectMethod",
+          "when": "view == iotHubDevices && viewItem == module",
+          "group": "azure-iot-toolkit@2"
+        },
+        {
+          "command": "azure-iot-toolkit.invokeModuleDirectMethod",
+          "when": "view == iotHubDevices && viewItem == edge-module",
+          "group": "azure-iot-toolkit@2"
+        },
+        {
+          "command": "azure-iot-toolkit.copyModuleConnectionString",
+          "when": "view == iotHubDevices && viewItem == module",
+          "group": "azure-iot-toolkit@3"
+        },
+        {
+          "command": "azure-iot-toolkit.copyModuleConnectionString",
+          "when": "view == iotHubDevices && viewItem == edge-module",
+          "group": "azure-iot-toolkit@3"
         },
         {
           "command": "azure-iot-toolkit.deleteModule",
           "when": "view == iotHubDevices && viewItem == module",
-          "group": "azure-iot-toolkit@2"
+          "group": "azure-iot-toolkit@4"
         }
       ],
       "editor/context": [
@@ -489,6 +521,14 @@
         },
         {
           "command": "azure-iot-toolkit.invokeModuleDirectMethod",
+          "when": "never"
+        },
+        {
+          "command": "azure-iot-toolkit.getModule",
+          "when": "never"
+        },
+        {
+          "command": "azure-iot-toolkit.copyModuleConnectionString",
           "when": "never"
         }
       ]

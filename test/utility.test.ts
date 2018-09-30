@@ -14,6 +14,10 @@ suite("Utility Tests ", () => {
         assert.equal(hostname, TestConstants.IotHubHostName);
     });
 
+    test("should be able to get postfix of hostname", () => {
+        assert.equal(Utility.getPostfixFromHostName(TestConstants.IotHubHostName), "azure-devices.net");
+    });
+
     test("should be able to get config", () => {
         let iotHubD2CMessageStringify = Utility.getConfig<boolean>(Constants.IoTHubD2CMessageStringifyKey);
         assert.equal(iotHubD2CMessageStringify, false);

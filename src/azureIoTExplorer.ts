@@ -164,4 +164,12 @@ export class AzureIoTExplorer {
     public deleteModule(moduleItem: ModuleItem): void {
         this._iotHubModuleExplorer.deleteModule(moduleItem);
     }
+
+    public getModule(moduleItem: ModuleItem): void {
+        this._iotHubModuleExplorer.getModule(moduleItem);
+    }
+
+    public copyModuleConnectionString(moduleItem: ModuleItem): void {
+        this._iotHubModuleExplorer.copyModuleConnectionString(moduleItem);
+    }
 }

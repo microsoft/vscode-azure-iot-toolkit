@@ -89,6 +89,11 @@ export class Utility {
         return result ? result[1] : "";
     }
 
+    public static getPostfixFromHostName(hostName: string): string {
+        let result = /^[^.]+\.(.+)$/.exec(hostName);
+        return result ? result[1] : "";
+    }
+
     public static hash(data: string): string {
         return crypto.createHash("sha256").update(data).digest("hex");
     }
@@ -171,7 +176,7 @@ export class Utility {
             const isConnected = module.connectionState === "Connected";
             const state = isConnected ? "on" : "off";
             const iconPath = context.asAbsolutePath(path.join("resources", `module-${state}.svg`));
-            return new ModuleItem(deviceItem, module.moduleId, null, iconPath, "module");
+            return new ModuleItem(deviceItem, module.moduleId, module.connectionString, null, iconPath, "module");
         });
     }
 
@@ -198,31 +203,37 @@ export class Utility {
             if (module.moduleId.startsWith("$")) {
                 const moduleId = module.moduleId.substring(1);
                 if (desiredTwin.systemModules && desiredTwin.systemModules[moduleId]) {
-                    return new ModuleItem(deviceItem, module.moduleId,
+                    return new ModuleItem(deviceItem, module.moduleId, module.connectionString,
                         isConnected && reportedTwin ? this.getModuleRuntimeStatus(moduleId, reportedTwin.systemModules) : undefined, iconPath, "edge-module");
                 }
             } else {
                 if (desiredTwin.modules && desiredTwin.modules[module.moduleId]) {
-                    return new ModuleItem(deviceItem, module.moduleId,
+                    return new ModuleItem(deviceItem, module.moduleId, module.connectionString,
                         isConnected && reportedTwin ? this.getModuleRuntimeStatus(module.moduleId, reportedTwin.modules) : undefined, iconPath, "edge-module");
                 }
             }
             const moduleType = module.moduleId.startsWith("$") ? "edge-module" : "module";
             // If Module Id starts with "$", then it is a IoT Edge System Module.
             // Otherwise, if a Module does not exist in desired properties of edgeAgent, then it is a Module Identity.
-            return new ModuleItem(deviceItem, module.moduleId, null, iconPath, moduleType);
+            return new ModuleItem(deviceItem, module.moduleId, module.connectionString, null, iconPath, moduleType);
         }).filter((module) => module);
     }
 
     public static async getModules(iotHubConnectionString: string, deviceId: string): Promise<any[]> {
         const registry: Registry = Registry.fromConnectionString(iotHubConnectionString);
+        const hostName: string = Utility.getHostName(iotHubConnectionString);
 
         return new Promise<any[]>((resolve, reject) => {
             registry.getModulesOnDevice(deviceId, (err, modules) => {
                 if (err) {
                     reject(err);
                 } else {
-                    resolve(modules);
+                    resolve(modules.map((module) => {
+                        if (module.authentication.symmetricKey.primaryKey) {
+                            (module as any).connectionString = Utility.createModuleConnectionString(hostName, deviceId, module.moduleId, module.authentication.symmetricKey.primaryKey);
+                        }
+                        return module;
+                    }));
                 }
             });
         });
@@ -307,6 +318,10 @@ export class Utility {
     public static getResourceGroupNameFromId(resourceId: string): string {
         let result = /resourceGroups\/([^/]+)\//.exec(resourceId);
         return result[1];
+    }
+
+    public static createModuleConnectionString(hostName: string, deviceId: string, moduleId: string, sharedAccessKey: string): string {
+        return `HostName=${hostName};DeviceId=${deviceId};ModuleId=${moduleId};SharedAccessKey=${sharedAccessKey}`;
     }
 
     private static async getFilteredDeviceList(iotHubConnectionString: string, onlyEdgeDevice: boolean): Promise<DeviceItem[]> {
