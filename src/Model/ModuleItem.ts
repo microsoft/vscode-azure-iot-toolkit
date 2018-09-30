@@ -9,10 +9,16 @@ export class ModuleItem extends TreeItem {
     constructor(
         public readonly deviceItem: DeviceItem,
         public readonly moduleId: string,
+        public readonly connectionString: string,
         public readonly runtimeStatus: string,
         public readonly iconPath: string,
         public readonly contextValue: string) {
         super(runtimeStatus ? `${moduleId} (${runtimeStatus})` : moduleId);
         this.deviceId = deviceItem.deviceId;
+        this.command = {
+            command: "azure-iot-toolkit.getModule",
+            title: "",
+            arguments: [this],
+        };
     }
 }

@@ -32,6 +32,7 @@ export class TelemetryClient {
             let iotHubHostName = Utility.getHostName(iotHubConnectionString);
             if (iotHubHostName) {
                 newProperties.IoTHubHostName = Utility.hash(iotHubHostName);
+                newProperties.IoTHubHostNamePostfix = Utility.getPostfixFromHostName(iotHubHostName);
             }
         }
         return newProperties;

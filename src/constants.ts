@@ -79,6 +79,8 @@ export class Constants {
     public static IoTHubAICreateModuleDoneEvent = "AZ.Module.Create.Done";
     public static IoTHubAIDeleteModuleStartEvent = "AZ.Module.Delete.Start";
     public static IoTHubAIDeleteModuleDoneEvent = "AZ.Module.Delete.Done";
+    public static IoTHubAIGetModuleStartEvent = "AZ.Module.Get.Start";
+    public static IoTHubAIDGetModuleDoneEvent = "AZ.Module.Get.Done";
 
     public static IoTHubAIStartLoadDeviceTreeEvent = "General.StartLoadDeviceTree";
     public static IoTHubAIShowWelcomePagetEvent = "General.WelcomePage.Show";
