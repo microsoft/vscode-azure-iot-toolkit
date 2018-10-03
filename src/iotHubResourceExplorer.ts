@@ -3,11 +3,11 @@
 
 "use strict";
 import { IotHubClient } from "azure-arm-iothub";
-import { ResourceManagementClient, ResourceModels, SubscriptionClient, SubscriptionModels } from "azure-arm-resource";
+import { ResourceManagementClient, ResourceModels, SubscriptionClient } from "azure-arm-resource";
 import * as clipboardy from "clipboardy";
 import * as vscode from "vscode";
 import { IotHubDescription } from "../node_modules/azure-arm-iothub/lib/models";
-import { AzureAccount, AzureLoginStatus, AzureResourceFilter, AzureSession } from "./azure-account.api";
+import { AzureAccount } from "./azure-account.api";
 import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
 import { DeviceItem } from "./Model/DeviceItem";

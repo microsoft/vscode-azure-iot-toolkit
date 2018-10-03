@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 "use strict";
-import { Message } from "azure-iot-common";
 import { Client as ServiceClient, DeviceMethodParams } from "azure-iothub";
 import { Callback } from "azure-iothub/lib/interfaces";
 import * as vscode from "vscode";
