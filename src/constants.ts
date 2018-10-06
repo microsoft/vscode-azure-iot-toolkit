@@ -8,6 +8,7 @@ import * as vscode from "vscode";
 
 enum TemplateLanguage {
     CSharp = "C#",
+    FSharp = "F#",
     Go = "Go",
     HTTP = "HTTP",
     Java = "Java",
@@ -102,6 +103,9 @@ export class Constants {
     public static CodeTemplates = {
         [TemplateLanguage.CSharp]: {
             [TemplateType.SendD2C]: "csharp/sendD2C",
+        },
+        [TemplateLanguage.FSharp]: {
+            [TemplateType.SendD2C]: "fsharp/sendD2C",
         },
         [TemplateLanguage.Go]: {
             [TemplateType.SendD2C]: "go/sendD2C.go",
