@@ -184,14 +184,20 @@ export class IoTHubResourceExplorer extends BaseExplorer {
     }
 
     private async generateSasToken(sasTokenFunction: (connectionString: string, expiryInHours: number) => string, connectionString: string, target: string) {
-        const expiryInHours = await vscode.window.showInputBox({ prompt: `Enter expiration time (hours)`, ignoreFocusOut: true });
-        if (expiryInHours && !isNaN(parseFloat(expiryInHours))) {
-            const sasToken = sasTokenFunction(connectionString, parseFloat(expiryInHours));
-            clipboardy.write(sasToken);
-            this._outputChannel.show();
-            this.outputLine("SASToken", `SAS token for [${target}] is generated and copied to clipboard:`);
-            this._outputChannel.appendLine(sasToken);
-        }
+        const expiryInHours = await vscode.window.showInputBox({
+            prompt: `Enter expiration time (hours)`,
+            ignoreFocusOut: true,
+            validateInput: (value: string) => {
+                if (!value || isNaN(parseFloat(value))) {
+                    return "Provided expiration time is not a number, enter correct expiration time (hours).";
+                }
+            }});
+
+        const sasToken = sasTokenFunction(connectionString, parseFloat(expiryInHours));
+        clipboardy.write(sasToken);
+        this._outputChannel.show();
+        this.outputLine("SASToken", `SAS token for [${target}] is generated and copied to clipboard:`);
+        this._outputChannel.appendLine(sasToken);
     }
 
     private async waitForLogin(): Promise<boolean> {

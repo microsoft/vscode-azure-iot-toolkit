@@ -25,7 +25,7 @@ export class IoTHubMessageExplorer extends BaseExplorer {
         }
 
         const deviceConnectionString: string = deviceItem.connectionString;
-        vscode.window.showInputBox({ prompt: `Enter message to send to ${Constants.IoTHub}` }).then((message: string) => {
+        vscode.window.showInputBox({ prompt: `Enter message to send to ${Constants.IoTHub}`, ignoreFocusOut: true }).then((message: string) => {
             if (message !== undefined) {
                 this._outputChannel.show();
                 try {
