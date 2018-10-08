@@ -3,7 +3,7 @@
 
 "use strict";
 import { Client as EventHubClient } from "azure-event-hubs";
-import { Client, Message } from "azure-iot-device";
+import { Message } from "azure-iot-device";
 import { clientFromConnectionString } from "azure-iot-device-mqtt";
 import * as vscode from "vscode";
 import { BaseExplorer } from "./baseExplorer";

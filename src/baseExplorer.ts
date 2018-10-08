@@ -2,9 +2,7 @@
 // Licensed under the MIT license.
 
 "use strict";
-import { Client as EventHubClient } from "azure-event-hubs";
 import * as vscode from "vscode";
-import { Constants } from "./constants";
 import { DeviceItem } from "./Model/DeviceItem";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";

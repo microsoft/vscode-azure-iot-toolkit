@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import { Command, TreeItem } from "vscode";
+import { TreeItem } from "vscode";
 import { DeviceItem } from "./DeviceItem";
 
 export class ModuleItem extends TreeItem {
