@@ -1,3 +1,13 @@
+## 1.5.0 (2018-10-11)
+### Added
+* Get module info
+* Copy module connection string
+* Add F# code generation for device to cloud communication
+
+### Changed
+* Valid that expiration time should be a number when generating SAS token
+* Keep input box open when entering D2C message
+
 ## 1.4.0 (2018-09-19)
 ### Added
 * Support Module direct method

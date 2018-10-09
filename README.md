@@ -22,12 +22,14 @@ The [Wiki page](https://github.com/Microsoft/vscode-azure-iot-toolkit/wiki) incl
     * Generate SAS Token for Device
 * Module management
     * List Moudles
+    * Get Module Info
     * Create Module
     * Edit Module Twin
     * Invoke Module Direct Method
+    * Copy Module Connection String
     * Delete Module
 * Interact with Azure IoT Hub
-    * Generate Code for C#, Go, Java, Node.js, PHP, Python, Ruby or REST API
+    * Generate Code for C#, F#, Go, Java, Node.js, PHP, Python, Ruby or REST API
     * Send D2C message to IoT Hub
     * Monitor IoT Hub D2C message
     * Send C2D message to device
@@ -146,6 +148,7 @@ Whether to show IoT Hub info when IoT Hub Connection String is not set (default 
 
 ## Resources
 - [Channel 9 video: Walkthrough of Azure IoT Toolkit extension](https://channel9.msdn.com/Shows/Internet-of-Things-Show/Azure-IoT-Toolkit-extension-for-Visual-Studio-Code)
+- [Channel 9 video: What's new in the IoT Toolkit extension for VS Code](https://channel9.msdn.com/Shows/Internet-of-Things-Show/Whats-new-in-the-IoT-Toolkit-extension-for-VS-Code)
 - [Create an IoT hub using the Azure IoT Toolkit for Visual Studio Code](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-create-use-iot-toolkit)
 - [Use Azure IoT Toolkit to send and receive messages between your device and IoT Hub](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-vscode-iot-toolkit-cloud-device-messaging)
 - [Use Azure IoT Toolkit for Azure IoT Hub device management](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-device-management-iot-toolkit)
@@ -157,6 +160,10 @@ Whether to show IoT Hub info when IoT Hub Connection String is not set (default 
 - [Create and control an IoT device connected to an IoT hub (.NET)](https://github.com/Microsoft/vscode-azure-iot-toolkit/wiki/Quickstart-.NET)
 - [Handy Tool When You Develop With Azure IoT](https://blogs.msdn.microsoft.com/iotdev/2017/09/01/handy-tool-when-you-develop-with-azure-iot/)
 - [Azure IoT Toolkit for Visual Studio Code generally available for managing Azure IoT Hub and Devices with ease](https://blogs.msdn.microsoft.com/iotdev/2018/06/30/azure-iot-toolkit-for-visual-studio-code-generally-available-for-managing-azure-iot-hub-and-devices-with-ease/)
+
+## ❤️ Contributors
+
+Thanks to all the [contributors](https://github.com/Microsoft/vscode-azure-iot-toolkit/graphs/contributors)!
 
 
 
