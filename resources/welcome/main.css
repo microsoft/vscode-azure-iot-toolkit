@@ -1,6 +1,6 @@
 * {
     box-sizing: border-box;
-    font-family: "Segoe UI";
+    font-family: "Segoe UI", sans-serif;
     font-size: 15px;
 }
 
@@ -46,7 +46,7 @@ header,
 
 h1 {
     font-size: 36px;
-    font-family: "Segoe UI Semibold";
+    font-family: "Segoe UI Semibold", sans-serif;
     line-height: 44px;
     margin-bottom: 0;
 }
@@ -87,7 +87,7 @@ header p {
 
 #main-content h2 {
     font-size: 32px;
-    font-family: "Segoe UI Light";
+    font-family: "Segoe UI Light", sans-serif;
     line-height: 38px;
     margin-top: 30px;
     margin-bottom: 0;
@@ -208,7 +208,7 @@ header p {
 }
 
 #tutorial h3 {
-    font-family: "Segoe UI Light";
+    font-family: "Segoe UI Light", sans-serif;
     font-size: 20px;
     text-align: left;
     line-height: 28px;
