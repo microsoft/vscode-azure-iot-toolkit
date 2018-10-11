@@ -1,4 +1,4 @@
-## 1.5.0 (2018-10-11)
+## 1.5.0 (2018-10-10)
 ### Added
 * Get module info
 * Copy module connection string
