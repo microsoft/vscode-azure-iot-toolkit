@@ -23,6 +23,16 @@ suite("Utility Tests ", () => {
         assert.equal(iotHubD2CMessageStringify, false);
     });
 
+    test("should be able to get auto refresh enable flag", () => {
+        let autoRefreshEnable = Utility.getConfig<boolean>(Constants.TreeViewAutoRefreshEnableKey);
+        assert.equal(autoRefreshEnable, false);
+    });
+
+    test("should be able to get auto refresh interval", () => {
+        let autoRefreshIntervalInSeconds = Utility.getConfig<boolean>(Constants.TreeViewAutoRefreshIntervalInSecondsKey);
+        assert.equal(autoRefreshIntervalInSeconds, 60);
+    });
+
     // tslint:disable-next-line:only-arrow-functions
     test("should be able to get IoT Hub Connection String", function (done) {
         this.timeout(5 * 1000);

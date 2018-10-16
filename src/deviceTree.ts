@@ -12,6 +12,13 @@ export class DeviceTree implements vscode.TreeDataProvider<vscode.TreeItem> {
     public readonly onDidChangeTreeData: vscode.Event<vscode.TreeItem | undefined> = this._onDidChangeTreeData.event;
 
     constructor(private context: vscode.ExtensionContext) {
+        let treeViewAutoRefreshEnable = Utility.getConfig<boolean>(Constants.TreeViewAutoRefreshEnableKey);
+        if (treeViewAutoRefreshEnable) {
+            let treeViewAutoRefreshIntervalInSeconds = Utility.getConfig<number>(Constants.TreeViewAutoRefreshIntervalInSecondsKey);
+            setInterval(() => {
+                vscode.commands.executeCommand("azure-iot-toolkit.refresh");
+            }, treeViewAutoRefreshIntervalInSeconds * 1000);
+        }
     }
 
     public refresh(element): void {

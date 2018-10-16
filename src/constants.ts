@@ -39,6 +39,8 @@ export class Constants {
     public static IoTHubMessageLabel = "D2CMessage";
     public static IoTHubC2DMessageLabel = "C2DMessage";
     public static IoTHubC2DMessageMonitorLabel = "C2DMessageMonitor";
+    public static TreeViewAutoRefreshEnableKey = "treeViewAutoRefreshEnable";
+    public static TreeViewAutoRefreshIntervalInSecondsKey = "treeViewAutoRefreshIntervalInSeconds";
 
     public static IoTHubDirectMethodLabel = "DirectMethod";
     public static IoTHubDeviceTwinLabel = "DeviceTwin";
