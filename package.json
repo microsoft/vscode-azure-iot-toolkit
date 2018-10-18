@@ -585,7 +585,7 @@
         "azure-iot-toolkit.treeViewAutoRefreshIntervalInSeconds": {
           "type": "number",
           "default": 60,
-          "description": "Time interval in seconds for treeview auto refresh, auto refresh has to be enabled for it to work."
+          "description": "Time interval in seconds for tree view auto refresh, auto refresh has to be enabled for it to work."
         }
       }
     },
