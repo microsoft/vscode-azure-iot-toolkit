@@ -289,7 +289,7 @@ export class Utility {
             return deviceItem;
         } else {
             if (eventName) {
-                TelemetryClient.sendEvent(eventName, { entry: "contextMenu" });
+                TelemetryClient.sendEvent(eventName, { entry: "contextMenu", deviceType: deviceItem.contextValue });
             }
             return deviceItem;
         }

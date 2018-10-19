@@ -59,7 +59,7 @@ export class IoTHubMessageExplorer extends BaseExplorer {
             this._outputChannel.show();
             const deviceLabel = deviceItem ? `[${deviceItem.deviceId}]` : "all devices";
             this.outputLine(Constants.IoTHubMonitorLabel, `Start monitoring D2C message for ${deviceLabel} ...`);
-            TelemetryClient.sendEvent(Constants.IoTHubAIStartMonitorEvent);
+            TelemetryClient.sendEvent(Constants.IoTHubAIStartMonitorEvent, { deviceType: deviceItem ? deviceItem.contextValue : "" });
             this.startMonitor(Constants.IoTHubMonitorLabel, consumerGroup, deviceItem);
         } catch (e) {
             this.outputLine(Constants.IoTHubMonitorLabel, e);
