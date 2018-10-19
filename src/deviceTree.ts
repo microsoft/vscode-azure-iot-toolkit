@@ -10,6 +10,7 @@ import { Utility } from "./utility";
 export class DeviceTree implements vscode.TreeDataProvider<vscode.TreeItem> {
     public _onDidChangeTreeData: vscode.EventEmitter<vscode.TreeItem | undefined> = new vscode.EventEmitter<vscode.TreeItem | undefined>();
     public readonly onDidChangeTreeData: vscode.Event<vscode.TreeItem | undefined> = this._onDidChangeTreeData.event;
+    private autoRefreshIntervalID: NodeJS.Timer;
 
     constructor(private context: vscode.ExtensionContext) {
     }
@@ -62,6 +63,9 @@ export class DeviceTree implements vscode.TreeDataProvider<vscode.TreeItem> {
                 return this.getErrorMessageTreeItems("modules", err.message);
             }
         } else {
+            if (this.autoRefreshIntervalID) {
+                clearInterval(this.autoRefreshIntervalID);
+            }
             TelemetryClient.sendEvent(Constants.IoTHubAIStartLoadDeviceTreeEvent);
             try {
                 const deviceList: vscode.TreeItem[] = await Utility.getDeviceList(iotHubConnectionString, this.context);
@@ -69,6 +73,7 @@ export class DeviceTree implements vscode.TreeDataProvider<vscode.TreeItem> {
                 if (deviceList.length === 0) {
                     deviceList.push(new vscode.TreeItem(`No devices in ${Utility.getHostName(iotHubConnectionString)}`));
                 }
+                this.autoRefreshIntervalID = this.generateAutoRefreshInterval();
                 return deviceList;
             } catch (err) {
                 TelemetryClient.sendEvent(Constants.IoTHubAILoadDeviceTreeEvent, { Result: "Fail", Message: err.message });
@@ -100,5 +105,16 @@ export class DeviceTree implements vscode.TreeDataProvider<vscode.TreeItem> {
             title: "",
         };
         return commandItem;
+    }
+
+    private generateAutoRefreshInterval(): NodeJS.Timer {
+        let treeViewAutoRefreshEnable = Utility.getConfig<boolean>(Constants.TreeViewAutoRefreshEnableKey);
+        if (treeViewAutoRefreshEnable) {
+            let treeViewAutoRefreshIntervalInSeconds = Utility.getConfig<number>(Constants.TreeViewAutoRefreshIntervalInSecondsKey);
+            return setInterval(() => {
+                this._onDidChangeTreeData.fire();
+            }, treeViewAutoRefreshIntervalInSeconds * 1000);
+        }
+        return undefined;
     }
 }

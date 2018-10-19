@@ -146,6 +146,20 @@ Whether to show IoT Hub info when IoT Hub Connection String is not set (default 
 }
 ```
 
+Whether to enable auto refresh of tree view (default is `false`):
+```json
+{ 
+    "azure-iot-toolkit.treeViewAutoRefreshEnable": false
+}
+```
+
+Time interval in seconds for tree view auto refresh, auto refresh has to be enabled for it to work. (default is `60`):
+```json
+{ 
+    "azure-iot-toolkit.treeViewAutoRefreshIntervalInSeconds": 60
+}
+```
+
 ## Resources
 - [Channel 9 video: Walkthrough of Azure IoT Toolkit extension](https://channel9.msdn.com/Shows/Internet-of-Things-Show/Azure-IoT-Toolkit-extension-for-Visual-Studio-Code)
 - [Channel 9 video: What's new in the IoT Toolkit extension for VS Code](https://channel9.msdn.com/Shows/Internet-of-Things-Show/Whats-new-in-the-IoT-Toolkit-extension-for-VS-Code)
