@@ -50,7 +50,6 @@ client.open(function(err) {
             process.exit(-1);
           } else {
             console.log('twin state reported');
-            process.exit(0);
           }
         });
       }
