@@ -12,6 +12,8 @@ import { ModuleTwinCodeLensProvider } from "./providers/moduleTwinCodeLensProvid
 import { TelemetryClient } from "./telemetryClient";
 
 export function activate(context: vscode.ExtensionContext) {
+    TelemetryClient.extensionContext = context;
+
     TelemetryClient.sendEvent("extensionActivated");
 
     Constants.initialize(context);
