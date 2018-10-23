@@ -14,6 +14,7 @@ import { TelemetryClient } from "./telemetryClient";
 export function activate(context: vscode.ExtensionContext) {
     TelemetryClient.sendEvent("extensionActivated");
 
+    TelemetryClient.initialize(context);
     Constants.initialize(context);
     let azureIoTExplorer = new AzureIoTExplorer(context);
     let deviceTree = new DeviceTree(context);
