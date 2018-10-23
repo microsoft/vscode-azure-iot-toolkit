@@ -21,6 +21,8 @@ enum TemplateLanguage {
 enum TemplateType {
     SendD2C = "Send device-to-cloud message",
     MonitorD2C = "Monitor device-to-cloud message",
+    DeviceManageDeviceTwin = "Device - Manage device twin",
+    ServiceManageDeviceTwin = "Service - Manage device twin",
 }
 
 export class Constants {
@@ -121,6 +123,8 @@ export class Constants {
         [TemplateLanguage.Node]: {
             [TemplateType.SendD2C]: "node/sendD2C.js",
             [TemplateType.MonitorD2C]: "node/monitorD2C.js",
+            [TemplateType.DeviceManageDeviceTwin]: "node/deviceManageDeviceTwin.js",
+            [TemplateType.ServiceManageDeviceTwin]: "node/serviceManageDeviceTwin.js",
         },
         [TemplateLanguage.PHP]: {
             [TemplateType.SendD2C]: "php/sendD2C.php",
