@@ -13,7 +13,7 @@ const extensionVersion: string = packageJSON.version;
 const aiKey: string = packageJSON.aiKey;
 
 export class TelemetryClient {
-    public static initialize(context: vscode.ExtensionContext){
+    public static initialize(context: vscode.ExtensionContext) {
         this._extensionContext = context;
         let iotWorkbenchExt = vscode.extensions.getExtension("vsciot-vscode.vscode-iot-workbench");
         if (iotWorkbenchExt) {
