@@ -1,12 +1,19 @@
+## 1.6.0 (2018-10-31)
+### Added
+* Add device twin templates for Node.js code generation
+* Add configuration to enable auto refresh and set refresh interval ([@tomaszbartoszewski](https://github.com/tomaszbartoszewski): [#184](https://github.com/Microsoft/vscode-azure-iot-toolkit/pull/184))
+* Display friendly info when no subscriptions are available ([@tomaszbartoszewski](https://github.com/tomaszbartoszewski): [#174](https://github.com/Microsoft/vscode-azure-iot-toolkit/pull/174))
+* Use sans-serif font for welcome page on Linux and macOS ([@tomaszbartoszewski](https://github.com/tomaszbartoszewski): [#176](https://github.com/Microsoft/vscode-azure-iot-toolkit/pull/176))
+
 ## 1.5.0 (2018-10-10)
 ### Added
 * Get module info
 * Copy module connection string
-* Add F# code generation for device to cloud communication
+* Add F# code generation for device to cloud communication ([@tomaszbartoszewski](https://github.com/tomaszbartoszewski): [#172](https://github.com/Microsoft/vscode-azure-iot-toolkit/pull/172))
 
 ### Changed
-* Valid that expiration time should be a number when generating SAS token
-* Keep input box open when entering D2C message
+* Valid that expiration time should be a number when generating SAS token ([@tomaszbartoszewski](https://github.com/tomaszbartoszewski): [#173](https://github.com/Microsoft/vscode-azure-iot-toolkit/pull/173))
+* Keep input box open when entering D2C message ([@tomaszbartoszewski](https://github.com/tomaszbartoszewski): [#173](https://github.com/Microsoft/vscode-azure-iot-toolkit/pull/173))
 
 ## 1.4.0 (2018-09-19)
 ### Added
@@ -19,7 +26,7 @@
 ## 1.3.0 (2018-08-28)
 ### Added
 * Generate Code for C#, Go, Java, PHP or Ruby
-* Module Management (List, Create, Delete module)
+* [Module Management](https://blogs.msdn.microsoft.com/iotdev/2018/09/19/azure-iot-toolkit-supports-iot-hub-module-management-module-twin-module-direct-method-module-crud/) (List, Create, Delete module)
 * Add configuration to set start time for monitoring D2C message
 * Support creating IoT Hub with basic tier
 
