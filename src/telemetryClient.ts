@@ -15,7 +15,7 @@ const aiKey: string = packageJSON.aiKey;
 export class TelemetryClient {
     public static initialize(context: vscode.ExtensionContext){
         this._extensionContext = context;
-        let iotWorkbenchExt = vscode.extensions.all.find((element) => element.id === "vsciot-vscode.vscode-iot-workbench");
+        let iotWorkbenchExt = vscode.extensions.getExtension("vsciot-vscode.vscode-iot-workbench");
         if (iotWorkbenchExt) {
             this._skipNsat = true;
         } else {
