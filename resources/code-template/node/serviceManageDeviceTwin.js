@@ -3,6 +3,7 @@
 
 "use strict";
 
+// Run 'npm install azure-iothub' to install the required libraries for this application
 var Registry = require('azure-iothub').Registry;
 
 var connectionString = "{{iotHubConnectionString}}";

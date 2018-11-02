@@ -1,4 +1,4 @@
-## 1.6.0 (2018-10-31)
+## 1.6.0 (2018-11-02)
 ### Added
 * Add device twin templates for Node.js code generation
 * Add configuration to enable auto refresh and set refresh interval ([@tomaszbartoszewski](https://github.com/tomaszbartoszewski): [#184](https://github.com/Microsoft/vscode-azure-iot-toolkit/pull/184))

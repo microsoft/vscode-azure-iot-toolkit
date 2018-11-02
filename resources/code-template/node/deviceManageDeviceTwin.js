@@ -3,6 +3,7 @@
 
 'use strict';
 
+// Run 'npm install azure-iot-device-mqtt' to install the required libraries for this application
 var Client = require('azure-iot-device').Client;
 var Protocol = require('azure-iot-device-mqtt').Mqtt;
 
