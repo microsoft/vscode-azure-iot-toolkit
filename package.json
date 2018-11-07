@@ -356,9 +356,14 @@
           "group": "azure-iot-toolkit@10"
         },
         {
-          "command": "azure-iot-toolkit.deleteDevice",
+          "command": "azure-iot-toolkit.refresh",
           "when": "view == iotHubDevices && viewItem == device",
           "group": "azure-iot-toolkit@11"
+        },
+        {
+          "command": "azure-iot-toolkit.deleteDevice",
+          "when": "view == iotHubDevices && viewItem == device",
+          "group": "azure-iot-toolkit@12"
         },
         {
           "command": "azure-iot-toolkit.generateCode",
@@ -416,19 +421,19 @@
           "group": "azure-iot-toolkit@10"
         },
         {
-          "command": "azure-iot-toolkit.deleteDevice",
+          "command": "azure-iot-toolkit.refresh",
           "when": "view == iotHubDevices && viewItem == edge",
           "group": "azure-iot-toolkit@11"
+        },
+        {
+          "command": "azure-iot-toolkit.deleteDevice",
+          "when": "view == iotHubDevices && viewItem == edge",
+          "group": "azure-iot-toolkit@12"
         },
         {
           "command": "azure-iot-toolkit.createDeployment",
           "when": "view == iotHubDevices && viewItem == edge",
           "group": "azure-iot-toolkit-edge@0"
-        },
-        {
-          "command": "azure-iot-toolkit.refresh",
-          "when": "view == iotHubDevices && viewItem == edge",
-          "group": "azure-iot-toolkit-edge@1"
         },
         {
           "command": "azure-iot-toolkit.getModule",
