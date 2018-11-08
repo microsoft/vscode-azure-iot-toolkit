@@ -3,7 +3,7 @@
 
 "use strict";
 import { Client as ServiceClient, DeviceMethodParams } from "azure-iothub";
-import { Callback } from "azure-iothub/lib/interfaces";
+import { IncomingMessageCallback } from "azure-iothub/lib/interfaces";
 import * as vscode from "vscode";
 import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
@@ -79,7 +79,7 @@ export class IotHubDirectMethodExplorer extends BaseExplorer {
         });
     }
 
-    private invokeDirectMethodWithServiceClient(serviceClient: ServiceClient, deviceId: string, methodParams: DeviceMethodParams, done?: Callback<any>, moduleId?: string) {
+    private invokeDirectMethodWithServiceClient(serviceClient: ServiceClient, deviceId: string, methodParams: DeviceMethodParams, done?: IncomingMessageCallback<any>, moduleId?: string) {
         if (moduleId) {
             serviceClient.invokeDeviceMethod(deviceId, moduleId, methodParams, done);
         } else {
