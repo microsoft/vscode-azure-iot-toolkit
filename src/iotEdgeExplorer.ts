@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 "use strict";
-import axios from "axios";
 import * as iothub from "azure-iothub";
 import * as fs from "fs";
 import * as path from "path";
@@ -163,27 +162,27 @@ export class IoTEdgeExplorer extends BaseExplorer {
         return content;
     }
 
-    private deploy(iotHubConnectionString: string, deviceId: string, deploymentJson: string, from: string) {
+    private async deploy(iotHubConnectionString: string, deviceId: string, deploymentJson: string, from: string) {
         const label = "Edge";
         this._outputChannel.show();
         this.outputLine(label, `Start deployment to device [${deviceId}]`);
-
-        const url = `/devices/${encodeURIComponent(deviceId)}/applyConfigurationContent?api-version=${Constants.IoTHubApiVersion}`;
-        const config = Utility.generateIoTHubAxiosRequestConfig(iotHubConnectionString, url, "post", deploymentJson);
         const entry = from === "none" ? "commandPalette" : "contextMenu";
 
-        axios.request(config)
-            .then((response) => {
-                this.outputLine(label, "Deployment succeeded.");
-                TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployDoneEvent, { Result: "Success", entry, from });
-            })
-            .catch((err) => {
-                this.outputLine(label, `Deployment failed. ${err}`);
-                if (err && err.response && err.response.data && err.response.data.Message) {
-                    this.outputLine(label, err.response.data.Message);
-                }
-                TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployDoneEvent, { Result: "Fail", Message: err, entry, from });
-            });
+        try {
+            const registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
+            const deploymentJsonObject = JSON.parse(deploymentJson);
+            await registry.applyConfigurationContentOnDevice(deviceId, deploymentJsonObject);
+            this.outputLine(label, "Deployment succeeded.");
+            TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployDoneEvent, { Result: "Success", entry, from });
+        } catch (err) {
+            this.outputLine(label, `Deployment failed. ${err}`);
+            let detailedMessage = "";
+            if (err && err.responseBody) {
+                detailedMessage = err.responseBody;
+                this.outputLine(label, err.responseBody);
+            }
+            TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployDoneEvent, { Result: "Fail", Message: err, detailedMessage, entry, from });
+        }
     }
 
     private async deployAtScale(iotHubConnectionString: string, deploymentJson: string) {

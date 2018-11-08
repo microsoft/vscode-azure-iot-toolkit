@@ -2,9 +2,10 @@
 // Licensed under the MIT license.
 
 "use strict";
-import axios, { AxiosRequestConfig } from "axios";
+import { ResultWithHttpResponse } from "azure-iot-common";
 import { ConnectionString as DeviceConnectionString, SharedAccessSignature as DeviceSharedAccessSignature } from "azure-iot-device";
-import { ConnectionString, Registry, SharedAccessSignature } from "azure-iothub";
+import { ConnectionString, Registry, SharedAccessSignature, Twin } from "azure-iothub";
+import { ResultWithIncomingMessage } from "azure-iothub/lib/interfaces";
 import * as crypto from "crypto";
 import * as fs from "fs";
 import * as os from "os";
@@ -157,19 +158,6 @@ export class Utility {
         });
     }
 
-    public static generateIoTHubAxiosRequestConfig(iotHubConnectionString: string, url: string, method: string, data?: any): AxiosRequestConfig {
-        return {
-            url,
-            method,
-            baseURL: `https://${Utility.getHostName(iotHubConnectionString)}`,
-            headers: {
-                "Authorization": Utility.generateSasTokenForService(iotHubConnectionString),
-                "Content-Type": "application/json",
-            },
-            data,
-        };
-    }
-
     public static async getModuleItems(iotHubConnectionString: string, deviceItem: DeviceItem, context: vscode.ExtensionContext) {
         const modules = await Utility.getModules(iotHubConnectionString, deviceItem.deviceId);
         return modules.map((module) => {
@@ -239,18 +227,14 @@ export class Utility {
         });
     }
 
-    public static async getModuleTwin(iotHubConnectionString: string, deviceId: string, moduleId: string): Promise<string> {
-        const url = `/twins/${encodeURIComponent(deviceId)}/modules/${moduleId}?api-version=${Constants.IoTHubApiVersion}`;
-        const config = Utility.generateIoTHubAxiosRequestConfig(iotHubConnectionString, url, "get");
-
-        return (await axios.request(config)).data;
+    public static async getModuleTwin(iotHubConnectionString: string, deviceId: string, moduleId: string): Promise<Twin> {
+        const registry: Registry = Registry.fromConnectionString(iotHubConnectionString);
+        return ((await registry.getModuleTwin(deviceId, moduleId)) as ResultWithHttpResponse<Twin>).responseBody;
     }
 
-    public static async updateModuleTwin(iotHubConnectionString: string, deviceId: string, moduleId: string, twin: any): Promise<string> {
-        const url = `/twins/${encodeURIComponent(deviceId)}/modules/${moduleId}?api-version=${Constants.IoTHubApiVersion}`;
-        const config = Utility.generateIoTHubAxiosRequestConfig(iotHubConnectionString, url, "put", twin);
-
-        return (await axios.request(config)).data;
+    public static async updateModuleTwin(iotHubConnectionString: string, deviceId: string, moduleId: string, twin: any): Promise<void> {
+        const registry: Registry = Registry.fromConnectionString(iotHubConnectionString);
+        await registry.updateModuleTwin(deviceId, moduleId, twin, "*");
     }
 
     public static async readFromActiveFile(fileName: string): Promise<string> {
@@ -376,14 +360,10 @@ export class Utility {
         return set;
     }
 
-    private static async getEdgeDeviceList(iotHubConnectionString: string): Promise<any[]> {
-        const body = {
-            query: "SELECT * FROM DEVICES where capabilities.iotEdge=true",
-        };
-        const url = `/devices/query?api-version=${Constants.IoTHubApiVersion}`;
-        const config = Utility.generateIoTHubAxiosRequestConfig(iotHubConnectionString, url, "post", body);
-
-        return (await axios.request(config)).data;
+    private static async getEdgeDeviceList(iotHubConnectionString: string): Promise<Twin[]> {
+        const registry: Registry = Registry.fromConnectionString(iotHubConnectionString);
+        const query = registry.createQuery("SELECT * FROM DEVICES where capabilities.iotEdge=true");
+        return ((await query.nextAsTwin(null)) as ResultWithIncomingMessage<Twin[]>).result;
     }
 
     private static showIoTHubInformationMessage(): void {
