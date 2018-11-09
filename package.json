@@ -301,6 +301,11 @@
       ],
       "view/item/context": [
         {
+          "command": "azure-iot-toolkit.refresh",
+          "when": "view == iotHubDevices && viewItem == device",
+          "group": "inline"
+        },
+        {
           "command": "azure-iot-toolkit.generateCode",
           "when": "view == iotHubDevices && viewItem == device",
           "group": "azure-iot-toolkit@0"
@@ -364,6 +369,11 @@
           "command": "azure-iot-toolkit.deleteDevice",
           "when": "view == iotHubDevices && viewItem == device",
           "group": "azure-iot-toolkit@12"
+        },
+        {
+          "command": "azure-iot-toolkit.refresh",
+          "when": "view == iotHubDevices && viewItem == edge",
+          "group": "inline"
         },
         {
           "command": "azure-iot-toolkit.generateCode",
