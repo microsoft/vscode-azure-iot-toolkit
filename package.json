@@ -301,6 +301,11 @@
       ],
       "view/item/context": [
         {
+          "command": "azure-iot-toolkit.refresh",
+          "when": "view == iotHubDevices && viewItem == device",
+          "group": "inline"
+        },
+        {
           "command": "azure-iot-toolkit.generateCode",
           "when": "view == iotHubDevices && viewItem == device",
           "group": "azure-iot-toolkit@0"
@@ -356,9 +361,19 @@
           "group": "azure-iot-toolkit@10"
         },
         {
-          "command": "azure-iot-toolkit.deleteDevice",
+          "command": "azure-iot-toolkit.refresh",
           "when": "view == iotHubDevices && viewItem == device",
           "group": "azure-iot-toolkit@11"
+        },
+        {
+          "command": "azure-iot-toolkit.deleteDevice",
+          "when": "view == iotHubDevices && viewItem == device",
+          "group": "azure-iot-toolkit@12"
+        },
+        {
+          "command": "azure-iot-toolkit.refresh",
+          "when": "view == iotHubDevices && viewItem == edge",
+          "group": "inline"
         },
         {
           "command": "azure-iot-toolkit.generateCode",
@@ -416,19 +431,19 @@
           "group": "azure-iot-toolkit@10"
         },
         {
-          "command": "azure-iot-toolkit.deleteDevice",
+          "command": "azure-iot-toolkit.refresh",
           "when": "view == iotHubDevices && viewItem == edge",
           "group": "azure-iot-toolkit@11"
+        },
+        {
+          "command": "azure-iot-toolkit.deleteDevice",
+          "when": "view == iotHubDevices && viewItem == edge",
+          "group": "azure-iot-toolkit@12"
         },
         {
           "command": "azure-iot-toolkit.createDeployment",
           "when": "view == iotHubDevices && viewItem == edge",
           "group": "azure-iot-toolkit-edge@0"
-        },
-        {
-          "command": "azure-iot-toolkit.refresh",
-          "when": "view == iotHubDevices && viewItem == edge",
-          "group": "azure-iot-toolkit-edge@1"
         },
         {
           "command": "azure-iot-toolkit.getModule",
@@ -500,12 +515,12 @@
       ],
       "explorer/context": [
         {
-          "when": "resourceFilename == deployment.json",
+          "when": "resourceFilename =~ /deployment(?!\\.template\\.)(\\.[a-z0-9]+)*(\\.debug)?.json/",
           "command": "azure-iot-toolkit.createDeployment",
           "group": "azure-iot-toolkit-edge@0 "
         },
         {
-          "when": "resourceFilename == deployment.json",
+          "when": "resourceFilename =~ /deployment(?!\\.template\\.)(\\.[a-z0-9]+)*(\\.debug)?.json/",
           "command": "azure-iot-toolkit.createDeploymentAtScale",
           "group": "azure-iot-toolkit-edge@1"
         }
