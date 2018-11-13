@@ -21,7 +21,7 @@ The [Wiki page](https://github.com/Microsoft/vscode-azure-iot-toolkit/wiki) incl
     * Copy Device Connection String
     * Generate SAS Token for Device
 * Module management
-    * List Moudles
+    * List Modules
     * Get Module Info
     * Create Module
     * Edit Module Twin
@@ -37,7 +37,7 @@ The [Wiki page](https://github.com/Microsoft/vscode-azure-iot-toolkit/wiki) incl
     * Invoke Device Direct Method
     * Edit Device Twin
 * Interact with Azure IoT Edge (Install [Azure IoT Edge](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.azure-iot-edge) for more IoT Edge support)
-    * List Moudles 
+    * List Modules 
     * Edit Module Twin
     * Create deployment for Single Device
     * Create Deployment at Scale
