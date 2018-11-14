@@ -90,7 +90,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
             }, 1000);
 
             const { session, subscription } = subscriptionItem;
-            const client = new IotHubClient(session.credentials, subscription.subscriptionId);
+            const client = new IotHubClient(session.credentials, subscription.subscriptionId, session.environment.resourceManagerEndpointUrl);
             const iotHubCreateParams = {
                 location: locationItem.location.name,
                 subscriptionid: subscription.subscriptionId,
@@ -223,7 +223,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
     private async loadIoTHubItems(subscriptionItem: SubscriptionItem) {
         const iotHubItems: IotHubItem[] = [];
         const { session, subscription } = subscriptionItem;
-        const client = new IotHubClient(session.credentials, subscription.subscriptionId);
+        const client = new IotHubClient(session.credentials, subscription.subscriptionId, session.environment.resourceManagerEndpointUrl);
         const iotHubs = await client.iotHubResource.listBySubscription();
         iotHubItems.push(...iotHubs.map((iotHub) => new IotHubItem(iotHub)));
         iotHubItems.sort((a, b) => a.label.localeCompare(b.label));
@@ -259,7 +259,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 
     private async getIoTHubConnectionString(subscriptionItem: SubscriptionItem, iotHubDescription: IotHubDescription) {
         const { session, subscription } = subscriptionItem;
-        const client = new IotHubClient(session.credentials, subscription.subscriptionId);
+        const client = new IotHubClient(session.credentials, subscription.subscriptionId, session.environment.resourceManagerEndpointUrl);
         return client.iotHubResource.getKeysForKeyName(Utility.getResourceGroupNameFromId(iotHubDescription.id), iotHubDescription.name, "iothubowner").then((result) => {
             return `HostName=${iotHubDescription.properties.hostName};SharedAccessKeyName=${result.keyName};SharedAccessKey=${result.primaryKey}`;
         });
@@ -305,7 +305,8 @@ export class IoTHubResourceExplorer extends BaseExplorer {
     }
 
     private async getResourceGroupItems(subscriptionItem: SubscriptionItem): Promise<vscode.QuickPickItem[]> {
-        const resourceManagementClient = new ResourceManagementClient(subscriptionItem.session.credentials, subscriptionItem.subscription.subscriptionId);
+        const resourceManagementClient = new ResourceManagementClient(subscriptionItem.session.credentials,
+            subscriptionItem.subscription.subscriptionId, subscriptionItem.session.environment.resourceManagerEndpointUrl);
         const resourceGroups = await resourceManagementClient.resourceGroups.list();
         let resourceGroupItems: vscode.QuickPickItem[] = [{
             label: "$(plus) Create Resource Group",
@@ -315,13 +316,13 @@ export class IoTHubResourceExplorer extends BaseExplorer {
     }
 
     private async getLocationItems(subscriptionItem: SubscriptionItem): Promise<LocationItem[]> {
-        const subscriptionClient = new SubscriptionClient(subscriptionItem.session.credentials);
+        const subscriptionClient = new SubscriptionClient(subscriptionItem.session.credentials, subscriptionItem.session.environment.resourceManagerEndpointUrl);
         const locations = await subscriptionClient.subscriptions.listLocations(subscriptionItem.subscription.subscriptionId);
         return locations.map((location) => new LocationItem(location));
     }
 
     private async getIoTHubName(subscriptionItem: SubscriptionItem): Promise<string> {
-        const client = new IotHubClient(subscriptionItem.session.credentials, subscriptionItem.subscription.subscriptionId);
+        const client = new IotHubClient(subscriptionItem.session.credentials, subscriptionItem.subscription.subscriptionId, subscriptionItem.session.environment.resourceManagerEndpointUrl);
 
         while (true) {
             const accountName = await vscode.window.showInputBox({
@@ -386,7 +387,8 @@ export class IoTHubResourceExplorer extends BaseExplorer {
                     title: `Creating resource group '${resourceGroupName}'`,
                     location: vscode.ProgressLocation.Window,
                 }, async (progress) => {
-                    const resourceManagementClient = new ResourceManagementClient(subscriptionItem.session.credentials, subscriptionItem.subscription.subscriptionId);
+                    const resourceManagementClient = new ResourceManagementClient(subscriptionItem.session.credentials,
+                        subscriptionItem.subscription.subscriptionId, subscriptionItem.session.environment.resourceManagerEndpointUrl);
                     return resourceManagementClient.resourceGroups.createOrUpdate(resourceGroupName, { location: locationItem.location.name });
                 });
             }
