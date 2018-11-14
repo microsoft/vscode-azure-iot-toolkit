@@ -26,6 +26,7 @@ enum TemplateType {
 }
 
 export class Constants {
+    public static ExtensionContext: vscode.ExtensionContext;
     public static ExtensionId = "vsciot-vscode.azure-iot-toolkit";
     public static CampaignID = "vsciottoolkit";
 
@@ -147,6 +148,7 @@ export class Constants {
     };
 
     public static initialize(context: vscode.ExtensionContext) {
+        Constants.ExtensionContext = context;
         const directory = context.storagePath ? context.storagePath : os.tmpdir();
         Constants.ModuleTwinJosnFilePath = path.join(directory, Constants.ModuleTwinJosnFileName);
         Constants.DeviceTwinJosnFilePath = path.join(directory, Constants.DeviceTwinJosnFileName);

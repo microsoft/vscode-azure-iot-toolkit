@@ -43,6 +43,7 @@ export class Utility {
                     await config.update(id, value, true);
                 } else {
                     TelemetryClient.sendEvent("General.SetConfig.Done", { Result: "Fail" });
+                    vscode.commands.executeCommand("markdown.showPreview", vscode.Uri.file(Constants.ExtensionContext.asAbsolutePath(path.join("resources", "iot-hub-connection-string.md"))));
                     value = null;
                     const reset = "Reset";
                     const GoToConnectionStringPage = "More info";
