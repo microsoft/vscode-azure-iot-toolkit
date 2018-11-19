@@ -85,9 +85,9 @@ export class DeviceTree implements vscode.TreeDataProvider<vscode.TreeItem> {
     private getDefaultTreeItems(): vscode.TreeItem[] {
         TelemetryClient.sendEvent("General.Load.DefaultTreeItems");
         const items = [];
-        items.push(this.createCommandItem("Set IoT Hub Connection String", "azure-iot-toolkit.setIoTHubConnectionString"));
-        items.push(this.createCommandItem("Select IoT Hub", "azure-iot-toolkit.selectIoTHub"));
-        items.push(this.createCommandItem("Create IoT Hub", "azure-iot-toolkit.createIoTHub"));
+        items.push(this.createCommandItem("-> Set IoT Hub Connection String", "azure-iot-toolkit.setIoTHubConnectionString"));
+        items.push(this.createCommandItem("-> Select IoT Hub", "azure-iot-toolkit.selectIoTHub"));
+        items.push(this.createCommandItem("-> Create IoT Hub", "azure-iot-toolkit.createIoTHub"));
         return items;
     }
 
@@ -95,6 +95,8 @@ export class DeviceTree implements vscode.TreeDataProvider<vscode.TreeItem> {
         const items = [];
         items.push(new vscode.TreeItem(`Failed to list ${item}`));
         items.push(new vscode.TreeItem(`Error: ${error}`));
+        items.push(new vscode.TreeItem(`Try another IoT Hub?`));
+        items.push(...this.getDefaultTreeItems());
         return items;
     }
 

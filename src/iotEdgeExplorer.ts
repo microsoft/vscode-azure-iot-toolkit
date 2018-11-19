@@ -140,7 +140,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
             filePath = filePathUri[0].fsPath;
         }
 
-        if (path.basename(filePath) === "deployment.template.json" || path.basename(filePath) === "deployment.template.debug.json" ) {
+        if (path.basename(filePath).endsWith(".template.json")) {
             vscode.window.showWarningMessage("Please select deployment manifest file under 'config' folder for deployment.");
             return "";
         }
