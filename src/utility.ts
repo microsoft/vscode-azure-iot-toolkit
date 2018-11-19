@@ -31,44 +31,33 @@ export class Utility {
 
     public static async setConnectionString(id: string, name: string) {
         TelemetryClient.sendEvent("General.SetConfig.Popup");
-        return vscode.window.showInputBox({
-            prompt: `${name}`,
-            placeHolder: Constants.ConnectionStringFormat[id],
-            ignoreFocusOut: true,
-        }).then(async (value: string) => {
-            if (value !== undefined) {
+        return new Promise<string>((resolve, reject) => {
+            let value;
+            const input = vscode.window.createInputBox();
+            input.prompt = name;
+            input.placeholder = Constants.ConnectionStringFormat[id];
+            input.ignoreFocusOut = true;
+            input.onDidAccept(async () => {
+                value = input.value;
                 if (this.isValidConnectionString(id, value)) {
                     TelemetryClient.sendEvent("General.SetConfig.Done", { Result: "Success" });
                     let config = Utility.getConfiguration();
                     await config.update(id, value, true);
+                    resolve(value);
+                    input.dispose();
                 } else {
                     TelemetryClient.sendEvent("General.SetConfig.Done", { Result: "Fail" });
                     vscode.commands.executeCommand("markdown.showPreview", vscode.Uri.file(Constants.ExtensionContext.asAbsolutePath(path.join("resources", "iot-hub-connection-string.md"))));
-                    value = null;
-                    const reset = "Reset";
-                    const GoToConnectionStringPage = "More info";
-                    await vscode.window.showErrorMessage(`The format should be "${Constants.ConnectionStringFormat[id]}". Please enter a valid ${name}.`,
-                        reset, GoToConnectionStringPage).then(async (selection) => {
-                            switch (selection) {
-                                case reset:
-                                    TelemetryClient.sendEvent("General.Reset.ConnectionString");
-                                    value = await this.setConnectionString(id, name);
-                                    break;
-                                case GoToConnectionStringPage:
-                                    vscode.commands.executeCommand("vscode.open",
-                                        vscode.Uri.parse(
-                                            `https://blogs.msdn.microsoft.com/iotdev/2017/05/09/understand-different-connection-strings-in-azure-iot-hub/?WT.mc_id=${Constants.CampaignID}`));
-                                    TelemetryClient.sendEvent("General.Open.ConnectionStringPage");
-                                    break;
-                                default:
-                            }
-                        });
+                    input.validationMessage = `The format should be "${Constants.ConnectionStringFormat[id]}"`;
                 }
-                return value;
-            } else {
-                this.showIoTHubInformationMessage();
-            }
-            return null;
+            });
+            input.onDidHide(() => {
+                resolve();
+                if (!value) {
+                    this.showIoTHubInformationMessage();
+                }
+            });
+            input.show();
         });
     }
 

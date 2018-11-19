@@ -1,3 +1,7 @@
+<br />
+<br />
+<br />
+
 # How to retrieve connection string for IoT hub
 
 1. Log in to the [Azure portal](https://portal.azure.com). 
@@ -8,5 +12,5 @@
 
 1. Under **Shared access keys**, copy the **Connection string -- primary key** to be used later.
 
-    ![Show how to retrieve the connection string](https://docs.microsoft.com/en-us/azure/includes/media/iot-hub-include-find-connection-string/iot-hub-get-connection-string.png)
+    ![Show how to retrieve the connection string](https://raw.githubusercontent.com/wiki/Microsoft/vscode-azure-iot-toolkit/images/iot-hub-get-connection-string.png)
 
