@@ -95,7 +95,7 @@ export class DeviceTree implements vscode.TreeDataProvider<vscode.TreeItem> {
         const items = [];
         items.push(new vscode.TreeItem(`Failed to list ${item}`));
         items.push(new vscode.TreeItem(`Error: ${error}`));
-        items.push(new vscode.TreeItem(`Try below options:`));
+        items.push(new vscode.TreeItem(`Try another IoT Hub?`));
         items.push(...this.getDefaultTreeItems());
         return items;
     }

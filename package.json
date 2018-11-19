@@ -515,12 +515,12 @@
       ],
       "explorer/context": [
         {
-          "when": "resourceFilename =~ /deployment(?!\\.template\\.)(\\.[-a-z0-9]+)*(\\.debug)?\\.json/",
+          "when": "resourceFilename =~ /^deployment(?!.*\\.template\\.json)(\\.debug)?(\\.[-a-z0-9]+)*\\.json$/",
           "command": "azure-iot-toolkit.createDeployment",
           "group": "azure-iot-toolkit-edge@0 "
         },
         {
-          "when": "resourceFilename =~ /deployment(?!\\.template\\.)(\\.[-a-z0-9]+)*(\\.debug)?\\.json/",
+          "when": "resourceFilename =~ /^deployment(?!.*\\.template\\.json)(\\.debug)?(\\.[-a-z0-9]+)*\\.json$/",
           "command": "azure-iot-toolkit.createDeploymentAtScale",
           "group": "azure-iot-toolkit-edge@1"
         }
