@@ -53,6 +53,7 @@ export class Utility {
             });
             input.onDidHide(() => {
                 resolve();
+                input.dispose();
                 if (!value) {
                     this.showIoTHubInformationMessage();
                 }
