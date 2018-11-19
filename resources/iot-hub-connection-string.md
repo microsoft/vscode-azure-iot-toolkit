@@ -1,6 +1,5 @@
 <br />
 <br />
-<br />
 
 # How to retrieve connection string for IoT hub
 
