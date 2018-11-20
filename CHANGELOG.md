@@ -1,3 +1,16 @@
+## 1.7.0 (2018-11-22)
+### Added
+* Support IoT Edge multiple platforms scenario
+* Support Azure National Clouds
+* Better hint user when they fail to set IoT Hub connection string
+* Better hint user when loading device list failed
+* Support passing JSON in payload for direct methods
+* Add 'Refresh' into context menu of normal device
+* Add 'Refresh' icon inline
+
+### Changed
+* Resolve [#189](https://github.com/Microsoft/vscode-azure-iot-toolkit/issues/189): Use Node SDK instead of REST API
+
 ## 1.6.0 (2018-11-02)
 ### Added
 * Add device twin templates for Node.js code generation
