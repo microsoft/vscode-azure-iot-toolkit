@@ -1,4 +1,4 @@
-## 1.7.0 (2018-11-22)
+## 1.7.0 (2018-11-21)
 ### Added
 * Support IoT Edge multiple platforms scenario
 * Support Azure National Clouds
