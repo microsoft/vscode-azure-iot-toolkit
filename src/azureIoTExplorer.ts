@@ -31,7 +31,7 @@ export class AzureIoTExplorer {
     private _iotHubModuleExplorer: IotHubModuleExplorer;
 
     constructor(private context: vscode.ExtensionContext) {
-        let outputChannel = vscode.window.createOutputChannel("Azure IoT Toolkit");
+        let outputChannel = vscode.window.createOutputChannel("Azure IoT Hub Toolkit");
         this._iotHubC2DMessageExplorer = new IotHubC2DMessageExplorer(outputChannel);
         this._iotHubMessageExplorer = new IoTHubMessageExplorer(outputChannel);
         this._deviceExplorer = new DeviceExplorer(outputChannel);

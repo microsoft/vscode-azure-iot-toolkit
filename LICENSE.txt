@@ -1,5 +1,5 @@
 ------------------------------------------- START OF LICENSE -----------------------------------------
-Azure IoT Toolkit for Visual Studio Code 
+Azure IoT Hub Toolkit for Visual Studio Code 
 Copyright (c) Microsoft Corporation
 All rights reserved.
 
