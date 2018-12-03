@@ -79,7 +79,7 @@ export class NSAT {
             },
         };
         TelemetryClient.sendEvent("nsat.survey/userAsked");
-        const button = await window.showInformationMessage("Do you mind taking a quick feedback survey about the Azure IoT Toolkit Extension for VS Code?", take, remind, never);
+        const button = await window.showInformationMessage("Do you mind taking a quick feedback survey about the Azure IoT Hub Toolkit Extension for VS Code?", take, remind, never);
         await (button || remind).run();
     }
 }

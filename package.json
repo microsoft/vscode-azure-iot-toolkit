@@ -1,6 +1,6 @@
 {
   "name": "azure-iot-toolkit",
-  "displayName": "Azure IoT Toolkit",
+  "displayName": "Azure IoT Hub Toolkit",
   "description": "Interact with Azure IoT Hub, IoT Device Management, IoT Edge Management, IoT Hub Code Generation",
   "version": "1.7.0",
   "publisher": "vsciot-vscode",
@@ -550,7 +550,7 @@
     },
     "configuration": {
       "type": "object",
-      "title": "Azure IoT Explorer configuration",
+      "title": "Azure IoT Hub Toolkit configuration",
       "properties": {
         "azure-iot-toolkit.deviceConnectionString": {
           "type": "string",

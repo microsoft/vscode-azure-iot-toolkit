@@ -6,7 +6,7 @@ import { exec, execSync } from "child_process";
 import * as vscode from "vscode";
 
 export class Executor {
-    public static runInTerminal(command: string, terminal: string = "Azure IoT Toolkit"): void {
+    public static runInTerminal(command: string, terminal: string = "Azure IoT Hub Toolkit"): void {
         if (this.terminals[terminal] === undefined ) {
             this.terminals[terminal] = vscode.window.createTerminal(terminal);
         }
