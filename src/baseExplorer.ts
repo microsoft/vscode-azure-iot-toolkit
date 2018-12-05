@@ -27,7 +27,7 @@ export class BaseExplorer {
         return (err) => {
             this.outputLine(label, err.message);
             if (this._eventHubClient) {
-                this.outputLine(label, "D2C monitoring stopped. Please try to start monitoring again or use a differnt consumer group to monitor.");
+                this.outputLine(label, "D2C monitoring stopped. Please try to start monitoring again or use a different consumer group to monitor.");
                 this._eventHubClient.close();
                 this._eventHubClient = null;
             }
