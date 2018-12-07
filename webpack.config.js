@@ -18,7 +18,7 @@ const config = {
     },
     entry: './src/extension.ts', // the entry point of this extension, 📖 -> https://webpack.js.org/configuration/entry-context/
     output: { // the bundle is stored in the 'dist' folder (check package.json), 📖 -> https://webpack.js.org/configuration/output/
-        path: path.resolve(__dirname, 'dist', 'scripts'),
+        path: path.resolve(__dirname, 'dist', 'scripts'),   // the clipboardy package ships with binaries in the fallbacks folder and reference them with "../fallbacks/*"
         filename: 'extension.js',
         libraryTarget: "commonjs2",
         devtoolModuleFilenameTemplate: "../[resource-path]",
@@ -26,6 +26,7 @@ const config = {
     devtool: 'source-map',
     externals: {
         vscode: "commonjs vscode", // the vscode-module is created on-the-fly and must be excluded. Add other modules that cannot be webpack'ed, 📖 -> https://webpack.js.org/configuration/externals/
+        bufferutil: 'bufferutil',   // bufferutil and utf-8-validate are actually optional binray dependencies. Adding them to suppress the warning https://github.com/websockets/ws/issues/719
         'utf-8-validate': 'utf-8-validate'
     },
     resolve: { // support reading TypeScript and JavaScript files, 📖 -> https://github.com/TypeStrong/ts-loader
@@ -60,7 +61,7 @@ const config = {
     plugins: [
         new CopyWebpackPlugin([{
             from: 'node_modules/clipboardy/fallbacks',
-            to: '../fallbacks'
+            to: '../fallbacks'  // copy clipboardy binaries to the parent folder of scripts
         }])
     ]
 }
