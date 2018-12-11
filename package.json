@@ -279,24 +279,29 @@
           "group": "azure-iot-toolkit@4"
         },
         {
-          "command": "azure-iot-toolkit.setIoTHubConnectionString",
+          "command": "azure-iot-toolkit.stopMonitorIoTHubMessage",
           "when": "view == iotHubDevices",
           "group": "azure-iot-toolkit@5"
         },
         {
-          "command": "azure-iot-toolkit.selectIoTHub",
+          "command": "azure-iot-toolkit.setIoTHubConnectionString",
           "when": "view == iotHubDevices",
           "group": "azure-iot-toolkit@6"
         },
         {
-          "command": "azure-iot-toolkit.copyIoTHubConnectionString",
+          "command": "azure-iot-toolkit.selectIoTHub",
           "when": "view == iotHubDevices",
           "group": "azure-iot-toolkit@7"
         },
         {
-          "command": "azure-iot-toolkit.generateSasTokenForIotHub",
+          "command": "azure-iot-toolkit.copyIoTHubConnectionString",
           "when": "view == iotHubDevices",
           "group": "azure-iot-toolkit@8"
+        },
+        {
+          "command": "azure-iot-toolkit.generateSasTokenForIotHub",
+          "when": "view == iotHubDevices",
+          "group": "azure-iot-toolkit@9"
         }
       ],
       "view/item/context": [
