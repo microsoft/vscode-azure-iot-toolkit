@@ -1,3 +1,10 @@
+## 2.0.0 (2018-12-23)
+### Added
+* Resolve [#218](https://github.com/Microsoft/vscode-azure-iot-toolkit/issues/218): Add 'Stop Monitoring D2C Message' into context menu of explorer title
+
+### Changed
+* Brand new! Rename from 'Azure IoT Toolkit' to 'Azure IoT Hub Toolkit'
+
 ## 1.7.0 (2018-11-21)
 ### Added
 * Support IoT Edge multiple platforms scenario
