@@ -1,4 +1,4 @@
-## 2.0.0 (2018-12-23)
+## 2.0.0 (2018-12-13)
 ### Added
 * Resolve [#218](https://github.com/Microsoft/vscode-azure-iot-toolkit/issues/218): Add 'Stop Monitoring D2C Message' into context menu of explorer title
 
