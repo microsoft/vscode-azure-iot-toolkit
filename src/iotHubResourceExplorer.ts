@@ -82,7 +82,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 
         return vscode.window.withProgress({
             title: `Creating IoT Hub '${name}'`,
-            location: vscode.ProgressLocation.Window,
+            location: vscode.ProgressLocation.Notification,
         }, async (progress) => {
             outputChannel.appendLine(`Creating IoT Hub: ${name}`);
             const intervalID = setInterval(() => {

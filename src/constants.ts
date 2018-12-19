@@ -23,6 +23,8 @@ enum TemplateType {
     MonitorD2C = "Monitor device-to-cloud message",
     DeviceManageDeviceTwin = "Device - Manage device twin",
     ServiceManageDeviceTwin = "Service - Manage device twin",
+    ListenForDirectMethod = "Listen for direct method",
+    CallDirectMethod = "Call direct method",
 }
 
 export class Constants {
@@ -126,6 +128,8 @@ export class Constants {
             [TemplateType.MonitorD2C]: "node/monitorD2C.js",
             [TemplateType.DeviceManageDeviceTwin]: "node/deviceManageDeviceTwin.js",
             [TemplateType.ServiceManageDeviceTwin]: "node/serviceManageDeviceTwin.js",
+            [TemplateType.ListenForDirectMethod]: "node/listenForDirectMethod.js",
+            [TemplateType.CallDirectMethod]: "node/callDirectMethod.js",
         },
         [TemplateLanguage.PHP]: {
             [TemplateType.SendD2C]: "php/sendD2C.php",
