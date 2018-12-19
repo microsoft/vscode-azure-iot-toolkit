@@ -385,7 +385,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
             if (locationItem) {
                 return vscode.window.withProgress({
                     title: `Creating resource group '${resourceGroupName}'`,
-                    location: vscode.ProgressLocation.Window,
+                    location: vscode.ProgressLocation.Notification,
                 }, async (progress) => {
                     const resourceManagementClient = new ResourceManagementClient(subscriptionItem.session.credentials,
                         subscriptionItem.subscription.subscriptionId, subscriptionItem.session.environment.resourceManagerEndpointUrl);
