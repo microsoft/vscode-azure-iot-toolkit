@@ -631,6 +631,7 @@
     "@types/mocha": "^2.2.32",
     "@types/node": "^10.12.3",
     "copy-webpack-plugin": "^4.6.0",
+    "fail-on-errors-webpack-plugin": "^3.0.0",
     "mocha": "^5.1.1",
     "rimraf": "^2.6.2",
     "shebang-loader": "0.0.1",

@@ -7,8 +7,10 @@
 
 'use strict';
 
-const CopyWebpackPlugin = require('copy-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const failOnErrorsPlugin = require('fail-on-errors-webpack-plugin');
 const path = require('path');
+const webpack = require('webpack');
 
 /**@type {import('webpack').Configuration}*/
 const config = {
@@ -26,16 +28,14 @@ const config = {
     devtool: 'source-map',
     externals: {
         vscode: "commonjs vscode", // the vscode-module is created on-the-fly and must be excluded. Add other modules that cannot be webpack'ed, 📖 -> https://webpack.js.org/configuration/externals/
-        bufferutil: 'bufferutil',   // bufferutil and utf-8-validate are actually optional binray dependencies. Adding them to suppress the warning https://github.com/websockets/ws/issues/719
-        'utf-8-validate': 'utf-8-validate'
+        bufferutil: 'bufferutil',   // bufferutil and utf-8-validate are actually optional binary dependencies. Adding them to suppress the warning https://github.com/websockets/ws/issues/719
+        'utf-8-validate': 'utf-8-validate',
+        'spawn-sync': 'spawn-sync'  // spawn-sync is only required for Node.js <= 0.12 https://github.com/ForbesLindesay/spawn-sync
     },
     resolve: { // support reading TypeScript and JavaScript files, 📖 -> https://github.com/TypeStrong/ts-loader
         extensions: ['.ts', '.js']
     },
     module: {
-        // require(expr)
-        // exprContextRegExp: /$^/,
-        // exprContextCritical: false,
         rules: [
             {
                 test: /\.ts$/,
@@ -62,7 +62,36 @@ const config = {
         new CopyWebpackPlugin([{
             from: 'node_modules/clipboardy/fallbacks',
             to: '../fallbacks'  // copy clipboardy binaries to the parent folder of scripts
-        }])
+        }]),
+        // Ignore all locale files of moment.js, which can save 50KB
+        // https://webpack.js.org/plugins/ignore-plugin/#ignore-moment-locales
+        new webpack.IgnorePlugin(/^\.\/locale$/, /[\/\\]moment$/),
+        // Suppress warnings of known dynamic require
+        new webpack.ContextReplacementPlugin(
+            /applicationinsights[\/\\]out[\/\\]AutoCollection/,
+            false,
+            /$^/
+        ),
+        new webpack.ContextReplacementPlugin(
+            /ms-rest[\/\\]lib/,
+            false,
+            /$^/
+        ),
+        new webpack.ContextReplacementPlugin(
+            /applicationinsights[\/\\]out[\/\\]Library/,
+            false,
+            /$^/
+        ),
+        // Pack node_modules/getos/logic/*.js
+        new webpack.ContextReplacementPlugin(
+            /getos/,
+            /logic[\/\\].*\.js/
+        ),
+        // Fail on warnings so that CI can report new warnings which require attention
+        new failOnErrorsPlugin({
+            failOnErrors: true,
+            failOnWarnings: true,
+        })
     ]
 }
 
