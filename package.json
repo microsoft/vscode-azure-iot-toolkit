@@ -617,14 +617,14 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "webpack --mode production",
+    "vscode:prepublish": "rimraf dist && webpack --mode production",
     "compile": "tsc -p ./",
     "postinstall": "node ./node_modules/vscode/bin/install",
     "tslint": "tslint -t verbose src/**/*.ts test/**/*.ts --exclude src/**/*.d.ts",
     "version": "tsc -v",
     "test": "node ./node_modules/vscode/bin/test",
-    "webpack": "webpack --mode development",
-    "webpack-dev": "webpack --mode development --watch"
+    "webpack": "rimraf dist && webpack --mode development",
+    "webpack-dev": "rimraf dist && webpack --mode development --watch"
   },
   "devDependencies": {
     "@types/fs-extra": "^5.0.4",
