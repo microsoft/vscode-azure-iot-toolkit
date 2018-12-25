@@ -89,9 +89,11 @@ export class Constants {
     public static IoTHubAIDeleteModuleDoneEvent = "AZ.Module.Delete.Done";
     public static IoTHubAIGetModuleStartEvent = "AZ.Module.Get.Start";
     public static IoTHubAIDGetModuleDoneEvent = "AZ.Module.Get.Done";
-
     public static IoTHubAIStartLoadDeviceTreeEvent = "General.StartLoadDeviceTree";
     public static IoTHubAIShowWelcomePagetEvent = "General.WelcomePage.Show";
+
+    public static DeleteLabel = "Delete";
+    public static DeleteMessage = "Are you sure you want to delete";
 
     public static ConnectionStringFormat = {
         [Constants.IotHubConnectionStringKey]: "HostName=<my-hostname>;SharedAccessKeyName=<my-policy>;SharedAccessKey=<my-policy-key>",

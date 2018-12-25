@@ -91,6 +91,11 @@ export class IotHubModuleExplorer extends BaseExplorer {
             return;
         }
 
+        const result = await vscode.window.showWarningMessage(`${Constants.DeleteMessage} "${moduleItem.moduleId}"?`, { modal: true }, Constants.DeleteLabel);
+        if (result !== Constants.DeleteLabel) {
+            return;
+        }
+
         const registry: iothub.Registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
 
         this._outputChannel.show();
