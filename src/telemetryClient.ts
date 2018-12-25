@@ -15,19 +15,13 @@ const aiKey: string = packageJSON.aiKey;
 export class TelemetryClient {
     public static initialize(context: vscode.ExtensionContext) {
         this._extensionContext = context;
-        let iotWorkbenchExt = vscode.extensions.getExtension("vsciot-vscode.vscode-iot-workbench");
-        if (iotWorkbenchExt) {
-            this._skipNsat = true;
-        } else {
-            this._skipNsat = false;
-        }
     }
 
     public static sendEvent(eventName: string, properties?: { [key: string]: string; }, iotHubConnectionString?: string): void {
         properties = this.addIoTHubHostName(properties, iotHubConnectionString);
         this._client.sendTelemetryEvent(eventName, properties);
 
-        if (!this._skipNsat && eventName.startsWith("AZ.") && eventName !== Constants.IoTHubAILoadDeviceTreeEvent ) {
+        if (eventName.startsWith("AZ.") && eventName !== Constants.IoTHubAILoadDeviceTreeEvent ) {
             if (this._extensionContext) {
                 NSAT.takeSurvey(this._extensionContext);
             }
@@ -36,7 +30,6 @@ export class TelemetryClient {
 
     private static _client = new TelemetryReporter(Constants.ExtensionId, extensionVersion, aiKey);
     private static _extensionContext: vscode.ExtensionContext;
-    private static _skipNsat: boolean = false;
 
     private static addIoTHubHostName(properties?: { [key: string]: string; }, iotHubConnectionString?: string): any {
         let newProperties = properties ? properties : {};
