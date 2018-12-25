@@ -101,7 +101,10 @@ export class DeviceExplorer extends BaseExplorer {
 
         deviceItem = await Utility.getInputDevice(deviceItem, "AZ.Device.Delete.Start");
         if (deviceItem && deviceItem.label) {
-            return this.deleteDeviceById(deviceItem.label, label, registry);
+            const result = await vscode.window.showWarningMessage(`${Constants.DeleteMessage} "${deviceItem.label}"?`, { modal: true }, Constants.DeleteLabel);
+            if (result === Constants.DeleteLabel) {
+                return this.deleteDeviceById(deviceItem.label, label, registry);
+            }
         }
     }
 
