@@ -360,7 +360,6 @@
           "when": "view == iotHubDevices && viewItem == device",
           "group": "azure-iot-toolkit-3@0"
         },
-        
         {
           "command": "azure-iot-toolkit.copyDeviceConnectionString",
           "when": "view == iotHubDevices && viewItem == device",
@@ -426,7 +425,6 @@
           "when": "view == iotHubDevices && viewItem == edge",
           "group": "azure-iot-toolkit-3@0"
         },
-        
         {
           "command": "azure-iot-toolkit.copyDeviceConnectionString",
           "when": "view == iotHubDevices && viewItem == edge",
@@ -635,9 +633,9 @@
     "webpack-cli": "^3.1.2"
   },
   "dependencies": {
+    "@azure/event-hubs": "^1.0.8",
     "azure-arm-iothub": "^2.0.1",
     "azure-arm-resource": "^2.0.0-preview",
-    "azure-event-hubs": "0.0.6",
     "azure-iot-common": "^1.8.1",
     "azure-iot-device": "^1.8.1",
     "azure-iot-device-mqtt": "^1.8.1",
