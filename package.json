@@ -311,69 +311,65 @@
           "group": "inline"
         },
         {
-          "command": "azure-iot-toolkit.generateCode",
-          "when": "view == iotHubDevices && viewItem == device",
-          "group": "azure-iot-toolkit@0"
-        },
-        {
           "command": "azure-iot-toolkit.sendD2CMessage",
           "when": "view == iotHubDevices && viewItem == device",
-          "group": "azure-iot-toolkit@1"
-        },
-        {
-          "command": "azure-iot-toolkit.startMonitorIoTHubMessage",
-          "when": "view == iotHubDevices && viewItem == device",
-          "group": "azure-iot-toolkit@2"
+          "group": "azure-iot-toolkit-0@0"
         },
         {
           "command": "azure-iot-toolkit.sendC2DMessage",
           "when": "view == iotHubDevices && viewItem == device",
-          "group": "azure-iot-toolkit@3"
-        },
-        {
-          "command": "azure-iot-toolkit.startMonitorC2DMessage",
-          "when": "view == iotHubDevices && viewItem == device",
-          "group": "azure-iot-toolkit@4"
+          "group": "azure-iot-toolkit-0@1"
         },
         {
           "command": "azure-iot-toolkit.invokeDeviceMethod",
           "when": "view == iotHubDevices && viewItem == device",
-          "group": "azure-iot-toolkit@5"
-        },
-        {
-          "command": "azure-iot-toolkit.getDevice",
-          "when": "view == iotHubDevices && viewItem == device",
-          "group": "azure-iot-toolkit@6"
+          "group": "azure-iot-toolkit-0@2"
         },
         {
           "command": "azure-iot-toolkit.getDeviceTwin",
           "when": "view == iotHubDevices && viewItem == device",
-          "group": "azure-iot-toolkit@7"
+          "group": "azure-iot-toolkit-0@3"
         },
         {
-          "command": "azure-iot-toolkit.copyDeviceConnectionString",
+          "command": "azure-iot-toolkit.startMonitorIoTHubMessage",
           "when": "view == iotHubDevices && viewItem == device",
-          "group": "azure-iot-toolkit@8"
+          "group": "azure-iot-toolkit-1@0"
+        },
+        {
+          "command": "azure-iot-toolkit.startMonitorC2DMessage",
+          "when": "view == iotHubDevices && viewItem == device",
+          "group": "azure-iot-toolkit-1@1"
+        },
+        {
+          "command": "azure-iot-toolkit.generateCode",
+          "when": "view == iotHubDevices && viewItem == device",
+          "group": "azure-iot-toolkit-2@0"
         },
         {
           "command": "azure-iot-toolkit.generateSasTokenForDevice",
           "when": "view == iotHubDevices && viewItem == device",
-          "group": "azure-iot-toolkit@9"
+          "group": "azure-iot-toolkit-2@1"
         },
         {
           "command": "azure-iot-toolkit.createModule",
           "when": "view == iotHubDevices && viewItem == device",
-          "group": "azure-iot-toolkit@10"
+          "group": "azure-iot-toolkit-2@2"
         },
         {
-          "command": "azure-iot-toolkit.refresh",
+          "command": "azure-iot-toolkit.getDevice",
           "when": "view == iotHubDevices && viewItem == device",
-          "group": "azure-iot-toolkit@11"
+          "group": "azure-iot-toolkit-3@0"
+        },
+        
+        {
+          "command": "azure-iot-toolkit.copyDeviceConnectionString",
+          "when": "view == iotHubDevices && viewItem == device",
+          "group": "azure-iot-toolkit-3@1"
         },
         {
           "command": "azure-iot-toolkit.deleteDevice",
           "when": "view == iotHubDevices && viewItem == device",
-          "group": "azure-iot-toolkit@12"
+          "group": "azure-iot-toolkit-4@0"
         },
         {
           "command": "azure-iot-toolkit.refresh",
@@ -381,69 +377,65 @@
           "group": "inline"
         },
         {
-          "command": "azure-iot-toolkit.generateCode",
-          "when": "view == iotHubDevices && viewItem == edge",
-          "group": "azure-iot-toolkit@0"
-        },
-        {
           "command": "azure-iot-toolkit.sendD2CMessage",
           "when": "view == iotHubDevices && viewItem == edge",
-          "group": "azure-iot-toolkit@1"
-        },
-        {
-          "command": "azure-iot-toolkit.startMonitorIoTHubMessage",
-          "when": "view == iotHubDevices && viewItem == edge",
-          "group": "azure-iot-toolkit@2"
+          "group": "azure-iot-toolkit-0@0"
         },
         {
           "command": "azure-iot-toolkit.sendC2DMessage",
           "when": "view == iotHubDevices && viewItem == edge",
-          "group": "azure-iot-toolkit@3"
-        },
-        {
-          "command": "azure-iot-toolkit.startMonitorC2DMessage",
-          "when": "view == iotHubDevices && viewItem == edge",
-          "group": "azure-iot-toolkit@4"
+          "group": "azure-iot-toolkit-0@1"
         },
         {
           "command": "azure-iot-toolkit.invokeDeviceMethod",
           "when": "view == iotHubDevices && viewItem == edge",
-          "group": "azure-iot-toolkit@5"
-        },
-        {
-          "command": "azure-iot-toolkit.getDevice",
-          "when": "view == iotHubDevices && viewItem == edge",
-          "group": "azure-iot-toolkit@6"
+          "group": "azure-iot-toolkit-0@2"
         },
         {
           "command": "azure-iot-toolkit.getDeviceTwin",
           "when": "view == iotHubDevices && viewItem == edge",
-          "group": "azure-iot-toolkit@7"
+          "group": "azure-iot-toolkit-0@3"
         },
         {
-          "command": "azure-iot-toolkit.copyDeviceConnectionString",
+          "command": "azure-iot-toolkit.startMonitorIoTHubMessage",
           "when": "view == iotHubDevices && viewItem == edge",
-          "group": "azure-iot-toolkit@8"
+          "group": "azure-iot-toolkit-1@0"
+        },
+        {
+          "command": "azure-iot-toolkit.startMonitorC2DMessage",
+          "when": "view == iotHubDevices && viewItem == edge",
+          "group": "azure-iot-toolkit-1@1"
+        },
+        {
+          "command": "azure-iot-toolkit.generateCode",
+          "when": "view == iotHubDevices && viewItem == edge",
+          "group": "azure-iot-toolkit-2@0"
         },
         {
           "command": "azure-iot-toolkit.generateSasTokenForDevice",
           "when": "view == iotHubDevices && viewItem == edge",
-          "group": "azure-iot-toolkit@9"
+          "group": "azure-iot-toolkit-2@1"
         },
         {
           "command": "azure-iot-toolkit.createModule",
           "when": "view == iotHubDevices && viewItem == edge",
-          "group": "azure-iot-toolkit@10"
+          "group": "azure-iot-toolkit-2@2"
         },
         {
-          "command": "azure-iot-toolkit.refresh",
+          "command": "azure-iot-toolkit.getDevice",
           "when": "view == iotHubDevices && viewItem == edge",
-          "group": "azure-iot-toolkit@11"
+          "group": "azure-iot-toolkit-3@0"
+        },
+        
+        {
+          "command": "azure-iot-toolkit.copyDeviceConnectionString",
+          "when": "view == iotHubDevices && viewItem == edge",
+          "group": "azure-iot-toolkit-3@1"
         },
         {
           "command": "azure-iot-toolkit.deleteDevice",
           "when": "view == iotHubDevices && viewItem == edge",
-          "group": "azure-iot-toolkit@12"
+          "group": "azure-iot-toolkit-4@0"
         },
         {
           "command": "azure-iot-toolkit.createDeployment",
