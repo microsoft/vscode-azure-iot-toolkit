@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 "use strict";
-import { Client as EventHubClient } from "azure-event-hubs";
+import { EventHubClient, EventPosition } from "@azure/event-hubs";
 import { Message } from "azure-iot-device";
 import { clientFromConnectionString } from "azure-iot-device-mqtt";
 import * as vscode from "vscode";
@@ -14,7 +14,7 @@ import { Utility } from "./utility";
 
 export class IoTHubMessageExplorer extends BaseExplorer {
     private _isMonitoring: boolean;
-    private _eventHubClient;
+    private _eventHubClient: EventHubClient;
     private _monitorStatusBarItem: vscode.StatusBarItem;
 
     constructor(outputChannel: vscode.OutputChannel) {
@@ -63,13 +63,15 @@ export class IoTHubMessageExplorer extends BaseExplorer {
         let consumerGroup = config.get<string>(Constants.IoTHubConsumerGroup);
 
         try {
-            this._eventHubClient = EventHubClient.fromConnectionString(iotHubConnectionString);
-            this.updateMonitorStatus(true);
             this._outputChannel.show();
             const deviceLabel = deviceItem ? `[${deviceItem.deviceId}]` : "all devices";
             this.outputLine(Constants.IoTHubMonitorLabel, `Start monitoring D2C message for ${deviceLabel} ...`);
+            if (!this._eventHubClient) {
+                this._eventHubClient = await EventHubClient.createFromIotHubConnectionString(iotHubConnectionString);
+            }
             TelemetryClient.sendEvent(Constants.IoTHubAIStartMonitorEvent, { deviceType: deviceItem ? deviceItem.contextValue : "" });
-            this.startMonitor(Constants.IoTHubMonitorLabel, consumerGroup, deviceItem);
+            await this.startMonitor(Constants.IoTHubMonitorLabel, consumerGroup, deviceItem);
+            this.updateMonitorStatus(true);
         } catch (e) {
             this.updateMonitorStatus(false);
             this.outputLine(Constants.IoTHubMonitorLabel, e);
@@ -81,31 +83,30 @@ export class IoTHubMessageExplorer extends BaseExplorer {
         this.stopMonitor(Constants.IoTHubMonitorLabel, Constants.IoTHubAIStopMonitorEvent);
     }
 
-    private startMonitor(label: string, consumerGroup: string, deviceItem?: DeviceItem) {
+    private async startMonitor(label: string, consumerGroup: string, deviceItem?: DeviceItem) {
         if (this._eventHubClient) {
             const monitorD2CBeforeNowInMinutes = Utility.getConfiguration().get<number>("monitorD2CBeforeNowInMinutes");
             const startAfterTime = new Date(Date.now() - 1000 * 60 * monitorD2CBeforeNowInMinutes);
-            this._eventHubClient.open()
-                .then(this._eventHubClient.getPartitionIds.bind(this._eventHubClient))
-                .then((partitionIds: any) => {
-                    return partitionIds.map((partitionId) => {
-                        return this._eventHubClient.createReceiver(consumerGroup, partitionId, { startAfterTime })
-                            .then((receiver) => {
-                                this.outputLine(label, `Created partition receiver [${partitionId}] for consumerGroup [${consumerGroup}]`);
-                                receiver.on("errorReceived", this.printError(this._outputChannel, label));
-                                receiver.on("message", this.printMessage(this._outputChannel, label, deviceItem));
-                            });
+            const partitionIds = await this._eventHubClient.getPartitionIds();
+            partitionIds.forEach((partitionId) => {
+                this.outputLine(label, `Created partition receiver [${partitionId}] for consumerGroup [${consumerGroup}]`);
+                this._eventHubClient.receive(partitionId,
+                    this.printMessage(this._outputChannel, label, deviceItem),
+                    this.printError(this._outputChannel, label),
+                    {
+                        eventPosition: EventPosition.fromEnqueuedTime(startAfterTime),
+                        consumerGroup,
                     });
-                });
+            });
         }
     }
 
-    private stopMonitor(label: string, aiEvent: string) {
+    private async stopMonitor(label: string, aiEvent: string) {
         TelemetryClient.sendEvent(aiEvent);
         this._outputChannel.show();
         if (this._isMonitoring) {
+            await this._eventHubClient.close();
             this.outputLine(label, "D2C monitoring stopped.");
-            this._eventHubClient.close();
             this.updateMonitorStatus(false);
         } else {
             this.outputLine(label, "No D2C monitor job running.");
@@ -113,18 +114,18 @@ export class IoTHubMessageExplorer extends BaseExplorer {
     }
 
     private printError(outputChannel: vscode.OutputChannel, label: string) {
-        return (err) => {
+        return async (err) => {
             this.outputLine(label, err.message);
             if (this._isMonitoring) {
+                await this._eventHubClient.close();
                 this.outputLine(label, "D2C monitoring stopped. Please try to start monitoring again or use a different consumer group to monitor.");
-                this._eventHubClient.close();
                 this.updateMonitorStatus(false);
             }
         };
     };
 
     private printMessage(outputChannel: vscode.OutputChannel, label: string, deviceItem?: DeviceItem) {
-        return (message) => {
+        return async (message) => {
             const deviceId = message.annotations["iothub-connection-device-id"];
             const moduleId = message.annotations["iothub-connection-module-id"];
             if (deviceItem && deviceItem.deviceId !== deviceId) {
