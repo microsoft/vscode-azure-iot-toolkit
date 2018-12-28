@@ -1,3 +1,16 @@
+## 2.1.0 (2019-01-02)
+### Added
+* Reorder and group context menu
+* Add confirmation prompt when deleting resource
+* Add 'Stop' button for monitoring D2C message in Status Bar
+* Add Direct Method template for Node.js code generation
+
+### Changed
+* Use Webpack to improve extension performance ⚡
+
+### Removed
+* Remove 'Refresh' item from context menu
+
 ## 2.0.0 (2018-12-13)
 ### Added
 * Resolve [#218](https://github.com/Microsoft/vscode-azure-iot-toolkit/issues/218): Add 'Stop Monitoring D2C Message' into context menu of explorer title
