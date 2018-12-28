@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 "use strict";
-import { EventHubClient, EventPosition, ReceiveHandler } from "@azure/event-hubs";
+import { EventHubClient, EventPosition } from "@azure/event-hubs";
 import { Message } from "azure-iot-device";
 import { clientFromConnectionString } from "azure-iot-device-mqtt";
 import * as vscode from "vscode";
@@ -66,7 +66,9 @@ export class IoTHubMessageExplorer extends BaseExplorer {
             this._outputChannel.show();
             const deviceLabel = deviceItem ? `[${deviceItem.deviceId}]` : "all devices";
             this.outputLine(Constants.IoTHubMonitorLabel, `Start monitoring D2C message for ${deviceLabel} ...`);
-            this._eventHubClient = await EventHubClient.createFromIotHubConnectionString(iotHubConnectionString);
+            if (!this._eventHubClient) {
+                this._eventHubClient = await EventHubClient.createFromIotHubConnectionString(iotHubConnectionString);
+            }
             TelemetryClient.sendEvent(Constants.IoTHubAIStartMonitorEvent, { deviceType: deviceItem ? deviceItem.contextValue : "" });
             await this.startMonitor(Constants.IoTHubMonitorLabel, consumerGroup, deviceItem);
             this.updateMonitorStatus(true);
