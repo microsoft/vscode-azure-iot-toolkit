@@ -92,7 +92,10 @@ const config = {
             failOnErrors: true,
             failOnWarnings: true,
         })
-    ]
+    ],
+    optimization: {
+        minimize: false
+    }
 }
 
 module.exports = config;
