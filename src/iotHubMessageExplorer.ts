@@ -105,6 +105,7 @@ export class IoTHubMessageExplorer extends BaseExplorer {
         TelemetryClient.sendEvent(aiEvent);
         this._outputChannel.show();
         if (this._isMonitoring) {
+            this.outputLine(label, "Stopping D2C monitoring...");
             await this._eventHubClient.close();
             this.outputLine(label, "D2C monitoring stopped.");
             this.updateMonitorStatus(false);
