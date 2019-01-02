@@ -7,8 +7,9 @@
 
 'use strict';
 
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+const copyWebpackPlugin = require('copy-webpack-plugin');
 const failOnErrorsPlugin = require('fail-on-errors-webpack-plugin');
+const terserWebpackPlugin = require('terser-webpack-plugin');
 const path = require('path');
 const webpack = require('webpack');
 
@@ -59,7 +60,7 @@ const config = {
         ]
     },
     plugins: [
-        new CopyWebpackPlugin([{
+        new copyWebpackPlugin([{
             from: 'node_modules/clipboardy/fallbacks',
             to: '../fallbacks'  // copy clipboardy binaries to the parent folder of scripts
         }]),
@@ -94,7 +95,13 @@ const config = {
         })
     ],
     optimization: {
-        minimize: false
+        minimizer: [
+            new terserWebpackPlugin({
+                terserOptions: {
+                    keep_fnames: true
+                }
+            })
+        ]
     }
 }
 
