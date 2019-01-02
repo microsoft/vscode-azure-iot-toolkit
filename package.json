@@ -625,6 +625,7 @@
     "mocha": "^5.1.1",
     "rimraf": "^2.6.2",
     "shebang-loader": "0.0.1",
+    "terser-webpack-plugin": "^1.2.1",
     "ts-loader": "^5.3.1",
     "tslint": "^4.5.1",
     "typescript": "^2.2.1",
