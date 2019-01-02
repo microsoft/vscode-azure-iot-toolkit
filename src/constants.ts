@@ -48,6 +48,7 @@ export class Constants {
     public static IoTHubDirectMethodLabel = "DirectMethod";
     public static IoTHubDeviceTwinLabel = "DeviceTwin";
     public static IoTHubModuleTwinLabel = "ModuleTwin";
+    public static IoTHubDistributedTracingSettingLabel = "DistributedTracingSetting";
 
     public static IoTHubAILoadDeviceTreeEvent = "AZ.LoadDeviceTree";
     public static IoTHubAIStartMonitorEvent = "AZ.D2C.startMonitoring";

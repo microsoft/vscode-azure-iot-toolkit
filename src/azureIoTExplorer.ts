@@ -15,6 +15,7 @@ import { IoTHubResourceExplorer } from "./iotHubResourceExplorer";
 import { DeviceItem } from "./Model/DeviceItem";
 import { ModuleItem } from "./Model/ModuleItem";
 import { SnippetManager } from "./snippetManager";
+import { DistributedSettingUpdateType } from "./utility";
 import { WelcomePage } from "./welcomePage";
 
 export class AzureIoTExplorer {
@@ -83,6 +84,10 @@ export class AzureIoTExplorer {
 
     public async deleteDevice(deviceItem?: DeviceItem) {
         return this._deviceExplorer.deleteDevice(deviceItem);
+    }
+
+    public updateDistributedTracingSetting(node, updateType?: DistributedSettingUpdateType): void {
+        this._deviceExplorer.updateDistributedTracingSetting(node, updateType);
     }
 
     public invokeDeviceDirectMethod(deviceItem: DeviceItem): void {
