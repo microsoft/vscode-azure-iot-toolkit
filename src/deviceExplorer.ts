@@ -119,24 +119,42 @@ export class DeviceExplorer extends BaseExplorer {
         }
 
         try {
-            let deviceId: string;
+            let deviceIds: string[];
             if (!node) {
-                let selectedDevice: DeviceItem = await vscode.window.showQuickPick(
+                let selectedDevices: DeviceItem[] = await vscode.window.showQuickPick(
                     Utility.getNoneEdgeDeviceList(iotHubConnectionString),
-                    { placeHolder: "Select device...", ignoreFocusOut: true },
+                    { placeHolder: "Select device...", ignoreFocusOut: true, canPickMany: true },
                 );
-                deviceId = selectedDevice.deviceId;
+                deviceIds = selectedDevices.map((deviceItem) => deviceItem.deviceId);
             } else {
-                deviceId = node.deviceNode.deviceId;
+                deviceIds = [node.deviceNode.deviceId];
             }
+            await this.updateDistributedTraceSettingForDevices(deviceIds, iotHubConnectionString, updateType);
 
-            let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
-            this._outputChannel.show();
+            this.outputLine(Constants.IoTHubDistributedTracingSettingLabel, `Update distributed tracing setting for device [${deviceIds.join(",")}] successfully!`);
+        } catch (err) {
+            this.outputLine(Constants.IoTHubDistributedTracingSettingLabel, `Failed to get or update distributed setting: ${err.message}`);
+            return;
+        }
 
-            let twin = await Utility.getTwin(registry, deviceId);
+        if (node instanceof DistributedTracingLabelNode) {
+            vscode.commands.executeCommand("azure-iot-toolkit.refresh", node);
+        } else if (node instanceof DistributedTracingSettingNode) {
+            vscode.commands.executeCommand("azure-iot-toolkit.refresh", node.parent);
+        } else {
+            vscode.commands.executeCommand("azure-iot-toolkit.refresh");
+        }
+    }
 
-            let mode: boolean = undefined;
-            let samplingRate: number = undefined;
+    private async updateDistributedTraceSettingForDevices(deviceIds: string[], iotHubConnectionString: string, updateType: DistributedSettingUpdateType) {
+        let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
+        this._outputChannel.show();
+        let mode: boolean = undefined;
+        let samplingRate: number = undefined;
+        let twin;
+
+        if (deviceIds.length === 1) {
+            twin = await Utility.getTwin(registry, deviceIds[0]);
 
             if (twin.properties.desired[Utility.DISTRIBUTED_TWIN_NAME]) {
                 mode = Utility.parseDesiredSamplingMode(twin);
@@ -150,45 +168,38 @@ export class DeviceExplorer extends BaseExplorer {
             if (updateType === DistributedSettingUpdateType.OnlyMode) {
                 samplingRate = undefined;
             }
+        }
 
-            if (updateType !== DistributedSettingUpdateType.OnlySamplingRate) {
-                let selectedItem: SamplingModeItem = await vscode.window.showQuickPick(
-                    this.getSamplingModePickupItems(),
-                    { placeHolder: "Distributed tracing is currently " + (mode ? "enabled" : "disabled") + ", select whether to enable/disable the distributed tracing...", ignoreFocusOut: true },
-                );
-                if (!selectedItem) {
+        if (updateType !== DistributedSettingUpdateType.OnlySamplingRate) {
+            let selectedItem: SamplingModeItem = await vscode.window.showQuickPick(
+                this.getSamplingModePickupItems(),
+                { placeHolder: "Select whether to enable/disable the distributed tracing...", ignoreFocusOut: true },
+            );
+            if (!selectedItem) {
+                return;
+            }
+            mode = selectedItem.distributedTracingEnabled;
+        }
+
+        if (updateType !== DistributedSettingUpdateType.OnlyMode) {
+            if (mode !== false) {
+                samplingRate = await this.promptForSamplingRate(`Enter sampling rate, within [0, 100]`, samplingRate);
+
+                if (samplingRate === undefined) {
                     return;
                 }
-                mode = selectedItem.distributedTracingEnabled;
             }
+        }
 
-            if (updateType !== DistributedSettingUpdateType.OnlyMode) {
-                if (mode !== false) {
-                    samplingRate = await this.promptForSamplingRate(`Enter sampling rate, within [0, 100]`, samplingRate);
-
-                    if (samplingRate === undefined) {
-                        return;
-                    }
-                }
+        await Promise.all(deviceIds.map(async (devcieId) => {
+            if (!twin) {
+                twin = await Utility.getTwin(registry, devcieId);
             }
-
             await this.updateDistributedTraceTwin(twin, mode, samplingRate, registry);
-
-            this.outputLine(Constants.IoTHubDistributedTracingSettingLabel, `Update distributed tracing setting for device [${deviceId}] successfully!`);
-        } catch (err) {
-            this.outputLine(Constants.IoTHubDistributedTracingSettingLabel, `Failed to get or update distributed setting: ${err.message}`);
-            return;
-        }
-
-        if (node instanceof DistributedTracingLabelNode) {
-            vscode.commands.executeCommand("azure-iot-toolkit.refresh", node);
-        } else if (node instanceof DistributedTracingSettingNode) {
-            vscode.commands.executeCommand("azure-iot-toolkit.refresh", node.parent);
-        }
+        }));
     }
 
     private async updateDistributedTraceTwin(twin: any, enable: boolean, samplingRate: number, registry: iothub.Registry) {
-
         if (enable === undefined && samplingRate === undefined) {
             return;
         }
@@ -232,7 +243,7 @@ export class DeviceExplorer extends BaseExplorer {
                 return undefined;
             }
 
-            const floatValue = parseFloat(samplingRate);
+            const floatValue: number = parseFloat(samplingRate);
             if (!Number.isInteger(floatValue) || floatValue < 0 || floatValue > 100) {
                 vscode.window.showErrorMessage("Sampling rate should be a positive integer within [0, 100]");
                 return undefined;
