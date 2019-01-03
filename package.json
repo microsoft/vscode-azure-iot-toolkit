@@ -233,7 +233,7 @@
       },
       {
         "command": "azure-iot-toolkit.updateDistributedTracingSetting",
-        "title": "Update Distributed Tracing Setting",
+        "title": "Update Distributed Tracing Setting (Preview)",
         "category": "Azure IoT Hub"
       },
       {

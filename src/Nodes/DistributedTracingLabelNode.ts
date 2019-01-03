@@ -11,7 +11,7 @@ import { TwinNode } from "./TwinNode";
 export class DistributedTracingLabelNode implements INode {
     private readonly label: string;
     constructor(public readonly deviceNode: DeviceNode) {
-        this.label = "Distributed Tracing Setting";
+        this.label = "Distributed Tracing Setting (Preview)";
     }
 
     public getTreeItem(): vscode.TreeItem {
