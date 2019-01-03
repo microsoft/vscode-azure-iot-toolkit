@@ -9,6 +9,7 @@
 
 const copyWebpackPlugin = require('copy-webpack-plugin');
 const failOnErrorsPlugin = require('fail-on-errors-webpack-plugin');
+const permissionsPlugin = require('webpack-permissions-plugin');
 const terserWebpackPlugin = require('terser-webpack-plugin');
 const path = require('path');
 const webpack = require('webpack');
@@ -92,6 +93,14 @@ const config = {
         new failOnErrorsPlugin({
             failOnErrors: true,
             failOnWarnings: true,
+        }),
+        new permissionsPlugin({
+            buildFiles: [
+                {
+                    path: path.resolve(__dirname, 'dist', 'fallbacks', 'linux', 'xsel'),    // chmod +x dist/fallbacks/linux/xsel
+                    fileMode: '775'
+                }
+            ]
         })
     ],
     optimization: {

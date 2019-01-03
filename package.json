@@ -2,7 +2,7 @@
   "name": "azure-iot-toolkit",
   "displayName": "Azure IoT Hub Toolkit",
   "description": "Interact with Azure IoT Hub, IoT Device Management, IoT Edge Management, IoT Hub Device Simulation, IoT Hub Code Generation",
-  "version": "2.1.0-rc3",
+  "version": "2.1.0-rc4",
   "publisher": "vsciot-vscode",
   "aiKey": "0caaff90-cc1c-4def-b64c-3ef33615bc9b",
   "icon": "logo.png",
@@ -631,7 +631,8 @@
     "typescript": "^2.2.1",
     "vscode": "^1.1.22",
     "webpack": "^4.27.1",
-    "webpack-cli": "^3.1.2"
+    "webpack-cli": "^3.1.2",
+    "webpack-permissions-plugin": "^1.0.0"
   },
   "dependencies": {
     "@azure/event-hubs": "^1.0.8",
