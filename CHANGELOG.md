@@ -1,4 +1,4 @@
-## 2.1.0 (2019-01-02)
+## 2.1.0 (2019-01-03)
 ### Added
 * Reorder and group context menu
 * Add confirmation prompt when deleting resource
