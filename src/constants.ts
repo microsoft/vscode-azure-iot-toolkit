@@ -88,6 +88,10 @@ export class Constants {
     public static IoTHubAIDeleteModuleDoneEvent = "AZ.Module.Delete.Done";
     public static IoTHubAIGetModuleStartEvent = "AZ.Module.Get.Start";
     public static IoTHubAIDGetModuleDoneEvent = "AZ.Module.Get.Done";
+    public static IoTHubAIUpdateDistributedSettingStartEvent = "AZ.DistributedTracing.Update.Start";
+    public static IoTHubAIUpdateDistributedSettingDoneEvent = "AZ.DistributedTracing.Update.Done";
+    public static IoTHubAILoadDistributedTracingSettingStartEvent = "AZ.LoadDistributedTracingSetting.Start";
+    public static IoTHubAILoadDistributedTracingSettingDoneEvent = "AZ.LoadDistributedTracingSetting.Done";
 
     public static IoTHubAIStartLoadDeviceTreeEvent = "General.StartLoadDeviceTree";
     public static IoTHubAIShowWelcomePagetEvent = "General.WelcomePage.Show";

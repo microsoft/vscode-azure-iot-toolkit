@@ -191,15 +191,22 @@ export class DeviceExplorer extends BaseExplorer {
             }
         }
 
-        await Promise.all(deviceIds.map(async (devcieId) => {
-            if (!twin) {
-                twin = await Utility.getTwin(registry, devcieId);
-            }
-            await this.updateDistributedTraceTwin(twin, mode, samplingRate, registry);
-        }));
+        TelemetryClient.sendEvent(Constants.IoTHubAIUpdateDistributedSettingStartEvent);
+
+        try {
+            await Promise.all(deviceIds.map(async (devcieId) => {
+                if (!twin) {
+                    twin = await Utility.getTwin(registry, devcieId);
+                }
+                await this.updateDistributedTraceTwin(twin, mode, samplingRate, registry, iotHubConnectionString);
+            }));
+            TelemetryClient.sendEvent(Constants.IoTHubAIUpdateDistributedSettingDoneEvent, { Result: "Success" }, iotHubConnectionString);
+        } catch (err) {
+            TelemetryClient.sendEvent(Constants.IoTHubAIUpdateDistributedSettingDoneEvent, { Result: "Fail" , Message: err.message}, iotHubConnectionString);
+        }
     }
 
-    private async updateDistributedTraceTwin(twin: any, enable: boolean, samplingRate: number, registry: iothub.Registry) {
+    private async updateDistributedTraceTwin(twin: any, enable: boolean, samplingRate: number, registry: iothub.Registry, iotHubConnectionString: string) {
         if (enable === undefined && samplingRate === undefined) {
             return;
         }
