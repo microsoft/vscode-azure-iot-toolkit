@@ -3,6 +3,7 @@
 
 "use strict";
 import * as vscode from "vscode";
+
 import { CodeManager } from "./codeManager";
 import { DistributedSettingUpdateType } from "./constants";
 import { DeviceExplorer } from "./deviceExplorer";
@@ -13,10 +14,12 @@ import { IotHubDirectMethodExplorer } from "./iotHubDirectMethodExplorer";
 import { IoTHubMessageExplorer } from "./iotHubMessageExplorer";
 import { IotHubModuleExplorer } from "./iotHubModuleExplorer";
 import { IoTHubResourceExplorer } from "./iotHubResourceExplorer";
-import { DeviceItem } from "./Model/DeviceItem";
-import { ModuleItem } from "./Model/ModuleItem";
 import { SnippetManager } from "./snippetManager";
 import { WelcomePage } from "./welcomePage";
+
+import { DistributedTracingManager } from "./DistributedTracingManager";
+import { DeviceItem } from "./Model/DeviceItem";
+import { ModuleItem } from "./Model/ModuleItem";
 
 export class AzureIoTExplorer {
     private _iotHubC2DMessageExplorer: IotHubC2DMessageExplorer;
@@ -30,12 +33,14 @@ export class AzureIoTExplorer {
     private _welcomePage: WelcomePage;
     private _codeManager: CodeManager;
     private _iotHubModuleExplorer: IotHubModuleExplorer;
+    private _distributedTracingManager: DistributedTracingManager;
 
     constructor(private context: vscode.ExtensionContext) {
         let outputChannel = vscode.window.createOutputChannel("Azure IoT Hub Toolkit");
         this._iotHubC2DMessageExplorer = new IotHubC2DMessageExplorer(outputChannel);
         this._iotHubMessageExplorer = new IoTHubMessageExplorer(outputChannel);
         this._deviceExplorer = new DeviceExplorer(outputChannel);
+        this._distributedTracingManager = new DistributedTracingManager(outputChannel);
         this._snippetManager = new SnippetManager(outputChannel);
         this._iotHubDirectMethodExplorer = new IotHubDirectMethodExplorer(outputChannel);
         this._iotHubDeviceTwinExplorer = new IotHubDeviceTwinExplorer(outputChannel);
@@ -87,7 +92,7 @@ export class AzureIoTExplorer {
     }
 
     public updateDistributedTracingSetting(node, updateType?: DistributedSettingUpdateType): void {
-        this._deviceExplorer.updateDistributedTracingSetting(node, updateType);
+        this._distributedTracingManager.updateDistributedTracingSetting(node, updateType);
     }
 
     public invokeDeviceDirectMethod(deviceItem: DeviceItem): void {
