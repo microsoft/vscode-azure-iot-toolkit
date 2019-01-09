@@ -4,6 +4,7 @@
 "use strict";
 import * as vscode from "vscode";
 import { CodeManager } from "./codeManager";
+import { DistributedSettingUpdateType } from "./constants";
 import { DeviceExplorer } from "./deviceExplorer";
 import { IoTEdgeExplorer } from "./iotEdgeExplorer";
 import { IotHubC2DMessageExplorer } from "./iotHubC2DMessageExplorer";
@@ -15,7 +16,6 @@ import { IoTHubResourceExplorer } from "./iotHubResourceExplorer";
 import { DeviceItem } from "./Model/DeviceItem";
 import { ModuleItem } from "./Model/ModuleItem";
 import { SnippetManager } from "./snippetManager";
-import { DistributedSettingUpdateType } from "./utility";
 import { WelcomePage } from "./welcomePage";
 
 export class AzureIoTExplorer {

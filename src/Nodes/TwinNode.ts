@@ -6,9 +6,9 @@ import { TwinItem } from "../Model/TwinItem";
 import { DistributedTracingSettingNode } from "./DistributedTracingSettingNode";
 import { INode } from "./INode";
 import iothub = require("azure-iothub");
-import { Constants } from "../constants";
+import { Constants, DeviceTwinPropertyType } from "../constants";
 import { TelemetryClient } from "../telemetryClient";
-import { DeviceTwinPropertyType, Utility} from "../utility";
+import { Utility } from "../utility";
 import { DeviceNode } from "./DeviceNode";
 export class TwinNode implements INode {
     private readonly DISTRIBUTED_TRACING_ENABLED_PROPERTY: string = "Enable Distributed Tracing: ";
@@ -35,24 +35,24 @@ export class TwinNode implements INode {
             if (this.twinItem.type === DeviceTwinPropertyType.Desired) {
                 let samplingRate = null;
                 let enabled = null;
-                if (twin.properties.desired[Utility.DISTRIBUTED_TWIN_NAME]) {
+                if (twin.properties.desired[Constants.DISTRIBUTED_TWIN_NAME]) {
                     samplingRate = Utility.parseDesiredSamplingRate(twin);
                     enabled = Utility.parseDesiredSamplingMode(twin);
                 }
 
                 items.push(new DistributedTracingSettingNode(this.DISTRIBUTED_TRACING_ENABLED_PROPERTY + (enabled ? "Enabled" : "Disabled"), this, "desired-mode-property", this.deviceNode));
                 items.push(new DistributedTracingSettingNode(this.DISTRIBUTED_TRACING_SAMPLING_RATE +
-                    (samplingRate ? samplingRate : "Not Set"), this, "desired-sampling-rate-property", this.deviceNode));
+                    (samplingRate ? samplingRate + "%" : "Not Set"), this, "desired-sampling-rate-property", this.deviceNode));
                 return items;
             } else if (this.twinItem.type === DeviceTwinPropertyType.Reported) {
                 let samplingRate = null;
                 let enabled = null;
-                if (twin.properties.reported[Utility.DISTRIBUTED_TWIN_NAME]) {
+                if (twin.properties.reported[Constants.DISTRIBUTED_TWIN_NAME]) {
                     samplingRate = Utility.parseReportedSamplingRate(twin);
                     enabled = Utility.parseReportedSamplingMode(twin);
 
                     items.push(new DistributedTracingSettingNode(this.DISTRIBUTED_TRACING_ENABLED_PROPERTY + (enabled ? "Enabled" : "Disabled"), this, "reported-mode-property", this.deviceNode));
-                    items.push(new DistributedTracingSettingNode(this.DISTRIBUTED_TRACING_SAMPLING_RATE + (samplingRate ? samplingRate : "Not Set"),
+                    items.push(new DistributedTracingSettingNode(this.DISTRIBUTED_TRACING_SAMPLING_RATE + (samplingRate ? samplingRate + "%" : "Not Set"),
                         this, "reported-sampling-rate-property", this.deviceNode));
                     return items;
                 } else {

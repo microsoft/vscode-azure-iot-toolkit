@@ -20,20 +20,7 @@ import { INode } from "./Nodes/INode";
 import { TelemetryClient } from "./telemetryClient";
 import iothub = require("azure-iothub");
 
-export enum DeviceTwinPropertyType {
-    Desired = "desired",
-    Reported = "reported",
-}
-
-export enum DistributedSettingUpdateType {
-    OnlyMode = "onlyMode",
-    OnlySamplingRate = "onlySamplingRate",
-    All = "all",
-}
-
 export class Utility {
-    public static readonly DISTRIBUTED_TWIN_NAME: string = "azureiot*com^dtracing^1*0*0";
-
     public static getConfiguration(): vscode.WorkspaceConfiguration {
         return vscode.workspace.getConfiguration("azure-iot-toolkit");
     }
@@ -305,9 +292,16 @@ export class Utility {
         });
     }
 
-    public static async getNoneEdgeDeviceList(iotHubConnectionString: string): Promise<DeviceItem[]> {
-        const [deviceList, edgeDeviceIdSet] = await Promise.all([Utility.getIoTDeviceList(iotHubConnectionString), Utility.getEdgeDeviceIdSet(iotHubConnectionString)]);
-        return deviceList.filter((device) => !edgeDeviceIdSet.has(device.deviceId));
+    public static async getNoneEdgeDeviceIdList(iotHubConnectionString: string): Promise<string[]> {
+        const registry: Registry = Registry.fromConnectionString(iotHubConnectionString);
+        const query = registry.createQuery("SELECT * FROM DEVICES where capabilities.iotEdge=false");
+        const noneEdgeDevices = ((await query.nextAsTwin(null)) as ResultWithIncomingMessage<Twin[]>).result;
+        const deviceIdList = [];
+        for (const noneEdgeDevice of noneEdgeDevices) {
+            deviceIdList.push(noneEdgeDevice.deviceId);
+        }
+
+        return deviceIdList;
     }
 
     public static isValidTargetCondition(value: string): boolean {
@@ -342,27 +336,27 @@ export class Utility {
     }
 
     public static parseReportedSamplingMode(twin: any): boolean {
-        if (twin.properties.reported[this.DISTRIBUTED_TWIN_NAME].sampling_mode === undefined) {
+        if (twin.properties.reported[Constants.DISTRIBUTED_TWIN_NAME].sampling_mode === undefined) {
             return undefined;
         }
 
-        return twin.properties.reported[this.DISTRIBUTED_TWIN_NAME].sampling_mode !== 0;
+        return twin.properties.reported[Constants.DISTRIBUTED_TWIN_NAME].sampling_mode !== 0;
     }
 
     public static parseReportedSamplingRate(twin: any): number {
-        return twin.properties.reported[this.DISTRIBUTED_TWIN_NAME].sampling_rate;
+        return twin.properties.reported[Constants.DISTRIBUTED_TWIN_NAME].sampling_rate;
     }
 
     public static parseDesiredSamplingMode(twin: any): boolean {
-        if (twin.properties.desired[this.DISTRIBUTED_TWIN_NAME].sampling_mode === undefined) {
+        if (twin.properties.desired[Constants.DISTRIBUTED_TWIN_NAME].sampling_mode === undefined) {
             return undefined;
         }
 
-        return twin.properties.desired[this.DISTRIBUTED_TWIN_NAME].sampling_mode !== 0;
+        return twin.properties.desired[Constants.DISTRIBUTED_TWIN_NAME].sampling_mode !== 0;
     }
 
     public static parseDesiredSamplingRate(twin: any): number {
-        return twin.properties.desired[this.DISTRIBUTED_TWIN_NAME].sampling_rate;
+        return twin.properties.desired[Constants.DISTRIBUTED_TWIN_NAME].sampling_rate;
     }
 
     public static async getTwin(registry: iothub.Registry, deviceId: string): Promise<any> {

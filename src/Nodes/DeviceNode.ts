@@ -5,7 +5,7 @@ import * as vscode from "vscode";
 import { DeviceItem } from "../Model/DeviceItem";
 import { DistributedTracingLabelNode } from "./DistributedTracingLabelNode";
 import { INode } from "./INode";
-import { ModuleNode } from "./ModuleNode";
+import { ModuleLabelNode } from "./ModuleLabelNode";
 
 export class DeviceNode implements INode {
     public readonly deviceId: string;
@@ -18,11 +18,11 @@ export class DeviceNode implements INode {
     }
 
     public async getChildren(): Promise<INode[]> {
-        let moduleNodeList: INode[] = [];
-        moduleNodeList.push(new ModuleNode(this));
+        let nodeList: INode[] = [];
+        nodeList.push(new ModuleLabelNode(this));
         if (this.deviceItem.contextValue === "device") {
-            moduleNodeList.push(new DistributedTracingLabelNode(this));
+            nodeList.push(new DistributedTracingLabelNode(this));
         }
-        return moduleNodeList;
+        return nodeList;
     }
 }

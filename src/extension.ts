@@ -4,7 +4,7 @@
 "use strict";
 import * as vscode from "vscode";
 import { AzureIoTExplorer } from "./azureIoTExplorer";
-import { Constants } from "./constants";
+import { Constants, DistributedSettingUpdateType } from "./constants";
 import { DeviceTree } from "./deviceTree";
 import { Executor } from "./executor";
 import { DeviceNode } from "./Nodes/DeviceNode";
@@ -12,7 +12,6 @@ import { ModuleItemNode } from "./Nodes/ModuleItemNode";
 import { DeviceTwinCodeLensProvider } from "./providers/deviceTwinCodeLensProvider";
 import { ModuleTwinCodeLensProvider } from "./providers/moduleTwinCodeLensProvider";
 import { TelemetryClient } from "./telemetryClient";
-import { DistributedSettingUpdateType } from "./utility";
 
 export function activate(context: vscode.ExtensionContext) {
     TelemetryClient.sendEvent("extensionActivated");

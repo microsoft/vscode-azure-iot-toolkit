@@ -10,10 +10,10 @@ import { DeviceNode } from "./DeviceNode";
 import { INode } from "./INode";
 import { ModuleItemNode } from "./ModuleItemNode";
 
-export class ModuleNode implements INode {
+export class ModuleLabelNode implements INode {
     private readonly label: string;
 
-    constructor(public deviceNode: DeviceNode) {
+    constructor(private deviceNode: DeviceNode) {
         this.label = "Modules";
     }
 

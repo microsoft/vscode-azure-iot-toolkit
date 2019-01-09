@@ -25,6 +25,17 @@ enum TemplateType {
     ServiceManageDeviceTwin = "Service - Manage device twin",
 }
 
+export enum DeviceTwinPropertyType {
+    Desired = "desired",
+    Reported = "reported",
+}
+
+export enum DistributedSettingUpdateType {
+    OnlyMode = "onlyMode",
+    OnlySamplingRate = "onlySamplingRate",
+    All = "all",
+}
+
 export class Constants {
     public static ExtensionContext: vscode.ExtensionContext;
     public static ExtensionId = "vsciot-vscode.azure-iot-toolkit";
@@ -95,6 +106,8 @@ export class Constants {
 
     public static IoTHubAIStartLoadDeviceTreeEvent = "General.StartLoadDeviceTree";
     public static IoTHubAIShowWelcomePagetEvent = "General.WelcomePage.Show";
+
+    public static readonly DISTRIBUTED_TWIN_NAME: string = "azureiot*com^dtracing^1*0*0";
 
     public static ConnectionStringFormat = {
         [Constants.IotHubConnectionStringKey]: "HostName=<my-hostname>;SharedAccessKeyName=<my-policy>;SharedAccessKey=<my-policy-key>",

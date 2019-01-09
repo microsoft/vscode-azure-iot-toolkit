@@ -5,10 +5,10 @@
 import { ConnectionString } from "azure-iot-device";
 import * as vscode from "vscode";
 import { BaseExplorer } from "./baseExplorer";
-import { Constants } from "./constants";
+import { Constants, DistributedSettingUpdateType } from "./constants";
 import { DeviceItem } from "./Model/DeviceItem";
 import { TelemetryClient } from "./telemetryClient";
-import { DistributedSettingUpdateType, Utility } from "./utility";
+import { Utility } from "./utility";
 import iothub = require("azure-iothub");
 import { SamplingModeItem } from "./Model/SamplingModeItem";
 import { DistributedTracingLabelNode } from "./Nodes/DistributedTracingLabelNode";
@@ -121,8 +121,10 @@ export class DeviceExplorer extends BaseExplorer {
         try {
             let deviceIds: string[];
             if (!node) {
+                const deviceIdList = await Utility.getNoneEdgeDeviceIdList(iotHubConnectionString);
+                const deviceItemList = deviceIdList.map((deviceId) => new DeviceItem(deviceId, null, null, null, null));
                 let selectedDevices: DeviceItem[] = await vscode.window.showQuickPick(
-                    Utility.getNoneEdgeDeviceList(iotHubConnectionString),
+                    deviceItemList,
                     { placeHolder: "Select device...", ignoreFocusOut: true, canPickMany: true },
                 );
                 deviceIds = selectedDevices.map((deviceItem) => deviceItem.deviceId);
@@ -156,7 +158,7 @@ export class DeviceExplorer extends BaseExplorer {
         if (deviceIds.length === 1) {
             twin = await Utility.getTwin(registry, deviceIds[0]);
 
-            if (twin.properties.desired[Utility.DISTRIBUTED_TWIN_NAME]) {
+            if (twin.properties.desired[Constants.DISTRIBUTED_TWIN_NAME]) {
                 mode = Utility.parseDesiredSamplingMode(twin);
                 samplingRate = Utility.parseDesiredSamplingRate(twin);
             }
@@ -211,16 +213,16 @@ export class DeviceExplorer extends BaseExplorer {
             return;
         }
 
-        if (!twin.properties.desired[Utility.DISTRIBUTED_TWIN_NAME]) {
-            twin.properties.desired[Utility.DISTRIBUTED_TWIN_NAME] = {};
+        if (!twin.properties.desired[Constants.DISTRIBUTED_TWIN_NAME]) {
+            twin.properties.desired[Constants.DISTRIBUTED_TWIN_NAME] = {};
         }
 
         if (enable !== undefined) {
-            twin.properties.desired[Utility.DISTRIBUTED_TWIN_NAME].sampling_mode = enable ? 1 : 0;
+            twin.properties.desired[Constants.DISTRIBUTED_TWIN_NAME].sampling_mode = enable ? 1 : 0;
         }
 
         if (samplingRate !== undefined) {
-            twin.properties.desired[Utility.DISTRIBUTED_TWIN_NAME].sampling_rate = samplingRate;
+            twin.properties.desired[Constants.DISTRIBUTED_TWIN_NAME].sampling_rate = samplingRate;
         }
 
         return new Promise((resolve, reject) => {
