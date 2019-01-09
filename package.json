@@ -515,12 +515,12 @@
           "command": "azure-iot-toolkit.refresh",
           "when": "view == iotHubDevices && viewItem == distributed-tracing-setting",
           "group": "inline"
-        },            
+        },
         {
           "command": "azure-iot-toolkit.refresh",
           "when": "view == iotHubDevices && viewItem == modules-label",
           "group": "inline"
-        },       
+        },
         {
           "command": "azure-iot-toolkit.refresh",
           "when": "view == iotHubDevices && viewItem == desired-distributed-twin-properies",
@@ -698,6 +698,7 @@
     "ms-rest-azure": "^2.5.5",
     "replace-in-file": "^3.4.0",
     "strip-json-comments": "^2.0.1",
+    "uuid": "^3.3.2",
     "vscode-extension-telemetry": "0.0.18"
   },
   "extensionDependencies": [
