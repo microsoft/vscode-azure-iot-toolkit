@@ -293,7 +293,7 @@ export class Utility {
     }
 
     public static async getNoneEdgeDeviceIdList(iotHubConnectionString: string): Promise<string[]> {
-        const noneEdgeDevices = await this.getDeviceAsTwinList(iotHubConnectionString, false);
+        const noneEdgeDevices = await this.queryDeviceTwins(iotHubConnectionString, false);
         const deviceIdList = [];
         for (const noneEdgeDevice of noneEdgeDevices) {
             deviceIdList.push(noneEdgeDevice.deviceId);
@@ -413,7 +413,7 @@ export class Utility {
     }
 
     private static async getEdgeDeviceIdSet(iotHubConnectionString: string): Promise<Set<string>> {
-        const edgeDevices = await Utility.getDeviceAsTwinList(iotHubConnectionString, true);
+        const edgeDevices = await Utility.queryDeviceTwins(iotHubConnectionString, true);
         const set = new Set<string>();
         for (const edgeDevice of edgeDevices) {
             set.add(edgeDevice.deviceId);
@@ -421,7 +421,7 @@ export class Utility {
         return set;
     }
 
-    private static async getDeviceAsTwinList(iotHubConnectionString: string, isEdge: boolean): Promise<Twin[]> {
+    private static async queryDeviceTwins(iotHubConnectionString: string, isEdge: boolean): Promise<Twin[]> {
         const registry: Registry = Registry.fromConnectionString(iotHubConnectionString);
         const query = registry.createQuery("SELECT * FROM DEVICES where capabilities.iotEdge=" + isEdge);
         return ((await query.nextAsTwin(null)) as ResultWithIncomingMessage<Twin[]>).result;
