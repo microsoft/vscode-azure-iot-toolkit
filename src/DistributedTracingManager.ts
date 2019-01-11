@@ -187,7 +187,7 @@ export class DistributedTracingManager extends BaseExplorer {
                             if (e) {
                                 reject("Could not monitor distributed tracing setting update job: " + e.message);
                             } else {
-                                resolve("Detailed information are shown as below:\n" + JSON.stringify(result, null, 2));
+                                resolve("\nDetailed information are shown as below:\n" + JSON.stringify(result, null, 2));
                             }
                         });
                     }

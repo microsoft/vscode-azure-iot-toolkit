@@ -23,6 +23,8 @@ enum TemplateType {
     MonitorD2C = "Monitor device-to-cloud message",
     DeviceManageDeviceTwin = "Device - Manage device twin",
     ServiceManageDeviceTwin = "Service - Manage device twin",
+    ListenForDirectMethod = "Listen for direct method",
+    CallDirectMethod = "Call direct method",
 }
 
 export enum DeviceTwinPropertyType {
@@ -102,14 +104,11 @@ export class Constants {
     public static IoTHubAIUpdateDistributedSettingStartEvent = "AZ.DistributedTracing.Update.Start";
     public static IoTHubAIUpdateDistributedSettingDoneEvent = "AZ.DistributedTracing.Update.Done";
     public static IoTHubAILoadDistributedTracingSettingStartEvent = "AZ.LoadDistributedTracingSetting.Start";
-    public static IoTHubAILoadDistributedTracingSettingDoneEvent = "AZ.LoadDistributedTracingSetting.Done";
-
-    public static IoTHubAIStartLoadDeviceTreeEvent = "General.StartLoadDeviceTree";
+    public static IoTHubAILoadDistributedTracingSettingDoneEvent = "AZ.LoadDistributedTracingSetting.Done";    public static IoTHubAIStartLoadDeviceTreeEvent = "General.StartLoadDeviceTree";
     public static IoTHubAIShowWelcomePagetEvent = "General.WelcomePage.Show";
 
-    public static readonly DISTRIBUTED_TWIN_NAME: string = "azureiot*com^dtracing^1*0*0";
-
-    public static ConnectionStringFormat = {
+    public static DeleteLabel = "Delete";
+    public static DeleteMessage = "Are you sure you want to delete";    public static readonly DISTRIBUTED_TWIN_NAME: string = "azureiot*com^dtracing^1*0*0";    public static ConnectionStringFormat = {
         [Constants.IotHubConnectionStringKey]: "HostName=<my-hostname>;SharedAccessKeyName=<my-policy>;SharedAccessKey=<my-policy-key>",
         [Constants.DeviceConnectionStringKey]: "HostName=<my-hostname>;DeviceId=<known-device-id>;SharedAccessKey=<known-device-key>",
     };
@@ -144,6 +143,8 @@ export class Constants {
             [TemplateType.MonitorD2C]: "node/monitorD2C.js",
             [TemplateType.DeviceManageDeviceTwin]: "node/deviceManageDeviceTwin.js",
             [TemplateType.ServiceManageDeviceTwin]: "node/serviceManageDeviceTwin.js",
+            [TemplateType.ListenForDirectMethod]: "node/listenForDirectMethod.js",
+            [TemplateType.CallDirectMethod]: "node/callDirectMethod.js",
         },
         [TemplateLanguage.PHP]: {
             [TemplateType.SendD2C]: "php/sendD2C.php",

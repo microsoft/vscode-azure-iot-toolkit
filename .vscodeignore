@@ -14,3 +14,6 @@ appveyor.yml
 CONTRIBUTING.md
 package-lock.json
 tslint.json
+out/**
+webpack.config.js
+node_modules

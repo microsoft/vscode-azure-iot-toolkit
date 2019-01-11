@@ -424,7 +424,7 @@ export class Utility {
     private static async queryDeviceTwins(iotHubConnectionString: string, isEdge: boolean): Promise<Twin[]> {
         const registry: Registry = Registry.fromConnectionString(iotHubConnectionString);
         const query = registry.createQuery("SELECT * FROM DEVICES where capabilities.iotEdge=" + isEdge);
-        return ((await query.nextAsTwin(null)) as ResultWithIncomingMessage<Twin[]>).result;
+        return ((await query.nextAsTwin()) as ResultWithIncomingMessage<Twin[]>).result;
     }
 
     private static showIoTHubInformationMessage(): void {

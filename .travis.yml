@@ -13,6 +13,7 @@ install:
 - npm install -g vsce
 script:
 - npm run tslint
+- npm run compile
 - node scripts/genAiKey.js
 - echo "y" | vsce package
 - npm test --silent
