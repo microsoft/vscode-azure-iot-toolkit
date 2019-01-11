@@ -293,9 +293,7 @@ export class Utility {
     }
 
     public static async getNoneEdgeDeviceIdList(iotHubConnectionString: string): Promise<string[]> {
-        const registry: Registry = Registry.fromConnectionString(iotHubConnectionString);
-        const query = registry.createQuery("SELECT * FROM DEVICES where capabilities.iotEdge=false");
-        const noneEdgeDevices = ((await query.nextAsTwin(null)) as ResultWithIncomingMessage<Twin[]>).result;
+        const noneEdgeDevices = await this.getDeviceAsTwinList(iotHubConnectionString, false);
         const deviceIdList = [];
         for (const noneEdgeDevice of noneEdgeDevices) {
             deviceIdList.push(noneEdgeDevice.deviceId);
@@ -340,7 +338,7 @@ export class Utility {
             return undefined;
         }
 
-        return twin.properties.reported[Constants.DISTRIBUTED_TWIN_NAME].sampling_mode !== 0;
+        return twin.properties.reported[Constants.DISTRIBUTED_TWIN_NAME].sampling_mode > 1;
     }
 
     public static parseReportedSamplingRate(twin: any): number {
@@ -352,7 +350,7 @@ export class Utility {
             return undefined;
         }
 
-        return twin.properties.desired[Constants.DISTRIBUTED_TWIN_NAME].sampling_mode !== 0;
+        return twin.properties.desired[Constants.DISTRIBUTED_TWIN_NAME].sampling_mode > 1;
     }
 
     public static parseDesiredSamplingRate(twin: any): number {
@@ -415,7 +413,7 @@ export class Utility {
     }
 
     private static async getEdgeDeviceIdSet(iotHubConnectionString: string): Promise<Set<string>> {
-        const edgeDevices = await Utility.getEdgeDeviceList(iotHubConnectionString);
+        const edgeDevices = await Utility.getDeviceAsTwinList(iotHubConnectionString, true);
         const set = new Set<string>();
         for (const edgeDevice of edgeDevices) {
             set.add(edgeDevice.deviceId);
@@ -423,9 +421,9 @@ export class Utility {
         return set;
     }
 
-    private static async getEdgeDeviceList(iotHubConnectionString: string): Promise<Twin[]> {
+    private static async getDeviceAsTwinList(iotHubConnectionString: string, isEdge: boolean): Promise<Twin[]> {
         const registry: Registry = Registry.fromConnectionString(iotHubConnectionString);
-        const query = registry.createQuery("SELECT * FROM DEVICES where capabilities.iotEdge=true");
+        const query = registry.createQuery("SELECT * FROM DEVICES where capabilities.iotEdge=" + isEdge);
         return ((await query.nextAsTwin(null)) as ResultWithIncomingMessage<Twin[]>).result;
     }
 

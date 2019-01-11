@@ -378,7 +378,7 @@
         },
         {
           "command": "azure-iot-toolkit.createModule",
-          "when": "view == iotHubDevices && viewItem == device",
+          "when": "view == iotHubDevices && viewItem == modules-label",
           "group": "azure-iot-toolkit@10"
         },
         {

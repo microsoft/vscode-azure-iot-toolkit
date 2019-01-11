@@ -31,22 +31,21 @@ export class TwinNode implements INode {
 
         try {
             let twin = await Utility.getTwin(registry, this.deviceNode.deviceId);
-
+            let samplingRate = null;
+            let enabled = null;
             if (this.twinItem.type === DeviceTwinPropertyType.Desired) {
-                let samplingRate = null;
-                let enabled = null;
                 if (twin.properties.desired[Constants.DISTRIBUTED_TWIN_NAME]) {
                     samplingRate = Utility.parseDesiredSamplingRate(twin);
                     enabled = Utility.parseDesiredSamplingMode(twin);
-                }
 
-                items.push(new DistributedTracingSettingNode(this.DISTRIBUTED_TRACING_ENABLED_PROPERTY + (enabled ? "Enabled" : "Disabled"), this, "desired-mode-property", this.deviceNode));
-                items.push(new DistributedTracingSettingNode(this.DISTRIBUTED_TRACING_SAMPLING_RATE +
-                    (samplingRate ? samplingRate + "(%)" : "Not Set"), this, "desired-sampling-rate-property", this.deviceNode));
-                return items;
+                    items.push(new DistributedTracingSettingNode(this.DISTRIBUTED_TRACING_ENABLED_PROPERTY + (enabled ? "Enabled" : "Disabled"), this, "desired-mode-property", this.deviceNode));
+                    items.push(new DistributedTracingSettingNode(this.DISTRIBUTED_TRACING_SAMPLING_RATE +
+                        (samplingRate !== undefined ? samplingRate + "(%)" : "Not Set"), this, "desired-sampling-rate-property", this.deviceNode));
+                } else {
+                    items.push(new DistributedTracingSettingNode(this.DISTRIBUTED_TRACING_ENABLED_PROPERTY + "Disabled", this, "desired-mode-property", this.deviceNode));
+                    items.push(new DistributedTracingSettingNode(this.DISTRIBUTED_TRACING_SAMPLING_RATE + "Not Set", this, "desired-sampling-rate-property", this.deviceNode));
+                }
             } else if (this.twinItem.type === DeviceTwinPropertyType.Reported) {
-                let samplingRate = null;
-                let enabled = null;
                 if (twin.properties.reported[Constants.DISTRIBUTED_TWIN_NAME]) {
                     samplingRate = Utility.parseReportedSamplingRate(twin);
                     enabled = Utility.parseReportedSamplingMode(twin);
@@ -54,7 +53,6 @@ export class TwinNode implements INode {
                     items.push(new DistributedTracingSettingNode(this.DISTRIBUTED_TRACING_ENABLED_PROPERTY + (enabled ? "Enabled" : "Disabled"), this, "reported-mode-property", this.deviceNode));
                     items.push(new DistributedTracingSettingNode(this.DISTRIBUTED_TRACING_SAMPLING_RATE + (samplingRate ? samplingRate + "(%)" : "Not Set"),
                         this, "reported-sampling-rate-property", this.deviceNode));
-                    return items;
                 } else {
                     items.push(new DistributedTracingSettingNode(this.DISTRIBUTED_TRACING_ENABLED_PROPERTY + "Disabled", this, "reported-mode-property", this.deviceNode));
                     items.push(new DistributedTracingSettingNode(this.DISTRIBUTED_TRACING_SAMPLING_RATE + "Not Set", this, "reported-sampling-rate-property", this.deviceNode));

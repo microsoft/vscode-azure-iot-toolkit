@@ -28,7 +28,7 @@ export class DistributedTracingManager extends BaseExplorer {
             updateType = DistributedSettingUpdateType.All;
         }
 
-        let deviceIds: string[];
+        let deviceIds: string[] = [];
         if (!node) {
             const deviceIdList = await Utility.getNoneEdgeDeviceIdList(iotHubConnectionString);
             const deviceItemList = deviceIdList.map((deviceId) => new DeviceItem(deviceId, null, null, null, null));
@@ -36,9 +36,16 @@ export class DistributedTracingManager extends BaseExplorer {
                 deviceItemList,
                 { placeHolder: "Select device...", ignoreFocusOut: true, canPickMany: true },
             );
-            deviceIds = selectedDevices.map((deviceItem) => deviceItem.deviceId);
+
+            if (selectedDevices !== undefined && selectedDevices.length > 0) {
+                deviceIds = selectedDevices.map((deviceItem) => deviceItem.deviceId);
+            }
         } else {
             deviceIds = [node.deviceNode.deviceId];
+        }
+
+        if (deviceIds.length === 0) {
+            return;
         }
 
         this._outputChannel.show();
@@ -90,7 +97,7 @@ export class DistributedTracingManager extends BaseExplorer {
 
         if (updateType !== DistributedSettingUpdateType.OnlyMode) {
             if (mode !== false) {
-                samplingRate = await this.promptForSamplingRate(`Enter sampling rate, within [0, 100]`, samplingRate);
+                samplingRate = await this.promptForSamplingRate(`Enter sampling rate, integer within [0, 100]`, samplingRate);
 
                 if (samplingRate === undefined) {
                     return;
@@ -108,7 +115,7 @@ export class DistributedTracingManager extends BaseExplorer {
                 const result = await this.scheduleTwinUpdate(mode, samplingRate, iotHubConnectionString, deviceIds);
                 TelemetryClient.sendEvent(Constants.IoTHubAIUpdateDistributedSettingDoneEvent, { Result: "Success" }, iotHubConnectionString);
                 this.outputLine(Constants.IoTHubDistributedTracingSettingLabel,
-                    `Update distributed tracing setting for device [${deviceIds.join(",")}] complete! Detailed information are shown as below:\n` + result);
+                    `Update distributed tracing setting for device [${deviceIds.join(",")}] complete!` + result);
             } catch (err) {
                 TelemetryClient.sendEvent(Constants.IoTHubAIUpdateDistributedSettingDoneEvent, { Result: "Fail", Message: err.message }, iotHubConnectionString);
                 this.outputLine(Constants.IoTHubDistributedTracingSettingLabel, `Failed to get or update distributed setting: ${err.message}`);
@@ -134,11 +141,25 @@ export class DistributedTracingManager extends BaseExplorer {
         }
 
         if (enable !== undefined) {
-            twinPatch.properties.desired[Constants.DISTRIBUTED_TWIN_NAME].sampling_mode = enable ? 1 : 0;
+            twinPatch.properties.desired[Constants.DISTRIBUTED_TWIN_NAME].sampling_mode = enable ? 2 : 1;
         }
 
         if (samplingRate !== undefined) {
             twinPatch.properties.desired[Constants.DISTRIBUTED_TWIN_NAME].sampling_rate = samplingRate;
+        }
+
+        if (deviceIds.length === 1) {
+            return new Promise((resolve, reject) => {
+                let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
+
+                registry.updateTwin(deviceIds[0], JSON.stringify(twinPatch), twinPatch.etag, (err) => {
+                    if (err) {
+                        return reject(err.message);
+                    } else {
+                        return resolve("");
+                    }
+                });
+            });
         }
 
         return await this.updateDeviceTwinJob(twinPatch, iotHubConnectionString, deviceIds);
@@ -166,7 +187,7 @@ export class DistributedTracingManager extends BaseExplorer {
                             if (e) {
                                 reject("Could not monitor distributed tracing setting update job: " + e.message);
                             } else {
-                                resolve(JSON.stringify(result, null, 2));
+                                resolve("Detailed information are shown as below:\n" + JSON.stringify(result, null, 2));
                             }
                         });
                     }
@@ -202,19 +223,26 @@ export class DistributedTracingManager extends BaseExplorer {
         if (defaultValue === undefined || defaultValue > 100 || defaultValue < 0) {
             defaultValue = 100;
         }
-        let samplingRate: string = await vscode.window.showInputBox({ prompt, value: defaultValue.toString(), ignoreFocusOut: true });
+
+        let samplingRate: string = await vscode.window.showInputBox({ prompt, value: defaultValue.toString(), ignoreFocusOut: true, validateInput: (value): string => {
+            if (value !== undefined) {
+                value = value.trim();
+                if (!value) {
+                    return "Sampling rate cannot be empty";
+                }
+                const floatValue: number = parseFloat(value);
+                if (!Number.isInteger(floatValue) || floatValue < 0 || floatValue > 100) {
+                    return "Sampling rate should be a positive integer within [0, 100]";
+                }
+                return undefined;
+            } else {
+                return "Sampling rate cannot be empty";
+            }
+        }});
+
         if (samplingRate !== undefined) {
             samplingRate = samplingRate.trim();
-            if (!samplingRate) {
-                vscode.window.showErrorMessage("Sampling rate cannot be empty");
-                return undefined;
-            }
-
             const floatValue: number = parseFloat(samplingRate);
-            if (!Number.isInteger(floatValue) || floatValue < 0 || floatValue > 100) {
-                vscode.window.showErrorMessage("Sampling rate should be a positive integer within [0, 100]");
-                return undefined;
-            }
             return floatValue;
         }
 
