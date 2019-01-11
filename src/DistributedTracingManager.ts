@@ -232,7 +232,7 @@ export class DistributedTracingManager extends BaseExplorer {
                 }
                 const floatValue: number = parseFloat(value);
                 if (!Number.isInteger(floatValue) || floatValue < 0 || floatValue > 100) {
-                    return "Sampling rate should be a positive integer within [0, 100]";
+                    return "Sampling rate should be an integer within [0, 100]";
                 }
                 return undefined;
             } else {
