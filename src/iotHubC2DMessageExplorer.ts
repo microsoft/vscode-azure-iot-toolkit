@@ -7,17 +7,17 @@ import { Client, ConnectionString } from "azure-iot-device";
 import { clientFromConnectionString } from "azure-iot-device-mqtt";
 import { Client as ServiceClient } from "azure-iothub";
 import * as vscode from "vscode";
-import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
+import { IoTHubMessageBaseExplorer } from "./iotHubMessageBaseExplorer";
 import { DeviceItem } from "./Model/DeviceItem";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
-export class IotHubC2DMessageExplorer extends BaseExplorer {
+export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
     private _deviceClient: Client;
 
     constructor(outputChannel: vscode.OutputChannel) {
-        super(outputChannel);
+        super(outputChannel, "$(primitive-square) Stop Monitoring C2D Message", "azure-iot-toolkit.stopMonitorC2DMessage");
     }
 
     public async sendC2DMessage(deviceItem?: DeviceItem) {
@@ -34,7 +34,7 @@ export class IotHubC2DMessageExplorer extends BaseExplorer {
     }
 
     public async startMonitorC2DMessage(deviceItem?: DeviceItem) {
-        if (this._deviceClient) {
+        if (this._isMonitoring) {
             this._outputChannel.show();
             this.outputLine(Constants.IoTHubC2DMessageMonitorLabel, "There is a running job to monitor C2D message. Please stop it first.");
             return;
@@ -51,13 +51,14 @@ export class IotHubC2DMessageExplorer extends BaseExplorer {
         this._deviceClient.open(this.connectCallback(deviceConnectionString));
     }
 
-    public stopMonitorC2DMessage(): void {
+    public stopMonitorC2DMessage() {
         TelemetryClient.sendEvent(Constants.IoTHubAIStopMonitorC2DEvent);
         this._outputChannel.show();
-        if (this._deviceClient) {
+        if (this._isMonitoring) {
             this.outputLine(Constants.IoTHubC2DMessageMonitorLabel, "C2D monitoring stopped.");
-            this._deviceClient.close(() => { return; });
-            this._deviceClient = null;
+            this._monitorStatusBarItem.hide();
+            this._deviceClient.close(() => { this.updateMonitorStatus(false); });
+            ;
         } else {
             this.outputLine(Constants.IoTHubC2DMessageMonitorLabel, "No C2D monitor job running.");
         }
@@ -87,6 +88,7 @@ export class IotHubC2DMessageExplorer extends BaseExplorer {
                 this.outputLine(Constants.IoTHubC2DMessageMonitorLabel, err);
                 TelemetryClient.sendEvent(Constants.IoTHubAIStartMonitorC2DEvent, { Result: "Exception", Message: err });
             } else {
+                this.updateMonitorStatus(true);
                 let deviceId = ConnectionString.parse(deviceConnectionString).DeviceId;
                 this.outputLine(Constants.IoTHubC2DMessageMonitorLabel, `Start monitoring C2D message for [${deviceId}]...`);
                 TelemetryClient.sendEvent(Constants.IoTHubAIStartMonitorC2DEvent);
