@@ -103,12 +103,18 @@ export class Constants {
     public static IoTHubAIDGetModuleDoneEvent = "AZ.Module.Get.Done";
     public static IoTHubAIUpdateDistributedSettingStartEvent = "AZ.DistributedTracing.Update.Start";
     public static IoTHubAIUpdateDistributedSettingDoneEvent = "AZ.DistributedTracing.Update.Done";
-    public static IoTHubAILoadDistributedTracingSettingStartEvent = "AZ.LoadDistributedTracingSetting.Start";
-    public static IoTHubAILoadDistributedTracingSettingDoneEvent = "AZ.LoadDistributedTracingSetting.Done";    public static IoTHubAIStartLoadDeviceTreeEvent = "General.StartLoadDeviceTree";
+    public static IoTHubAILoadDistributedTracingSettingTreeStartEvent = "AZ.LoadDistributedTracingSettingTree.Start";
+    public static IoTHubAILoadDistributedTracingSettingTreeDoneEvent = "AZ.LoadDistributedTracingSettingTree.Done";
+    public static IoTHubAIStartLoadDeviceTreeEvent = "General.StartLoadDeviceTree";
     public static IoTHubAIShowWelcomePagetEvent = "General.WelcomePage.Show";
+    public static PercentageLabel = "(%)";
+    public static NotSetLabel = "Not Set";
+    public static DisabledLabel = "Disabled";
+    public static EnabledLabel = "Enabled";
 
     public static DeleteLabel = "Delete";
-    public static DeleteMessage = "Are you sure you want to delete";    public static readonly DISTRIBUTED_TWIN_NAME: string = "azureiot*com^dtracing^1*0*0";    public static ConnectionStringFormat = {
+    public static DeleteMessage = "Are you sure you want to delete";    public static readonly DISTRIBUTED_TWIN_NAME: string = "azureiot*com^dtracing^1*0*0";
+    public static ConnectionStringFormat = {
         [Constants.IotHubConnectionStringKey]: "HostName=<my-hostname>;SharedAccessKeyName=<my-policy>;SharedAccessKey=<my-policy-key>",
         [Constants.DeviceConnectionStringKey]: "HostName=<my-hostname>;DeviceId=<known-device-id>;SharedAccessKey=<known-device-key>",
     };

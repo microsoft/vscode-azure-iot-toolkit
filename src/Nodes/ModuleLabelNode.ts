@@ -13,7 +13,7 @@ import { ModuleItemNode } from "./ModuleItemNode";
 export class ModuleLabelNode implements INode {
     private readonly label: string;
 
-    constructor(private deviceNode: DeviceNode) {
+    constructor(public deviceNode: DeviceNode) {
         this.label = "Modules";
     }
 
@@ -34,7 +34,7 @@ export class ModuleLabelNode implements INode {
 
                 let moduleNodeList: INode[] = [];
                 moduleList.forEach((item) => {
-                    moduleNodeList.push(new ModuleItemNode(item as ModuleItem));
+                    moduleNodeList.push(new ModuleItemNode(item as ModuleItem, this));
                 });
                 return moduleNodeList;
             } catch (err) {
@@ -52,7 +52,7 @@ export class ModuleLabelNode implements INode {
 
                 let moduleNodeList: INode[] = [];
                 moduleList.forEach((item) => {
-                    moduleNodeList.push(new ModuleItemNode(item as ModuleItem));
+                    moduleNodeList.push(new ModuleItemNode(item as ModuleItem, this));
                 });
                 return moduleNodeList;
             } catch (err) {

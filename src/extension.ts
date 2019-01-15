@@ -9,6 +9,7 @@ import { DeviceTree } from "./deviceTree";
 import { Executor } from "./executor";
 import { DeviceNode } from "./Nodes/DeviceNode";
 import { ModuleItemNode } from "./Nodes/ModuleItemNode";
+import { ModuleLabelNode } from "./Nodes/ModuleLabelNode";
 import { DeviceTwinCodeLensProvider } from "./providers/deviceTwinCodeLensProvider";
 import { ModuleTwinCodeLensProvider } from "./providers/moduleTwinCodeLensProvider";
 import { TelemetryClient } from "./telemetryClient";
@@ -87,8 +88,8 @@ export function activate(context: vscode.ExtensionContext) {
         azureIoTExplorer.getDeviceTwin(deviceNode.deviceItem);
     });
 
-    let updateDistributedTracingSetting = vscode.commands.registerCommand("azure-iot-toolkit.updateDistributedTracingSetting", (node, updateType?: DistributedSettingUpdateType) => {
-        azureIoTExplorer.updateDistributedTracingSetting(node, updateType);
+    let updateDistributedTracingSetting = vscode.commands.registerCommand("azure-iot-toolkit.updateDistributedTracingSetting", (node) => {
+        azureIoTExplorer.updateDistributedTracingSetting(node);
     });
 
     let editDistributedTracingMode = vscode.commands.registerCommand("azure-iot-toolkit.editDistributedTracingMode", (node) => {
@@ -156,12 +157,12 @@ export function activate(context: vscode.ExtensionContext) {
         azureIoTExplorer.generateCode(deviceNode.deviceItem);
     }));
 
-    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.createModule", (deviceNode: DeviceNode) => {
-        azureIoTExplorer.createModule(deviceNode.deviceItem);
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.createModule", (moduleLabelNode: ModuleLabelNode) => {
+        azureIoTExplorer.createModule(moduleLabelNode.deviceNode);
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.deleteModule", (moduleItemNode: ModuleItemNode) => {
-        azureIoTExplorer.deleteModule(moduleItemNode.moduleItem);
+        azureIoTExplorer.deleteModule(moduleItemNode);
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.getModule", (moduleItemNode: ModuleItemNode) => {

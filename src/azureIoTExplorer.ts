@@ -3,10 +3,10 @@
 
 "use strict";
 import * as vscode from "vscode";
-
 import { CodeManager } from "./codeManager";
 import { DistributedSettingUpdateType } from "./constants";
 import { DeviceExplorer } from "./deviceExplorer";
+import { DistributedTracingManager } from "./DistributedTracingManager";
 import { IoTEdgeExplorer } from "./iotEdgeExplorer";
 import { IotHubC2DMessageExplorer } from "./iotHubC2DMessageExplorer";
 import { IotHubDeviceTwinExplorer } from "./iotHubDeviceTwinExplorer";
@@ -14,12 +14,12 @@ import { IotHubDirectMethodExplorer } from "./iotHubDirectMethodExplorer";
 import { IoTHubMessageExplorer } from "./iotHubMessageExplorer";
 import { IotHubModuleExplorer } from "./iotHubModuleExplorer";
 import { IoTHubResourceExplorer } from "./iotHubResourceExplorer";
-import { SnippetManager } from "./snippetManager";
-import { WelcomePage } from "./welcomePage";
-
-import { DistributedTracingManager } from "./DistributedTracingManager";
 import { DeviceItem } from "./Model/DeviceItem";
 import { ModuleItem } from "./Model/ModuleItem";
+import { DeviceNode } from "./Nodes/DeviceNode";
+import { ModuleItemNode } from "./Nodes/ModuleItemNode";
+import { SnippetManager } from "./snippetManager";
+import { WelcomePage } from "./welcomePage";
 
 export class AzureIoTExplorer {
     private _iotHubC2DMessageExplorer: IotHubC2DMessageExplorer;
@@ -91,7 +91,7 @@ export class AzureIoTExplorer {
         return this._deviceExplorer.deleteDevice(deviceItem);
     }
 
-    public updateDistributedTracingSetting(node, updateType?: DistributedSettingUpdateType): void {
+    public updateDistributedTracingSetting(node, updateType: DistributedSettingUpdateType = DistributedSettingUpdateType.All): void {
         this._distributedTracingManager.updateDistributedTracingSetting(node, updateType);
     }
 
@@ -167,12 +167,12 @@ export class AzureIoTExplorer {
         this._codeManager.generateCode(deviceItem);
     }
 
-    public createModule(deviceItem: DeviceItem): void {
-        this._iotHubModuleExplorer.createModule(deviceItem);
+    public createModule(deviceNode: DeviceNode): void {
+        this._iotHubModuleExplorer.createModule(deviceNode);
     }
 
-    public deleteModule(moduleItem: ModuleItem): void {
-        this._iotHubModuleExplorer.deleteModule(moduleItem);
+    public deleteModule(moduleItemNode: ModuleItemNode): void {
+        this._iotHubModuleExplorer.deleteModule(moduleItemNode);
     }
 
     public getModule(moduleItem: ModuleItem): void {

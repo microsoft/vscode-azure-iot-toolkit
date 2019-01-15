@@ -1,44 +1,39 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+import * as iothub from "azure-iothub";
+import * as uuid from "uuid";
 import * as vscode from "vscode";
 import { BaseExplorer } from "./baseExplorer";
 import { Constants, DistributedSettingUpdateType } from "./constants";
-import { TelemetryClient } from "./telemetryClient";
-import { Utility } from "./utility";
-import iothub = require("azure-iothub");
-import uuid = require("uuid");
-import { DeviceItem } from "./Model/DeviceItem";
 import { SamplingModeItem } from "./Model/SamplingModeItem";
 import { DistributedTracingLabelNode } from "./Nodes/DistributedTracingLabelNode";
 import { DistributedTracingSettingNode } from "./Nodes/DistributedTracingSettingNode";
+import { TelemetryClient } from "./telemetryClient";
+import { Utility } from "./utility";
 
 export class DistributedTracingManager extends BaseExplorer {
     constructor(outputChannel: vscode.OutputChannel) {
         super(outputChannel);
     }
 
-    public async updateDistributedTracingSetting(node, updateType?: DistributedSettingUpdateType) {
+    public async updateDistributedTracingSetting(node, updateType: DistributedSettingUpdateType) {
         let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
             return;
         }
 
-        if (!updateType) {
-            updateType = DistributedSettingUpdateType.All;
-        }
+        TelemetryClient.sendEvent(Constants.IoTHubAIUpdateDistributedSettingStartEvent);
 
         let deviceIds: string[] = [];
         if (!node) {
-            const deviceIdList = await Utility.getNoneEdgeDeviceIdList(iotHubConnectionString);
-            const deviceItemList = deviceIdList.map((deviceId) => new DeviceItem(deviceId, null, null, null, null));
-            let selectedDevices: DeviceItem[] = await vscode.window.showQuickPick(
-                deviceItemList,
-                { placeHolder: "Select device...", ignoreFocusOut: true, canPickMany: true },
+            let selectedDeviceId: string[] = await vscode.window.showQuickPick(
+                Utility.getNoneEdgeDeviceIdList(iotHubConnectionString),
+                { placeHolder: "Select devices...", ignoreFocusOut: true, canPickMany: true },
             );
 
-            if (selectedDevices !== undefined && selectedDevices.length > 0) {
-                deviceIds = selectedDevices.map((deviceItem) => deviceItem.deviceId);
+            if (selectedDeviceId !== undefined && selectedDeviceId.length > 0) {
+                deviceIds = selectedDeviceId;
             }
         } else {
             deviceIds = [node.deviceNode.deviceId];
@@ -68,20 +63,25 @@ export class DistributedTracingManager extends BaseExplorer {
         let twin;
 
         if (deviceIds.length === 1) {
-            twin = await Utility.getTwin(registry, deviceIds[0]);
+            await vscode.window.withProgress({
+                title: `Get Current Distributed Tracing Setting`,
+                location: vscode.ProgressLocation.Notification,
+            }, async () => {
+                twin = await Utility.getTwin(registry, deviceIds[0]);
 
-            if (twin.properties.desired[Constants.DISTRIBUTED_TWIN_NAME]) {
-                mode = Utility.parseDesiredSamplingMode(twin);
-                samplingRate = Utility.parseDesiredSamplingRate(twin);
-            }
+                if (twin.properties.desired[Constants.DISTRIBUTED_TWIN_NAME]) {
+                    mode = Utility.parseDesiredSamplingMode(twin);
+                    samplingRate = Utility.parseDesiredSamplingRate(twin);
+                }
 
-            if (updateType === DistributedSettingUpdateType.OnlySamplingRate) {
-                mode = undefined;
-            }
+                if (updateType === DistributedSettingUpdateType.OnlySamplingRate) {
+                    mode = undefined;
+                }
 
-            if (updateType === DistributedSettingUpdateType.OnlyMode) {
-                samplingRate = undefined;
-            }
+                if (updateType === DistributedSettingUpdateType.OnlyMode) {
+                    samplingRate = undefined;
+                }
+            });
         }
 
         if (updateType !== DistributedSettingUpdateType.OnlySamplingRate) {
@@ -105,26 +105,29 @@ export class DistributedTracingManager extends BaseExplorer {
             }
         }
 
-        TelemetryClient.sendEvent(Constants.IoTHubAIUpdateDistributedSettingStartEvent);
-
         await vscode.window.withProgress({
             title: `Update Distributed Tracing Setting`,
             location: vscode.ProgressLocation.Notification,
         }, async () => {
             try {
-                const result = await this.scheduleTwinUpdate(mode, samplingRate, iotHubConnectionString, deviceIds);
-                TelemetryClient.sendEvent(Constants.IoTHubAIUpdateDistributedSettingDoneEvent, { Result: "Success" }, iotHubConnectionString);
+                const result = await this.updateDeviceTwin(mode, samplingRate, iotHubConnectionString, deviceIds);
+                TelemetryClient.sendEvent(Constants.IoTHubAIUpdateDistributedSettingDoneEvent,
+                    { Result: "Success", UpdateType: updateType.toString(), DeviceCound: deviceIds.length.toString(),
+                    SamplingRate: samplingRate ? samplingRate.toString() : "" , SamplingMode: mode ? mode.toString() : "" }, iotHubConnectionString);
+
                 this.outputLine(Constants.IoTHubDistributedTracingSettingLabel,
                     `Update distributed tracing setting for device [${deviceIds.join(",")}] complete!` + result);
             } catch (err) {
-                TelemetryClient.sendEvent(Constants.IoTHubAIUpdateDistributedSettingDoneEvent, { Result: "Fail", Message: err.message }, iotHubConnectionString);
+                TelemetryClient.sendEvent(Constants.IoTHubAIUpdateDistributedSettingDoneEvent,
+                    { Result: "Fail", UpdateType: updateType.toString(), DeviceCound: deviceIds.length.toString(),
+                    SamplingRate: samplingRate ? "" : samplingRate.toString(), SamplingMode: mode ? "" : mode.toString() }, iotHubConnectionString);
                 this.outputLine(Constants.IoTHubDistributedTracingSettingLabel, `Failed to get or update distributed setting: ${err.message}`);
                 return;
             }
         });
     }
 
-    private async scheduleTwinUpdate(enable: boolean, samplingRate: number, iotHubConnectionString: string, deviceIds: string[]) {
+    private async updateDeviceTwin(enable: boolean, samplingRate: number, iotHubConnectionString: string, deviceIds: string[]) {
         let twinPatch = {
             etag: "*",
             properties: {
@@ -149,24 +152,21 @@ export class DistributedTracingManager extends BaseExplorer {
         }
 
         if (deviceIds.length === 1) {
-            return new Promise((resolve, reject) => {
+            try {
                 let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
-
-                registry.updateTwin(deviceIds[0], JSON.stringify(twinPatch), twinPatch.etag, (err) => {
-                    if (err) {
-                        return reject(err.message);
-                    } else {
-                        return resolve("");
-                    }
-                });
-            });
+                await  registry.updateTwin(deviceIds[0], JSON.stringify(twinPatch), twinPatch.etag);
+                return "";
+            } catch (err) {
+                return err.message;
+            }
         }
 
-        return await this.updateDeviceTwinJob(twinPatch, iotHubConnectionString, deviceIds);
+        const result = this.scheduleTwinUpdate(twinPatch, iotHubConnectionString, deviceIds);
+        return result;
     }
 
-    private updateDeviceTwinJob(twinPatch, iotHubConnectionString: string, deviceIds: string[]) {
-        return new Promise((resolve, reject) => {
+    private scheduleTwinUpdate(twinPatch, iotHubConnectionString: string, deviceIds: string[]) {
+        return new Promise(async (resolve, reject) => {
             let twinJobId = uuid.v4();
             let jobClient = iothub.JobClient.fromConnectionString(iotHubConnectionString);
 
@@ -174,24 +174,13 @@ export class DistributedTracingManager extends BaseExplorer {
             let startTime = new Date();
             let maxExecutionTimeInSeconds = 300;
 
-            jobClient.scheduleTwinUpdate(twinJobId,
-                queryCondition,
-                twinPatch,
-                startTime,
-                maxExecutionTimeInSeconds,
-                (err) => {
-                    if (err) {
-                        reject("Could not schedule distributed tracing setting update job: " + err.message);
-                    } else {
-                        this.monitorJob(twinJobId, jobClient, (e, result) => {
-                            if (e) {
-                                reject("Could not monitor distributed tracing setting update job: " + e.message);
-                            } else {
-                                resolve("\nDetailed information are shown as below:\n" + JSON.stringify(result, null, 2));
-                            }
-                        });
-                    }
-                });
+            try {
+                await jobClient.scheduleTwinUpdate(twinJobId, queryCondition, twinPatch, startTime, maxExecutionTimeInSeconds);
+                const result = await this.monitorJob(twinJobId, jobClient);
+                resolve("\nDetailed information are shown as below:\n" + JSON.stringify(result, null, 2));
+            } catch (err) {
+                reject("Could not monitor distributed tracing setting update job: " + err);
+            }
         });
     }
 
@@ -200,19 +189,20 @@ export class DistributedTracingManager extends BaseExplorer {
         return `deviceId IN [${deviceIdsWithQuotes.join(",")}]`;
     }
 
-    private monitorJob(jobId, jobClient, callback) {
-        let jobMonitorInterval = setInterval(() => {
-            jobClient.getJob(jobId, (err, result) => {
-                if (err) {
-                    callback(err);
-                } else {
-                    if (result.status === "completed" || result.status === "failed" || result.status === "cancelled") {
+    private async monitorJob(jobId, jobClient) {
+        return new Promise(async (resolve, reject) => {
+            let jobMonitorInterval = setInterval(async () => {
+                try {
+                    const result = await jobClient.getJob(jobId);
+                    if (result.jobStatus.status === "completed" || result.jobStatus.status === "failed" || result.jobStatus.status === "cancelled") {
                         clearInterval(jobMonitorInterval);
-                        callback(null, result);
+                        resolve(result.jobStatus);
                     }
+                } catch (err) {
+                    reject(err);
                 }
-            });
-        }, 1000);
+            }, 1000);
+        });
     }
 
     private getSamplingModePickupItems(): SamplingModeItem[] {

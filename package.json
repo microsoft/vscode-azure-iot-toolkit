@@ -318,6 +318,11 @@
           "command": "azure-iot-toolkit.generateSasTokenForIotHub",
           "when": "view == iotHubDevices",
           "group": "azure-iot-toolkit@9"
+        },
+        {
+          "command": "azure-iot-toolkit.updateDistributedTracingSetting",
+          "when": "view == iotHubDevices",
+          "group": "azure-iot-toolkit@10"
         }
       ],
       "view/item/context": [
