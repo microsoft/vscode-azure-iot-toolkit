@@ -334,15 +334,19 @@ export class Utility {
     }
 
     public static parseReportedSamplingMode(twin: any): boolean {
-        if (twin.properties.reported[Constants.DISTRIBUTED_TWIN_NAME].sampling_mode === undefined) {
+        const reportedDistributedTwinObject = twin.properties.reported[Constants.DISTRIBUTED_TWIN_NAME];
+        if (reportedDistributedTwinObject.sampling_mode === undefined || reportedDistributedTwinObject.sampling_mode.value === undefined) {
             return undefined;
         }
-
         return twin.properties.reported[Constants.DISTRIBUTED_TWIN_NAME].sampling_mode > 1;
     }
 
     public static parseReportedSamplingRate(twin: any): number {
-        return twin.properties.reported[Constants.DISTRIBUTED_TWIN_NAME].sampling_rate;
+        const reportedDistributedTwinObject = twin.properties.reported[Constants.DISTRIBUTED_TWIN_NAME];
+        if (reportedDistributedTwinObject.sampling_rate === undefined) {
+            return undefined;
+        }
+        return twin.properties.reported[Constants.DISTRIBUTED_TWIN_NAME].sampling_rate.value;
     }
 
     public static parseDesiredSamplingMode(twin: any): boolean {
