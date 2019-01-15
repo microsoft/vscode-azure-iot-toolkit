@@ -58,7 +58,6 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
             this.outputLine(Constants.IoTHubC2DMessageMonitorLabel, "C2D monitoring stopped.");
             this._monitorStatusBarItem.hide();
             this._deviceClient.close(() => { this.updateMonitorStatus(false); });
-            ;
         } else {
             this.outputLine(Constants.IoTHubC2DMessageMonitorLabel, "No C2D monitor job running.");
         }
