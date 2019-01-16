@@ -27,13 +27,13 @@ export class DistributedTracingManager extends BaseExplorer {
 
         let deviceIds: string[] = [];
         if (!node) {
-            let selectedDeviceId: string[] = await vscode.window.showQuickPick(
+            let selectedDeviceIds: string[] = await vscode.window.showQuickPick(
                 Utility.getNoneEdgeDeviceIdList(iotHubConnectionString),
                 { placeHolder: "Select devices...", ignoreFocusOut: true, canPickMany: true },
             );
 
-            if (selectedDeviceId !== undefined && selectedDeviceId.length > 0) {
-                deviceIds = selectedDeviceId;
+            if (selectedDeviceIds !== undefined && selectedDeviceIds.length > 0) {
+                deviceIds = selectedDeviceIds;
             }
         } else {
             deviceIds = [node.deviceNode.deviceId];
@@ -112,14 +112,14 @@ export class DistributedTracingManager extends BaseExplorer {
             try {
                 const result = await this.updateDeviceTwin(mode, samplingRate, iotHubConnectionString, deviceIds);
                 TelemetryClient.sendEvent(Constants.IoTHubAIUpdateDistributedSettingDoneEvent,
-                    { Result: "Success", UpdateType: updateType.toString(), DeviceCound: deviceIds.length.toString(),
+                    { Result: "Success", UpdateType: updateType.toString(), DeviceCount: deviceIds.length.toString(),
                     SamplingRate: samplingRate ? samplingRate.toString() : "" , SamplingMode: mode ? mode.toString() : "" }, iotHubConnectionString);
 
                 this.outputLine(Constants.IoTHubDistributedTracingSettingLabel,
                     `Update distributed tracing setting for device [${deviceIds.join(",")}] complete!` + result);
             } catch (err) {
                 TelemetryClient.sendEvent(Constants.IoTHubAIUpdateDistributedSettingDoneEvent,
-                    { Result: "Fail", UpdateType: updateType.toString(), DeviceCound: deviceIds.length.toString(),
+                    { Result: "Fail", UpdateType: updateType.toString(), DeviceCount: deviceIds.length.toString(),
                     SamplingRate: samplingRate ? "" : samplingRate.toString(), SamplingMode: mode ? "" : mode.toString() }, iotHubConnectionString);
                 this.outputLine(Constants.IoTHubDistributedTracingSettingLabel, `Failed to get or update distributed setting: ${err.message}`);
                 return;
@@ -144,7 +144,7 @@ export class DistributedTracingManager extends BaseExplorer {
         }
 
         if (enable !== undefined) {
-            twinPatch.properties.desired[Constants.DISTRIBUTED_TWIN_NAME].sampling_mode = enable ? 2 : 1;
+            twinPatch.properties.desired[Constants.DISTRIBUTED_TWIN_NAME].sampling_mode = enable ? 1 : 2;
         }
 
         if (samplingRate !== undefined) {

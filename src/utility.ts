@@ -338,7 +338,7 @@ export class Utility {
         if (reportedDistributedTwinObject.sampling_mode === undefined || reportedDistributedTwinObject.sampling_mode.value === undefined) {
             return undefined;
         }
-        return twin.properties.reported[Constants.DISTRIBUTED_TWIN_NAME].sampling_mode > 1;
+        return twin.properties.reported[Constants.DISTRIBUTED_TWIN_NAME].sampling_mode.value === 1;
     }
 
     public static parseReportedSamplingRate(twin: any): number {
@@ -354,7 +354,7 @@ export class Utility {
             return undefined;
         }
 
-        return twin.properties.desired[Constants.DISTRIBUTED_TWIN_NAME].sampling_mode > 1;
+        return twin.properties.desired[Constants.DISTRIBUTED_TWIN_NAME].sampling_mode === 1;
     }
 
     public static parseDesiredSamplingRate(twin: any): number {
