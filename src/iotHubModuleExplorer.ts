@@ -45,7 +45,7 @@ export class IotHubModuleExplorer extends BaseExplorer {
 
     public async createModule(deviceNode?: DeviceNode) {
         const label = "Module";
-        const deviceItem = await Utility.getInputDevice(deviceNode.deviceItem, Constants.IoTHubAICreateModuleStartEvent);
+        const deviceItem = await Utility.getInputDevice(deviceNode ? deviceNode.deviceItem : undefined, Constants.IoTHubAICreateModuleStartEvent);
         if (!deviceItem) {
             return;
         }

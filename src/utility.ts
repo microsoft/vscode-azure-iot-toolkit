@@ -362,15 +362,8 @@ export class Utility {
     }
 
     public static async getTwin(registry: iothub.Registry, deviceId: string): Promise<any> {
-        return new Promise((resolve, reject) => {
-            registry.getTwin(deviceId, async (err, twin) => {
-                if (err) {
-                    reject(err.message);
-                } else {
-                    resolve(twin);
-                }
-            });
-        });
+        const result = await registry.getTwin(deviceId);
+        return result.responseBody;
     }
 
     private static async getFilteredDeviceList(iotHubConnectionString: string, onlyEdgeDevice: boolean): Promise<DeviceItem[]> {

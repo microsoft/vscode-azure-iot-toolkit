@@ -107,8 +107,13 @@ export class DistributedTracingManager extends BaseExplorer {
                     { Result: "Success", UpdateType: updateType.toString(), DeviceCount: deviceIds.length.toString(),
                     SamplingRate: samplingRate ? samplingRate.toString() : "" , SamplingMode: mode ? mode.toString() : "" }, iotHubConnectionString);
 
+                let resultTip = "";
+                if (result) {
+                    resultTip = "\nDetailed information are shown as below:\n" + JSON.stringify(result, null, 2);
+                }
+
                 this.outputLine(Constants.IoTHubDistributedTracingSettingLabel,
-                    `Update distributed tracing setting for device [${deviceIds.join(",")}] complete!` + (result ? result : ""));
+                    `Update distributed tracing setting for device [${deviceIds.join(",")}] complete!` + resultTip);
 
                 if (node instanceof DistributedTracingLabelNode) {
                     vscode.commands.executeCommand("azure-iot-toolkit.refresh", node);
@@ -122,12 +127,11 @@ export class DistributedTracingManager extends BaseExplorer {
                     { Result: "Fail", UpdateType: updateType.toString(), DeviceCount: deviceIds.length.toString(),
                     SamplingRate: samplingRate ? "" : samplingRate.toString(), SamplingMode: mode ? "" : mode.toString() }, iotHubConnectionString);
                 this.outputLine(Constants.IoTHubDistributedTracingSettingLabel, `Failed to get or update distributed setting: ${err.message}`);
-                return;
             }
         });
     }
 
-    private async updateDeviceTwin(enable: boolean, samplingRate: number, iotHubConnectionString: string, deviceIds: string[]) {
+    private async updateDeviceTwin(enable: boolean, samplingRate: number, iotHubConnectionString: string, deviceIds: string[]): Promise<any>{
         let twinPatch = {
             etag: "*",
             properties: {
@@ -152,36 +156,24 @@ export class DistributedTracingManager extends BaseExplorer {
         }
 
         if (deviceIds.length === 1) {
-            try {
-                let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
-                await  registry.updateTwin(deviceIds[0], JSON.stringify(twinPatch), twinPatch.etag);
-            } catch (err) {
-                return err.message;
-            }
+            let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
+            await registry.updateTwin(deviceIds[0], JSON.stringify(twinPatch), twinPatch.etag);
             return;
         }
 
-        const result = this.scheduleTwinUpdate(twinPatch, iotHubConnectionString, deviceIds);
-        return result;
+        return await this.scheduleTwinUpdate(twinPatch, iotHubConnectionString, deviceIds);
     }
 
-    private scheduleTwinUpdate(twinPatch, iotHubConnectionString: string, deviceIds: string[]) {
-        return new Promise(async (resolve, reject) => {
-            let twinJobId = uuid.v4();
-            let jobClient = iothub.JobClient.fromConnectionString(iotHubConnectionString);
+    private async scheduleTwinUpdate(twinPatch, iotHubConnectionString: string, deviceIds: string[]): Promise<any> {
+        let twinJobId = uuid.v4();
+        let jobClient = iothub.JobClient.fromConnectionString(iotHubConnectionString);
 
-            let queryCondition = this.generateQureyCondition(deviceIds);
-            let startTime = new Date();
-            let maxExecutionTimeInSeconds = 300;
+        let queryCondition = this.generateQureyCondition(deviceIds);
+        let startTime = new Date();
+        let maxExecutionTimeInSeconds = 300;
 
-            try {
-                await jobClient.scheduleTwinUpdate(twinJobId, queryCondition, twinPatch, startTime, maxExecutionTimeInSeconds);
-                const result = await this.monitorJob(twinJobId, jobClient);
-                resolve("\nDetailed information are shown as below:\n" + JSON.stringify(result, null, 2));
-            } catch (err) {
-                reject("Could not monitor distributed tracing setting update job: " + err);
-            }
-        });
+        await jobClient.scheduleTwinUpdate(twinJobId, queryCondition, twinPatch, startTime, maxExecutionTimeInSeconds);
+        return await this.monitorJob(twinJobId, jobClient);
     }
 
     private generateQureyCondition(deviceids: string[]): string {
@@ -189,8 +181,8 @@ export class DistributedTracingManager extends BaseExplorer {
         return `deviceId IN [${deviceIdsWithQuotes.join(",")}]`;
     }
 
-    private async monitorJob(jobId, jobClient) {
-        return new Promise(async (resolve, reject) => {
+    private async monitorJob(jobId, jobClient): Promise<any> {
+        return new Promise<any>(async (resolve, reject) => {
             let jobMonitorInterval = setInterval(async () => {
                 try {
                     const result = await jobClient.getJob(jobId);

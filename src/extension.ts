@@ -37,11 +37,11 @@ export function activate(context: vscode.ExtensionContext) {
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.getDevice", async (deviceNode: DeviceNode) => {
-        return azureIoTExplorer.getDevice(deviceNode.deviceItem);
+        return azureIoTExplorer.getDevice(deviceNode ? deviceNode.deviceItem : undefined);
     }));
 
     let sendD2CMessage = vscode.commands.registerCommand("azure-iot-toolkit.sendD2CMessage", (deviceNode: DeviceNode) => {
-        azureIoTExplorer.sendD2CMessage(deviceNode.deviceItem);
+        azureIoTExplorer.sendD2CMessage(deviceNode ? deviceNode.deviceItem : undefined);
     });
 
     let startMonitorIoTHubMessage = vscode.commands.registerCommand("azure-iot-toolkit.startMonitorIoTHubMessage", (deviceNode: DeviceNode) => {
@@ -53,11 +53,11 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     let sendC2DMessage = vscode.commands.registerCommand("azure-iot-toolkit.sendC2DMessage", (deviceNode: DeviceNode) => {
-        azureIoTExplorer.sendC2DMessage(deviceNode.deviceItem);
+        azureIoTExplorer.sendC2DMessage(deviceNode ? deviceNode.deviceItem : undefined);
     });
 
     let startMonitorC2DMessage = vscode.commands.registerCommand("azure-iot-toolkit.startMonitorC2DMessage", (deviceNode: DeviceNode) => {
-        azureIoTExplorer.startMonitorC2DMessage(deviceNode.deviceItem);
+        azureIoTExplorer.startMonitorC2DMessage(deviceNode ? deviceNode.deviceItem : undefined);
     });
 
     let stopMonitorC2DMessage = vscode.commands.registerCommand("azure-iot-toolkit.stopMonitorC2DMessage", () => {
@@ -73,19 +73,19 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     let deleteDevice = vscode.commands.registerCommand("azure-iot-toolkit.deleteDevice", async (deviceNode: DeviceNode) => {
-        await azureIoTExplorer.deleteDevice(deviceNode.deviceItem);
+        await azureIoTExplorer.deleteDevice(deviceNode ? deviceNode.deviceItem : undefined);
     });
 
     let invokeDeviceMethod = vscode.commands.registerCommand("azure-iot-toolkit.invokeDeviceMethod", (deviceNode: DeviceNode) => {
-        azureIoTExplorer.invokeDeviceDirectMethod(deviceNode.deviceItem);
+        azureIoTExplorer.invokeDeviceDirectMethod(deviceNode ? deviceNode.deviceItem : undefined);
     });
 
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.invokeModuleDirectMethod", (moduleItemNode: ModuleItemNode) => {
-        azureIoTExplorer.invokeModuleDirectMethod(moduleItemNode.moduleItem);
+        azureIoTExplorer.invokeModuleDirectMethod(moduleItemNode ? moduleItemNode.moduleItem : undefined);
     }));
 
     let getDeviceTwin = vscode.commands.registerCommand("azure-iot-toolkit.getDeviceTwin", (deviceNode: DeviceNode) => {
-        azureIoTExplorer.getDeviceTwin(deviceNode.deviceItem);
+        azureIoTExplorer.getDeviceTwin(deviceNode ? deviceNode.deviceItem : undefined);
     });
 
     let updateDistributedTracingSetting = vscode.commands.registerCommand("azure-iot-toolkit.updateDistributedTracingSetting", (node) => {
@@ -117,7 +117,7 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     let copyDeviceConnectionString = vscode.commands.registerCommand("azure-iot-toolkit.copyDeviceConnectionString", (deviceNode: DeviceNode) => {
-        azureIoTExplorer.copyDeviceConnectionString(deviceNode.deviceItem);
+        azureIoTExplorer.copyDeviceConnectionString(deviceNode ? deviceNode.deviceItem : undefined);
     });
 
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.createEdgeDevice", async () => {
@@ -133,7 +133,7 @@ export function activate(context: vscode.ExtensionContext) {
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.getModuleTwin", async (moduleItemNode: ModuleItemNode) => {
-        await azureIoTExplorer.getModuleTwin(moduleItemNode.moduleItem);
+        await azureIoTExplorer.getModuleTwin(moduleItemNode ? moduleItemNode.moduleItem : undefined);
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.updateModuleTwin", async () => {
@@ -145,7 +145,7 @@ export function activate(context: vscode.ExtensionContext) {
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.generateSasTokenForDevice", (deviceNode: DeviceNode) => {
-        azureIoTExplorer.generateSasTokenForDevice(deviceNode.deviceItem);
+        azureIoTExplorer.generateSasTokenForDevice(deviceNode ? deviceNode.deviceItem : undefined);
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.showWelcomePage", () => {
@@ -154,11 +154,11 @@ export function activate(context: vscode.ExtensionContext) {
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.generateCode", (deviceNode: DeviceNode) => {
-        azureIoTExplorer.generateCode(deviceNode.deviceItem);
+        azureIoTExplorer.generateCode(deviceNode ? deviceNode.deviceItem : undefined);
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.createModule", (moduleLabelNode: ModuleLabelNode) => {
-        azureIoTExplorer.createModule(moduleLabelNode.deviceNode);
+        azureIoTExplorer.createModule(moduleLabelNode ? moduleLabelNode.deviceNode : undefined);
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.deleteModule", (moduleItemNode: ModuleItemNode) => {
@@ -166,11 +166,11 @@ export function activate(context: vscode.ExtensionContext) {
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.getModule", (moduleItemNode: ModuleItemNode) => {
-        azureIoTExplorer.getModule(moduleItemNode.moduleItem);
+        azureIoTExplorer.getModule(moduleItemNode ? moduleItemNode.moduleItem : undefined);
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.copyModuleConnectionString", (moduleItemNode: ModuleItemNode) => {
-        azureIoTExplorer.copyModuleConnectionString(moduleItemNode.moduleItem);
+        azureIoTExplorer.copyModuleConnectionString(moduleItemNode ? moduleItemNode.moduleItem : undefined);
     }));
 
     vscode.workspace.onDidChangeTextDocument((event) => azureIoTExplorer.replaceConnectionString(event));
