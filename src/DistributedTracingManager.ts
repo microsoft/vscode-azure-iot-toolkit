@@ -44,18 +44,10 @@ export class DistributedTracingManager extends BaseExplorer {
         }
 
         this._outputChannel.show();
-        await this.updateDistributedTracingSettingForDevices(deviceIds, iotHubConnectionString, updateType);
-
-        if (node instanceof DistributedTracingLabelNode) {
-            vscode.commands.executeCommand("azure-iot-toolkit.refresh", node);
-        } else if (node instanceof DistributedTracingSettingNode) {
-            vscode.commands.executeCommand("azure-iot-toolkit.refresh", node.parent);
-        } else {
-            vscode.commands.executeCommand("azure-iot-toolkit.refresh");
-        }
+        await this.updateDistributedTracingSettingForDevices(deviceIds, iotHubConnectionString, updateType, node);
     }
 
-    public async updateDistributedTracingSettingForDevices(deviceIds: string[], iotHubConnectionString: string, updateType: DistributedSettingUpdateType) {
+    public async updateDistributedTracingSettingForDevices(deviceIds: string[], iotHubConnectionString: string, updateType: DistributedSettingUpdateType, node) {
         let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
 
         let mode: boolean = undefined;
@@ -116,7 +108,15 @@ export class DistributedTracingManager extends BaseExplorer {
                     SamplingRate: samplingRate ? samplingRate.toString() : "" , SamplingMode: mode ? mode.toString() : "" }, iotHubConnectionString);
 
                 this.outputLine(Constants.IoTHubDistributedTracingSettingLabel,
-                    `Update distributed tracing setting for device [${deviceIds.join(",")}] complete!` + result);
+                    `Update distributed tracing setting for device [${deviceIds.join(",")}] complete!` + (result ? result : ""));
+
+                if (node instanceof DistributedTracingLabelNode) {
+                    vscode.commands.executeCommand("azure-iot-toolkit.refresh", node);
+                } else if (node instanceof DistributedTracingSettingNode) {
+                    vscode.commands.executeCommand("azure-iot-toolkit.refresh", node.parent);
+                } else {
+                    vscode.commands.executeCommand("azure-iot-toolkit.refresh");
+                }
             } catch (err) {
                 TelemetryClient.sendEvent(Constants.IoTHubAIUpdateDistributedSettingDoneEvent,
                     { Result: "Fail", UpdateType: updateType.toString(), DeviceCount: deviceIds.length.toString(),
@@ -155,10 +155,10 @@ export class DistributedTracingManager extends BaseExplorer {
             try {
                 let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
                 await  registry.updateTwin(deviceIds[0], JSON.stringify(twinPatch), twinPatch.etag);
-                return "";
             } catch (err) {
                 return err.message;
             }
+            return;
         }
 
         const result = this.scheduleTwinUpdate(twinPatch, iotHubConnectionString, deviceIds);
