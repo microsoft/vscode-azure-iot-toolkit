@@ -123,8 +123,8 @@ export class AzureIoTExplorer {
         await this._iotHubResourceExplorer.copyIoTHubConnectionString();
     }
 
-    public copyDeviceConnectionString(deviceItem: DeviceItem): void {
-        this._iotHubResourceExplorer.copyDeviceConnectionString(deviceItem);
+    public async copyDeviceConnectionString(deviceItem: DeviceItem) {
+        await this._iotHubResourceExplorer.copyDeviceConnectionString(deviceItem);
     }
 
     public replaceConnectionString(event: vscode.TextDocumentChangeEvent): void {
