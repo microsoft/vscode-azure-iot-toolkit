@@ -8,7 +8,7 @@ import { Constants } from "./constants";
 import { TelemetryClient } from "./telemetryClient";
 
 const NSAT_SURVEY_URL = "https://www.surveymonkey.com/r/C9Y5M25";
-const PROBABILITY = 0.5;
+const PROBABILITY = 1;
 const SESSION_COUNT_THRESHOLD = 2;
 const SESSION_COUNT_KEY = "nsat/sessionCount";
 const LAST_SESSION_DATE_KEY = "nsat/lastSessionDate";
