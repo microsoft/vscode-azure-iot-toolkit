@@ -112,8 +112,8 @@ export function activate(context: vscode.ExtensionContext) {
         azureIoTExplorer.selectIoTHub();
     });
 
-    let copyIoTHubConnectionString = vscode.commands.registerCommand("azure-iot-toolkit.copyIoTHubConnectionString", () => {
-        azureIoTExplorer.copyIoTHubConnectionString();
+    let copyIoTHubConnectionString = vscode.commands.registerCommand("azure-iot-toolkit.copyIoTHubConnectionString", async () => {
+        await azureIoTExplorer.copyIoTHubConnectionString();
     });
 
     let copyDeviceConnectionString = vscode.commands.registerCommand("azure-iot-toolkit.copyDeviceConnectionString", (deviceNode: DeviceNode) => {
@@ -169,8 +169,8 @@ export function activate(context: vscode.ExtensionContext) {
         azureIoTExplorer.getModule(moduleItemNode ? moduleItemNode.moduleItem : undefined);
     }));
 
-    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.copyModuleConnectionString", (moduleItemNode: ModuleItemNode) => {
-        azureIoTExplorer.copyModuleConnectionString(moduleItemNode ? moduleItemNode.moduleItem : undefined);
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.copyModuleConnectionString", async (moduleItemNode: ModuleItemNode) => {
+        await azureIoTExplorer.copyModuleConnectionString(moduleItemNode ? moduleItemNode.moduleItem : undefined);
     }));
 
     vscode.workspace.onDidChangeTextDocument((event) => azureIoTExplorer.replaceConnectionString(event));

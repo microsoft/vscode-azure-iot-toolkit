@@ -7,9 +7,7 @@
 
 'use strict';
 
-const copyWebpackPlugin = require('copy-webpack-plugin');
 const failOnErrorsPlugin = require('fail-on-errors-webpack-plugin');
-const permissionsPlugin = require('webpack-permissions-plugin');
 const terserWebpackPlugin = require('terser-webpack-plugin');
 const path = require('path');
 const webpack = require('webpack');
@@ -22,7 +20,7 @@ const config = {
     },
     entry: './src/extension.ts', // the entry point of this extension, 📖 -> https://webpack.js.org/configuration/entry-context/
     output: { // the bundle is stored in the 'dist' folder (check package.json), 📖 -> https://webpack.js.org/configuration/output/
-        path: path.resolve(__dirname, 'dist', 'scripts'),   // the clipboardy package ships with binaries in the fallbacks folder and reference them with "../fallbacks/*"
+        path: path.resolve(__dirname, 'dist'),
         filename: 'extension.js',
         libraryTarget: "commonjs2",
         devtoolModuleFilenameTemplate: "../../[resource-path]",
@@ -61,10 +59,6 @@ const config = {
         ]
     },
     plugins: [
-        new copyWebpackPlugin([{
-            from: 'node_modules/clipboardy/fallbacks',
-            to: '../fallbacks'  // copy clipboardy binaries to the parent folder of scripts
-        }]),
         // Ignore all locale files of moment.js, which can save 50KB
         // https://webpack.js.org/plugins/ignore-plugin/#ignore-moment-locales
         new webpack.IgnorePlugin(/^\.\/locale$/, /[\/\\]moment$/),
@@ -93,14 +87,6 @@ const config = {
         new failOnErrorsPlugin({
             failOnErrors: true,
             failOnWarnings: true,
-        }),
-        new permissionsPlugin({
-            buildFiles: [
-                {
-                    path: path.resolve(__dirname, 'dist', 'fallbacks', 'linux', 'xsel'),    // chmod +x dist/fallbacks/linux/xsel
-                    fileMode: '775'
-                }
-            ]
         })
     ],
     optimization: {

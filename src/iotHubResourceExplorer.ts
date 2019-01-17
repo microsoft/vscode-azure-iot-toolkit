@@ -4,7 +4,6 @@
 "use strict";
 import { IotHubClient } from "azure-arm-iothub";
 import { ResourceManagementClient, ResourceModels, SubscriptionClient } from "azure-arm-resource";
-import * as clipboardy from "clipboardy";
 import * as vscode from "vscode";
 import { IotHubDescription } from "../node_modules/azure-arm-iothub/lib/models";
 import { AzureAccount } from "./azure-account.api";
@@ -153,18 +152,18 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         }
     }
 
-    public copyIoTHubConnectionString() {
+    public async copyIoTHubConnectionString() {
         TelemetryClient.sendEvent("AZ.Copy.IotHubConnectionString");
         const iotHubConnectionString = Utility.getConnectionStringWithId(Constants.IotHubConnectionStringKey);
         if (iotHubConnectionString) {
-            clipboardy.write(iotHubConnectionString);
+            await vscode.env.clipboard.writeText(iotHubConnectionString);
         }
     }
 
     public async copyDeviceConnectionString(deviceItem: DeviceItem) {
         deviceItem = await Utility.getInputDevice(deviceItem, "AZ.Copy.DeviceConnectionString");
         if (deviceItem && deviceItem.connectionString) {
-            clipboardy.write(deviceItem.connectionString);
+            await vscode.env.clipboard.writeText(deviceItem.connectionString);
         }
     }
 
@@ -194,7 +193,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
             }});
 
         const sasToken = sasTokenFunction(connectionString, parseFloat(expiryInHours));
-        clipboardy.write(sasToken);
+        await vscode.env.clipboard.writeText(sasToken);
         this._outputChannel.show();
         this.outputLine("SASToken", `SAS token for [${target}] is generated and copied to clipboard:`);
         this._outputChannel.appendLine(sasToken);
