@@ -6,7 +6,7 @@ import * as vscode from "vscode";
 import { CodeManager } from "./codeManager";
 import { DistributedSettingUpdateType } from "./constants";
 import { DeviceExplorer } from "./deviceExplorer";
-import { DistributedTracingManager } from "./DistributedTracingManager";
+import { DistributedTracingManager } from "./distributedTracingManager";
 import { IoTEdgeExplorer } from "./iotEdgeExplorer";
 import { IotHubC2DMessageExplorer } from "./iotHubC2DMessageExplorer";
 import { IotHubDeviceTwinExplorer } from "./iotHubDeviceTwinExplorer";
