@@ -1,3 +1,7 @@
+## 2.2.0 (2019-01-23)
+### Added
+* Add 'Stop' button for monitoring C2D message in Status Bar
+
 ## 2.1.0 (2019-01-03)
 ### Added
 * Reorder and group context menu
