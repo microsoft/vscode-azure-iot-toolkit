@@ -105,6 +105,7 @@ export class Constants {
     public static IoTHubAIUpdateDistributedSettingDoneEvent = "AZ.DistributedTracing.Update.Done";
     public static IoTHubAILoadDistributedTracingSettingTreeStartEvent = "AZ.LoadDistributedTracingSettingTree.Start";
     public static IoTHubAILoadDistributedTracingSettingTreeDoneEvent = "AZ.LoadDistributedTracingSettingTree.Done";
+    public static IoTHubAILoadLabelInDeviceTreeDoneEvent = "AZ.LoadLabelInDeviceTree.Done";
     public static IoTHubAIStartLoadDeviceTreeEvent = "General.StartLoadDeviceTree";
     public static IoTHubAIShowWelcomePagetEvent = "General.WelcomePage.Show";
     public static PercentageLabel = "(%)";
