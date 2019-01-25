@@ -14,7 +14,11 @@ import * as vscode from "vscode";
 import { Constants } from "./constants";
 import { DeviceItem } from "./Model/DeviceItem";
 import { ModuleItem } from "./Model/ModuleItem";
+import { CommandNode } from "./Nodes/CommandNode";
+import { InfoNode } from "./Nodes/InfoNode";
+import { INode } from "./Nodes/INode";
 import { TelemetryClient } from "./telemetryClient";
+import iothub = require("azure-iothub");
 
 export class Utility {
     public static getConfiguration(): vscode.WorkspaceConfiguration {
@@ -270,7 +274,7 @@ export class Utility {
         }
     }
 
-    public static async getDeviceList(iotHubConnectionString: string, context: vscode.ExtensionContext): Promise<DeviceItem[]> {
+    public static async getDeviceList(iotHubConnectionString: string, context?: vscode.ExtensionContext): Promise<DeviceItem[]> {
         const [deviceList, edgeDeviceIdSet] = await Promise.all([Utility.getIoTDeviceList(iotHubConnectionString), Utility.getEdgeDeviceIdSet(iotHubConnectionString)]);
         return deviceList.map((device) => {
             const state: string = device.connectionState.toString() === "Connected" ? "on" : "off";
@@ -281,9 +285,21 @@ export class Utility {
             } else {
                 deviceType = "device";
             }
-            device.iconPath = context.asAbsolutePath(path.join("resources", `${deviceType}-${state}.svg`));
+            if (context) {
+                device.iconPath = context.asAbsolutePath(path.join("resources", `${deviceType}-${state}.svg`));
+            }
             return device;
         });
+    }
+
+    public static async getNoneEdgeDeviceIdList(iotHubConnectionString: string): Promise<string[]> {
+        const noneEdgeDevices = await this.queryDeviceTwins(iotHubConnectionString, false);
+        const deviceIdList = [];
+        for (const noneEdgeDevice of noneEdgeDevices) {
+            deviceIdList.push(noneEdgeDevice.deviceId);
+        }
+
+        return deviceIdList;
     }
 
     public static isValidTargetCondition(value: string): boolean {
@@ -297,6 +313,57 @@ export class Utility {
 
     public static createModuleConnectionString(hostName: string, deviceId: string, moduleId: string, sharedAccessKey: string): string {
         return `HostName=${hostName};DeviceId=${deviceId};ModuleId=${moduleId};SharedAccessKey=${sharedAccessKey}`;
+    }
+
+    public static getDefaultTreeItems(): INode[] {
+        TelemetryClient.sendEvent("General.Load.DefaultTreeItems");
+        const items = [];
+        items.push(new CommandNode("-> Set IoT Hub Connection String", "azure-iot-toolkit.setIoTHubConnectionString"));
+        items.push(new CommandNode("-> Select IoT Hub", "azure-iot-toolkit.selectIoTHub"));
+        items.push(new CommandNode("-> Create IoT Hub", "azure-iot-toolkit.createIoTHub"));
+        return items;
+    }
+
+    public static getErrorMessageTreeItems(item: string, error: string): INode[] {
+        const items = [];
+        items.push(new InfoNode(`Failed to list ${item}`));
+        items.push(new InfoNode(`Error: ${error}`));
+        items.push(new InfoNode(`Try another IoT Hub?`));
+        items.push(...this.getDefaultTreeItems());
+        return items;
+    }
+
+    public static parseReportedSamplingMode(twin: any): boolean {
+        const reportedDistributedTwinObject = twin.properties.reported[Constants.DISTRIBUTED_TWIN_NAME];
+        if (reportedDistributedTwinObject.sampling_mode === undefined || reportedDistributedTwinObject.sampling_mode.value === undefined) {
+            return undefined;
+        }
+        return twin.properties.reported[Constants.DISTRIBUTED_TWIN_NAME].sampling_mode.value === 1;
+    }
+
+    public static parseReportedSamplingRate(twin: any): number {
+        const reportedDistributedTwinObject = twin.properties.reported[Constants.DISTRIBUTED_TWIN_NAME];
+        if (reportedDistributedTwinObject.sampling_rate === undefined) {
+            return undefined;
+        }
+        return twin.properties.reported[Constants.DISTRIBUTED_TWIN_NAME].sampling_rate.value;
+    }
+
+    public static parseDesiredSamplingMode(twin: any): boolean {
+        if (twin.properties.desired[Constants.DISTRIBUTED_TWIN_NAME].sampling_mode === undefined) {
+            return undefined;
+        }
+
+        return twin.properties.desired[Constants.DISTRIBUTED_TWIN_NAME].sampling_mode === 1;
+    }
+
+    public static parseDesiredSamplingRate(twin: any): number {
+        return twin.properties.desired[Constants.DISTRIBUTED_TWIN_NAME].sampling_rate;
+    }
+
+    public static async getTwin(registry: iothub.Registry, deviceId: string): Promise<any> {
+        const result = await registry.getTwin(deviceId);
+        return result.responseBody;
     }
 
     private static async getFilteredDeviceList(iotHubConnectionString: string, onlyEdgeDevice: boolean): Promise<DeviceItem[]> {
@@ -343,7 +410,7 @@ export class Utility {
     }
 
     private static async getEdgeDeviceIdSet(iotHubConnectionString: string): Promise<Set<string>> {
-        const edgeDevices = await Utility.getEdgeDeviceList(iotHubConnectionString);
+        const edgeDevices = await Utility.queryDeviceTwins(iotHubConnectionString, true);
         const set = new Set<string>();
         for (const edgeDevice of edgeDevices) {
             set.add(edgeDevice.deviceId);
@@ -351,9 +418,9 @@ export class Utility {
         return set;
     }
 
-    private static async getEdgeDeviceList(iotHubConnectionString: string): Promise<Twin[]> {
+    private static async queryDeviceTwins(iotHubConnectionString: string, isEdge: boolean): Promise<Twin[]> {
         const registry: Registry = Registry.fromConnectionString(iotHubConnectionString);
-        const query = registry.createQuery("SELECT * FROM DEVICES where capabilities.iotEdge=true");
+        const query = registry.createQuery("SELECT * FROM DEVICES where capabilities.iotEdge=" + isEdge);
         return ((await query.nextAsTwin()) as ResultWithIncomingMessage<Twin[]>).result;
     }
 

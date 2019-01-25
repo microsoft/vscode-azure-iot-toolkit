@@ -61,6 +61,7 @@
     "onCommand:azure-iot-toolkit.showWelcomePage",
     "onCommand:azure-iot-toolkit.generateCode",
     "onCommand:azure-iot-toolkit.createModule",
+    "onCommand:azure-iot-toolkit.updateDistributedTracingSetting",
     "onCommand:azure-iot-toolkit.deleteModule",
     "onCommand:azure-iot-toolkit.getModule",
     "onCommand:azure-iot-toolkit.copyModuleConnectionString"
@@ -231,6 +232,21 @@
         "category": "Azure IoT Hub"
       },
       {
+        "command": "azure-iot-toolkit.updateDistributedTracingSetting",
+        "title": "Update Distributed Tracing Setting (Preview)",
+        "category": "Azure IoT Hub"
+      },
+      {
+        "command": "azure-iot-toolkit.editDistributedTracingMode",
+        "title": "Edit...",
+        "category": "Azure IoT Hub"
+      },
+      {
+        "command": "azure-iot-toolkit.editDistributedTracingSamplingRate",
+        "title": "Edit...",
+        "category": "Azure IoT Hub"
+      },
+      {
         "command": "azure-iot-toolkit.deleteModule",
         "title": "Delete Module",
         "category": "Azure IoT Hub"
@@ -302,6 +318,11 @@
           "command": "azure-iot-toolkit.generateSasTokenForIotHub",
           "when": "view == iotHubDevices",
           "group": "azure-iot-toolkit@9"
+        },
+        {
+          "command": "azure-iot-toolkit.updateDistributedTracingSetting",
+          "when": "view == iotHubDevices",
+          "group": "azure-iot-toolkit@10"
         }
       ],
       "view/item/context": [
@@ -352,7 +373,7 @@
         },
         {
           "command": "azure-iot-toolkit.createModule",
-          "when": "view == iotHubDevices && viewItem == device",
+          "when": "view == iotHubDevices && viewItem == modules-label",
           "group": "azure-iot-toolkit-2@2"
         },
         {
@@ -484,6 +505,41 @@
           "command": "azure-iot-toolkit.deleteModule",
           "when": "view == iotHubDevices && viewItem == module",
           "group": "azure-iot-toolkit@4"
+        },
+        {
+          "command": "azure-iot-toolkit.refresh",
+          "when": "view == iotHubDevices && viewItem == distributed-tracing-setting",
+          "group": "inline"
+        },
+        {
+          "command": "azure-iot-toolkit.refresh",
+          "when": "view == iotHubDevices && viewItem == modules-label",
+          "group": "inline"
+        },
+        {
+          "command": "azure-iot-toolkit.refresh",
+          "when": "view == iotHubDevices && viewItem == desired-distributed-twin-properies",
+          "group": "inline"
+        },
+        {
+          "command": "azure-iot-toolkit.refresh",
+          "when": "view == iotHubDevices && viewItem == reported-distributed-twin-properies",
+          "group": "inline"
+        },
+        {
+          "command": "azure-iot-toolkit.updateDistributedTracingSetting",
+          "when": "view == iotHubDevices && viewItem == distributed-tracing-setting",
+          "group": "azure-iot-toolkit@5"
+        },
+        {
+          "command": "azure-iot-toolkit.editDistributedTracingMode",
+          "when": "view == iotHubDevices && viewItem == desired-mode-property",
+          "group": "azure-iot-toolkit@6"
+        },
+        {
+          "command": "azure-iot-toolkit.editDistributedTracingSamplingRate",
+          "when": "view == iotHubDevices && viewItem == desired-sampling-rate-property",
+          "group": "azure-iot-toolkit@7"
         }
       ],
       "editor/context": [
@@ -648,6 +704,7 @@
     "ms-rest-azure": "^2.5.5",
     "replace-in-file": "^3.4.0",
     "strip-json-comments": "^2.0.1",
+    "uuid": "^3.3.2",
     "vscode-extension-telemetry": "0.0.18"
   },
   "extensionDependencies": [

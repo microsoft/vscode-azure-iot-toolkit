@@ -16,4 +16,4 @@ package-lock.json
 tslint.json
 out/**
 webpack.config.js
-node_modules
+node_modules/**

@@ -27,6 +27,17 @@ enum TemplateType {
     CallDirectMethod = "Call direct method",
 }
 
+export enum DeviceTwinPropertyType {
+    Desired = "desired",
+    Reported = "reported",
+}
+
+export enum DistributedSettingUpdateType {
+    OnlyMode = "onlyMode",
+    OnlySamplingRate = "onlySamplingRate",
+    All = "all",
+}
+
 export class Constants {
     public static ExtensionContext: vscode.ExtensionContext;
     public static ExtensionId = "vsciot-vscode.azure-iot-toolkit";
@@ -50,6 +61,7 @@ export class Constants {
     public static IoTHubDirectMethodLabel = "DirectMethod";
     public static IoTHubDeviceTwinLabel = "DeviceTwin";
     public static IoTHubModuleTwinLabel = "ModuleTwin";
+    public static IoTHubDistributedTracingSettingLabel = "DistributedTracingSetting";
 
     public static IoTHubAILoadDeviceTreeEvent = "AZ.LoadDeviceTree";
     public static IoTHubAIStartMonitorEvent = "AZ.D2C.startMonitoring";
@@ -89,12 +101,20 @@ export class Constants {
     public static IoTHubAIDeleteModuleDoneEvent = "AZ.Module.Delete.Done";
     public static IoTHubAIGetModuleStartEvent = "AZ.Module.Get.Start";
     public static IoTHubAIDGetModuleDoneEvent = "AZ.Module.Get.Done";
+    public static IoTHubAIUpdateDistributedSettingStartEvent = "AZ.DistributedTracing.Update.Start";
+    public static IoTHubAIUpdateDistributedSettingDoneEvent = "AZ.DistributedTracing.Update.Done";
+    public static IoTHubAILoadDistributedTracingSettingTreeStartEvent = "AZ.LoadDistributedTracingSettingTree.Start";
+    public static IoTHubAILoadDistributedTracingSettingTreeDoneEvent = "AZ.LoadDistributedTracingSettingTree.Done";
+    public static IoTHubAILoadLabelInDeviceTreeDoneEvent = "AZ.LoadLabelInDeviceTree.Done";
     public static IoTHubAIStartLoadDeviceTreeEvent = "General.StartLoadDeviceTree";
     public static IoTHubAIShowWelcomePagetEvent = "General.WelcomePage.Show";
+    public static PercentageLabel = "(%)";
+    public static NotSetLabel = "Not Set";
+    public static DisabledLabel = "Disabled";
+    public static EnabledLabel = "Enabled";
 
     public static DeleteLabel = "Delete";
-    public static DeleteMessage = "Are you sure you want to delete";
-
+    public static DeleteMessage = "Are you sure you want to delete";    public static readonly DISTRIBUTED_TWIN_NAME: string = "azureiot*com^dtracing^1*0*0";
     public static ConnectionStringFormat = {
         [Constants.IotHubConnectionStringKey]: "HostName=<my-hostname>;SharedAccessKeyName=<my-policy>;SharedAccessKey=<my-policy-key>",
         [Constants.DeviceConnectionStringKey]: "HostName=<my-hostname>;DeviceId=<known-device-id>;SharedAccessKey=<known-device-key>",

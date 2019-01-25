@@ -4,7 +4,9 @@
 "use strict";
 import * as vscode from "vscode";
 import { CodeManager } from "./codeManager";
+import { DistributedSettingUpdateType } from "./constants";
 import { DeviceExplorer } from "./deviceExplorer";
+import { DistributedTracingManager } from "./distributedTracingManager";
 import { IoTEdgeExplorer } from "./iotEdgeExplorer";
 import { IotHubC2DMessageExplorer } from "./iotHubC2DMessageExplorer";
 import { IotHubDeviceTwinExplorer } from "./iotHubDeviceTwinExplorer";
@@ -14,6 +16,8 @@ import { IotHubModuleExplorer } from "./iotHubModuleExplorer";
 import { IoTHubResourceExplorer } from "./iotHubResourceExplorer";
 import { DeviceItem } from "./Model/DeviceItem";
 import { ModuleItem } from "./Model/ModuleItem";
+import { DeviceNode } from "./Nodes/DeviceNode";
+import { ModuleItemNode } from "./Nodes/ModuleItemNode";
 import { SnippetManager } from "./snippetManager";
 import { WelcomePage } from "./welcomePage";
 
@@ -29,12 +33,14 @@ export class AzureIoTExplorer {
     private _welcomePage: WelcomePage;
     private _codeManager: CodeManager;
     private _iotHubModuleExplorer: IotHubModuleExplorer;
+    private _distributedTracingManager: DistributedTracingManager;
 
     constructor(private context: vscode.ExtensionContext) {
         let outputChannel = vscode.window.createOutputChannel("Azure IoT Hub Toolkit");
         this._iotHubC2DMessageExplorer = new IotHubC2DMessageExplorer(outputChannel);
         this._iotHubMessageExplorer = new IoTHubMessageExplorer(outputChannel);
         this._deviceExplorer = new DeviceExplorer(outputChannel);
+        this._distributedTracingManager = new DistributedTracingManager(outputChannel);
         this._snippetManager = new SnippetManager(outputChannel);
         this._iotHubDirectMethodExplorer = new IotHubDirectMethodExplorer(outputChannel);
         this._iotHubDeviceTwinExplorer = new IotHubDeviceTwinExplorer(outputChannel);
@@ -83,6 +89,10 @@ export class AzureIoTExplorer {
 
     public async deleteDevice(deviceItem?: DeviceItem) {
         return this._deviceExplorer.deleteDevice(deviceItem);
+    }
+
+    public updateDistributedTracingSetting(node, updateType: DistributedSettingUpdateType = DistributedSettingUpdateType.All): void {
+        this._distributedTracingManager.updateDistributedTracingSetting(node, updateType);
     }
 
     public invokeDeviceDirectMethod(deviceItem: DeviceItem): void {
@@ -157,12 +167,12 @@ export class AzureIoTExplorer {
         this._codeManager.generateCode(deviceItem);
     }
 
-    public createModule(deviceItem: DeviceItem): void {
-        this._iotHubModuleExplorer.createModule(deviceItem);
+    public createModule(deviceNode: DeviceNode): void {
+        this._iotHubModuleExplorer.createModule(deviceNode);
     }
 
-    public deleteModule(moduleItem: ModuleItem): void {
-        this._iotHubModuleExplorer.deleteModule(moduleItem);
+    public deleteModule(moduleItemNode: ModuleItemNode): void {
+        this._iotHubModuleExplorer.deleteModule(moduleItemNode);
     }
 
     public getModule(moduleItem: ModuleItem): void {
