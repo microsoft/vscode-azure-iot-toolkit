@@ -1,4 +1,4 @@
-## 2.3.0 (2019-02-06)
+## 2.3.0 (2019-02-07)
 ### Added
 * Add support for [Azure IoT distributed tracing (preview)](https://aka.ms/iottracing)
 
