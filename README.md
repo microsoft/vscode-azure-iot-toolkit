@@ -36,6 +36,7 @@ The [Wiki page](https://github.com/Microsoft/vscode-azure-iot-toolkit/wiki) incl
     * Monitor C2D message from IoT Hub
     * Invoke Device Direct Method
     * Edit Device Twin
+    * Manage Azure IoT distributed tracing
 * Interact with Azure IoT Edge (Install [Azure IoT Edge](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.azure-iot-edge) for more IoT Edge support)
     * List Modules 
     * Edit Module Twin

@@ -1,3 +1,10 @@
+## 2.3.0 (2019-02-06)
+### Added
+* Add support for Azure IoT distributed tracing
+
+### Changed
+* Move 'Create Module' context menu into 'Modules' node
+
 ## 2.2.0 (2019-01-23)
 ### Added
 * Add 'Stop' button for monitoring C2D message in Status Bar
