@@ -113,7 +113,9 @@ export class DistributedTracingManager extends BaseExplorer {
                 }
 
                 this.outputLine(Constants.IoTHubDistributedTracingSettingLabel,
-                    `Update distributed tracing setting for device [${deviceIds.join(",")}] complete!` + resultTip);
+                    `Update distributed tracing setting for device [${deviceIds.join(",")}] complete!` + 
+                    (mode === true ? " (Distributed Tracing is in public preview stage and is available only in some regions, please check detail https://aka.ms/iottracing)" : "")
+                     + resultTip);
 
                 if (node instanceof DistributedTracingLabelNode) {
                     vscode.commands.executeCommand("azure-iot-toolkit.refresh", node);
