@@ -6,23 +6,17 @@ import { EventHubClient, EventPosition } from "@azure/event-hubs";
 import { Message } from "azure-iot-device";
 import { clientFromConnectionString } from "azure-iot-device-mqtt";
 import * as vscode from "vscode";
-import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
+import { IoTHubMessageBaseExplorer } from "./iotHubMessageBaseExplorer";
 import { DeviceItem } from "./Model/DeviceItem";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
-export class IoTHubMessageExplorer extends BaseExplorer {
-    private _isMonitoring: boolean;
+export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
     private _eventHubClient: EventHubClient;
-    private _monitorStatusBarItem: vscode.StatusBarItem;
 
     constructor(outputChannel: vscode.OutputChannel) {
-        super(outputChannel);
-        this._isMonitoring = false;
-        this._monitorStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, -9999999);
-        this._monitorStatusBarItem.text = "$(primitive-square) Stop Monitoring D2C Message";
-        this._monitorStatusBarItem.command = "azure-iot-toolkit.stopMonitorIoTHubMessage";
+        super(outputChannel, "$(primitive-square) Stop Monitoring D2C Message", "azure-iot-toolkit.stopMonitorIoTHubMessage");
     }
 
     public async sendD2CMessage(deviceItem?: DeviceItem) {
@@ -158,14 +152,4 @@ export class IoTHubMessageExplorer extends BaseExplorer {
             this._outputChannel.appendLine(JSON.stringify(result, null, 2));
         };
     };
-
-    private updateMonitorStatus(status: boolean) {
-        if (status) {
-            this._isMonitoring = true;
-            this._monitorStatusBarItem.show();
-        } else {
-            this._isMonitoring = false;
-            this._monitorStatusBarItem.hide();
-        }
-    }
 }
