@@ -214,8 +214,9 @@ export class DistributedTracingManager extends BaseExplorer {
                 if (!value) {
                     return "Sampling rate cannot be empty";
                 }
+                const containsOnlyNumber = /^\d+$/.test(value);
                 const floatValue: number = parseFloat(value);
-                if (!Number.isInteger(floatValue) || floatValue < 0 || floatValue > 100) {
+                if (!containsOnlyNumber || !Number.isInteger(floatValue) || floatValue < 0 || floatValue > 100) {
                     return "Sampling rate should be an integer within [0, 100]";
                 }
                 return undefined;
