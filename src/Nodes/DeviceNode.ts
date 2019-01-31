@@ -11,8 +11,10 @@ import { ModuleLabelNode } from "./ModuleLabelNode";
 
 export class DeviceNode implements INode {
     public readonly deviceId: string;
+    public readonly connectionString: string;
     constructor(public deviceItem: DeviceItem) {
         this.deviceId = deviceItem.deviceId;
+        this.connectionString = deviceItem.connectionString;
     }
 
     public getTreeItem(): vscode.TreeItem {
