@@ -43,7 +43,6 @@ export class DistributedTracingManager extends BaseExplorer {
             return;
         }
 
-        this._outputChannel.show();
         await this.updateDistributedTracingSettingForDevices(deviceIds, iotHubConnectionString, updateType, node);
     }
 
@@ -111,7 +110,7 @@ export class DistributedTracingManager extends BaseExplorer {
                 if (result) {
                     resultTip = "\nDetailed information are shown as below:\n" + JSON.stringify(result, null, 2);
                 }
-
+                this._outputChannel.show();
                 this.outputLine(Constants.IoTHubDistributedTracingSettingLabel,
                     `Update distributed tracing setting for device [${deviceIds.join(",")}] complete!` +
                     (mode === true ? " (Distributed Tracing is in public preview stage and is available only in some regions, please check detail https://aka.ms/iottracing)" : "")
@@ -128,6 +127,7 @@ export class DistributedTracingManager extends BaseExplorer {
                 TelemetryClient.sendEvent(Constants.IoTHubAIUpdateDistributedSettingDoneEvent,
                     { Result: "Fail", UpdateType: updateType.toString(), DeviceCount: deviceIds.length.toString(),
                     SamplingRate: samplingRate ? "" : samplingRate.toString(), SamplingMode: mode ? "" : mode.toString() }, iotHubConnectionString);
+                this._outputChannel.show();
                 this.outputLine(Constants.IoTHubDistributedTracingSettingLabel, `Failed to get or update distributed setting: ${err.message}`);
             }
         });
