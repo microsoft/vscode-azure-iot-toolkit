@@ -43,7 +43,6 @@ export class DistributedTracingManager extends BaseExplorer {
             return;
         }
 
-        this._outputChannel.show();
         await this.updateDistributedTracingSettingForDevices(deviceIds, iotHubConnectionString, updateType, node);
     }
 
@@ -101,6 +100,7 @@ export class DistributedTracingManager extends BaseExplorer {
             title: `Update Distributed Tracing Setting`,
             location: vscode.ProgressLocation.Notification,
         }, async () => {
+            this._outputChannel.show();
             try {
                 const result = await this.updateDeviceTwin(mode, samplingRate, iotHubConnectionString, deviceIds);
                 TelemetryClient.sendEvent(Constants.IoTHubAIUpdateDistributedSettingDoneEvent,
