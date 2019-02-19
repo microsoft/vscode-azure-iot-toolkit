@@ -3,7 +3,6 @@
 
 "use strict";
 import * as iothub from "azure-iothub";
-import * as clipboardy from "clipboardy";
 import * as vscode from "vscode";
 import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
@@ -77,10 +76,10 @@ export class IotHubModuleExplorer extends BaseExplorer {
         });
     }
 
-    public copyModuleConnectionString(moduleItem: ModuleItem) {
+    public async copyModuleConnectionString(moduleItem: ModuleItem) {
         TelemetryClient.sendEvent("AZ.Copy.ModuleConnectionString");
         if (moduleItem.connectionString) {
-            clipboardy.write(moduleItem.connectionString);
+            await vscode.env.clipboard.writeText(moduleItem.connectionString);
         }
     }
 

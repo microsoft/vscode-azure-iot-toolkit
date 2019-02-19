@@ -119,12 +119,12 @@ export class AzureIoTExplorer {
         return this._iotHubResourceExplorer.selectIoTHub(outputChannel, subscriptionId);
     }
 
-    public copyIoTHubConnectionString(): void {
-        this._iotHubResourceExplorer.copyIoTHubConnectionString();
+    public async copyIoTHubConnectionString() {
+        await this._iotHubResourceExplorer.copyIoTHubConnectionString();
     }
 
-    public copyDeviceConnectionString(deviceItem: DeviceItem): void {
-        this._iotHubResourceExplorer.copyDeviceConnectionString(deviceItem);
+    public async copyDeviceConnectionString(deviceItem: DeviceItem) {
+        await this._iotHubResourceExplorer.copyDeviceConnectionString(deviceItem);
     }
 
     public replaceConnectionString(event: vscode.TextDocumentChangeEvent): void {
@@ -179,7 +179,7 @@ export class AzureIoTExplorer {
         this._iotHubModuleExplorer.getModule(moduleItem);
     }
 
-    public copyModuleConnectionString(moduleItem: ModuleItem): void {
-        this._iotHubModuleExplorer.copyModuleConnectionString(moduleItem);
+    public async copyModuleConnectionString(moduleItem: ModuleItem) {
+        await this._iotHubModuleExplorer.copyModuleConnectionString(moduleItem);
     }
 }
