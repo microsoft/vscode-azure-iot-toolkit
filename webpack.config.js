@@ -29,8 +29,7 @@ const config = {
     externals: {
         vscode: "commonjs vscode", // the vscode-module is created on-the-fly and must be excluded. Add other modules that cannot be webpack'ed, 📖 -> https://webpack.js.org/configuration/externals/
         bufferutil: 'commonjs bufferutil',   // bufferutil and utf-8-validate are actually optional binary dependencies. Adding them to suppress the warning https://github.com/websockets/ws/issues/719
-        'utf-8-validate': 'commonjs utf-8-validate',
-        'spawn-sync': 'commonjs spawn-sync'  // spawn-sync is only required for Node.js <= 0.12 https://github.com/ForbesLindesay/spawn-sync
+        'utf-8-validate': 'commonjs utf-8-validate'
     },
     resolve: { // support reading TypeScript and JavaScript files, 📖 -> https://github.com/TypeStrong/ts-loader
         extensions: ['.ts', '.js']

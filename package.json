@@ -685,6 +685,7 @@
     "@types/mocha": "^2.2.32",
     "@types/node": "^10.12.3",
     "@types/terser-webpack-plugin": "^1.2.0",
+    "@types/webpack": "^4.4.24",
     "fail-on-errors-webpack-plugin": "^3.0.0",
     "mocha": "^5.1.1",
     "rimraf": "^2.6.2",
