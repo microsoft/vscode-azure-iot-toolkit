@@ -159,7 +159,7 @@ export class Utility {
             const isConnected = module.connectionState === "Connected";
             const state = isConnected ? "on" : "off";
             const iconPath = context.asAbsolutePath(path.join("resources", `module-${state}.svg`));
-            return new ModuleItem(deviceItem, module.moduleId, module.connectionString, null, iconPath, "module");
+            return new ModuleItem(deviceItem, module.moduleId, module.connectionString, module.connectionState, null, iconPath, "module");
         });
     }
 
@@ -179,26 +179,29 @@ export class Utility {
             let isConnected = module.connectionState === "Connected";
             // Due to https://github.com/Azure/iotedge/issues/39, use $edgeAgent's connectionState for $edgeHub as workaround
             if (module.moduleId === "$edgeHub") {
-                isConnected = (edgeAgent as any).connectionState === "Connected";
+                isConnected = isConnected || (edgeAgent as any).connectionState === "Connected";
+                if (isConnected) {
+                    module.connectionState = "Connected";
+                }
             }
             const state = isConnected ? "on" : "off";
             const iconPath = context.asAbsolutePath(path.join("resources", `module-${state}.svg`));
             if (module.moduleId.startsWith("$")) {
                 const moduleId = module.moduleId.substring(1);
                 if (desiredTwin.systemModules && desiredTwin.systemModules[moduleId]) {
-                    return new ModuleItem(deviceItem, module.moduleId, module.connectionString,
+                    return new ModuleItem(deviceItem, module.moduleId, module.connectionString, module.connectionState,
                         isConnected && reportedTwin ? this.getModuleRuntimeStatus(moduleId, reportedTwin.systemModules) : undefined, iconPath, "edge-module");
                 }
             } else {
                 if (desiredTwin.modules && desiredTwin.modules[module.moduleId]) {
-                    return new ModuleItem(deviceItem, module.moduleId, module.connectionString,
+                    return new ModuleItem(deviceItem, module.moduleId, module.connectionString, module.connectionState,
                         isConnected && reportedTwin ? this.getModuleRuntimeStatus(module.moduleId, reportedTwin.modules) : undefined, iconPath, "edge-module");
                 }
             }
             const moduleType = module.moduleId.startsWith("$") ? "edge-module" : "module";
             // If Module Id starts with "$", then it is a IoT Edge System Module.
             // Otherwise, if a Module does not exist in desired properties of edgeAgent, then it is a Module Identity.
-            return new ModuleItem(deviceItem, module.moduleId, module.connectionString, null, iconPath, moduleType);
+            return new ModuleItem(deviceItem, module.moduleId, module.connectionString, module.connectionState, null, iconPath, moduleType);
         }).filter((module) => module);
     }
 
@@ -277,7 +280,11 @@ export class Utility {
     public static async getDeviceList(iotHubConnectionString: string, context?: vscode.ExtensionContext): Promise<DeviceItem[]> {
         const [deviceList, edgeDeviceIdSet] = await Promise.all([Utility.getIoTDeviceList(iotHubConnectionString), Utility.getEdgeDeviceIdSet(iotHubConnectionString)]);
         return deviceList.map((device) => {
-            const state: string = device.connectionState.toString() === "Connected" ? "on" : "off";
+            const isConnected = device.connectionState.toString() === "Connected";
+            const state: string = isConnected ? "on" : "off";
+            if (isConnected) {
+                device.description = device.connectionState.toString()
+            }
             let deviceType: string;
             if (edgeDeviceIdSet.has(device.deviceId)) {
                 deviceType = "edge";

@@ -10,15 +10,19 @@ export class ModuleItem extends TreeItem {
         public readonly deviceItem: DeviceItem,
         public readonly moduleId: string,
         public readonly connectionString: string,
+        public readonly connectionState: string,
         public readonly runtimeStatus: string,
         public readonly iconPath: string,
         public readonly contextValue: string) {
-        super(runtimeStatus ? `${moduleId} (${runtimeStatus})` : moduleId);
+        super(moduleId);
         this.deviceId = deviceItem.deviceId;
         this.command = {
             command: "azure-iot-toolkit.getModule",
             title: "",
             arguments: [this],
         };
+        if (connectionState === "Connected") {
+            this.description = runtimeStatus ? `${connectionState} (${runtimeStatus})` : connectionState;
+        }
     }
 }
