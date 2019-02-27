@@ -179,7 +179,10 @@ export class Utility {
             let isConnected = module.connectionState === "Connected";
             // Due to https://github.com/Azure/iotedge/issues/39, use $edgeAgent's connectionState for $edgeHub as workaround
             if (module.moduleId === "$edgeHub") {
-                isConnected = (edgeAgent as any).connectionState === "Connected";
+                isConnected = isConnected || (edgeAgent as any).connectionState === "Connected";
+                if (isConnected) {
+                    module.connectionState = "Connected";
+                }
             }
             const state = isConnected ? "on" : "off";
             const iconPath = context.asAbsolutePath(path.join("resources", `module-${state}.svg`));
