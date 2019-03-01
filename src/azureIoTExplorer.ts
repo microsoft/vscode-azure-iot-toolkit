@@ -131,7 +131,7 @@ export class AzureIoTExplorer {
         this._snippetManager.replaceConnectionString(event);
     }
 
-    public createDeployment(input?: DeviceItem | vscode.Uri): void {
+    public createDeployment(input?: DeviceNode | vscode.Uri): void {
         this._iotEdgeExplorer.createDeployment(input);
     }
 
