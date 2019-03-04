@@ -9,8 +9,8 @@ import * as stripJsonComments from "strip-json-comments";
 import * as vscode from "vscode";
 import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
-import { DeviceItem } from "./Model/DeviceItem";
 import { ModuleItem } from "./Model/ModuleItem";
+import { DeviceNode } from "./Nodes/DeviceNode";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
@@ -19,7 +19,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
         super(outputChannel);
     }
 
-    public async createDeployment(input?: DeviceItem | vscode.Uri) {
+    public async createDeployment(input?: DeviceNode | vscode.Uri) {
         TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployStartEvent);
 
         let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
@@ -29,8 +29,8 @@ export class IoTEdgeExplorer extends BaseExplorer {
 
         let from = "none";
         let deviceItem;
-        if (input instanceof DeviceItem) {
-            deviceItem = input;
+        if (input instanceof DeviceNode) {
+            deviceItem = input.deviceItem;
             from = "device";
         }
         deviceItem = await Utility.getInputDevice(deviceItem, null, true);
