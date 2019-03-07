@@ -59,7 +59,7 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
         try {
             this._outputChannel.show();
             const deviceLabel = deviceItem ? `[${deviceItem.deviceId}]` : "all devices";
-            this.outputLine(Constants.IoTHubMonitorLabel, `Start monitoring D2C message for ${deviceLabel} ...`);
+            this.outputLine(Constants.IoTHubMonitorLabel, `Start monitoring D2C message arrived in built-in endpoint for ${deviceLabel} ...`);
             if (!this._eventHubClient) {
                 this._eventHubClient = await EventHubClient.createFromIotHubConnectionString(iotHubConnectionString);
             }
