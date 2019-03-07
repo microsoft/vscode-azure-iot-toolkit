@@ -1,3 +1,14 @@
+## 2.4.0 (2019-03-08)
+### Added
+* [Accessibility] Indicate device/module status in description of tree item
+* Indicate monitoring D2C message is for built-in endpoint
+
+### Changed
+* Switch to VS Code built-in clipboard API to reduce extension size
+
+### Fixed
+* [#278](https://github.com/Microsoft/vscode-azure-iot-toolkit/issues/278): Double select device ID when creating IoT Edge deployment via context menu in treeview
+
 ## 2.3.0 (2019-02-19)
 ### Added
 * Add support for [Azure IoT distributed tracing (preview)](https://aka.ms/iottracing)
