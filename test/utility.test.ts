@@ -43,7 +43,7 @@ suite("Utility Tests ", () => {
                     assert.equal(IotHubConnectionString, TestConstants.IotHubConnectionString);
                     done();
                 });
-            }, 3000);
+            }, 300);
         });
     });
 
@@ -56,7 +56,7 @@ suite("Utility Tests ", () => {
                 let IotHubConnectionString = Utility.getConnectionStringWithId(Constants.IotHubConnectionStringKey);
                 assert.equal(IotHubConnectionString, null);
                 done();
-            }, 3000);
+            }, 300);
         });
     });
 
