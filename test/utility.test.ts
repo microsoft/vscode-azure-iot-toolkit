@@ -52,7 +52,7 @@ suite("Utility Tests ", () => {
         this.timeout(5 * 1000);
         let config = Utility.getConfiguration();
         config.update(Constants.IotHubConnectionStringKey, TestConstants.InvalidIotHubConnectionString, true).then(() => {
-            console.log("TestConstants.IotHubConnectionStringKey:"+TestConstants.IotHubConnectionStringKey);
+            console.log("Constants.IotHubConnectionStringKey:"+Constants.IotHubConnectionStringKey);
             let IotHubConnectionString = Utility.getConnectionStringWithId(Constants.IotHubConnectionStringKey);
             assert.equal(IotHubConnectionString, null);
             done();
