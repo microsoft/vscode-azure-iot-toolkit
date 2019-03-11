@@ -1,4 +1,4 @@
-## 2.4.0 (2019-03-08)
+## 2.4.0 (2019-03-11)
 ### Added
 * [Accessibility] Indicate device/module status in description of tree item
 * Indicate monitoring D2C message is for built-in endpoint
