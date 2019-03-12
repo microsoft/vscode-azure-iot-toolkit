@@ -114,20 +114,37 @@ export class IoTEdgeExplorer extends BaseExplorer {
         }
     }
 
-    private async isValidDeploymentJson(json: string): Promise<boolean> {
+    private async isValidDeploymentJson(jsonStr: string): Promise<boolean> {
         try {
             const schema = (await axios.get(Constants.DeploymentJsonSchemaUrl)).data;
             const ajv = new Ajv({ allErrors: true });
-            const valid = ajv.validate(schema, JSON.parse(json));
-            if (!valid) {
-                this._outputChannel.show();
-                this.outputLine(Constants.IoTHubEdgeLabel, `There are errors in deployment json file:\n${ajv.errorsText(null, { separator: ",\n" })}`);
+
+            const json = this.tryParseJson(jsonStr);
+            if (json === null) {
+                TelemetryClient.sendEvent(Constants.IoTHubAIValidateJsonSchemaEvent, { error: "The deployment json file is not a valid json file" });
+                vscode.window.showErrorMessage("The deployment json file is not a valid json file");
                 return false;
             }
+
+            const valid = ajv.validate(schema, json);
+            if (!valid) {
+                TelemetryClient.sendEvent(Constants.IoTHubAIValidateJsonSchemaEvent, { error: `There are errors in deployment json file: ${ajv.errorsText(null, { separator: ", " })}` });
+                vscode.window.showErrorMessage(`There are errors in deployment json file: ${ajv.errorsText(null, { separator: ", " })}`);
+                return false;
+            }
+            TelemetryClient.sendEvent(Constants.IoTHubAIValidateJsonSchemaEvent);
             return true;
         } catch (error) {
-            vscode.window.showWarningMessage(`Cannot validate deployment json: ${error.toString()}`);
+            TelemetryClient.sendEvent(Constants.IoTHubAIValidateJsonSchemaEvent, { error: `Cannot validate deployment json: ${error.toString()}` });
             return true;
+        }
+    }
+
+    private tryParseJson(jsonStr: string) {
+        try {
+            return JSON.parse(jsonStr);
+        } catch (err) {
+            return null;
         }
     }
 

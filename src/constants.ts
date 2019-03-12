@@ -109,6 +109,7 @@ export class Constants {
     public static IoTHubAILoadLabelInDeviceTreeDoneEvent = "AZ.LoadLabelInDeviceTree.Done";
     public static IoTHubAIStartLoadDeviceTreeEvent = "General.StartLoadDeviceTree";
     public static IoTHubAIShowWelcomePagetEvent = "General.WelcomePage.Show";
+    public static IoTHubAIValidateJsonSchemaEvent = "General.ValidateJsonSchema.Done";
     public static PercentageLabel = "(%)";
     public static NotSetLabel = "Not Set";
     public static DisabledLabel = "Disabled";
