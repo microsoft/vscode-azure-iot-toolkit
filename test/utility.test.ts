@@ -38,10 +38,12 @@ suite("Utility Tests ", () => {
         this.timeout(5 * 1000);
         let config = Utility.getConfiguration();
         config.update(Constants.IotHubConnectionStringKey, TestConstants.IotHubConnectionString, true).then(() => {
-            Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle).then((IotHubConnectionString) => {
-                assert.equal(IotHubConnectionString, TestConstants.IotHubConnectionString);
-                done();
-            });
+            setTimeout(() => {
+                Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle).then((IotHubConnectionString) => {
+                    assert.equal(IotHubConnectionString, TestConstants.IotHubConnectionString);
+                    done();
+                });
+            }, 300);
         });
     });
 
@@ -50,9 +52,11 @@ suite("Utility Tests ", () => {
         this.timeout(5 * 1000);
         let config = Utility.getConfiguration();
         config.update(Constants.IotHubConnectionStringKey, TestConstants.InvalidIotHubConnectionString, true).then(() => {
-            let IotHubConnectionString = Utility.getConnectionStringWithId(Constants.IotHubConnectionStringKey);
-            assert.equal(IotHubConnectionString, null);
-            done();
+            setTimeout(() => {
+                let IotHubConnectionString = Utility.getConnectionStringWithId(Constants.IotHubConnectionStringKey);
+                assert.equal(IotHubConnectionString, null);
+                done();
+            }, 300);
         });
     });
 
