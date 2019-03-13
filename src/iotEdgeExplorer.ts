@@ -119,11 +119,10 @@ export class IoTEdgeExplorer extends BaseExplorer {
         try {
             const json = this.tryParseJson(jsonStr);
             let errorMessage = null;
+
             if (json === null) {
                 errorMessage = "The deployment json file is not a valid json file";
-            }
-
-            if (json) {
+            } else {
                 const schema = (await axios.get(Constants.DeploymentJsonSchemaUrl)).data;
                 const ajv = new Ajv({ allErrors: true });
                 const valid = ajv.validate(schema, json);
