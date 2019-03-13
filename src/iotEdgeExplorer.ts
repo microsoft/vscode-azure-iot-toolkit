@@ -11,6 +11,7 @@ import * as stripJsonComments from "strip-json-comments";
 import * as vscode from "vscode";
 import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
+import { JsonSchemaValidateError } from "./JsonSchemaValidateError";
 import { ModuleItem } from "./Model/ModuleItem";
 import { DeviceNode } from "./Nodes/DeviceNode";
 import { TelemetryClient } from "./telemetryClient";
@@ -116,28 +117,36 @@ export class IoTEdgeExplorer extends BaseExplorer {
 
     private async isValidDeploymentJson(jsonStr: string): Promise<boolean> {
         try {
-            const schema = (await axios.get(Constants.DeploymentJsonSchemaUrl)).data;
-            const ajv = new Ajv({ allErrors: true });
-
             const json = this.tryParseJson(jsonStr);
+            let errorMessage = null;
             if (json === null) {
-                TelemetryClient.sendEvent(Constants.IoTHubAIValidateJsonSchemaEvent, { error: "The deployment json file is not a valid json file" });
-                vscode.window.showErrorMessage("The deployment json file is not a valid json file");
-                return false;
+                errorMessage = "The deployment json file is not a valid json file";
             }
 
-            const valid = ajv.validate(schema, json);
-            if (!valid) {
-                TelemetryClient.sendEvent(Constants.IoTHubAIValidateJsonSchemaEvent, { error: `There are errors in deployment json file: ${ajv.errorsText(null, { separator: ", " })}` });
-                vscode.window.showErrorMessage(`There are errors in deployment json file: ${ajv.errorsText(null, { separator: ", " })}`);
+            if (json) {
+                const schema = (await axios.get(Constants.DeploymentJsonSchemaUrl)).data;
+                const ajv = new Ajv({ allErrors: true });
+                const valid = ajv.validate(schema, json);
+                if (!valid) {
+                    errorMessage = `There are errors in deployment json file: ${ajv.errorsText(null, { separator: ", " })}`;
+                }
+            }
+
+            if (errorMessage) {
+                throw new JsonSchemaValidateError(errorMessage);
+            }
+
+            TelemetryClient.sendEvent(Constants.IoTHubAIValidateJsonSchemaEvent);
+        } catch (error) {
+            TelemetryClient.sendEvent(Constants.IoTHubAIValidateJsonSchemaEvent, { error: error.message });
+
+            if (error instanceof JsonSchemaValidateError) {
+                vscode.window.showErrorMessage(error.message);
                 return false;
             }
-            TelemetryClient.sendEvent(Constants.IoTHubAIValidateJsonSchemaEvent);
-            return true;
-        } catch (error) {
-            TelemetryClient.sendEvent(Constants.IoTHubAIValidateJsonSchemaEvent, { error: `Cannot validate deployment json: ${error.toString()}` });
-            return true;
         }
+
+        return true;
     }
 
     private tryParseJson(jsonStr: string) {
