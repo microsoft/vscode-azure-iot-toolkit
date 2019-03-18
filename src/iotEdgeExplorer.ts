@@ -11,7 +11,6 @@ import * as stripJsonComments from "strip-json-comments";
 import * as vscode from "vscode";
 import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
-import { JsonSchemaValidateError } from "./JsonSchemaValidateError";
 import { ModuleItem } from "./Model/ModuleItem";
 import { DeviceNode } from "./Nodes/DeviceNode";
 import { TelemetryClient } from "./telemetryClient";
