@@ -50,15 +50,6 @@ export class IoTEdgeExplorer extends BaseExplorer {
             return;
         }
 
-        try {
-            const isValidJson = await this.isValidDeploymentJson(deploymentJson);
-            if (!isValidJson) {
-                return;
-            }
-        } catch (error) {
-            TelemetryClient.sendEvent(Constants.IoTHubAIValidateJsonSchemaEvent, { error: error.message });
-        }
-
         this.deploy(iotHubConnectionString, deviceItem.deviceId, deploymentJson, from);
     }
 
@@ -74,15 +65,6 @@ export class IoTEdgeExplorer extends BaseExplorer {
         const deploymentJson = await this.getDeploymentJson(filePath);
         if (!deploymentJson) {
             return;
-        }
-
-        try {
-            const isValidJson = await this.isValidDeploymentJson(deploymentJson);
-            if (!isValidJson) {
-                return;
-            }
-        } catch (error) {
-            TelemetryClient.sendEvent(Constants.IoTHubAIValidateJsonSchemaEvent, { error: error.message });
         }
 
         this.deployAtScale(iotHubConnectionString, deploymentJson);
@@ -122,8 +104,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
         }
     }
 
-    private async isValidDeploymentJson(jsonStr: string): Promise<boolean> {
-        const json = JSON.parse(jsonStr);
+    private async isValidDeploymentJsonSchema(json: object): Promise<boolean> {
         const schema = (await axios.get(Constants.DeploymentJsonSchemaUrl)).data;
         const ajv = new Ajv({ allErrors: true });
         const valid = ajv.validate(schema, json);
@@ -185,8 +166,18 @@ export class IoTEdgeExplorer extends BaseExplorer {
             if (!contentJson.modulesContent && contentJson.moduleContent) {
                 contentJson.modulesContent = contentJson.moduleContent;
                 delete contentJson.moduleContent;
-                content = JSON.stringify(contentJson, null, 2);
             }
+
+            try {
+                const isValid = await this.isValidDeploymentJsonSchema(contentJson);
+                if (!isValid) {
+                    return "";
+                }
+            } catch (error) {
+                TelemetryClient.sendEvent(Constants.IoTHubAIValidateJsonSchemaEvent, { error: error.message });
+            }
+
+            content = JSON.stringify(contentJson, null, 2);
         } catch (error) {
             vscode.window.showErrorMessage("Failed to parse deployment manifest: " + error.toString());
             return "";
