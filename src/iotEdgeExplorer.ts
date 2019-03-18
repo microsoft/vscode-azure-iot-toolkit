@@ -2,6 +2,8 @@
 // Licensed under the MIT license.
 
 "use strict";
+import * as Ajv from "ajv";
+import axios from "axios";
 import * as iothub from "azure-iothub";
 import * as fs from "fs";
 import * as path from "path";
@@ -102,6 +104,18 @@ export class IoTEdgeExplorer extends BaseExplorer {
         }
     }
 
+    private async isValidDeploymentJsonSchema(json: object): Promise<boolean> {
+        const schema = (await axios.get(Constants.DeploymentJsonSchemaUrl)).data;
+        const ajv = new Ajv({ allErrors: true });
+        const valid = ajv.validate(schema, json);
+        if (!valid) {
+            vscode.window.showErrorMessage(`There are errors in deployment json file: ${ajv.errorsText(null, { separator: ", " })}`);
+            return false;
+        }
+
+        return true;
+    }
+
     private async getModuleTwinById(deviceId: string, moduleId: string, moduleType: string = "unknown") {
         TelemetryClient.sendEvent(Constants.IoTHubAIGetModuleTwinStartEvent, { moduleType });
         const iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
@@ -152,8 +166,18 @@ export class IoTEdgeExplorer extends BaseExplorer {
             if (!contentJson.modulesContent && contentJson.moduleContent) {
                 contentJson.modulesContent = contentJson.moduleContent;
                 delete contentJson.moduleContent;
-                content = JSON.stringify(contentJson, null, 2);
             }
+
+            try {
+                const isValid = await this.isValidDeploymentJsonSchema(contentJson);
+                if (!isValid) {
+                    return "";
+                }
+            } catch (error) {
+                TelemetryClient.sendEvent(Constants.IoTHubAIValidateJsonSchemaEvent, { error: error.message });
+            }
+
+            content = JSON.stringify(contentJson, null, 2);
         } catch (error) {
             vscode.window.showErrorMessage("Failed to parse deployment manifest: " + error.toString());
             return "";
@@ -163,7 +187,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
     }
 
     private async deploy(iotHubConnectionString: string, deviceId: string, deploymentJson: string, from: string) {
-        const label = "Edge";
+        const label = Constants.IoTHubEdgeLabel;
         this._outputChannel.show();
         this.outputLine(label, `Start deployment to device [${deviceId}]`);
         const entry = from === "none" ? "commandPalette" : "contextMenu";
@@ -268,7 +292,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
             priority: parseInt(priority, 10),
         };
 
-        const label = "Edge";
+        const label = Constants.IoTHubEdgeLabel;
         this._outputChannel.show();
         this.outputLine(label, `Start deployment with deployment id [${deploymentId}] and target condition [${targetCondition}]`);
 

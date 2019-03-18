@@ -700,6 +700,8 @@
   },
   "dependencies": {
     "@azure/event-hubs": "^1.0.8",
+    "ajv": "^6.10.0",
+    "axios": "^0.18.0",
     "azure-arm-iothub": "^2.0.1",
     "azure-arm-resource": "^2.0.0-preview",
     "azure-iot-common": "^1.8.1",

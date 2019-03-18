@@ -62,6 +62,7 @@ export class Constants {
     public static IoTHubDeviceTwinLabel = "DeviceTwin";
     public static IoTHubModuleTwinLabel = "ModuleTwin";
     public static IoTHubDistributedTracingSettingLabel = "DistributedTracingSetting";
+    public static IoTHubEdgeLabel = "Edge";
 
     public static IoTHubAILoadDeviceTreeEvent = "AZ.LoadDeviceTree";
     public static IoTHubAIStartMonitorEvent = "AZ.D2C.startMonitoring";
@@ -108,10 +109,12 @@ export class Constants {
     public static IoTHubAILoadLabelInDeviceTreeDoneEvent = "AZ.LoadLabelInDeviceTree.Done";
     public static IoTHubAIStartLoadDeviceTreeEvent = "General.StartLoadDeviceTree";
     public static IoTHubAIShowWelcomePagetEvent = "General.WelcomePage.Show";
+    public static IoTHubAIValidateJsonSchemaEvent = "General.ValidateJsonSchema.Done";
     public static PercentageLabel = "(%)";
     public static NotSetLabel = "Not Set";
     public static DisabledLabel = "Disabled";
     public static EnabledLabel = "Enabled";
+    public static DeploymentJsonSchemaUrl = "http://json.schemastore.org/azure-iot-edge-deployment-1.0";
 
     public static DeleteLabel = "Delete";
     public static DeleteMessage = "Are you sure you want to delete";    public static readonly DISTRIBUTED_TWIN_NAME: string = "azureiot*com^dtracing^1";
