@@ -51,9 +51,13 @@ export class IoTEdgeExplorer extends BaseExplorer {
             return;
         }
 
-        const isValidJson = await this.isValidDeploymentJson(deploymentJson);
-        if (!isValidJson) {
-            return;
+        try {
+            const isValidJson = await this.isValidDeploymentJson(deploymentJson);
+            if (!isValidJson) {
+                return;
+            }
+        } catch (error) {
+            TelemetryClient.sendEvent(Constants.IoTHubAIValidateJsonSchemaEvent, { error: error.message });
         }
 
         this.deploy(iotHubConnectionString, deviceItem.deviceId, deploymentJson, from);
@@ -73,9 +77,13 @@ export class IoTEdgeExplorer extends BaseExplorer {
             return;
         }
 
-        const isValidJson = await this.isValidDeploymentJson(deploymentJson);
-        if (!isValidJson) {
-            return;
+        try {
+            const isValidJson = await this.isValidDeploymentJson(deploymentJson);
+            if (!isValidJson) {
+                return;
+            }
+        } catch (error) {
+            TelemetryClient.sendEvent(Constants.IoTHubAIValidateJsonSchemaEvent, { error: error.message });
         }
 
         this.deployAtScale(iotHubConnectionString, deploymentJson);
@@ -116,44 +124,16 @@ export class IoTEdgeExplorer extends BaseExplorer {
     }
 
     private async isValidDeploymentJson(jsonStr: string): Promise<boolean> {
-        try {
-            const json = this.tryParseJson(jsonStr);
-            let errorMessage = null;
-
-            if (json === null) {
-                errorMessage = "The deployment json file is not a valid json file";
-            } else {
-                const schema = (await axios.get(Constants.DeploymentJsonSchemaUrl)).data;
-                const ajv = new Ajv({ allErrors: true });
-                const valid = ajv.validate(schema, json);
-                if (!valid) {
-                    errorMessage = `There are errors in deployment json file: ${ajv.errorsText(null, { separator: ", " })}`;
-                }
-            }
-
-            if (errorMessage) {
-                throw new JsonSchemaValidateError(errorMessage);
-            }
-
-            TelemetryClient.sendEvent(Constants.IoTHubAIValidateJsonSchemaEvent);
-        } catch (error) {
-            TelemetryClient.sendEvent(Constants.IoTHubAIValidateJsonSchemaEvent, { error: error.message });
-
-            if (error instanceof JsonSchemaValidateError) {
-                vscode.window.showErrorMessage(error.message);
-                return false;
-            }
+        const json = JSON.parse(jsonStr);
+        const schema = (await axios.get(Constants.DeploymentJsonSchemaUrl)).data;
+        const ajv = new Ajv({ allErrors: true });
+        const valid = ajv.validate(schema, json);
+        if (!valid) {
+            vscode.window.showErrorMessage(`There are errors in deployment json file: ${ajv.errorsText(null, { separator: ", " })}`);
+            return false;
         }
 
         return true;
-    }
-
-    private tryParseJson(jsonStr: string) {
-        try {
-            return JSON.parse(jsonStr);
-        } catch (err) {
-            return null;
-        }
     }
 
     private async getModuleTwinById(deviceId: string, moduleId: string, moduleType: string = "unknown") {
