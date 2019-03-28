@@ -116,7 +116,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
         return true;
     }
 
-    private async isValidCreateOptions(desiredProperties: any): Promise<boolean> {
+    private isValidCreateOptions(desiredProperties: any): boolean {
         const systemModules = desiredProperties.systemModules;
         for (const systemModuleName in systemModules) {
             if (systemModules.hasOwnProperty(systemModuleName)) {
@@ -203,7 +203,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 
             try {
                 const isValid = await this.isValidDeploymentJsonSchema(contentJson)
-                    && await this.isValidCreateOptions(contentJson.modulesContent.$edgeAgent["properties.desired"]);
+                    && this.isValidCreateOptions(contentJson.modulesContent.$edgeAgent["properties.desired"]);
 
                 if (!isValid) {
                     return "";
