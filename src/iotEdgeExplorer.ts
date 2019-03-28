@@ -117,32 +117,36 @@ export class IoTEdgeExplorer extends BaseExplorer {
     }
 
     private async isValidCreateOptions(desiredProperties: any): Promise<boolean> {
-
-        try {
-            const moduleCreateOptions: string [] = [];
-
-            const systemModules = desiredProperties.systemModules;
-            moduleCreateOptions.push(systemModules.edgeAgent.settings.createOptions);
-            moduleCreateOptions.push(systemModules.edgeHub.settings.createOptions);
-
-            const customModules = desiredProperties.modules;
-            for (const moduleName in customModules) {
-                if (customModules.hasOwnProperty(moduleName)) {
-                    moduleCreateOptions.push(customModules[moduleName].settings.createOptions);
+        const systemModules = desiredProperties.systemModules;
+        for (const systemModuleName in systemModules) {
+            if (systemModules.hasOwnProperty(systemModuleName)) {
+                try {
+                    const createOptions = systemModules[systemModuleName].settings.createOptions;
+                    if (createOptions) {
+                        JSON.parse(createOptions);
+                    }
+                } catch (error) {
+                    vscode.window.showErrorMessage(`Cannot convert createOptions of system module "${systemModuleName}" as json object: ${error.message}`);
+                    return false;
                 }
             }
-
-            moduleCreateOptions.forEach( (createOption) => {
-                if (createOption) {
-                    JSON.parse(createOption);
-                }
-            });
-
-            return true;
-        } catch (error) {
-            vscode.window.showErrorMessage(`Cannot parse createOptions of modules: ${error.message}`);
-            return false;
         }
+
+        const customModules = desiredProperties.modules;
+        for (const moduleName in customModules) {
+            if (customModules.hasOwnProperty(moduleName)) {
+                try {
+                    const createOptions = customModules[moduleName].settings.createOptions;
+                    if (createOptions) {
+                        JSON.parse(createOptions);
+                    }
+                } catch (error) {
+                    vscode.window.showErrorMessage(`Cannot convert createOptions of custom module "${moduleName}" as json object: ${error.message}`);
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     private async getModuleTwinById(deviceId: string, moduleId: string, moduleType: string = "unknown") {
