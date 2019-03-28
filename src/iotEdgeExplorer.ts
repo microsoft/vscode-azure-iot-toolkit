@@ -116,6 +116,35 @@ export class IoTEdgeExplorer extends BaseExplorer {
         return true;
     }
 
+    private async isValidCreateOptions(desiredProperties: any): Promise<boolean> {
+
+        try {
+            const moduleCreateOptions: string [] = [];
+
+            const systemModules = desiredProperties.systemModules;
+            moduleCreateOptions.push(systemModules.edgeAgent.settings.createOptions);
+            moduleCreateOptions.push(systemModules.edgeHub.settings.createOptions);
+
+            const customModules = desiredProperties.modules;
+            for (const moduleName in customModules) {
+                if (customModules.hasOwnProperty(moduleName)) {
+                    moduleCreateOptions.push(customModules[moduleName].settings.createOptions);
+                }
+            }
+
+            moduleCreateOptions.forEach( (createOption) => {
+                if (createOption) {
+                    JSON.parse(createOption);
+                }
+            });
+
+            return true;
+        } catch (error) {
+            vscode.window.showErrorMessage(`Cannot parse createOptions of modules: ${error.message}`);
+            return false;
+        }
+    }
+
     private async getModuleTwinById(deviceId: string, moduleId: string, moduleType: string = "unknown") {
         TelemetryClient.sendEvent(Constants.IoTHubAIGetModuleTwinStartEvent, { moduleType });
         const iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
@@ -169,7 +198,9 @@ export class IoTEdgeExplorer extends BaseExplorer {
             }
 
             try {
-                const isValid = await this.isValidDeploymentJsonSchema(contentJson);
+                const isValid = await this.isValidDeploymentJsonSchema(contentJson)
+                    && await this.isValidCreateOptions(contentJson.modulesContent.$edgeAgent["properties.desired"]);
+
                 if (!isValid) {
                     return "";
                 }
