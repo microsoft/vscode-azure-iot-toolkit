@@ -116,6 +116,36 @@ export class IoTEdgeExplorer extends BaseExplorer {
         return true;
     }
 
+    private isValidCreateOptions(desiredProperties: any): boolean {
+        return this.isValidCreateOptionsHepler(desiredProperties.systemModules) && this.isValidCreateOptionsHepler(desiredProperties.modules);
+    }
+
+    private isValidCreateOptionsHepler(modules: any): boolean {
+        for (const moduleName in modules) {
+            if (modules.hasOwnProperty(moduleName)) {
+                try {
+                    const createOptions = modules[moduleName].settings.createOptions;
+                    if (createOptions) {
+                        this.checkJsonString(createOptions);
+                    }
+                } catch (error) {
+                    vscode.window.showErrorMessage(`CreateOptions of "${moduleName}" is not a valid JSON string: ${error.message}`);
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private checkJsonString(json: string) {
+        if (json) {
+            if (json.trim().charAt(0) !== "{") {
+                throw new Error("not a valid JSON string");
+            }
+            JSON.parse(json);
+        }
+    }
+
     private async getModuleTwinById(deviceId: string, moduleId: string, moduleType: string = "unknown") {
         TelemetryClient.sendEvent(Constants.IoTHubAIGetModuleTwinStartEvent, { moduleType });
         const iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
@@ -169,7 +199,9 @@ export class IoTEdgeExplorer extends BaseExplorer {
             }
 
             try {
-                const isValid = await this.isValidDeploymentJsonSchema(contentJson);
+                const isValid = await this.isValidDeploymentJsonSchema(contentJson)
+                    && this.isValidCreateOptions(contentJson.modulesContent.$edgeAgent["properties.desired"]);
+
                 if (!isValid) {
                     return "";
                 }
