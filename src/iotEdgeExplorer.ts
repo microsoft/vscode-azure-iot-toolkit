@@ -117,36 +117,33 @@ export class IoTEdgeExplorer extends BaseExplorer {
     }
 
     private isValidCreateOptions(desiredProperties: any): boolean {
-        const systemModules = desiredProperties.systemModules;
-        for (const systemModuleName in systemModules) {
-            if (systemModules.hasOwnProperty(systemModuleName)) {
-                try {
-                    const createOptions = systemModules[systemModuleName].settings.createOptions;
-                    if (createOptions) {
-                        JSON.parse(createOptions);
-                    }
-                } catch (error) {
-                    vscode.window.showErrorMessage(`Cannot convert createOptions of system module "${systemModuleName}" as json object: ${error.message}`);
-                    return false;
-                }
-            }
-        }
+        return this.isValidCreateOptionsHepler(desiredProperties.systemModules) && this.isValidCreateOptionsHepler(desiredProperties.modules);
+    }
 
-        const customModules = desiredProperties.modules;
-        for (const moduleName in customModules) {
-            if (customModules.hasOwnProperty(moduleName)) {
+    private isValidCreateOptionsHepler(modules: any): boolean {
+        for (const moduleName in modules) {
+            if (modules.hasOwnProperty(moduleName)) {
                 try {
-                    const createOptions = customModules[moduleName].settings.createOptions;
+                    const createOptions = modules[moduleName].settings.createOptions;
                     if (createOptions) {
-                        JSON.parse(createOptions);
+                        this.checkJsonString(createOptions);
                     }
                 } catch (error) {
-                    vscode.window.showErrorMessage(`Cannot convert createOptions of custom module "${moduleName}" as json object: ${error.message}`);
+                    vscode.window.showErrorMessage(`Cannot convert createOptions of module "${moduleName}" as json object: ${error.message}`);
                     return false;
                 }
             }
         }
         return true;
+    }
+
+    private checkJsonString(json: string) {
+        if (json) {
+            if (json.trim().charAt(0) !== "{") {
+                throw new Error("not a valid json string");
+            }
+            JSON.parse(json);
+        }
     }
 
     private async getModuleTwinById(deviceId: string, moduleId: string, moduleType: string = "unknown") {
