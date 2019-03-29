@@ -129,7 +129,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
                         this.checkJsonString(createOptions);
                     }
                 } catch (error) {
-                    vscode.window.showErrorMessage(`Cannot convert createOptions of module "${moduleName}" as json object: ${error.message}`);
+                    vscode.window.showErrorMessage(`CreateOptions of "${moduleName}" is not a valid JSON string: ${error.message}`);
                     return false;
                 }
             }
@@ -140,7 +140,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
     private checkJsonString(json: string) {
         if (json) {
             if (json.trim().charAt(0) !== "{") {
-                throw new Error("not a valid json string");
+                throw new Error("not a valid JSON string");
             }
             JSON.parse(json);
         }
