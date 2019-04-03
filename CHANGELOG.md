@@ -1,6 +1,6 @@
 ## 2.5.0 (2019-04-03)
 ### Added
-* Add Json schema check when create deployment
+* Add JSON schema check when creating deployment
 
 ### Changed
 * Sort and group menu for device explorer
