@@ -1,6 +1,6 @@
 ## 2.5.0 (2019-04-03)
 ### Added
-* Add JSON schema check when creating deployment
+* Add JSON schema check when creating IoT Edge deployment
 
 ### Changed
 * Sort and group menu for device explorer
