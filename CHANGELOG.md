@@ -1,3 +1,10 @@
+## 2.5.0 (2019-04-03)
+### Added
+* Add Json schema check when create deployment
+
+### Changed
+* Sort and group menu for device explorer
+
 ## 2.4.0 (2019-03-11)
 ### Added
 * [Accessibility] Indicate device/module status in description of tree item
