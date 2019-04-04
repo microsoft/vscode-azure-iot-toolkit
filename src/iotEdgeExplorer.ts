@@ -126,9 +126,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
                 try {
                     let createOptions = modules[moduleName].settings.createOptions;
 
-                    let i = 0;
-                    while (i < Constants.CREATE_OPTIONS_MAX_CHUNKS) {
-                        i++;
+                    for (let i = 1; i < Constants.CREATE_OPTIONS_MAX_CHUNKS; i++) {
                         const extendedCreateOptions = modules[moduleName].settings[`createOptions0${i}`];
                         if (!extendedCreateOptions) {
                             break;
