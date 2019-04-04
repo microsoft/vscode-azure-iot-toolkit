@@ -124,7 +124,16 @@ export class IoTEdgeExplorer extends BaseExplorer {
         for (const moduleName in modules) {
             if (modules.hasOwnProperty(moduleName)) {
                 try {
-                    const createOptions = modules[moduleName].settings.createOptions;
+                    let createOptions = modules[moduleName].settings.createOptions;
+
+                    for (let i = 1; i < Constants.CREATE_OPTIONS_MAX_CHUNKS; i++) {
+                        const extendedCreateOptions = modules[moduleName].settings[`createOptions0${i}`];
+                        if (!extendedCreateOptions) {
+                            break;
+                        }
+                        createOptions += extendedCreateOptions;
+                    }
+
                     if (createOptions) {
                         this.checkJsonString(createOptions);
                     }
