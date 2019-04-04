@@ -1,3 +1,7 @@
+## 2.5.1 (2019-04-04)
+### Fixed
+* [#293](https://github.com/Microsoft/vscode-azure-iot-toolkit/issues/293): Fix deployment JSON validation issue when create options is larger than 512 bytes
+
 ## 2.5.0 (2019-04-03)
 ### Added
 * Add JSON schema check when creating IoT Edge deployment
