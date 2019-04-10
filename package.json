@@ -699,7 +699,7 @@
     "webpack-cli": "^3.1.2"
   },
   "dependencies": {
-    "@azure/event-hubs": "^1.0.8",
+    "@azure/event-hubs": "^2.0.0",
     "ajv": "^6.10.0",
     "axios": "^0.18.0",
     "azure-arm-iothub": "^2.0.1",
