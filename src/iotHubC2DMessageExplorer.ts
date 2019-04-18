@@ -93,6 +93,10 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
                 TelemetryClient.sendEvent(Constants.IoTHubAIStartMonitorC2DEvent);
                 this._deviceClient.on("message", (msg) => {
                     this.outputLine(Constants.IoTHubC2DMessageMonitorLabel, "Message Received: " + msg.getData());
+                    if (msg.properties && msg.properties.propertyList && msg.properties.propertyList.length > 0) {
+                        this._outputChannel.appendLine("Properties:");
+                        this._outputChannel.appendLine(JSON.stringify(msg.properties.propertyList, null, 2));
+                    }
                     this._deviceClient.complete(msg, this.printResult);
                 });
             }
