@@ -1,3 +1,13 @@
+## 2.6.0 (2019-04-23)
+### Added
+* Show properties when monitoring C2D message
+
+### Changed
+* Upgrade @azure/event-hubs npm to 2.0.0
+
+### Fixed
+* Fix context menu issue for deployment JSON file
+
 ## 2.5.1 (2019-04-04)
 ### Fixed
 * [#293](https://github.com/Microsoft/vscode-azure-iot-toolkit/issues/293): Fix deployment JSON validation issue when create options is larger than 512 bytes
