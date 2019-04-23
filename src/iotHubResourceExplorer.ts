@@ -16,6 +16,7 @@ import { ResourceGroupItem } from "./Model/ResourceGroupItem";
 import { SubscriptionItem } from "./Model/SubscriptionItem";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
+import { EventHubManagementClient, EventHubManagementModels, EventHubManagementMappers } from "@azure/arm-eventhub";
 
 export class IoTHubResourceExplorer extends BaseExplorer {
     private readonly accountApi: AzureAccount;
@@ -142,6 +143,8 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         TelemetryClient.sendEvent("General.Select.Subscription.Done");
         const iotHubItem = await this.selectIoTHubItem(subscriptionItem);
         if (iotHubItem) {
+            const clientEH = new EventHubManagementClient(subscriptionItem.session.credentials, subscriptionId);
+            clientEH.eventHubs.listKeys()
             outputChannel.show();
             outputChannel.appendLine(`IoT Hub selected: ${iotHubItem.label}`);
             const iotHubConnectionString = await this.getIoTHubConnectionString(subscriptionItem, iotHubItem.iotHubDescription);

@@ -694,6 +694,7 @@
     "webpack-cli": "^3.1.2"
   },
   "dependencies": {
+    "@azure/arm-eventhub": "^3.2.0",
     "@azure/event-hubs": "^2.0.0",
     "ajv": "^6.10.0",
     "axios": "^0.18.0",

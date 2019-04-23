@@ -283,7 +283,7 @@ export class Utility {
             const isConnected = device.connectionState.toString() === "Connected";
             const state: string = isConnected ? "on" : "off";
             if (isConnected) {
-                device.description = device.connectionState.toString()
+                device.description = device.connectionState.toString();
             }
             let deviceType: string;
             if (edgeDeviceIdSet.has(device.deviceId)) {
