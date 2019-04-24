@@ -7,6 +7,7 @@
 
 ### Fixed
 * Fix context menu issue for deployment JSON file
+* [#303](https://github.com/Microsoft/vscode-azure-iot-toolkit/issues/303): 'Create Module' should not show in context menu of device node
 
 ## 2.5.1 (2019-04-04)
 ### Fixed
