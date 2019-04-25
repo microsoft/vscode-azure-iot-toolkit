@@ -68,11 +68,20 @@
   ],
   "main": "./dist/extension",
   "contributes": {
+		"viewsContainers": { 
+      "activitybar": [ 
+        { 
+          "id": "azure", 
+          "title": "Azure", 
+          "icon": "resources/azure.svg" 
+        } 
+      ] 
+    },
     "views": {
-      "explorer": [
+      "azure": [
         {
           "id": "iotHubDevices",
-          "name": "Azure IoT Hub Devices"
+          "name": "IoT Hub Devices"
         }
       ]
     },
