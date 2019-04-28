@@ -7,6 +7,7 @@ import { CodeManager } from "./codeManager";
 import { DistributedSettingUpdateType } from "./constants";
 import { DeviceExplorer } from "./deviceExplorer";
 import { DistributedTracingManager } from "./distributedTracingManager";
+import { EventHubManager } from "./eventHubManager";
 import { IoTEdgeExplorer } from "./iotEdgeExplorer";
 import { IotHubC2DMessageExplorer } from "./iotHubC2DMessageExplorer";
 import { IotHubDeviceTwinExplorer } from "./iotHubDeviceTwinExplorer";
@@ -15,6 +16,7 @@ import { IoTHubMessageExplorer } from "./iotHubMessageExplorer";
 import { IotHubModuleExplorer } from "./iotHubModuleExplorer";
 import { IoTHubResourceExplorer } from "./iotHubResourceExplorer";
 import { DeviceItem } from "./Model/DeviceItem";
+import { EventHubItem } from "./Model/EventHubItem";
 import { ModuleItem } from "./Model/ModuleItem";
 import { DeviceNode } from "./Nodes/DeviceNode";
 import { ModuleItemNode } from "./Nodes/ModuleItemNode";
@@ -34,6 +36,7 @@ export class AzureIoTExplorer {
     private _codeManager: CodeManager;
     private _iotHubModuleExplorer: IotHubModuleExplorer;
     private _distributedTracingManager: DistributedTracingManager;
+    private _eventHubManager: EventHubManager;
 
     constructor(private context: vscode.ExtensionContext) {
         let outputChannel = vscode.window.createOutputChannel("Azure IoT Hub Toolkit");
@@ -49,6 +52,7 @@ export class AzureIoTExplorer {
         this._welcomePage = new WelcomePage(this.context);
         this._codeManager = new CodeManager(this.context);
         this._iotHubModuleExplorer = new IotHubModuleExplorer(outputChannel);
+        this._eventHubManager = new EventHubManager(outputChannel);
     }
 
     public sendD2CMessage(deviceItem?: DeviceItem): void {
@@ -181,5 +185,9 @@ export class AzureIoTExplorer {
 
     public async copyModuleConnectionString(moduleItem: ModuleItem) {
         await this._iotHubModuleExplorer.copyModuleConnectionString(moduleItem);
+    }
+
+    public async startMonitorEventHubMessage(eventHubItem: EventHubItem) {
+        this._eventHubManager.startMonitorEventHubMMessage(eventHubItem);
     }
 }

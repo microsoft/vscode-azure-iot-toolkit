@@ -64,7 +64,8 @@
     "onCommand:azure-iot-toolkit.updateDistributedTracingSetting",
     "onCommand:azure-iot-toolkit.deleteModule",
     "onCommand:azure-iot-toolkit.getModule",
-    "onCommand:azure-iot-toolkit.copyModuleConnectionString"
+    "onCommand:azure-iot-toolkit.copyModuleConnectionString",
+    "onCommand:azure-iot-toolkit.startMonitorEventHubMessage"
   ],
   "main": "./dist/extension",
   "contributes": {
@@ -259,6 +260,11 @@
       {
         "command": "azure-iot-toolkit.copyModuleConnectionString",
         "title": "Copy Module Connection String",
+        "category": "Azure IoT Hub"
+      },
+      {
+        "command": "azure-iot-toolkit.startMonitorEventHubMessage",
+        "title": "Start Monitoring Message from custom Event Hub endpoints",
         "category": "Azure IoT Hub"
       }
     ],
@@ -535,6 +541,10 @@
           "command": "azure-iot-toolkit.editDistributedTracingSamplingRate",
           "when": "view == iotHubDevices && viewItem == desired-sampling-rate-property",
           "group": "azure-iot-toolkit@7"
+        },
+        {
+          "command": "azure-iot-toolkit.startMonitorEventHubMessage",
+          "when": "view == iotHubDevices && viewItem == event-hub"
         }
       ],
       "editor/context": [
@@ -694,10 +704,10 @@
     "webpack-cli": "^3.1.2"
   },
   "dependencies": {
-    "@azure/arm-eventhub": "^3.2.0",
     "@azure/event-hubs": "^2.0.0",
     "ajv": "^6.10.0",
     "axios": "^0.18.0",
+    "azure-arm-eventhub": "^3.2.0",
     "azure-arm-iothub": "^2.0.1",
     "azure-arm-resource": "^2.0.0-preview",
     "azure-iot-common": "^1.8.1",

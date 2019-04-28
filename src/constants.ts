@@ -52,6 +52,7 @@ export class Constants {
     public static IoTHubConsumerGroup = "iotHubConsumerGroup";
     public static IoTHubD2CMessageStringifyKey = "iotHubD2CMessageStringify";
     public static IoTHubMonitorLabel = "IoTHubMonitor";
+    public static EventHubMonitorLabel = "EventHubMonitor";
     public static IoTHubMessageLabel = "D2CMessage";
     public static IoTHubC2DMessageLabel = "C2DMessage";
     public static IoTHubC2DMessageMonitorLabel = "C2DMessageMonitor";
@@ -116,6 +117,8 @@ export class Constants {
     public static EnabledLabel = "Enabled";
     public static DeploymentJsonSchemaUrl = "http://json.schemastore.org/azure-iot-edge-deployment-1.0";
     public static CREATE_OPTIONS_MAX_CHUNKS = 8;
+    public static StateKeySubsID = "subscriptionId";
+    public static StateKeyIoTHubID = "iothubid";
 
     public static DeleteLabel = "Delete";
     public static DeleteMessage = "Are you sure you want to delete";    public static readonly DISTRIBUTED_TWIN_NAME: string = "azureiot*com^dtracing^1";

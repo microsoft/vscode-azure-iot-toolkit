@@ -19,6 +19,8 @@ import { InfoNode } from "./Nodes/InfoNode";
 import { INode } from "./Nodes/INode";
 import { TelemetryClient } from "./telemetryClient";
 import iothub = require("azure-iothub");
+import { EventData } from "@azure/event-hubs";
+import { AzureAccount } from "./azure-account.api";
 
 export class Utility {
     public static getConfiguration(): vscode.WorkspaceConfiguration {
@@ -371,6 +373,47 @@ export class Utility {
     public static async getTwin(registry: iothub.Registry, deviceId: string): Promise<any> {
         const result = await registry.getTwin(deviceId);
         return result.responseBody;
+    }
+
+    public static getAzureAccountApi(): AzureAccount {
+        return vscode.extensions.getExtension<AzureAccount>("ms-vscode.azure-account")!.exports;
+    }
+
+    public static getMessageFromEventData(message: EventData): any {
+        const config = Utility.getConfiguration();
+        const showVerboseMessage = config.get<boolean>("showVerboseMessage");
+        let result;
+        const body = Utility.tryGetStringFromCharCode(message.body);
+        if (showVerboseMessage) {
+            result = {
+                body,
+                applicationProperties: message.applicationProperties,
+                annotations: message.annotations,
+                properties: message.properties,
+            };
+        } else if (message.applicationProperties && Object.keys(message.applicationProperties).length > 0) {
+            result = {
+                body,
+                applicationProperties: message.applicationProperties,
+            };
+        } else {
+            result = body;
+        }
+        return result;
+    }
+
+    public static getTimeMessageFromEventData(message: EventData): string {
+        return message.enqueuedTimeUtc ? `[${message.enqueuedTimeUtc.toLocaleTimeString("en-US")}] ` : "";
+    }
+
+    private static tryGetStringFromCharCode(source) {
+        if (source instanceof Uint8Array) {
+            try {
+                source = String.fromCharCode.apply(null, source);
+            } catch (e) {
+            }
+        }
+        return source;
     }
 
     private static async getFilteredDeviceList(iotHubConnectionString: string, onlyEdgeDevice: boolean): Promise<DeviceItem[]> {

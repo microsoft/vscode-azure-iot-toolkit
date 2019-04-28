@@ -16,14 +16,13 @@ import { ResourceGroupItem } from "./Model/ResourceGroupItem";
 import { SubscriptionItem } from "./Model/SubscriptionItem";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
-import { EventHubManagementClient, EventHubManagementModels, EventHubManagementMappers } from "@azure/arm-eventhub";
 
 export class IoTHubResourceExplorer extends BaseExplorer {
     private readonly accountApi: AzureAccount;
 
     constructor(outputChannel: vscode.OutputChannel) {
         super(outputChannel);
-        this.accountApi = vscode.extensions.getExtension<AzureAccount>("ms-vscode.azure-account")!.exports;
+        this.accountApi = Utility.getAzureAccountApi();
     }
 
     public async createIoTHub(outputChannel: vscode.OutputChannel = this._outputChannel, subscriptionId?: string, resourceGroupName?: string): Promise<IotHubDescription> {
@@ -143,14 +142,13 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         TelemetryClient.sendEvent("General.Select.Subscription.Done");
         const iotHubItem = await this.selectIoTHubItem(subscriptionItem);
         if (iotHubItem) {
-            const clientEH = new EventHubManagementClient(subscriptionItem.session.credentials, subscriptionId);
-            clientEH.eventHubs.listKeys()
             outputChannel.show();
             outputChannel.appendLine(`IoT Hub selected: ${iotHubItem.label}`);
             const iotHubConnectionString = await this.getIoTHubConnectionString(subscriptionItem, iotHubItem.iotHubDescription);
             await this.updateIoTHubConnectionString(iotHubConnectionString);
             (iotHubItem.iotHubDescription as any).iotHubConnectionString = iotHubConnectionString;
             TelemetryClient.sendEvent("AZ.Select.IoTHub.Done", undefined, iotHubConnectionString);
+            await this.storeIoTHubInfo(subscriptionItem, iotHubItem.iotHubDescription);
             return iotHubItem.iotHubDescription;
         }
     }
@@ -183,6 +181,11 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         if (deviceItem && deviceItem.connectionString) {
             this.generateSasToken(Utility.generateSasTokenForDevice, deviceItem.connectionString, deviceItem.deviceId);
         }
+    }
+
+    private async storeIoTHubInfo(subscriptionItem: SubscriptionItem, iotHubDescription: IotHubDescription) {
+        await Constants.ExtensionContext.globalState.update(Constants.StateKeySubsID, subscriptionItem.subscription.subscriptionId);
+        await Constants.ExtensionContext.globalState.update(Constants.StateKeyIoTHubID, iotHubDescription.id);
     }
 
     private async generateSasToken(sasTokenFunction: (connectionString: string, expiryInHours: number) => string, connectionString: string, target: string) {

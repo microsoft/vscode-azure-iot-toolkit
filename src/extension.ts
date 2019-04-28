@@ -13,6 +13,7 @@ import { ModuleLabelNode } from "./Nodes/ModuleLabelNode";
 import { DeviceTwinCodeLensProvider } from "./providers/deviceTwinCodeLensProvider";
 import { ModuleTwinCodeLensProvider } from "./providers/moduleTwinCodeLensProvider";
 import { TelemetryClient } from "./telemetryClient";
+import { EventHubItemNode } from "./Nodes/Endpoints/EventHubItemNode";
 
 export function activate(context: vscode.ExtensionContext) {
     TelemetryClient.sendEvent("extensionActivated");
@@ -171,6 +172,10 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.copyModuleConnectionString", async (moduleItemNode: ModuleItemNode) => {
         await azureIoTExplorer.copyModuleConnectionString(moduleItemNode ? moduleItemNode.moduleItem : undefined);
+    }));
+
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.startMonitorEventHubMessage", async (eventHubItemNode: EventHubItemNode) => {
+        await azureIoTExplorer.startMonitorEventHubMessage(eventHubItemNode ? eventHubItemNode.eventHubItem : undefined);
     }));
 
     vscode.workspace.onDidChangeTextDocument((event) => azureIoTExplorer.replaceConnectionString(event));
