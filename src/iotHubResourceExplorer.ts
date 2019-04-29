@@ -109,6 +109,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
                     await this.updateIoTHubConnectionString(newIotHubConnectionString);
                     (iotHubDescription as any).iotHubConnectionString = newIotHubConnectionString;
                     TelemetryClient.sendEvent(Constants.IoTHubAICreateDoneEvent, { Result: "Success" }, newIotHubConnectionString);
+                    await Utility.storeIoTHubInfo(subscriptionItem, iotHubDescription);
                     return iotHubDescription;
                 })
                 .catch((err) => {
@@ -148,7 +149,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
             await this.updateIoTHubConnectionString(iotHubConnectionString);
             (iotHubItem.iotHubDescription as any).iotHubConnectionString = iotHubConnectionString;
             TelemetryClient.sendEvent("AZ.Select.IoTHub.Done", undefined, iotHubConnectionString);
-            await this.storeIoTHubInfo(subscriptionItem, iotHubItem.iotHubDescription);
+            await Utility.storeIoTHubInfo(subscriptionItem, iotHubItem.iotHubDescription);
             return iotHubItem.iotHubDescription;
         }
     }
@@ -181,11 +182,6 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         if (deviceItem && deviceItem.connectionString) {
             this.generateSasToken(Utility.generateSasTokenForDevice, deviceItem.connectionString, deviceItem.deviceId);
         }
-    }
-
-    private async storeIoTHubInfo(subscriptionItem: SubscriptionItem, iotHubDescription: IotHubDescription) {
-        await Constants.ExtensionContext.globalState.update(Constants.StateKeySubsID, subscriptionItem.subscription.subscriptionId);
-        await Constants.ExtensionContext.globalState.update(Constants.StateKeyIoTHubID, iotHubDescription.id);
     }
 
     private async generateSasToken(sasTokenFunction: (connectionString: string, expiryInHours: number) => string, connectionString: string, target: string) {

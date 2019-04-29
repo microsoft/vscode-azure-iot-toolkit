@@ -5,6 +5,7 @@ import IotHubClient from "azure-arm-iothub";
 import * as vscode from "vscode";
 import { Constants } from "../../constants";
 import { Utility } from "../../utility";
+import { CommandNode } from "../CommandNode";
 import { INode } from "../INode";
 import { EventHubLabelNode } from "./EventHubLabelNode";
 
@@ -22,12 +23,12 @@ export class EndpointsLabelNode implements INode {
 
     public async getChildren(): Promise<INode[]> {
         const accountApi = Utility.getAzureAccountApi();
-        if (!(await accountApi.waitForLogin())) {
-            return [];
+        const subscriptionId = Constants.ExtensionContext.globalState.get(Constants.StateKeySubsID);
+        if (!subscriptionId || !(await accountApi.waitForLogin())) {
+            return [new CommandNode("Please select an IoT Hub", "azure-iot-toolkit.selectIoTHub")];
         }
 
-        // TODO: check whether Constants.StateKeySubsID is set
-        const subscription = accountApi.subscriptions.find((element) => element.subscription.subscriptionId === Constants.ExtensionContext.globalState.get(Constants.StateKeySubsID));
+        const subscription = accountApi.subscriptions.find((element) => element.subscription.subscriptionId === subscriptionId);
         const client = new IotHubClient(subscription.session.credentials, subscription.subscription.subscriptionId, subscription.session.environment.resourceManagerEndpointUrl);
         const iotHubs = await client.iotHubResource.listBySubscription();
         const iothub = iotHubs.find((element) =>

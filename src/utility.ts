@@ -20,7 +20,9 @@ import { INode } from "./Nodes/INode";
 import { TelemetryClient } from "./telemetryClient";
 import iothub = require("azure-iothub");
 import { EventData } from "@azure/event-hubs";
+import { IotHubDescription } from "azure-arm-iothub/lib/models";
 import { AzureAccount } from "./azure-account.api";
+import { SubscriptionItem } from "./Model/SubscriptionItem";
 
 export class Utility {
     public static getConfiguration(): vscode.WorkspaceConfiguration {
@@ -49,6 +51,9 @@ export class Utility {
                     TelemetryClient.sendEvent("General.SetConfig.Done", { Result: "Success" });
                     let config = Utility.getConfiguration();
                     await config.update(id, value, true);
+                    if (id === Constants.IotHubConnectionStringKey) {
+                        await Utility.deleteIoTHubInfo();
+                    }
                     resolve(value);
                     input.dispose();
                 } else {
@@ -404,6 +409,16 @@ export class Utility {
 
     public static getTimeMessageFromEventData(message: EventData): string {
         return message.enqueuedTimeUtc ? `[${message.enqueuedTimeUtc.toLocaleTimeString("en-US")}] ` : "";
+    }
+
+    public static async storeIoTHubInfo(subscriptionItem: SubscriptionItem, iotHubDescription: IotHubDescription) {
+        await Constants.ExtensionContext.globalState.update(Constants.StateKeySubsID, subscriptionItem.subscription.subscriptionId);
+        await Constants.ExtensionContext.globalState.update(Constants.StateKeyIoTHubID, iotHubDescription.id);
+    }
+
+    public static async deleteIoTHubInfo() {
+        await Constants.ExtensionContext.globalState.update(Constants.StateKeySubsID, "");
+        await Constants.ExtensionContext.globalState.update(Constants.StateKeyIoTHubID, "");
     }
 
     private static tryGetStringFromCharCode(source) {
