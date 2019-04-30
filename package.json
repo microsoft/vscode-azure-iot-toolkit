@@ -65,7 +65,8 @@
     "onCommand:azure-iot-toolkit.deleteModule",
     "onCommand:azure-iot-toolkit.getModule",
     "onCommand:azure-iot-toolkit.copyModuleConnectionString",
-    "onCommand:azure-iot-toolkit.startMonitorEventHubMessage"
+    "onCommand:azure-iot-toolkit.startMonitorCustomEventHubEndpoint",
+    "onCommand:azure-iot-toolkit.stopMonitorCustomEventHubEndpoint"
   ],
   "main": "./dist/extension",
   "contributes": {
@@ -85,12 +86,12 @@
       },
       {
         "command": "azure-iot-toolkit.startMonitorIoTHubMessage",
-        "title": "Start Monitoring D2C Message",
+        "title": "Start Monitoring Built-in Event Endpoint",
         "category": "Azure IoT Hub"
       },
       {
         "command": "azure-iot-toolkit.stopMonitorIoTHubMessage",
-        "title": "Stop Monitoring D2C Message",
+        "title": "Stop Monitoring Built-in Event Endpoint",
         "category": "Azure IoT Hub"
       },
       {
@@ -263,8 +264,13 @@
         "category": "Azure IoT Hub"
       },
       {
-        "command": "azure-iot-toolkit.startMonitorEventHubMessage",
-        "title": "Start Monitoring Message from custom Event Hub endpoints",
+        "command": "azure-iot-toolkit.startMonitorCustomEventHubEndpoint",
+        "title": "Start Monitoring",
+        "category": "Azure IoT Hub"
+      },
+      {
+        "command": "azure-iot-toolkit.stopMonitorCustomEventHubEndpoint",
+        "title": "Stop Monitoring Custom Event Hub Endpoint",
         "category": "Azure IoT Hub"
       }
     ],
@@ -543,7 +549,7 @@
           "group": "azure-iot-toolkit@7"
         },
         {
-          "command": "azure-iot-toolkit.startMonitorEventHubMessage",
+          "command": "azure-iot-toolkit.startMonitorCustomEventHubEndpoint",
           "when": "view == iotHubDevices && viewItem == event-hub"
         }
       ],
@@ -555,8 +561,13 @@
         },
         {
           "when": "inOutput",
-          "command": "azure-iot-toolkit.stopMonitorC2DMessage",
+          "command": "azure-iot-toolkit.stopMonitorCustomEventHubEndpoint",
           "group": "azure-iot-toolkit@2"
+        },
+        {
+          "when": "inOutput",
+          "command": "azure-iot-toolkit.stopMonitorC2DMessage",
+          "group": "azure-iot-toolkit@3"
         },
         {
           "when": "resourceFilename == azure-iot-device-twin.json",
@@ -609,6 +620,10 @@
         {
           "command": "azure-iot-toolkit.copyModuleConnectionString",
           "when": "never"
+        },
+        {
+          "command": "azure-iot-toolkit.startMonitorCustomEventHubEndpoint",
+          "when": "never"
         }
       ]
     },
@@ -634,7 +649,7 @@
         "azure-iot-toolkit.monitorD2CBeforeNowInMinutes": {
           "type": "number",
           "default": 0,
-          "description": "The time span (in minutes) of monitoring D2C message before current time."
+          "description": "The time span (in minutes) of monitoring built-in event endpoint before current time."
         },
         "azure-iot-toolkit.showVerboseMessage": {
           "type": "boolean",

@@ -4,34 +4,48 @@
 import { EventData, EventHubClient, EventPosition, MessagingError, OnError, OnMessage } from "@azure/event-hubs";
 import EventHubManagementClient from "azure-arm-eventhub";
 import * as vscode from "vscode";
-import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
+import { IoTHubMessageBaseExplorer } from "./iotHubMessageBaseExplorer";
 import { EventHubItem } from "./Model/EventHubItem";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
-export class EventHubManager extends BaseExplorer {
+export class EventHubManager extends IoTHubMessageBaseExplorer {
+    private _eventHubClient: EventHubClient;
+
     constructor(outputChannel: vscode.OutputChannel) {
-        super(outputChannel);
+        super(outputChannel, "$(primitive-square) Stop Monitoring Custom Event Hub Endpoint", "azure-iot-toolkit.stopMonitorCustomEventHubEndpoint");
     }
 
-    public async startMonitorEventHubMMessage(eventHubItem: EventHubItem) {
+    public async startMonitorCustomEventHubEndpoint(eventHubItem: EventHubItem) {
+        if (this._isMonitoring) {
+            this._outputChannel.show();
+            this.outputLine(Constants.IoTHubMonitorLabel, "There is a running job to monitor custom Event Hub endpoint. Please stop it first.");
+            return;
+        }
+
         try {
             this._outputChannel.show();
-            this.outputLine(Constants.EventHubMonitorLabel, `Start monitoring message arrived in Event Hub endpoint [${eventHubItem.eventHubProperty.name}] ...`);
+            this.outputLine(Constants.EventHubMonitorLabel, `Start monitoring message arrived in custom Event Hub endpoint [${eventHubItem.eventHubProperty.name}] ...`);
 
             const eventHubClient = new EventHubManagementClient(eventHubItem.azureSubscription.session.credentials, eventHubItem.azureSubscription.subscription.subscriptionId);
             const connectionString = (await eventHubClient.namespaces.listKeys(eventHubItem.eventHubProperty.resourceGroup,
                 this.getNamespacefromConnectionString(eventHubItem.eventHubProperty.connectionString), "RootManageSharedAccessKey")).primaryConnectionString;
-            const client = EventHubClient.createFromConnectionString(connectionString, this.getEntityPathfromConnectionString(eventHubItem.eventHubProperty.connectionString));
-            const partitionIds = await client.getPartitionIds();
+            this._eventHubClient = EventHubClient.createFromConnectionString(connectionString, this.getEntityPathfromConnectionString(eventHubItem.eventHubProperty.connectionString));
+            const partitionIds = await this._eventHubClient.getPartitionIds();
+            this.updateMonitorStatus(true);
             partitionIds.forEach((partitionId) => {
                 this.outputLine(Constants.EventHubMonitorLabel, `Created partition receiver [${partitionId}]`);
-                client.receive(partitionId, this.onMessage, this.onError, { eventPosition: EventPosition.fromEnqueuedTime(Date.now()) });
+                this._eventHubClient.receive(partitionId, this.onMessage, this.onError, { eventPosition: EventPosition.fromEnqueuedTime(Date.now()) });
             });
         } catch (error) {
+            this.updateMonitorStatus(false);
             vscode.window.showErrorMessage(error);
         }
+    }
+
+    public async stopMonitorCustomEventHubEndpoint() {
+        this.stopMonitorEventHubEndpoint(Constants.EventHubMonitorLabel, "TODO", this._eventHubClient, "custom Event Hub endpoint");
     }
 
     private onMessage: OnMessage = (message: EventData) => {

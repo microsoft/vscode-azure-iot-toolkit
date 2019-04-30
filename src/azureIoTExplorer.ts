@@ -187,7 +187,11 @@ export class AzureIoTExplorer {
         await this._iotHubModuleExplorer.copyModuleConnectionString(moduleItem);
     }
 
-    public async startMonitorEventHubMessage(eventHubItem: EventHubItem) {
-        this._eventHubManager.startMonitorEventHubMMessage(eventHubItem);
+    public async startMonitorCustomEventHubEndpoint(eventHubItem: EventHubItem) {
+        this._eventHubManager.startMonitorCustomEventHubEndpoint(eventHubItem);
+    }
+
+    public async stopMonitorCustomEventHubEndpoint() {
+        this._eventHubManager.stopMonitorCustomEventHubEndpoint();
     }
 }

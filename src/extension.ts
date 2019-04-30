@@ -174,8 +174,12 @@ export function activate(context: vscode.ExtensionContext) {
         await azureIoTExplorer.copyModuleConnectionString(moduleItemNode ? moduleItemNode.moduleItem : undefined);
     }));
 
-    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.startMonitorEventHubMessage", async (eventHubItemNode: EventHubItemNode) => {
-        await azureIoTExplorer.startMonitorEventHubMessage(eventHubItemNode ? eventHubItemNode.eventHubItem : undefined);
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.startMonitorCustomEventHubEndpoint", async (eventHubItemNode: EventHubItemNode) => {
+        await azureIoTExplorer.startMonitorCustomEventHubEndpoint(eventHubItemNode ? eventHubItemNode.eventHubItem : undefined);
+    }));
+
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.stopMonitorCustomEventHubEndpoint",  () => {
+        azureIoTExplorer.stopMonitorCustomEventHubEndpoint();
     }));
 
     vscode.workspace.onDidChangeTextDocument((event) => azureIoTExplorer.replaceConnectionString(event));

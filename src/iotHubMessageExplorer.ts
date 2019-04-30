@@ -16,7 +16,7 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
     private _eventHubClient: EventHubClient;
 
     constructor(outputChannel: vscode.OutputChannel) {
-        super(outputChannel, "$(primitive-square) Stop Monitoring D2C Message", "azure-iot-toolkit.stopMonitorIoTHubMessage");
+        super(outputChannel, "$(primitive-square) Stop Monitoring built-in event endpoint", "azure-iot-toolkit.stopMonitorIoTHubMessage");
     }
 
     public async sendD2CMessage(deviceItem?: DeviceItem) {
@@ -45,7 +45,7 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
     public async startMonitorIoTHubMessage(deviceItem?: DeviceItem) {
         if (this._isMonitoring) {
             this._outputChannel.show();
-            this.outputLine(Constants.IoTHubMonitorLabel, "There is a running job to monitor D2C message. Please stop it first.");
+            this.outputLine(Constants.IoTHubMonitorLabel, "There is a running job to monitor built-in event endpoint. Please stop it first.");
             return;
         }
 
@@ -74,7 +74,7 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
     }
 
     public stopMonitorIoTHubMessage(): void {
-        this.stopMonitor(Constants.IoTHubMonitorLabel, Constants.IoTHubAIStopMonitorEvent);
+        this.stopMonitorEventHubEndpoint(Constants.IoTHubMonitorLabel, Constants.IoTHubAIStopMonitorEvent, this._eventHubClient, "built-in event endpoint");
     }
 
     private async startMonitor(label: string, consumerGroup: string, deviceItem?: DeviceItem) {
@@ -95,19 +95,7 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
         }
     }
 
-    private async stopMonitor(label: string, aiEvent: string) {
-        TelemetryClient.sendEvent(aiEvent);
-        this._outputChannel.show();
-        if (this._isMonitoring) {
-            this.outputLine(label, "Stopping D2C monitoring...");
-            this._monitorStatusBarItem.hide();
-            await this._eventHubClient.close();
-            this.outputLine(label, "D2C monitoring stopped.");
-            this.updateMonitorStatus(false);
-        } else {
-            this.outputLine(label, "No D2C monitor job running.");
-        }
-    }
+
 
     private printError(outputChannel: vscode.OutputChannel, label: string) {
         return async (err) => {
