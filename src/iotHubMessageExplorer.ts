@@ -95,8 +95,6 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
         }
     }
 
-
-
     private printError(outputChannel: vscode.OutputChannel, label: string) {
         return async (err) => {
             this.outputLine(label, err.message);

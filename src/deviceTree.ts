@@ -49,6 +49,7 @@ export class DeviceTree implements vscode.TreeDataProvider<INode> {
     }
 
     private async showLableNodes(iotHubConnectionString: string) {
+        TelemetryClient.sendEvent("AZ.LoadLableNodes");
         if (this.autoRefreshIntervalID) {
             clearInterval(this.autoRefreshIntervalID);
         }
