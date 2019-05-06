@@ -182,6 +182,10 @@ export function activate(context: vscode.ExtensionContext) {
         azureIoTExplorer.stopMonitorCustomEventHubEndpoint();
     }));
 
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.startMonitorIoTHubMessageWithAbbreviation", () => {
+        vscode.commands.executeCommand("azure-iot-toolkit.startMonitorIoTHubMessage");
+    }));
+
     vscode.workspace.onDidChangeTextDocument((event) => azureIoTExplorer.replaceConnectionString(event));
 
     context.subscriptions.push(vscode.window.onDidCloseTerminal((closedTerminal: vscode.Terminal) => {

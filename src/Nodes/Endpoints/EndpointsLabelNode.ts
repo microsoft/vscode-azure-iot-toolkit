@@ -7,6 +7,8 @@ import { Constants } from "../../constants";
 import { Utility } from "../../utility";
 import { CommandNode } from "../CommandNode";
 import { INode } from "../INode";
+import { BuiltInEndpointLabelNode } from "./BuiltInEndpointLabelNode";
+import { CustomEndpointLabelNode } from "./CustomEndpointLabelNode";
 import { EventHubLabelNode } from "./EventHubLabelNode";
 
 export class EndpointsLabelNode implements INode {
@@ -25,7 +27,7 @@ export class EndpointsLabelNode implements INode {
         const accountApi = Utility.getAzureAccountApi();
         const subscriptionId = Constants.ExtensionContext.globalState.get(Constants.StateKeySubsID);
         if (!subscriptionId || !(await accountApi.waitForLogin())) {
-            return [new CommandNode("Please select an IoT Hub", "azure-iot-toolkit.selectIoTHub")];
+            return [new CommandNode("-> Please select an IoT Hub", "azure-iot-toolkit.selectIoTHub")];
         }
 
         const subscription = accountApi.subscriptions.find((element) => element.subscription.subscriptionId === subscriptionId);
@@ -33,6 +35,10 @@ export class EndpointsLabelNode implements INode {
         const iotHubs = await client.iotHubResource.listBySubscription();
         const iothub = iotHubs.find((element) =>
             element.id === Constants.ExtensionContext.globalState.get(Constants.StateKeyIoTHubID));
-        return [new EventHubLabelNode(subscription, iothub.properties.routing.endpoints.eventHubs)];
+        return [new BuiltInEndpointLabelNode(),
+            new EventHubLabelNode(subscription, iothub.properties.routing.endpoints.eventHubs),
+            new CustomEndpointLabelNode("Service Bus queue", iothub.properties.routing.endpoints.serviceBusQueues),
+            new CustomEndpointLabelNode("Service Bus topic", iothub.properties.routing.endpoints.serviceBusTopics),
+            new CustomEndpointLabelNode("Blob storage", iothub.properties.routing.endpoints.storageContainers)];
     }
 }

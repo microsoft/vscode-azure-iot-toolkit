@@ -74,7 +74,7 @@
       "explorer": [
         {
           "id": "iotHubDevices",
-          "name": "Azure IoT Hub Devices"
+          "name": "Azure IoT Hub"
         }
       ]
     },
@@ -87,6 +87,11 @@
       {
         "command": "azure-iot-toolkit.startMonitorIoTHubMessage",
         "title": "Start Monitoring Built-in Event Endpoint",
+        "category": "Azure IoT Hub"
+      },
+      {
+        "command": "azure-iot-toolkit.startMonitorIoTHubMessageWithAbbreviation",
+        "title": "Start Monitoring",
         "category": "Azure IoT Hub"
       },
       {
@@ -340,6 +345,11 @@
       "view/item/context": [
         {
           "command": "azure-iot-toolkit.refresh",
+          "when": "view == iotHubDevices && viewItem == devices-label",
+          "group": "inline"
+        },
+        {
+          "command": "azure-iot-toolkit.refresh",
           "when": "view == iotHubDevices && viewItem == device",
           "group": "inline"
         },
@@ -549,8 +559,17 @@
           "group": "azure-iot-toolkit@7"
         },
         {
+          "command": "azure-iot-toolkit.refresh",
+          "when": "view == iotHubDevices && viewItem == endpoints-label",
+          "group": "inline"
+        },
+        {
           "command": "azure-iot-toolkit.startMonitorCustomEventHubEndpoint",
           "when": "view == iotHubDevices && viewItem == event-hub"
+        },
+        {
+          "command": "azure-iot-toolkit.startMonitorIoTHubMessageWithAbbreviation",
+          "when": "view == iotHubDevices && viewItem == events"
         }
       ],
       "editor/context": [
@@ -623,6 +642,10 @@
         },
         {
           "command": "azure-iot-toolkit.startMonitorCustomEventHubEndpoint",
+          "when": "never"
+        },
+        {
+          "command": "azure-iot-toolkit.startMonitorIoTHubMessageWithAbbreviation",
           "when": "never"
         }
       ]

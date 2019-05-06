@@ -59,7 +59,7 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
         try {
             this._outputChannel.show();
             const deviceLabel = deviceItem ? `[${deviceItem.deviceId}]` : "all devices";
-            this.outputLine(Constants.IoTHubMonitorLabel, `Start monitoring D2C message arrived in built-in endpoint for ${deviceLabel} ...`);
+            this.outputLine(Constants.IoTHubMonitorLabel, `Start monitoring message arrived in built-in endpoint for ${deviceLabel} ...`);
             if (!this._eventHubClient) {
                 this._eventHubClient = await EventHubClient.createFromIotHubConnectionString(iotHubConnectionString);
             }
@@ -102,7 +102,7 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
             this.outputLine(label, err.message);
             if (this._isMonitoring) {
                 await this._eventHubClient.close();
-                this.outputLine(label, "D2C monitoring stopped. Please try to start monitoring again or use a different consumer group to monitor.");
+                this.outputLine(label, "Message monitoring stopped. Please try to start monitoring again or use a different consumer group to monitor.");
                 this.updateMonitorStatus(false);
             }
         };
