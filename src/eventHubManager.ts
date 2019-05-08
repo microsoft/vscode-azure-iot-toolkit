@@ -25,6 +25,7 @@ export class EventHubManager extends IoTHubMessageBaseExplorer {
         }
 
         try {
+            TelemetryClient.sendEvent(Constants.IoTHubAIEHStartMonitorEvent);
             this._outputChannel.show();
             this.outputLine(Constants.EventHubMonitorLabel, `Start monitoring message arrived in custom Event Hub endpoint [${eventHubItem.eventHubProperty.name}] ...`);
 
@@ -40,12 +41,13 @@ export class EventHubManager extends IoTHubMessageBaseExplorer {
             });
         } catch (error) {
             this.updateMonitorStatus(false);
-            vscode.window.showErrorMessage(error);
+            this.outputLine(Constants.EventHubMonitorLabel, error);
+            TelemetryClient.sendEvent(Constants.IoTHubAIEHStartMonitorEvent, { Result: "Exception", Message: error });
         }
     }
 
     public async stopMonitorCustomEventHubEndpoint() {
-        this.stopMonitorEventHubEndpoint(Constants.EventHubMonitorLabel, "TODO", this._eventHubClient, "custom Event Hub endpoint");
+        this.stopMonitorEventHubEndpoint(Constants.EventHubMonitorLabel, Constants.IoTHubAIEHStopMonitorEvent, this._eventHubClient, "custom Event Hub endpoint");
     }
 
     private onMessage: OnMessage = (message: EventData) => {

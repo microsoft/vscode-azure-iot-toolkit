@@ -113,6 +113,8 @@ export class Constants {
     public static IoTHubAIValidateJsonSchemaEvent = "General.ValidateJsonSchema.Done";
     public static IoTHubAILoadEndpointsTreeStartEvent = "AZ.LoadEndpointsTree.Start";
     public static IoTHubAILoadEndpointsTreeDoneEvent = "AZ.LoadEndpointsTree.Done";
+    public static IoTHubAIEHStartMonitorEvent = "AZ.EventHub.startMonitoring";
+    public static IoTHubAIEHStopMonitorEvent = "AZ.EventHub.stopMonitoring";
     public static PercentageLabel = "(%)";
     public static NotSetLabel = "Not Set";
     public static DisabledLabel = "Disabled";
