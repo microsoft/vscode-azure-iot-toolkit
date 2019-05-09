@@ -183,6 +183,7 @@ export function activate(context: vscode.ExtensionContext) {
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.startMonitorIoTHubMessageWithAbbreviation", () => {
+        TelemetryClient.sendEvent(Constants.IoTHubAIStartMonitorEvent, { entry: "built-in-events" });
         vscode.commands.executeCommand("azure-iot-toolkit.startMonitorIoTHubMessage");
     }));
 
