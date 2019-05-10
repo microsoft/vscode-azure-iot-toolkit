@@ -31,7 +31,7 @@ export class EndpointsLabelNode implements INode {
             const accountApi = Utility.getAzureAccountApi();
             const subscriptionId = Constants.ExtensionContext.globalState.get(Constants.StateKeySubsID);
             if (!subscriptionId || !(await accountApi.waitForLogin())) {
-                return [new CommandNode("-> Please select an IoT Hub", "azure-iot-toolkit.selectIoTHub")];
+                return [this.getSelectIoTHubCommandNode()];
             }
 
             const subscription = accountApi.subscriptions.find((element) => element.subscription.subscriptionId === subscriptionId);
@@ -40,6 +40,10 @@ export class EndpointsLabelNode implements INode {
             const iothub = iotHubs.find((element) =>
                 element.id === Constants.ExtensionContext.globalState.get(Constants.StateKeyIoTHubID));
             TelemetryClient.sendEvent(Constants.IoTHubAILoadEndpointsTreeDoneEvent, { Result: "Success" });
+
+            if (!iothub) {
+                return [this.getSelectIoTHubCommandNode()];
+            }
 
             return [new BuiltInEndpointLabelNode(),
                 new EventHubLabelNode(subscription, iothub.properties.routing.endpoints.eventHubs),
@@ -50,5 +54,9 @@ export class EndpointsLabelNode implements INode {
             TelemetryClient.sendEvent(Constants.IoTHubAILoadEndpointsTreeDoneEvent, { Result: "Fail", Message: err.message });
             return Utility.getErrorMessageTreeItems("endpoints", err.message);
         }
+    }
+
+    private getSelectIoTHubCommandNode(): CommandNode {
+        return new CommandNode("-> Please select an IoT Hub", "azure-iot-toolkit.selectIoTHub");
     }
 }
