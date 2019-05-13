@@ -1,3 +1,11 @@
+## 2.7.0 
+### Added
+* Endpoints tree view
+* Monitor custom Event Hub endpoint
+
+### Changed
+* Rename 'Start Monitoring D2C Message' to 'Start Monitoring Built-in Event Endpoint'
+
 ## 2.6.0 (2019-04-23)
 ### Added
 * Show properties when monitoring C2D message

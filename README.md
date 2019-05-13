@@ -20,7 +20,7 @@ The [Wiki page](https://github.com/Microsoft/vscode-azure-iot-toolkit/wiki) incl
     * Delete device
     * Copy Device Connection String
     * Generate SAS Token for Device
-* Module management
+* Module Endpoint
     * List Modules
     * Get Module Info
     * Create Module
@@ -31,7 +31,7 @@ The [Wiki page](https://github.com/Microsoft/vscode-azure-iot-toolkit/wiki) incl
 * Interact with Azure IoT Hub
     * Generate Code for C#, F#, Go, Java, Node.js, PHP, Python, Ruby or REST API
     * Send D2C message to IoT Hub
-    * Monitor IoT Hub D2C message
+    * Monitor Built-in Event Endpoint
     * Send C2D message to device
     * Monitor C2D message from IoT Hub
     * Invoke Device Direct Method
@@ -42,6 +42,9 @@ The [Wiki page](https://github.com/Microsoft/vscode-azure-iot-toolkit/wiki) incl
     * Edit Module Twin
     * Create deployment for Single Device
     * Create Deployment at Scale
+* Endpoints Endpoint
+    * List Built-in and Custom Endpoints
+    * Monitor Custom Event Hub Endpoint
 
 ### Prerequisites
 
