@@ -15,7 +15,7 @@ export class WelcomePage {
     }
 
     public checkAndShow() {
-        if (!this.context.globalState.get(Constants.IsWelcomePageShown)) {
+        if (!this.context.globalState.get(Constants.IsWelcomePageShown) && !vscode.extensions.getExtension("vsciot-vscode.azure-iot-tools")) {
             TelemetryClient.sendEvent(Constants.IoTHubAIShowWelcomePagetEvent, { trigger: "auto" });
             this.show();
             this.context.globalState.update(Constants.IsWelcomePageShown, true);

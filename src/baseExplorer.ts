@@ -38,14 +38,4 @@ export class BaseExplorer {
             client.close(() => { return; });
         };
     }
-
-    protected tryGetStringFromCharCode(source) {
-        if (source instanceof Uint8Array) {
-            try {
-                source = String.fromCharCode.apply(null, source);
-            } catch (e) {
-            }
-        }
-        return source;
-    }
 }

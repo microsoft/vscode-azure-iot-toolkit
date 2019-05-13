@@ -8,6 +8,7 @@ import { Constants, DistributedSettingUpdateType } from "./constants";
 import { DeviceTree } from "./deviceTree";
 import { Executor } from "./executor";
 import { DeviceNode } from "./Nodes/DeviceNode";
+import { EventHubItemNode } from "./Nodes/Endpoints/EventHubItemNode";
 import { ModuleItemNode } from "./Nodes/ModuleItemNode";
 import { ModuleLabelNode } from "./Nodes/ModuleLabelNode";
 import { DeviceTwinCodeLensProvider } from "./providers/deviceTwinCodeLensProvider";
@@ -171,6 +172,19 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.copyModuleConnectionString", async (moduleItemNode: ModuleItemNode) => {
         await azureIoTExplorer.copyModuleConnectionString(moduleItemNode ? moduleItemNode.moduleItem : undefined);
+    }));
+
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.startMonitorCustomEventHubEndpoint", async (eventHubItemNode: EventHubItemNode) => {
+        await azureIoTExplorer.startMonitorCustomEventHubEndpoint(eventHubItemNode ? eventHubItemNode.eventHubItem : undefined);
+    }));
+
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.stopMonitorCustomEventHubEndpoint",  () => {
+        azureIoTExplorer.stopMonitorCustomEventHubEndpoint();
+    }));
+
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.startMonitorIoTHubMessageWithAbbreviation", () => {
+        TelemetryClient.sendEvent(Constants.IoTHubAIStartMonitorEvent, { entry: "built-in-events" });
+        vscode.commands.executeCommand("azure-iot-toolkit.startMonitorIoTHubMessage");
     }));
 
     vscode.workspace.onDidChangeTextDocument((event) => azureIoTExplorer.replaceConnectionString(event));

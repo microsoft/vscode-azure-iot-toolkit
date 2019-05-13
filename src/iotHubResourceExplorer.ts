@@ -22,7 +22,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 
     constructor(outputChannel: vscode.OutputChannel) {
         super(outputChannel);
-        this.accountApi = vscode.extensions.getExtension<AzureAccount>("ms-vscode.azure-account")!.exports;
+        this.accountApi = Utility.getAzureAccountApi();
     }
 
     public async createIoTHub(outputChannel: vscode.OutputChannel = this._outputChannel, subscriptionId?: string, resourceGroupName?: string): Promise<IotHubDescription> {
@@ -109,6 +109,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
                     await this.updateIoTHubConnectionString(newIotHubConnectionString);
                     (iotHubDescription as any).iotHubConnectionString = newIotHubConnectionString;
                     TelemetryClient.sendEvent(Constants.IoTHubAICreateDoneEvent, { Result: "Success" }, newIotHubConnectionString);
+                    await Utility.storeIoTHubInfo(subscriptionItem, iotHubDescription);
                     return iotHubDescription;
                 })
                 .catch((err) => {
@@ -148,6 +149,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
             await this.updateIoTHubConnectionString(iotHubConnectionString);
             (iotHubItem.iotHubDescription as any).iotHubConnectionString = iotHubConnectionString;
             TelemetryClient.sendEvent("AZ.Select.IoTHub.Done", undefined, iotHubConnectionString);
+            await Utility.storeIoTHubInfo(subscriptionItem, iotHubItem.iotHubDescription);
             return iotHubItem.iotHubDescription;
         }
     }
