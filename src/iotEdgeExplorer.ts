@@ -106,7 +106,8 @@ export class IoTEdgeExplorer extends BaseExplorer {
 
     private async isValidDeploymentJsonSchema(json: object): Promise<boolean> {
         const schema = (await axios.get(Constants.DeploymentJsonSchemaUrl)).data;
-        const ajv = new Ajv({ allErrors: true });
+        const ajv = new Ajv({ allErrors: true, schemaId: "id" });
+        ajv.addMetaSchema(require("ajv/lib/refs/json-schema-draft-04.json"));
         const valid = ajv.validate(schema, json);
         if (!valid) {
             vscode.window.showErrorMessage(`There are errors in deployment json file: ${ajv.errorsText(null, { separator: ", " })}`);
