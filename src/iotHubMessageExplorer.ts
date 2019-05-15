@@ -58,11 +58,9 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
 
         try {
             this._outputChannel.show();
-            const deviceLabel = deviceItem ? `[${deviceItem.deviceId}]` : "all devices";
+            const deviceLabel = deviceItem ? `device [${deviceItem.deviceId}]` : "all devices";
             this.outputLine(Constants.IoTHubMonitorLabel, `Start monitoring message arrived in built-in endpoint for ${deviceLabel} ...`);
-            if (!this._eventHubClient) {
-                this._eventHubClient = await EventHubClient.createFromIotHubConnectionString(iotHubConnectionString);
-            }
+            this._eventHubClient = await EventHubClient.createFromIotHubConnectionString(iotHubConnectionString);
             TelemetryClient.sendEvent(Constants.IoTHubAIStartMonitorEvent, { deviceType: deviceItem ? deviceItem.contextValue : "" });
             await this.startMonitor(Constants.IoTHubMonitorLabel, consumerGroup, deviceItem);
             this.updateMonitorStatus(true);
