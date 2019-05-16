@@ -1,4 +1,4 @@
-## 2.7.0 
+## 2.7.0 (2019-05-16)
 ### Added
 * Endpoints tree view
 * Monitor custom Event Hub endpoint
