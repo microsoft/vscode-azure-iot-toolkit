@@ -119,7 +119,7 @@ export class Constants {
     public static NotSetLabel = "Not Set";
     public static DisabledLabel = "Disabled";
     public static EnabledLabel = "Enabled";
-    public static DeploymentJsonSchemaUrl = "http://json.schemastore.org/azure-iot-edge-deployment-1.0";
+    public static DeploymentJsonSchemaUrl = "http://json.schemastore.org/azure-iot-edge-deployment-2.0";
     public static CREATE_OPTIONS_MAX_CHUNKS = 8;
     public static StateKeySubsID = "subscriptionId";
     public static StateKeyIoTHubID = "iothubid";
