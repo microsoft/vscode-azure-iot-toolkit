@@ -20,7 +20,7 @@ The [Wiki page](https://github.com/Microsoft/vscode-azure-iot-toolkit/wiki) incl
     * Delete device
     * Copy Device Connection String
     * Generate SAS Token for Device
-* Module Endpoint
+* Module management
     * List Modules
     * Get Module Info
     * Create Module
@@ -42,7 +42,7 @@ The [Wiki page](https://github.com/Microsoft/vscode-azure-iot-toolkit/wiki) incl
     * Edit Module Twin
     * Create deployment for Single Device
     * Create Deployment at Scale
-* Endpoints Endpoint
+* Endpoints management
     * List Built-in and Custom Endpoints
     * Monitor Custom Event Hub Endpoint
 
