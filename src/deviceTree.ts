@@ -3,9 +3,8 @@
 
 import * as vscode from "vscode";
 import { Constants } from "./constants";
-import { DeviceItem } from "./Model/DeviceItem";
-import { DeviceNode } from "./Nodes/DeviceNode";
-import { InfoNode } from "./Nodes/InfoNode";
+import { DeviceLabelNode } from "./Nodes/DeviceLabelNode";
+import { EndpointsLabelNode } from "./Nodes/Endpoints/EndpointsLabelNode";
 import { INode } from "./Nodes/INode";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
@@ -32,7 +31,7 @@ export class DeviceTree implements vscode.TreeDataProvider<INode> {
         }
     }
 
-    public getTreeItem(element: INode): Promise<vscode.TreeItem> | vscode.TreeItem  {
+    public getTreeItem(element: INode): Promise<vscode.TreeItem> | vscode.TreeItem {
         return element.getTreeItem();
     }
 
@@ -43,35 +42,20 @@ export class DeviceTree implements vscode.TreeDataProvider<INode> {
         }
 
         if (!element) {
-          return this.showDeviceList(iotHubConnectionString);
+            return this.showLableNodes(iotHubConnectionString);
         }
 
         return element.getChildren(this.context, iotHubConnectionString);
     }
 
-    private async showDeviceList(iotHubConnectionString: string) {
+    private async showLableNodes(iotHubConnectionString: string) {
+        TelemetryClient.sendEvent("AZ.LoadLableNodes");
         if (this.autoRefreshIntervalID) {
             clearInterval(this.autoRefreshIntervalID);
         }
-        TelemetryClient.sendEvent(Constants.IoTHubAIStartLoadDeviceTreeEvent);
+        this.autoRefreshIntervalID = this.generateAutoRefreshInterval();
 
-        try {
-            const deviceList: vscode.TreeItem[] = await Utility.getDeviceList(iotHubConnectionString, this.context);
-            this.autoRefreshIntervalID = this.generateAutoRefreshInterval();
-
-            let deviceNode: INode[] = deviceList.map((item) => new DeviceNode(item as DeviceItem));
-
-            if (deviceNode.length === 0) {
-                deviceNode.push(new InfoNode(`No devices in ${Utility.getHostName(iotHubConnectionString)}`));
-            }
-
-            TelemetryClient.sendEvent(Constants.IoTHubAILoadDeviceTreeEvent, { Result: "Success", DeviceCount: deviceList.length.toString() });
-
-            return deviceNode;
-        } catch (err) {
-            TelemetryClient.sendEvent(Constants.IoTHubAILoadDeviceTreeEvent, { Result: "Fail", Message: err.message });
-            return Utility.getErrorMessageTreeItems("IoT Hub devices", err.message);
-        }
+        return [new DeviceLabelNode(iotHubConnectionString), new EndpointsLabelNode()];
     }
 
     private generateAutoRefreshInterval(): NodeJS.Timer {

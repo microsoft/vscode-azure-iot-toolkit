@@ -20,7 +20,7 @@ The [Wiki page](https://github.com/Microsoft/vscode-azure-iot-toolkit/wiki) incl
     * Delete device
     * Copy Device Connection String
     * Generate SAS Token for Device
-* Module management
+* Module Endpoint
     * List Modules
     * Get Module Info
     * Create Module
@@ -31,7 +31,7 @@ The [Wiki page](https://github.com/Microsoft/vscode-azure-iot-toolkit/wiki) incl
 * Interact with Azure IoT Hub
     * Generate Code for C#, F#, Go, Java, Node.js, PHP, Python, Ruby or REST API
     * Send D2C message to IoT Hub
-    * Monitor IoT Hub D2C message
+    * Monitor Built-in Event Endpoint
     * Send C2D message to device
     * Monitor C2D message from IoT Hub
     * Invoke Device Direct Method
@@ -42,10 +42,13 @@ The [Wiki page](https://github.com/Microsoft/vscode-azure-iot-toolkit/wiki) incl
     * Edit Module Twin
     * Create deployment for Single Device
     * Create Deployment at Scale
+* Endpoints Endpoint
+    * List Built-in and Custom Endpoints
+    * Monitor Custom Event Hub Endpoint
 
 ### Prerequisites
 
-1. In Explorer of VS Code, click "Azure IoT Hub Devices" in the bottom left corner.
+1. In Explorer of VS Code, click "Azure IoT Hub" in the bottom left corner.
 
   ![Click Device Explorer](images/device-explorer-click.png)
 
@@ -57,7 +60,7 @@ The [Wiki page](https://github.com/Microsoft/vscode-azure-iot-toolkit/wiki) incl
 
   ![Enter Connection String](images/enter-connection-string.png)
 
-4. The device list will be shown.
+4. The devices list will be shown.
 
   ![Device Explorer](images/device-explorer.png)
 
@@ -74,7 +77,9 @@ Instead of copying and pasting to set IoT Hub Connection String, you could sign 
 2. If you have not signed in to Azure, a pop-up will show to let you sign in to Azure.
 3. After you sign in, your Azure Subscription list will be shown, then select an Azure Subscription.
 4. Your IoT Hub list will be shown, then select an IoT Hub.
-5. The device list will be shown.
+5. The devices and endpoints list will be shown.
+
+  ![IoT Hub Explorer](images/iot-hub-explorer.png)
 
 ## Code Generation
 

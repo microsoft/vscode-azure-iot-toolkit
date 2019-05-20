@@ -2,8 +2,10 @@
 // Licensed under the MIT license.
 
 "use strict";
+import { EventHubClient } from "@azure/event-hubs";
 import * as vscode from "vscode";
 import { BaseExplorer } from "./baseExplorer";
+import { TelemetryClient } from "./telemetryClient";
 
 export class IoTHubMessageBaseExplorer extends BaseExplorer {
     protected _isMonitoring: boolean;
@@ -24,6 +26,20 @@ export class IoTHubMessageBaseExplorer extends BaseExplorer {
         } else {
             this._isMonitoring = false;
             this._monitorStatusBarItem.hide();
+        }
+    }
+
+    protected async stopMonitorEventHubEndpoint(label: string, aiEvent: string, eventHubClient: EventHubClient, endpointType: string) {
+        TelemetryClient.sendEvent(aiEvent);
+        this._outputChannel.show();
+        if (this._isMonitoring) {
+            this.outputLine(label, `Stopping ${endpointType} monitoring...`);
+            this._monitorStatusBarItem.hide();
+            await eventHubClient.close();
+            this.outputLine(label, `${endpointType.charAt(0).toUpperCase() + endpointType.substr(1)} monitoring stopped.`);
+            this.updateMonitorStatus(false);
+        } else {
+            this.outputLine(label, `No ${endpointType} monitor job running.`);
         }
     }
 }

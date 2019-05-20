@@ -19,6 +19,10 @@ import { InfoNode } from "./Nodes/InfoNode";
 import { INode } from "./Nodes/INode";
 import { TelemetryClient } from "./telemetryClient";
 import iothub = require("azure-iothub");
+import { EventData } from "@azure/event-hubs";
+import { IotHubDescription } from "azure-arm-iothub/lib/models";
+import { AzureAccount } from "./azure-account.api";
+import { SubscriptionItem } from "./Model/SubscriptionItem";
 
 export class Utility {
     public static getConfiguration(): vscode.WorkspaceConfiguration {
@@ -47,6 +51,9 @@ export class Utility {
                     TelemetryClient.sendEvent("General.SetConfig.Done", { Result: "Success" });
                     let config = Utility.getConfiguration();
                     await config.update(id, value, true);
+                    if (id === Constants.IotHubConnectionStringKey) {
+                        await Utility.deleteIoTHubInfo();
+                    }
                     resolve(value);
                     input.dispose();
                 } else {
@@ -283,7 +290,7 @@ export class Utility {
             const isConnected = device.connectionState.toString() === "Connected";
             const state: string = isConnected ? "on" : "off";
             if (isConnected) {
-                device.description = device.connectionState.toString()
+                device.description = device.connectionState.toString();
             }
             let deviceType: string;
             if (edgeDeviceIdSet.has(device.deviceId)) {
@@ -371,6 +378,57 @@ export class Utility {
     public static async getTwin(registry: iothub.Registry, deviceId: string): Promise<any> {
         const result = await registry.getTwin(deviceId);
         return result.responseBody;
+    }
+
+    public static getAzureAccountApi(): AzureAccount {
+        return vscode.extensions.getExtension<AzureAccount>("ms-vscode.azure-account")!.exports;
+    }
+
+    public static getMessageFromEventData(message: EventData): any {
+        const config = Utility.getConfiguration();
+        const showVerboseMessage = config.get<boolean>("showVerboseMessage");
+        let result;
+        const body = Utility.tryGetStringFromCharCode(message.body);
+        if (showVerboseMessage) {
+            result = {
+                body,
+                applicationProperties: message.applicationProperties,
+                annotations: message.annotations,
+                properties: message.properties,
+            };
+        } else if (message.applicationProperties && Object.keys(message.applicationProperties).length > 0) {
+            result = {
+                body,
+                applicationProperties: message.applicationProperties,
+            };
+        } else {
+            result = body;
+        }
+        return result;
+    }
+
+    public static getTimeMessageFromEventData(message: EventData): string {
+        return message.enqueuedTimeUtc ? `[${message.enqueuedTimeUtc.toLocaleTimeString("en-US")}] ` : "";
+    }
+
+    public static async storeIoTHubInfo(subscriptionItem: SubscriptionItem, iotHubDescription: IotHubDescription) {
+        await Constants.ExtensionContext.globalState.update(Constants.StateKeySubsID, subscriptionItem.subscription.subscriptionId);
+        await Constants.ExtensionContext.globalState.update(Constants.StateKeyIoTHubID, iotHubDescription.id);
+    }
+
+    public static async deleteIoTHubInfo() {
+        await Constants.ExtensionContext.globalState.update(Constants.StateKeySubsID, "");
+        await Constants.ExtensionContext.globalState.update(Constants.StateKeyIoTHubID, "");
+    }
+
+    private static tryGetStringFromCharCode(source) {
+        if (source instanceof Uint8Array) {
+            try {
+                source = String.fromCharCode.apply(null, source);
+            } catch (e) {
+            }
+        }
+        return source;
     }
 
     private static async getFilteredDeviceList(iotHubConnectionString: string, onlyEdgeDevice: boolean): Promise<DeviceItem[]> {

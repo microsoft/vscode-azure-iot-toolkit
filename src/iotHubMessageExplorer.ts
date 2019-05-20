@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 "use strict";
-import { EventHubClient, EventPosition } from "@azure/event-hubs";
+import { EventData, EventHubClient, EventPosition } from "@azure/event-hubs";
 import { Message } from "azure-iot-device";
 import { clientFromConnectionString } from "azure-iot-device-mqtt";
 import * as vscode from "vscode";
@@ -16,7 +16,7 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
     private _eventHubClient: EventHubClient;
 
     constructor(outputChannel: vscode.OutputChannel) {
-        super(outputChannel, "$(primitive-square) Stop Monitoring D2C Message", "azure-iot-toolkit.stopMonitorIoTHubMessage");
+        super(outputChannel, "$(primitive-square) Stop Monitoring built-in event endpoint", "azure-iot-toolkit.stopMonitorIoTHubMessage");
     }
 
     public async sendD2CMessage(deviceItem?: DeviceItem) {
@@ -45,7 +45,7 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
     public async startMonitorIoTHubMessage(deviceItem?: DeviceItem) {
         if (this._isMonitoring) {
             this._outputChannel.show();
-            this.outputLine(Constants.IoTHubMonitorLabel, "There is a running job to monitor D2C message. Please stop it first.");
+            this.outputLine(Constants.IoTHubMonitorLabel, "There is a running job to monitor built-in event endpoint. Please stop it first.");
             return;
         }
 
@@ -58,11 +58,9 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
 
         try {
             this._outputChannel.show();
-            const deviceLabel = deviceItem ? `[${deviceItem.deviceId}]` : "all devices";
-            this.outputLine(Constants.IoTHubMonitorLabel, `Start monitoring D2C message arrived in built-in endpoint for ${deviceLabel} ...`);
-            if (!this._eventHubClient) {
-                this._eventHubClient = await EventHubClient.createFromIotHubConnectionString(iotHubConnectionString);
-            }
+            const deviceLabel = deviceItem ? `device [${deviceItem.deviceId}]` : "all devices";
+            this.outputLine(Constants.IoTHubMonitorLabel, `Start monitoring message arrived in built-in endpoint for ${deviceLabel} ...`);
+            this._eventHubClient = await EventHubClient.createFromIotHubConnectionString(iotHubConnectionString);
             TelemetryClient.sendEvent(Constants.IoTHubAIStartMonitorEvent, { deviceType: deviceItem ? deviceItem.contextValue : "" });
             await this.startMonitor(Constants.IoTHubMonitorLabel, consumerGroup, deviceItem);
             this.updateMonitorStatus(true);
@@ -74,7 +72,7 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
     }
 
     public stopMonitorIoTHubMessage(): void {
-        this.stopMonitor(Constants.IoTHubMonitorLabel, Constants.IoTHubAIStopMonitorEvent);
+        this.stopMonitorEventHubEndpoint(Constants.IoTHubMonitorLabel, Constants.IoTHubAIStopMonitorEvent, this._eventHubClient, "built-in event endpoint");
     }
 
     private async startMonitor(label: string, consumerGroup: string, deviceItem?: DeviceItem) {
@@ -95,58 +93,26 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
         }
     }
 
-    private async stopMonitor(label: string, aiEvent: string) {
-        TelemetryClient.sendEvent(aiEvent);
-        this._outputChannel.show();
-        if (this._isMonitoring) {
-            this.outputLine(label, "Stopping D2C monitoring...");
-            this._monitorStatusBarItem.hide();
-            await this._eventHubClient.close();
-            this.outputLine(label, "D2C monitoring stopped.");
-            this.updateMonitorStatus(false);
-        } else {
-            this.outputLine(label, "No D2C monitor job running.");
-        }
-    }
-
     private printError(outputChannel: vscode.OutputChannel, label: string) {
         return async (err) => {
             this.outputLine(label, err.message);
             if (this._isMonitoring) {
                 await this._eventHubClient.close();
-                this.outputLine(label, "D2C monitoring stopped. Please try to start monitoring again or use a different consumer group to monitor.");
+                this.outputLine(label, "Message monitoring stopped. Please try to start monitoring again or use a different consumer group to monitor.");
                 this.updateMonitorStatus(false);
             }
         };
     };
 
     private printMessage(outputChannel: vscode.OutputChannel, label: string, deviceItem?: DeviceItem) {
-        return async (message) => {
+        return async (message: EventData) => {
             const deviceId = message.annotations["iothub-connection-device-id"];
             const moduleId = message.annotations["iothub-connection-module-id"];
             if (deviceItem && deviceItem.deviceId !== deviceId) {
                 return;
             }
-            let config = Utility.getConfiguration();
-            let showVerboseMessage = config.get<boolean>("showVerboseMessage");
-            let result;
-            const body = this.tryGetStringFromCharCode(message.body);
-            if (showVerboseMessage) {
-                result = {
-                    body,
-                    applicationProperties: message.applicationProperties,
-                    annotations: message.annotations,
-                    properties: message.properties,
-                };
-            } else if (message.applicationProperties && Object.keys(message.applicationProperties).length > 0) {
-                result = {
-                    body,
-                    applicationProperties: message.applicationProperties,
-                };
-            } else {
-                result = body;
-            }
-            const timeMessage = message.enqueuedTimeUtc ? `[${message.enqueuedTimeUtc.toLocaleTimeString("en-US")}] ` : "";
+            const result = Utility.getMessageFromEventData(message);
+            const timeMessage = Utility.getTimeMessageFromEventData(message);
             const messageSource = moduleId ? `${deviceId}/${moduleId}` : deviceId;
             this.outputLine(label, `${timeMessage}Message received from [${messageSource}]:`);
             this._outputChannel.appendLine(JSON.stringify(result, null, 2));

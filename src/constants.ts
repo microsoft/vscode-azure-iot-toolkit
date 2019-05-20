@@ -52,6 +52,7 @@ export class Constants {
     public static IoTHubConsumerGroup = "iotHubConsumerGroup";
     public static IoTHubD2CMessageStringifyKey = "iotHubD2CMessageStringify";
     public static IoTHubMonitorLabel = "IoTHubMonitor";
+    public static EventHubMonitorLabel = "EventHubMonitor";
     public static IoTHubMessageLabel = "D2CMessage";
     public static IoTHubC2DMessageLabel = "C2DMessage";
     public static IoTHubC2DMessageMonitorLabel = "C2DMessageMonitor";
@@ -110,12 +111,18 @@ export class Constants {
     public static IoTHubAIStartLoadDeviceTreeEvent = "General.StartLoadDeviceTree";
     public static IoTHubAIShowWelcomePagetEvent = "General.WelcomePage.Show";
     public static IoTHubAIValidateJsonSchemaEvent = "General.ValidateJsonSchema.Done";
+    public static IoTHubAILoadEndpointsTreeStartEvent = "AZ.LoadEndpointsTree.Start";
+    public static IoTHubAILoadEndpointsTreeDoneEvent = "AZ.LoadEndpointsTree.Done";
+    public static IoTHubAIEHStartMonitorEvent = "AZ.EventHub.startMonitoring";
+    public static IoTHubAIEHStopMonitorEvent = "AZ.EventHub.stopMonitoring";
     public static PercentageLabel = "(%)";
     public static NotSetLabel = "Not Set";
     public static DisabledLabel = "Disabled";
     public static EnabledLabel = "Enabled";
     public static DeploymentJsonSchemaUrl = "http://json.schemastore.org/azure-iot-edge-deployment-2.0";
     public static CREATE_OPTIONS_MAX_CHUNKS = 8;
+    public static StateKeySubsID = "subscriptionId";
+    public static StateKeyIoTHubID = "iothubid";
 
     public static DeleteLabel = "Delete";
     public static DeleteMessage = "Are you sure you want to delete";    public static readonly DISTRIBUTED_TWIN_NAME: string = "azureiot*com^dtracing^1";
