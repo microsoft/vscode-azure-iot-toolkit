@@ -33,7 +33,7 @@ The [Wiki page](https://github.com/Microsoft/vscode-azure-iot-toolkit/wiki) incl
     * Send D2C message to IoT Hub
     * Monitor Built-in Event Endpoint
     * Send C2D message to device
-    * Monitor C2D message from IoT Hub
+    * Receive C2D message from IoT Hub
     * Invoke Device Direct Method
     * Edit Device Twin
     * Manage Azure IoT distributed tracing
@@ -92,7 +92,7 @@ Instead of copying and pasting to set IoT Hub Connection String, you could sign 
 | iotSendD2CMessage | Send D2C message to IoT Hub |
 | iotMonitorD2CMessage | Monitor D2C message for IoT Hub |
 | iotSendC2DMessage | Send C2D message to device |
-| iotMonitorC2DMessage | Monitor C2D message from IoT Hub |
+| iotMonitorC2DMessage | Receive C2D message from IoT Hub |
 | iotCallDirectMethods | Send direct methods to device |
 | iotReceiveDirectMethods | Receive direct methods from IoT Hub |
 

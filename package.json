@@ -106,12 +106,12 @@
       },
       {
         "command": "azure-iot-toolkit.startMonitorC2DMessage",
-        "title": "Start Monitoring C2D Message",
+        "title": "Start Receiving C2D Message",
         "category": "Azure IoT Hub"
       },
       {
         "command": "azure-iot-toolkit.stopMonitorC2DMessage",
-        "title": "Stop Monitoring C2D Message",
+        "title": "Stop Receiving C2D Message",
         "category": "Azure IoT Hub"
       },
       {

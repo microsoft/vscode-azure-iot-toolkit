@@ -17,7 +17,7 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
     private _deviceClient: Client;
 
     constructor(outputChannel: vscode.OutputChannel) {
-        super(outputChannel, "$(primitive-square) Stop Monitoring C2D Message", "azure-iot-toolkit.stopMonitorC2DMessage");
+        super(outputChannel, "$(primitive-square) Stop Receiving C2D Message", "azure-iot-toolkit.stopMonitorC2DMessage");
     }
 
     public async sendC2DMessage(deviceItem?: DeviceItem) {
@@ -89,7 +89,7 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
             } else {
                 this.updateMonitorStatus(true);
                 let deviceId = ConnectionString.parse(deviceConnectionString).DeviceId;
-                this.outputLine(Constants.IoTHubC2DMessageMonitorLabel, `Start monitoring C2D message for [${deviceId}]...`);
+                this.outputLine(Constants.IoTHubC2DMessageMonitorLabel, `Start receiving C2D message for [${deviceId}]...`);
                 TelemetryClient.sendEvent(Constants.IoTHubAIStartMonitorC2DEvent);
                 this._deviceClient.on("message", (msg) => {
                     this.outputLine(Constants.IoTHubC2DMessageMonitorLabel, "Message Received: " + msg.getData());
