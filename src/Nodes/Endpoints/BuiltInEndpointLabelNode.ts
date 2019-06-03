@@ -11,7 +11,7 @@ export class BuiltInEndpointLabelNode implements INode {
 
     public getTreeItem(): vscode.TreeItem {
         return {
-            label: "Built-in endpints",
+            label: "Built-in endpoints",
             collapsibleState: vscode.TreeItemCollapsibleState.Collapsed,
             contextValue: "built-in-endpoint-label",
         };
