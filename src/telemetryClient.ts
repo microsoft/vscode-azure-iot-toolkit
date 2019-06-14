@@ -18,10 +18,10 @@ export class TelemetryClient {
     }
 
     public static sendEvent(eventName: string, properties?: { [key: string]: string; }, iotHubConnectionString?: string): void {
-        properties = this.addIoTHubHostName(properties, iotHubConnectionString);
+        properties = this.addCommonProperties(properties, iotHubConnectionString);
         this._client.sendTelemetryEvent(eventName, properties);
 
-        if (eventName.startsWith("AZ.") && eventName !== Constants.IoTHubAILoadDeviceTreeEvent ) {
+        if (eventName.startsWith("AZ.") && eventName !== Constants.IoTHubAILoadDeviceTreeEvent) {
             if (this._extensionContext) {
                 NSAT.takeSurvey(this._extensionContext);
             }
@@ -30,8 +30,9 @@ export class TelemetryClient {
 
     private static _client = new TelemetryReporter(Constants.ExtensionId, extensionVersion, aiKey);
     private static _extensionContext: vscode.ExtensionContext;
+    private static _isInternal: boolean = TelemetryClient.isInternalUser();
 
-    private static addIoTHubHostName(properties?: { [key: string]: string; }, iotHubConnectionString?: string): any {
+    private static addCommonProperties(properties?: { [key: string]: string; }, iotHubConnectionString?: string): any {
         let newProperties = properties ? properties : {};
         if (!iotHubConnectionString) {
             iotHubConnectionString = Utility.getConnectionStringWithId(Constants.IotHubConnectionStringKey);
@@ -47,6 +48,14 @@ export class TelemetryClient {
                 newProperties.IoTHubHostNamePostfix = Utility.getPostfixFromHostName(iotHubHostName);
             }
         }
+
+        newProperties.IsInternal = this._isInternal === true ? "true" : "false";
+
         return newProperties;
+    }
+
+    private static isInternalUser(): boolean {
+        const userDomain = process.env.USERDNSDOMAIN ? process.env.USERDNSDOMAIN.toLowerCase() : "";
+        return userDomain.endsWith("microsoft.com");
     }
 }
