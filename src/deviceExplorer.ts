@@ -141,6 +141,7 @@ export class DeviceExplorer extends BaseExplorer {
                 if (res.statusCode < 300) {
                     result = "Success";
                     if (op === "Create" || op === "Delete") {
+                        // Workaround for https://github.com/microsoft/vscode-azure-iot-toolkit/issues/331
                         setTimeout(() => {
                             vscode.commands.executeCommand("azure-iot-toolkit.refresh");
                         }, 500);
