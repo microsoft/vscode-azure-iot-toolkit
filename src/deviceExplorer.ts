@@ -141,7 +141,9 @@ export class DeviceExplorer extends BaseExplorer {
                 if (res.statusCode < 300) {
                     result = "Success";
                     if (op === "Create" || op === "Delete") {
-                        vscode.commands.executeCommand("azure-iot-toolkit.refresh");
+                        setTimeout(() => {
+                            vscode.commands.executeCommand("azure-iot-toolkit.refresh");
+                        }, 500);
                     }
                 }
                 TelemetryClient.sendEvent(eventName, { Result: result }, iotHubConnectionString);
