@@ -1,3 +1,11 @@
+## 2.8.0 (2019-06-XX)
+### Changed
+* Update json schema version to 2.0 for deployment validation
+
+### Fixed
+* [#332](https://github.com/microsoft/vscode-azure-iot-toolkit/pull/332): Bump axios from 0.18.0 to 0.18.1
+* [#334](https://github.com/microsoft/vscode-azure-iot-toolkit/pull/334): The menu/icon of new Edge Device is sometimes not right
+
 ## 2.7.0 (2019-05-16)
 ### Added
 * Endpoints tree view
