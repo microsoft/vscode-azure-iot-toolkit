@@ -1,4 +1,4 @@
-## 2.8.0 (2019-06-XX)
+## 2.8.0 (2019-06-26)
 ### Changed
 * Update json schema version to 2.0 for deployment validation
 
