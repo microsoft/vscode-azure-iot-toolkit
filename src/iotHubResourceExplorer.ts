@@ -9,6 +9,7 @@ import { IotHubDescription } from "../node_modules/azure-arm-iothub/lib/models";
 import { AzureAccount } from "./azure-account.api";
 import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
+import { CredentialStore } from "./credentialStore";
 import { DeviceItem } from "./Model/DeviceItem";
 import { IotHubItem } from "./Model/IotHubItem";
 import { LocationItem } from "./Model/LocationItem";
@@ -156,7 +157,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 
     public async copyIoTHubConnectionString() {
         TelemetryClient.sendEvent("AZ.Copy.IotHubConnectionString");
-        const iotHubConnectionString = Utility.getConnectionStringWithId(Constants.IotHubConnectionStringKey);
+        const iotHubConnectionString = await Utility.getConnectionStringWithId(Constants.IotHubConnectionStringKey);
         if (iotHubConnectionString) {
             await vscode.env.clipboard.writeText(iotHubConnectionString);
         }
@@ -253,8 +254,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
     }
 
     private async updateIoTHubConnectionString(iotHubConnectionString: string) {
-        const config = Utility.getConfiguration();
-        await config.update(Constants.IotHubConnectionStringKey, iotHubConnectionString, true);
+        await CredentialStore.setPassword(Constants.IotHubConnectionStringKey, iotHubConnectionString);
         vscode.commands.executeCommand("azure-iot-toolkit.refresh");
     }
 

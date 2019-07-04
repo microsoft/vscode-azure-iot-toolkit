@@ -37,7 +37,7 @@ export class CodeManager {
             return;
         }
 
-        const iotHubConnectionString = Utility.getConnectionStringWithId(Constants.IotHubConnectionStringKey);
+        const iotHubConnectionString = await Utility.getConnectionStringWithId(Constants.IotHubConnectionStringKey);
         const template = this.context.asAbsolutePath(path.join("resources", "code-template", Constants.CodeTemplates[language][type]));
         const replacements = new Map(
             [[/{{deviceConnectionString}}/g, deviceItem.connectionString],
