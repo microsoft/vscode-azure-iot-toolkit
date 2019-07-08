@@ -33,33 +33,6 @@ suite("Utility Tests ", () => {
         assert.equal(autoRefreshIntervalInSeconds, 60);
     });
 
-    // tslint:disable-next-line:only-arrow-functions
-    test("should be able to get IoT Hub Connection String", function (done) {
-        this.timeout(5 * 1000);
-        let config = Utility.getConfiguration();
-        config.update(Constants.IotHubConnectionStringKey, TestConstants.IotHubConnectionString, true).then(() => {
-            setTimeout(() => {
-                Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle).then((IotHubConnectionString) => {
-                    assert.equal(IotHubConnectionString, TestConstants.IotHubConnectionString);
-                    done();
-                });
-            }, 300);
-        });
-    });
-
-    // tslint:disable-next-line:only-arrow-functions
-    test("should be able to get 'null' value when querying a invalid IoT Hub Connection String", function (done) {
-        this.timeout(5 * 1000);
-        let config = Utility.getConfiguration();
-        config.update(Constants.IotHubConnectionStringKey, TestConstants.InvalidIotHubConnectionString, true).then(() => {
-            setTimeout(() => {
-                let IotHubConnectionString = Utility.getConnectionStringWithId(Constants.IotHubConnectionStringKey);
-                assert.equal(IotHubConnectionString, null);
-                done();
-            }, 300);
-        });
-    });
-
     test("should be able to generate SAS Token for IoT Hub", () => {
         let sasTokenForService = Utility.generateSasTokenForService(TestConstants.IotHubConnectionString, 10);
         assert.equal(/^SharedAccessSignature sr=iot-hub-test.azure-devices.net&sig=.+&skn=iothubowner&se=.+$/.test(sasTokenForService), true);
