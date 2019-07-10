@@ -71,8 +71,6 @@ The [Wiki page](https://github.com/Microsoft/vscode-azure-iot-toolkit/wiki) incl
 
   ![Device Explorer](images/device-explorer.png)
 
-**NOTE**: You could also go to **File** > **Preferences** > **Settings** (**Code** > **Preferences** > **Settings** on Mac), update the config of `azure-iot-toolkit.iotHubConnectionString` to change your IoT Hub Connection String.
-
 ### Sign in to Azure
 
 Instead of copying and pasting to set IoT Hub Connection String, you could sign in to Azure to select IoT Hub from your Azure Subscription.
@@ -109,20 +107,6 @@ Instead of copying and pasting to set IoT Hub Connection String, you could sign 
 > If you want to 'Run Code' directly, you need to install [Code Runner](https://marketplace.visualstudio.com/items?itemName=formulahendry.code-runner).
 
 ## Configuration
-
-IoT Hub Connection String:
-```json
-{
-    "azure-iot-toolkit.iotHubConnectionString": "HostName=<my-hub>.azure-devices.net;SharedAccessKeyName=<my-policy>;SharedAccessKey=<my-policy-key>"
-}
-```
-
-Device Connection String:
-```json
-{
-    "azure-iot-toolkit.deviceConnectionString": "HostName=<my-hub>.azure-devices.net;DeviceId=<known-device-id>;SharedAccessKey=<known-device-key>"
-}
-```
 
 IoT Hub Consumer Group (default is `"$Default"`):
 ```json

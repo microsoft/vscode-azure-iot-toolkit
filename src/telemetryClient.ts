@@ -17,8 +17,8 @@ export class TelemetryClient {
         this._extensionContext = context;
     }
 
-    public static sendEvent(eventName: string, properties?: { [key: string]: string; }, iotHubConnectionString?: string): void {
-        properties = this.addCommonProperties(properties, iotHubConnectionString);
+    public static async sendEvent(eventName: string, properties?: { [key: string]: string; }, iotHubConnectionString?: string) {
+        properties = await this.addCommonProperties(properties, iotHubConnectionString);
         this._client.sendTelemetryEvent(eventName, properties);
 
         if (eventName.startsWith("AZ.") && eventName !== Constants.IoTHubAILoadDeviceTreeEvent) {
@@ -32,12 +32,12 @@ export class TelemetryClient {
     private static _extensionContext: vscode.ExtensionContext;
     private static _isInternal: boolean = TelemetryClient.isInternalUser();
 
-    private static addCommonProperties(properties?: { [key: string]: string; }, iotHubConnectionString?: string): any {
+    private static async addCommonProperties(properties?: { [key: string]: string; }, iotHubConnectionString?: string) {
         let newProperties = properties ? properties : {};
         if (!iotHubConnectionString) {
-            iotHubConnectionString = Utility.getConnectionStringWithId(Constants.IotHubConnectionStringKey);
+            iotHubConnectionString = await Utility.getConnectionStringWithId(Constants.IotHubConnectionStringKey);
             if (!iotHubConnectionString) {
-                iotHubConnectionString = Utility.getConnectionStringWithId(Constants.DeviceConnectionStringKey);
+                iotHubConnectionString = await Utility.getConnectionStringWithId(Constants.DeviceConnectionStringKey);
             }
         }
 
