@@ -725,6 +725,7 @@
   },
   "devDependencies": {
     "@types/fs-extra": "^5.0.4",
+    "@types/keytar": "^4.4.0",
     "@types/mocha": "^2.2.32",
     "@types/node": "^10.12.3",
     "@types/terser-webpack-plugin": "^1.2.0",

@@ -22,6 +22,7 @@ import iothub = require("azure-iothub");
 import { EventData } from "@azure/event-hubs";
 import { IotHubDescription } from "azure-arm-iothub/lib/models";
 import { AzureAccount } from "./azure-account.api";
+import { CredentialStore } from "./credentialStore";
 import { SubscriptionItem } from "./Model/SubscriptionItem";
 
 export class Utility {
@@ -30,7 +31,7 @@ export class Utility {
     }
 
     public static async getConnectionString(id: string, name: string, askForConnectionString: boolean = true) {
-        const connectionString = this.getConnectionStringWithId(id);
+        const connectionString = await this.getConnectionStringWithId(id);
         if (!connectionString && askForConnectionString) {
             return this.setConnectionString(id, name);
         }
@@ -49,8 +50,7 @@ export class Utility {
                 value = input.value;
                 if (this.isValidConnectionString(id, value)) {
                     TelemetryClient.sendEvent("General.SetConfig.Done", { Result: "Success" });
-                    let config = Utility.getConfiguration();
-                    await config.update(id, value, true);
+                    await CredentialStore.setPassword(id, value);
                     if (id === Constants.IotHubConnectionStringKey) {
                         await Utility.deleteIoTHubInfo();
                     }
@@ -73,9 +73,11 @@ export class Utility {
         });
     }
 
-    public static getConnectionStringWithId(id: string) {
-        let config = Utility.getConfiguration();
-        let configValue = config.get<string>(id);
+    public static async getConnectionStringWithId(id: string) {
+        let configValue = await CredentialStore.getPassword(id);
+        if (!configValue) {
+            configValue = Utility.getConfiguration().get<string>(id);
+        }
         if (!this.isValidConnectionString(id, configValue)) {
             return null;
         }

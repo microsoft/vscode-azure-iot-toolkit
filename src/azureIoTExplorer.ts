@@ -4,7 +4,7 @@
 "use strict";
 import * as vscode from "vscode";
 import { CodeManager } from "./codeManager";
-import { DistributedSettingUpdateType } from "./constants";
+import { Constants, DistributedSettingUpdateType } from "./constants";
 import { DeviceExplorer } from "./deviceExplorer";
 import { DistributedTracingManager } from "./distributedTracingManager";
 import { EventHubManager } from "./eventHubManager";
@@ -21,6 +21,7 @@ import { ModuleItem } from "./Model/ModuleItem";
 import { DeviceNode } from "./Nodes/DeviceNode";
 import { ModuleItemNode } from "./Nodes/ModuleItemNode";
 import { SnippetManager } from "./snippetManager";
+import { Utility } from "./utility";
 import { WelcomePage } from "./welcomePage";
 
 export class AzureIoTExplorer {
@@ -193,5 +194,9 @@ export class AzureIoTExplorer {
 
     public async stopMonitorCustomEventHubEndpoint() {
         this._eventHubManager.stopMonitorCustomEventHubEndpoint();
+    }
+
+    public async getIotHubConnectionString(): Promise<string> {
+        return Utility.getConnectionStringWithId(Constants.IotHubConnectionStringKey);
     }
 }
