@@ -1,4 +1,12 @@
 ## 2.8.0 (2019-06-26)
+### Added
+* Update infrastructrue to support localization (Thanks [@matsujirushi](https://github.com/matsujirushi)!)
+* Expose API to read IoT Hub connection string
+
+### Changed
+* Use OS credential store to store IoT Hub connection string
+
+## 2.8.0 (2019-06-26)
 ### Changed
 * Update json schema version to 2.0 for deployment validation
 
