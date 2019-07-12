@@ -1,4 +1,4 @@
-## 2.8.0 (2019-06-26)
+## 2.9.0
 ### Added
 * Update infrastructrue to support localization (Thanks [@matsujirushi](https://github.com/matsujirushi)!)
 * Expose API to read IoT Hub connection string
