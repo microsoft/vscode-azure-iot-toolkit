@@ -5,7 +5,7 @@
 * Expose API to read IoT Hub connection string
 
 ### Changed
-* Use OS credential store to store IoT Hub connection string (We will no longer use `azure-iot-toolkit.iotHubConnectionString` in settings.json to store IoT Hub connection string)
+* Use OS credential store to store IoT Hub connection string (To be more secure, we will no longer use `azure-iot-toolkit.iotHubConnectionString` in settings.json to store IoT Hub connection string)
 
 ## 2.8.0 (2019-06-26)
 ### Changed
