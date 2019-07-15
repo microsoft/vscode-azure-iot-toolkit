@@ -1,6 +1,6 @@
 ## 2.9.0
 ### Added
-* Update infrastructrue to support localization (Thanks [@matsujirushi](https://github.com/matsujirushi)!)
+* Update infrastructure to support localization (Thanks [@matsujirushi](https://github.com/matsujirushi)!)
 * Localization for Japanese language (Thanks [@matsujirushi](https://github.com/matsujirushi)!)
 * Expose API to read IoT Hub connection string
 
