@@ -17,9 +17,11 @@ import { IotHubModuleExplorer } from "./iotHubModuleExplorer";
 import { IoTHubResourceExplorer } from "./iotHubResourceExplorer";
 import { DeviceItem } from "./Model/DeviceItem";
 import { EventHubItem } from "./Model/EventHubItem";
+import { InterfaceItem } from "./Model/InterfaceItem";
 import { ModuleItem } from "./Model/ModuleItem";
 import { DeviceNode } from "./Nodes/DeviceNode";
 import { ModuleItemNode } from "./Nodes/ModuleItemNode";
+import { PnpManager } from "./pnpManager";
 import { SnippetManager } from "./snippetManager";
 import { Utility } from "./utility";
 import { WelcomePage } from "./welcomePage";
@@ -38,6 +40,7 @@ export class AzureIoTExplorer {
     private _iotHubModuleExplorer: IotHubModuleExplorer;
     private _distributedTracingManager: DistributedTracingManager;
     private _eventHubManager: EventHubManager;
+    private _pnpManager: PnpManager;
 
     constructor(private context: vscode.ExtensionContext) {
         let outputChannel = vscode.window.createOutputChannel("Azure IoT Hub Toolkit");
@@ -54,6 +57,7 @@ export class AzureIoTExplorer {
         this._codeManager = new CodeManager(this.context);
         this._iotHubModuleExplorer = new IotHubModuleExplorer(outputChannel);
         this._eventHubManager = new EventHubManager(outputChannel);
+        this._pnpManager = new PnpManager(outputChannel);
     }
 
     public sendD2CMessage(deviceItem?: DeviceItem): void {
@@ -198,5 +202,9 @@ export class AzureIoTExplorer {
 
     public async getIotHubConnectionString(): Promise<string> {
         return Utility.getConnectionStringWithId(Constants.IotHubConnectionStringKey);
+    }
+
+    public getInterface(interfaceItem: InterfaceItem) {
+        this._pnpManager.getInterface(interfaceItem);
     }
 }

@@ -6,11 +6,11 @@ import { InterfaceItem } from "../Model/InterfaceItem";
 import { INode } from "./INode";
 
 export class InterfaceNode implements INode {
-    constructor(private name: string) {
+    constructor(public interfaceItem: InterfaceItem) {
     }
 
     public getTreeItem(): vscode.TreeItem {
-        return new InterfaceItem(this.name);
+        return this.interfaceItem;
     }
 
     public getChildren(): INode[] {

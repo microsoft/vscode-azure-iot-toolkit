@@ -277,6 +277,11 @@
         "command": "azure-iot-toolkit.stopMonitorCustomEventHubEndpoint",
         "title": "%azure-iot-toolkit.command.stopMonitorCustomEventHubEndpoint.title%",
         "category": "%azure-iot-toolkit.category%"
+      },
+      {
+        "command": "azure-iot-toolkit.getInterface",
+        "title": "%azure-iot-toolkit.command.getInterface.title%",
+        "category": "%azure-iot-toolkit.category%"
       }
     ],
     "menus": {
@@ -570,6 +575,15 @@
         {
           "command": "azure-iot-toolkit.startMonitorIoTHubMessageWithAbbreviation",
           "when": "view == iotHubDevices && viewItem == events"
+        },
+        {
+          "command": "azure-iot-toolkit.refresh",
+          "when": "view == iotHubDevices && viewItem == interfaces-label",
+          "group": "inline"
+        },
+        {
+          "command": "azure-iot-toolkit.getInterface",
+          "when": "view == iotHubDevices && viewItem == interface"
         }
       ],
       "editor/context": [

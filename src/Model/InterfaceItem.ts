@@ -4,7 +4,9 @@
 import { TreeItem } from "vscode";
 
 export class InterfaceItem extends TreeItem {
-    constructor(name: string) {
+    constructor(
+        public readonly deviceId: string,
+        public readonly name: string) {
         super(name);
         this.contextValue = "interface";
     }

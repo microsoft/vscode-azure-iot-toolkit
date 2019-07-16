@@ -9,6 +9,7 @@ import { DeviceTree } from "./deviceTree";
 import { Executor } from "./executor";
 import { DeviceNode } from "./Nodes/DeviceNode";
 import { EventHubItemNode } from "./Nodes/Endpoints/EventHubItemNode";
+import { InterfaceNode } from "./Nodes/InterfaceNode";
 import { ModuleItemNode } from "./Nodes/ModuleItemNode";
 import { ModuleLabelNode } from "./Nodes/ModuleLabelNode";
 import { DeviceTwinCodeLensProvider } from "./providers/deviceTwinCodeLensProvider";
@@ -185,6 +186,10 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.startMonitorIoTHubMessageWithAbbreviation", () => {
         TelemetryClient.sendEvent(Constants.IoTHubAIStartMonitorEvent, { entry: "built-in-events" });
         vscode.commands.executeCommand("azure-iot-toolkit.startMonitorIoTHubMessage");
+    }));
+
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.getInterface",  (interfaceNode: InterfaceNode) => {
+        azureIoTExplorer.getInterface(interfaceNode ? interfaceNode.interfaceItem : undefined);
     }));
 
     vscode.workspace.onDidChangeTextDocument((event) => azureIoTExplorer.replaceConnectionString(event));

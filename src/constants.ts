@@ -123,6 +123,12 @@ export class Constants {
     public static CREATE_OPTIONS_MAX_CHUNKS = 8;
     public static StateKeySubsID = "subscriptionId";
     public static StateKeyIoTHubID = "iothubid";
+    public static InterfaceJosnFileName = "azure-iot-interface.json";
+    public static InterfaceJosnFilePath: string;
+    public static IoTHubAIGetInterfaceStartEvent = "AZ.Interface.Get.Start";
+    public static IoTHubAIGetInterfaceDoneEvent = "AZ.Interface.Get.Done";
+    public static IoTHubAILoadInterfacesTreeStartEvent = "AZ.LoadInterfacesTree.Start";
+    public static IoTHubAILoadInterfacesTreeDoneEvent = "AZ.LoadInterfacesTree.Done";
 
     public static DeleteLabel = "Delete";
     public static DeleteMessage = "Are you sure you want to delete";    public static readonly DISTRIBUTED_TWIN_NAME: string = "azureiot*com^dtracing^1";
@@ -189,5 +195,6 @@ export class Constants {
         const directory = context.storagePath ? context.storagePath : os.tmpdir();
         Constants.ModuleTwinJosnFilePath = path.join(directory, Constants.ModuleTwinJosnFileName);
         Constants.DeviceTwinJosnFilePath = path.join(directory, Constants.DeviceTwinJosnFileName);
+        Constants.InterfaceJosnFilePath = path.join(directory, Constants.InterfaceJosnFileName)
     }
 }

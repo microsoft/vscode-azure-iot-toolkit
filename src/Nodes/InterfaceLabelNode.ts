@@ -4,6 +4,7 @@
 import axios from "axios";
 import * as vscode from "vscode";
 import { Constants } from "../constants";
+import { InterfaceItem } from "../Model/InterfaceItem";
 import { TelemetryClient } from "../telemetryClient";
 import { Utility } from "../utility";
 import { DeviceNode } from "./DeviceNode";
@@ -17,14 +18,14 @@ export class InterfaceLabelNode implements INode {
 
     public getTreeItem(): vscode.TreeItem {
         return {
-            label: "interfaces",
+            label: "Interfaces",
             collapsibleState: vscode.TreeItemCollapsibleState.Collapsed,
             contextValue: "interfaces-label",
         };
     }
 
     public async getChildren(context: vscode.ExtensionContext, iotHubConnectionString: string): Promise<INode[]> {
-        // TelemetryClient.sendEvent(Constants.IoTHubAIStartLoadDeviceTreeEvent);
+        TelemetryClient.sendEvent(Constants.IoTHubAIStartLoadDeviceTreeEvent);
 
         try {
             const interfaces = (await axios.get(`https://${Utility.getHostName(iotHubConnectionString)}/digitalTwins/${this.deviceNode.deviceId}/interfaces?api-version=2019-07-01-preview`, {
@@ -32,9 +33,14 @@ export class InterfaceLabelNode implements INode {
                     Authorization: Utility.generateSasTokenForService(iotHubConnectionString),
                 }
             })).data;
-            return Object.keys(interfaces.interfaces).map((name) => new InterfaceNode(name));
+            TelemetryClient.sendEvent(Constants.IoTHubAILoadInterfacesTreeDoneEvent, { Result: "Success" });
+            if (!interfaces || !interfaces.interfaces || Object.keys(interfaces.interfaces).length === 0) {
+                return [new InfoNode("No Interfaces")];
+            }
+            return Object.keys(interfaces.interfaces).map((name) => new InterfaceNode(new InterfaceItem(this.deviceNode.deviceId, name)));
         } catch (err) {
-            return [];
+            TelemetryClient.sendEvent(Constants.IoTHubAILoadInterfacesTreeDoneEvent, { Result: "Fail", Message: err.message });
+            return Utility.getErrorMessageTreeItems("interfaces", err.message);
         }
     }
 }
