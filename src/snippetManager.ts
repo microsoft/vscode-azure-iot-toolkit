@@ -27,9 +27,8 @@ export class SnippetManager extends BaseExplorer {
             }
             let document = editor.document;
             let text = document.getText();
-            let config = Utility.getConfiguration();
-            this.connectionStringKeys.forEach((connectionStringKey) => {
-                let connectionStringValue = config.get<string>(connectionStringKey);
+            this.connectionStringKeys.forEach(async (connectionStringKey) => {
+                let connectionStringValue = await Utility.getConnectionStringWithId(connectionStringKey);
                 let connectionStringKeyWithAngleBracket = this.getTextWithAngleBracket(connectionStringKey);
                 if (changedText.indexOf(connectionStringKeyWithAngleBracket) > -1
                     && connectionStringValue && !connectionStringValue.startsWith("<<insert")) {
