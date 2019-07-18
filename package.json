@@ -277,6 +277,10 @@
         "command": "azure-iot-toolkit.stopMonitorCustomEventHubEndpoint",
         "title": "%azure-iot-toolkit.command.stopMonitorCustomEventHubEndpoint.title%",
         "category": "%azure-iot-toolkit.category%"
+      },
+      {
+        "command": "extension.sayhello",
+        "title": "sayhello"
       }
     ],
     "menus": {
@@ -727,7 +731,7 @@
     "@types/fs-extra": "^5.0.4",
     "@types/keytar": "^4.4.0",
     "@types/mocha": "^2.2.32",
-    "@types/node": "^10.12.3",
+    "@types/node": "^10.14.12",
     "@types/terser-webpack-plugin": "^1.2.0",
     "@types/webpack": "^4.4.24",
     "fail-on-errors-webpack-plugin": "^3.0.0",

@@ -286,6 +286,19 @@ export class Utility {
         }
     }
 
+    public static async getInputDeviceList(eventName: string, onlyEdgeDevice: boolean = false, iotHubConnectionString?: string): Promise<DeviceItem[]> {
+        if (eventName) {
+            TelemetryClient.sendEvent(eventName, { entry: "commandPalette" });
+        }
+        if (!iotHubConnectionString) {
+            iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
+            if (!iotHubConnectionString) {
+                return null;
+            }
+        }
+        return Utility.getFilteredDeviceList(iotHubConnectionString, onlyEdgeDevice);
+    }
+
     public static async getDeviceList(iotHubConnectionString: string, context?: vscode.ExtensionContext): Promise<DeviceItem[]> {
         const [deviceList, edgeDeviceIdSet] = await Promise.all([Utility.getIoTDeviceList(iotHubConnectionString), Utility.getEdgeDeviceIdSet(iotHubConnectionString)]);
         return deviceList.map((device) => {
