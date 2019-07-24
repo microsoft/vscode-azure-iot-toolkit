@@ -7,7 +7,8 @@ import { IoTHubMessageBaseExplorer } from "./iotHubMessageBaseExplorer";
 import { DeviceItem } from "./Model/DeviceItem";
 import { Utility } from "./utility";
 import { MultiStepInput } from './multiStepInput';
-import { QuickPickItem } from 'vscode';
+import * as fse from "fs-extra";
+import { Marketplace } from "./marketplace/marketplace";
 
 interface State {
     title: string;

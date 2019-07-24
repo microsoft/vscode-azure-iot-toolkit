@@ -220,7 +220,15 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.window.showInformationMessage('sayGoodbye');
         
 	});
-	context.subscriptions.push(sayhello);
+    context.subscriptions.push(sayhello);
+    
+    let sw = vscode.commands.registerCommand('extension.sw', () => {
+        vscode.window.showInformationMessage('sw');
+        azureIoTExplorer.sw();
+        vscode.window.showInformationMessage('swsw');
+        
+	});
+	context.subscriptions.push(sw);
 
     return { azureIoTExplorer };
 }

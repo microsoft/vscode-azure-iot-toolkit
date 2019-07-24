@@ -82,6 +82,12 @@ const config = {
             /getos/,
             /logic[\/\\].*\.js/
         ),
+		// Express
+		new webpack.ContextReplacementPlugin(
+            /express[\/\\]lib/,
+            false,
+            /$^/
+        ),
         // Fail on warnings so that CI can report new warnings which require attention
         new failOnErrorsPlugin({
             failOnErrors: true,

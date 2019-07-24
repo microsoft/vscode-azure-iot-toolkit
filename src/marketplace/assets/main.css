@@ -1,0 +1,302 @@
+* {
+    box-sizing: border-box;
+    font-family: "Segoe UI";
+}
+
+.vscode-dark {
+    background: #1E1E1E;
+    color: #D4D4D4;
+}
+.vscode-light {
+    background: #FFFFFF;
+    color: #333333;
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0
+}
+
+#app {
+    display: table;
+    width: 100%;
+    height: 100%;
+}
+
+#content {
+    position: relative;
+    display: table-cell;
+}
+
+#main-content {
+    padding-left: 50px;
+}
+
+#error-initialization {
+    padding-top: 50px;
+    font-size: 20px;
+    color: #E81123;
+    line-height: 24px;
+}
+
+#title-area {
+    position: relative;
+}
+
+#title-area h1 {
+    font-size: 24px;
+    line-height: 28px;
+}
+
+#search-box {
+    width: 280px;
+    height: 32px;
+    position: absolute;
+    top: 0;
+    right: 80px;
+    padding-left: 12px;
+    font-size: 13px;
+    letter-spacing: 0;
+    line-height: 17px;
+}
+.vscode-dark #search-box {
+    color: #A8A8A8;
+    background: #3C3C3C;
+    border: 1px solid #383838;
+}
+.vscode-light #search-box {
+    color: #999999;
+    background: #FFFFFF;
+    border: 1px solid #9F9F9F;
+}
+
+.modules {
+    padding-top: 10px;
+}
+
+.module {
+    float: left;
+    width: 200px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    border-width: 1px;
+    border-style: solid;
+    cursor: pointer;
+}
+.vscode-dark .module {
+    border-color: #383838;
+}
+.vscode-light .module {
+    border-color: #E4E4E4;
+}
+
+.module.selected {
+    border-color: #0078D7;
+}
+
+.module .image {
+    height: 68px;
+    
+    padding-left: 14px;
+    padding-top: 14px;
+}
+.vscode-dark .module .image {
+    background-color: #383838;
+}
+.vscode-light .module .image {
+    background-color: #F2F2F2;
+}
+
+.module img {
+    width: 40px;
+    height: 40px;
+    display: block;
+}
+
+.module .info-area {
+    padding: 0 10px;
+    height: 200px;
+}
+.vscode-dark .module .info-area {
+    background-color: #2B2B2B;
+}
+.vscode-light .module .info-area {
+    background-color: #FFFFFF;
+}
+
+.module .title {
+    font-weight: 600;
+    font-size: 16px;
+    letter-spacing: 0;
+    text-align: left;
+    line-height: 18px;
+    padding-top: 10px;
+}
+
+.module .publisher {
+    font-size: 12px;
+    
+    letter-spacing: 0;
+    text-align: left;
+    line-height: 15px;
+    padding-top: 5px;
+}
+.vscode-dark .module .publisher {
+    color: #999999;
+}
+.vscode-light .module .publisher {
+    color: #666666;
+}
+
+.module .description {
+    padding-top: 10px;
+    font-size: 12px;
+    letter-spacing: 0;
+    text-align: left;
+    line-height: 15px;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#module-detail {
+    width: 100%;
+    padding: 30px;
+    position: fixed;
+    bottom: 0;
+}
+.vscode-dark #module-detail {
+    background-color: #2B2B2B;
+}
+.vscode-light #module-detail {
+    background-color: #F7F7F7;
+}
+
+#module-detail-container {
+    display: flex;
+    max-width: 1200px;
+}
+
+#module-detail .info-item {
+    flex: 3;
+}
+
+#module-detail .learn-more-item {
+    flex: 1;
+    padding-left: 30px;
+}
+
+#module-detail .title {
+    font-size: 24px;
+    line-height: 28px;
+}
+
+#module-detail .publisher {
+    padding-top: 5px;
+    font-size: 13px;
+}
+.vscode-dark #module-detail .publisher {
+    color: #999999;
+}
+.vscode-light #module-detail .publisher {
+    color: #666666;
+}
+
+#module-detail .description {
+    padding-top: 5px;
+    font-size: 13px;
+}
+
+#module-detail .inputs {
+    padding-top: 10px;
+    font-size: 13px;
+}
+
+#module-detail .input {
+    margin-top: 10px;
+}
+
+#module-detail .input label {
+    display: block;
+    width: 100px;
+    float: left;
+}
+
+#module-detail input {
+    padding-left: 5px;
+}
+
+#module-detail input,
+#module-detail select {
+    width: 200px;
+    border-style: none;
+}
+.vscode-dark #module-detail input,
+.vscode-dark #module-detail select {
+    color: #D4D4D4;
+    background-color: #3C3C3C;
+}
+.vscode-light #module-detail input,
+.vscode-light #module-detail select {
+    color: #333333;
+    background-color: #FFFFFF;
+}
+
+#module-detail .error {
+    font-size: 12px;
+    color: #E81123;
+    line-height: 15px;
+}
+
+#module-detail .action {
+    color: #B6B6B6;
+    margin-top: 20px;
+}
+
+#module-detail .action button {
+    width: 120px;
+    height: 32px;
+    margin-right: 15px;
+    font-size: 13px;
+    color: #FFFFFF;
+    background-color: #0078D7;
+    border-style: none;
+}
+
+#module-detail .term-of-use {
+    font-size: 13px;
+    line-height: 15px;
+    margin-top: 10px;
+}
+
+#module-detail .learn-more {
+    font-size: 18px;
+    letter-spacing: 0;
+    line-height: 22px;
+    margin-top: 5px;
+}
+
+#module-detail .learn-more-links {
+    margin-top: 5px;
+}
+
+#module-detail .learn-more-links .link {
+    font-size: 13px;
+    letter-spacing: 0;
+    line-height: 18px;
+}
+
+#module-detail a {
+    color: #3D7DD3;
+    text-decoration: none;
+}
+
+#sidebar {
+    width: 0;
+    background-color: #404040;
+    display: table-cell;
+}

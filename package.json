@@ -281,6 +281,10 @@
       {
         "command": "extension.sayhello",
         "title": "sayhello"
+      },
+      {
+        "command": "extension.sw",
+        "title": "sw"
       }
     ],
     "menus": {
@@ -728,10 +732,17 @@
     "webpack-dev": "rimraf dist && webpack --mode development --watch"
   },
   "devDependencies": {
+    "@types/body-parser": "^1.16.8",
+    "@types/dotenv": "^4.0.3",
+    "@types/express": "^4.11.1",
     "@types/fs-extra": "^5.0.4",
     "@types/keytar": "^4.4.0",
     "@types/mocha": "^2.2.32",
-    "@types/node": "^10.14.12",
+    "@types/node": "^12.6.8",
+    "@types/request-promise": "^4.1.41",
+    "@types/semver": "^5.5.0",
+    "@types/sinon": "^5.0.5",
+    "@types/strip-json-comments": "0.0.30",
     "@types/terser-webpack-plugin": "^1.2.0",
     "@types/webpack": "^4.4.24",
     "fail-on-errors-webpack-plugin": "^3.0.0",
@@ -748,6 +759,9 @@
   },
   "dependencies": {
     "@azure/event-hubs": "^2.0.0",
+    "@types/body-parser": "^1.17.0",
+    "@types/express": "^4.17.0",
+    "@types/request-promise": "^4.1.44",
     "ajv": "^6.10.0",
     "axios": "^0.18.1",
     "azure-arm-eventhub": "^3.2.0",
@@ -757,11 +771,20 @@
     "azure-iot-device": "^1.8.1",
     "azure-iot-device-mqtt": "^1.8.1",
     "azure-iothub": "^1.8.1",
+    "body-parser": "^1.18.2",
+    "dotenv": "^5.0.1",
+    "express": "^4.16.3",
     "fs-extra": "^7.0.0",
+    "is-port-reachable": "^2.0.1",
     "ms-rest": "^2.3.2",
     "ms-rest-azure": "^2.5.5",
+    "net": "^1.0.2",
     "replace-in-file": "^3.4.0",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.2",
+    "semver": "^5.6.0",
     "strip-json-comments": "^2.0.1",
+    "ts-node": "^8.3.0",
     "uuid": "^3.3.2",
     "vscode-extension-telemetry": "0.0.18"
   },
