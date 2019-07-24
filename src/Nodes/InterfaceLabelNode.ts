@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 import axios from "axios";
+import * as path from "path";
 import * as vscode from "vscode";
 import { Constants } from "../constants";
 import { TelemetryClient } from "../telemetryClient";
@@ -17,24 +18,29 @@ export class InterfaceLabelNode implements INode {
 
     public getTreeItem(): vscode.TreeItem {
         return {
-            label: "interfaces",
+            label: "Interfaces",
             collapsibleState: vscode.TreeItemCollapsibleState.Collapsed,
             contextValue: "interfaces-label",
         };
     }
 
     public async getChildren(context: vscode.ExtensionContext, iotHubConnectionString: string): Promise<INode[]> {
-        // TelemetryClient.sendEvent(Constants.IoTHubAIStartLoadDeviceTreeEvent);
+        TelemetryClient.sendEvent(Constants.IoTHubAILoadInterfacesTreeStartEvent);
 
         try {
             const interfaces = (await axios.get(`https://${Utility.getHostName(iotHubConnectionString)}/digitalTwins/${this.deviceNode.deviceId}/interfaces?api-version=2019-07-01-preview`, {
                 headers: {
                     Authorization: Utility.generateSasTokenForService(iotHubConnectionString),
-                }
+                },
             })).data;
-            return Object.keys(interfaces.interfaces).map((name) => new InterfaceNode(name));
+            TelemetryClient.sendEvent(Constants.IoTHubAILoadInterfacesTreeDoneEvent, { Result: "Success" });
+            if (!interfaces || !interfaces.interfaces || Object.keys(interfaces.interfaces).length === 0) {
+                return [new InfoNode("No Interfaces")];
+            }
+            return Object.keys(interfaces.interfaces).map((name) => new InterfaceNode(name, context.asAbsolutePath(path.join("resources", `interface.svg`))));
         } catch (err) {
-            return [];
+            TelemetryClient.sendEvent(Constants.IoTHubAILoadInterfacesTreeDoneEvent, { Result: "Fail", Message: err.message });
+            return Utility.getErrorMessageTreeItems("interfaces", err.message);
         }
     }
 }

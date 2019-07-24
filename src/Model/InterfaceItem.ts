@@ -4,7 +4,7 @@
 import { TreeItem } from "vscode";
 
 export class InterfaceItem extends TreeItem {
-    constructor(name: string) {
+    constructor(name: string, public readonly iconPath: string) {
         super(name);
         this.contextValue = "interface";
     }
