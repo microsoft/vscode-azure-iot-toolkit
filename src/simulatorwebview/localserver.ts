@@ -93,6 +93,6 @@ export class LocalServer {
         vscode.window.showInformationMessage(message);
         let outputChannel = vscode.window.createOutputChannel("Azure IoT Hub Toolkit");
         const simulatorMessageSender: SimulatorMessageSender = new SimulatorMessageSender(outputChannel);
-        simulatorMessageSender.sendD2CMessageRepeatedlyIneractive(inputDeviceConnectionStrings, message, times, interval);
+        simulatorMessageSender.sendD2CMessageRepeatedly(inputDeviceConnectionStrings, message, times, interval);
     }
 }

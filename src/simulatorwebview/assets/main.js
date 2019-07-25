@@ -8,6 +8,7 @@ try {
 const app = new Vue({
     el: '#app',
     data: {
+        step: 1,
         inputDevice: [],
         msg: '',
         times: '',
@@ -18,14 +19,22 @@ const app = new Vue({
     },
     created: async function () {
         try {
-            this.inputDeviceList = await this.getInputDeviceList();
+            const list = await this.getInputDeviceList();
         } catch (error) {
             this.errorMessageInitialization = error.toString();
         }
     },
     methods: {
-        getInputDeviceList: async function () {
-            return (await axios.get(`${this.endpoint}/api/getinputdevicelist`)).data;
+        async getInputDeviceList () {
+            const list = (await axios.get(`${this.endpoint}/api/getinputdevicelist`)).data;
+            this.inputDeviceList = []
+            for (const device of list) {
+                device.key = device.deviceId;
+                this.inputDeviceList.push(device)
+            }
+        },
+        nextStep () {
+            this.step = this.step + 1;
         },
         async send () {
             // TODO: Add validator here
@@ -36,7 +45,13 @@ const app = new Vue({
                 interval: this.interval
             }
             await axios.post(`${this.endpoint}/api/sendmessagerepeatedly`, data);
-        }
+        },
+        deviceListTransferRender (item) {
+            return item.label;
+        },
+        deviceListTransferChangeHandler (newTargetKeys) {
+            this.inputDevice = newTargetKeys;
+        },
     }
 });
   

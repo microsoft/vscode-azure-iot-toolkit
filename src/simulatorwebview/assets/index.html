@@ -10,25 +10,63 @@
 
 <body>
     <div id="app" data-endpoint="{{endpoint}}" v-cloak>
-        <i-select
-        v-model="inputDevice"
-        multiple
-        filterable
-        placeholder="Please select the device(s) you want to send message to..."
-        >
-            <i-option
-            v-for="item in inputDeviceList"
-            :value="item.connectionString"
-            :key="item.connectionString"
-            >
-                {{ item.label }}
-            </i-option>
-        </i-select>
-        <i-input v-model="msg" placeholder="Enter msg..."></i-input>
-        <i-input v-model="times" placeholder="Enter times..."></i-input>
-        <i-input v-model="interval" placeholder="Enter interval..."></i-input>
-        <i-input v-model="result"></i-input>
-        <i-button @click="send()" type="success" long> send </i-button>
+        <Card>
+            <Steps :current="step">
+                <Step title="Welcome" content="Welcome, make sure you have logged in and you have already created related resources..."></Step>
+                <Step title="Device List" content="Please select the device(s) you want to send message to..."></Step>
+                <Step title="Message" content="Design your message body here..."></Step>
+                <Step title="Options" content="Select protocols, headers, and other information here..."></Step>
+                <Step title="Sending" content="ha ha ha ha"></Step>
+            </Steps>
+        </Card>
+        <i-button @click="nextStep()" type="success" long> Next Step </i-button>
+        <Card v-if="step===0">
+            Welcome!!
+        </Card>
+        <Card v-if="step===1">
+            <Transfer
+            :data="inputDeviceList"
+            :target-keys="inputDevice"
+            :render-format="deviceListTransferRender"
+            :operations="['Remove this(these) device(s)', 'Select this(these) device(s)']"
+            :titles="['Valiable Device(s)', 'Selected Device(s)']"
+            filterable
+            filter-placeholder="Type something to search..."
+            not-found-text="List is empty"
+            @on-change="deviceListTransferChangeHandler">
+                <div :style="{float: 'right', margin: '5px'}">
+                    <i-button size="small" @click="getInputDeviceList">Reload</i-button>
+                </div>
+            </Transfer>
+        </Card>
+        <Card v-if="step===2">
+            <Tabs value="constant">
+                <TabPane label="ConstantMessage" name="constant">
+                    <i-input v-model="msg" placeholder="Enter msg..."></i-input>
+                    <i-input v-model="times" placeholder="Enter times..."></i-input>
+                    <i-input v-model="interval" placeholder="Enter interval..."></i-input>
+                    <i-input v-model="result"></i-input>
+                </TabPane>
+                <TabPane label="GeneratedPlainMessage" name="generatedplain">
+                    aaaaa
+                </TabPane>
+                <TabPane label="GeneratedJsonMessage" name="generatedjson">
+                    bbbbbb
+                </TabPane>
+                <TabPane label="UserUploadedTestCase" name="testcase">
+                    cccccc
+                </TabPane>
+                <TabPane label="UserUploadedJson" name="userjson">
+                    dddddd
+                </TabPane>
+            </Tabs>
+        </Card>
+        <Card v-if="step===3">
+            {{inputDeviceList}}
+        </Card>
+        <Card v-if="step===4">
+            4
+        </Card>
     </div>
     <script type="text/javascript" src="{{root}}/src/simulatorwebview/assets/vue.min.js"></script>
     <script type="text/javascript" src="./vue.min.js"></script>

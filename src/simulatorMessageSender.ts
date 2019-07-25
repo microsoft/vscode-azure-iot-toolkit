@@ -12,7 +12,7 @@ export class SimulatorMessageSender extends IoTHubMessageBaseExplorer {
         super(outputChannel, "$(primitive-square) Stop Monitoring built-in event endpoint", "azure-iot-toolkit.stopMonitorIoTHubMessage");
     }
 
-    public async sendD2CMessageRepeatedlyIneractive(inputDeviceConnectionStrings: string[], message: string, times: number, interval: number) {
+    public async sendD2CMessageRepeatedly(inputDeviceConnectionStrings: string[], message: string, times: number, interval: number) {
         for (const deviceConnectionString of inputDeviceConnectionStrings) {
             vscode.window.showInformationMessage(deviceConnectionString);
             console.log(deviceConnectionString);
