@@ -140,7 +140,7 @@ export class Constants {
 
     public static ShowIoTHubInfoKey = "showIoTHubInfo";
     public static ShowConnectionStringInputBoxKey = "showConnectionStringInputBox";
-    public static IoTHubApiVersion = "2018-06-30";
+    public static IoTHubApiVersion = "2019-07-01-preview";
 
     public static CodeTemplates = {
         [TemplateLanguage.CSharp]: {

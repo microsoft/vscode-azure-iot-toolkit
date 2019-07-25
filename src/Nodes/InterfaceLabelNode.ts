@@ -28,11 +28,11 @@ export class InterfaceLabelNode implements INode {
         TelemetryClient.sendEvent(Constants.IoTHubAILoadInterfacesTreeStartEvent);
 
         try {
-            const interfaces = (await axios.get(`https://${Utility.getHostName(iotHubConnectionString)}/digitalTwins/${this.deviceNode.deviceId}/interfaces?api-version=2019-07-01-preview`, {
-                headers: {
-                    Authorization: Utility.generateSasTokenForService(iotHubConnectionString),
-                },
-            })).data;
+            const interfaces = (await axios.request(Utility.generateIoTHubAxiosRequestConfig(
+                iotHubConnectionString,
+                `/digitalTwins/${this.deviceNode.deviceId}/interfaces?api-version=${Constants.IoTHubApiVersion}`,
+                "get",
+            ))).data;
             TelemetryClient.sendEvent(Constants.IoTHubAILoadInterfacesTreeDoneEvent, { Result: "Success" });
             if (!interfaces || !interfaces.interfaces || Object.keys(interfaces.interfaces).length === 0) {
                 return [new InfoNode("No Interfaces")];
