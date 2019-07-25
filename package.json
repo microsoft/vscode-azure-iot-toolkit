@@ -570,6 +570,11 @@
         {
           "command": "azure-iot-toolkit.startMonitorIoTHubMessageWithAbbreviation",
           "when": "view == iotHubDevices && viewItem == events"
+        },
+        {
+          "command": "azure-iot-toolkit.refresh",
+          "when": "view == iotHubDevices && viewItem == interfaces-label",
+          "group": "inline"
         }
       ],
       "editor/context": [
