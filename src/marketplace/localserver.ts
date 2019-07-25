@@ -27,6 +27,7 @@ export class LocalServer {
     public startServer(): void {
         const { port } = this.server.listen(0).address() as AddressInfo;
         this.serverPort = port;
+        vscode.window.showInformationMessage("serverPort:" + this.serverPort);
         // tslint:disable-next-line:no-console
         console.log("serverPort:" + this.serverPort);
     }
@@ -43,17 +44,27 @@ export class LocalServer {
         this.router = express.Router();
         this.router.get("/api/v1/modules", async (req, res, next) => await this.getModules(req, res, next));
         this.router.get("/api/v1/modules/:module/status", async (req, res, next) => await this.validateModuleName(req, res, next));
+        this.router.get("/api/test/get", async(req, res, next) => await this.testGet(req, res, next));
+        this.router.post("/api/test/post", async(req, res, next) => await this.testPost(req, res, next));
     }
 
     private initApp() {
         this.app = express();
         this.app.all("*", (req, res, next) => {
             res.setHeader("Access-Control-Allow-Origin", "*");
-            next();
+            res.setHeader("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, PATCH, OPTIONS");
+            res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+            res.setHeader("Access-Control-Allow-Credentials", "true");
+            if (req.method === 'OPTIONS') {
+                res.end()
+            } else {
+                next()
+            }
         });
         this.app.use(bodyParser.json());
-        this.app.use(bodyParser.urlencoded({extended: true}));
+        this.app.use(bodyParser.urlencoded({extended: false}));
         this.app.use("/", this.router);
+        this.app.set("trust proxy", 1);
         this.app.use("*", (req, res) => {
             res.status(404).json({ error: "I don\'t have that" });
         });
@@ -64,6 +75,28 @@ export class LocalServer {
               res.status(404).json({error: "I don\'t have that"});
             }
         });
+    }
+
+    private async testGet(req: express.Request, res: express.Response, next: express.NextFunction) {
+        try {
+            vscode.window.showInformationMessage("In Get");
+            const result = ['11', '22', '33', '44', '55'];
+            return res.status(200).json(result);
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    private async testPost(req: express.Request, res: express.Response, next: express.NextFunction) {
+        try {
+            vscode.window.showInformationMessage("In Post");
+            const result = req.body;
+            result.name = result.name + ' - posted';
+            result.age = result.age - 5;
+            return res.status(200).json(result);
+        } catch (err) {
+            next(err);
+        }
     }
 
     private async validateModuleName(req: express.Request, res: express.Response, next: express.NextFunction) {
