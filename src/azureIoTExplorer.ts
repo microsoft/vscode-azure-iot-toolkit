@@ -24,7 +24,6 @@ import { SnippetManager } from "./snippetManager";
 import { Utility } from "./utility";
 import { WelcomePage } from "./welcomePage";
 import { Simulator } from "./simulator";
-import { SimulatorWebview } from "./simulatorWebview";
 
 export class AzureIoTExplorer {
     private _iotHubC2DMessageExplorer: IotHubC2DMessageExplorer;
@@ -40,8 +39,7 @@ export class AzureIoTExplorer {
     private _iotHubModuleExplorer: IotHubModuleExplorer;
     private _distributedTracingManager: DistributedTracingManager;
     private _eventHubManager: EventHubManager;
-    private _simulator: Simulator;
-    private _sw : SimulatorWebview;
+    private _simulator : Simulator;
 
     constructor(private context: vscode.ExtensionContext) {
         let outputChannel = vscode.window.createOutputChannel("Azure IoT Hub Toolkit");
@@ -58,8 +56,7 @@ export class AzureIoTExplorer {
         this._codeManager = new CodeManager(this.context);
         this._iotHubModuleExplorer = new IotHubModuleExplorer(outputChannel);
         this._eventHubManager = new EventHubManager(outputChannel);
-        this._simulator = new Simulator(outputChannel);
-        this._sw = new SimulatorWebview(context);
+        this._simulator = new Simulator(context);
     }
 
     public sendD2CMessage(deviceItem?: DeviceItem): void {
@@ -206,12 +203,8 @@ export class AzureIoTExplorer {
         return Utility.getConnectionStringWithId(Constants.IotHubConnectionStringKey);
     }
 
-    public sendD2CMessageRepeatedly(times: number, deviceItem?: DeviceItem): void {
-        this._simulator.sendD2CMessageRepeatedly(times, deviceItem);
-    }
-
-    public sw() {
-        this._sw.addModule();
+    public showSimulatorWebview() {
+        this._simulator.showWebview();
     }
     
 }

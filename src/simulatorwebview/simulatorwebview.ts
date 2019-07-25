@@ -7,19 +7,18 @@ import * as path from "path";
 import * as vscode from "vscode";
 import { LocalServer } from "./localserver";
 
+const simulatorWebviewPanelViewType = "IoT Edge SimulatorWebview";
+const simulatorWebviewPanelViewTitle = "IoT Edge SimulatorWebview";
 
-const marketplacePanelViewType = "IoT Edge Marketplace";
-const marketplacePanelViewTitle = "IoT Edge Marketplace";
-
-export class Marketplace {
+export class SimulatorWebview {
     public static getInstance(context: vscode.ExtensionContext) {
-        if (!Marketplace.instance) {
-            Marketplace.instance = new Marketplace(context);
+        if (!SimulatorWebview.instance) {
+            SimulatorWebview.instance = new SimulatorWebview(context);
         }
-        return Marketplace.instance;
+        return SimulatorWebview.instance;
     }
 
-    private static instance: Marketplace;
+    private static instance: SimulatorWebview;
     private panel: vscode.WebviewPanel;
     private localServer: LocalServer;
 
@@ -27,12 +26,12 @@ export class Marketplace {
         this.localServer = new LocalServer(context);
     }
 
-    public async openMarketplacePage(): Promise<any> {
+    public async openSimulatorWebviewPage(): Promise<any> {
         if (!this.panel) {
             this.localServer.startServer();
             this.panel = vscode.window.createWebviewPanel(
-                marketplacePanelViewType,
-                marketplacePanelViewTitle,
+                simulatorWebviewPanelViewType,
+                simulatorWebviewPanelViewTitle,
                 vscode.ViewColumn.One,
                 {
                     enableCommandUris: true,
@@ -41,7 +40,7 @@ export class Marketplace {
                 },
             );
 
-            let html = fs.readFileSync(this.context.asAbsolutePath(path.join("src", "marketplace", "assets", "index.html")), "utf8");
+            let html = fs.readFileSync(this.context.asAbsolutePath(path.join("src", "simulatorwebview", "assets", "index.html")), "utf8");
             html = html
                 .replace(/{{root}}/g, vscode.Uri.file(this.context.asAbsolutePath(".")).with({ scheme: "vscode-resource" }).toString())
                 .replace(/{{endpoint}}/g, this.localServer.getServerUri());

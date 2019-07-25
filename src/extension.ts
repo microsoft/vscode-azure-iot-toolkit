@@ -14,7 +14,6 @@ import { ModuleLabelNode } from "./Nodes/ModuleLabelNode";
 import { DeviceTwinCodeLensProvider } from "./providers/deviceTwinCodeLensProvider";
 import { ModuleTwinCodeLensProvider } from "./providers/moduleTwinCodeLensProvider";
 import { TelemetryClient } from "./telemetryClient";
-import { Simulator } from "./simulator";
 
 export function activate(context: vscode.ExtensionContext) {
     TelemetryClient.sendEvent("extensionActivated");
@@ -213,22 +212,11 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(updateDistributedTracingSetting);
     context.subscriptions.push(editDistributedTracingMode);
     context.subscriptions.push(editDistributedTracingSamplingRate);
-
-    let sayhello = vscode.commands.registerCommand('extension.sayhello', async (deviceNode: DeviceNode) => {
-        vscode.window.showInformationMessage('sayHello');
-        azureIoTExplorer.sendD2CMessageRepeatedly(5);
-        vscode.window.showInformationMessage('sayGoodbye');
-        
-	});
-    context.subscriptions.push(sayhello);
     
-    let sw = vscode.commands.registerCommand('extension.sw', () => {
-        vscode.window.showInformationMessage('sw');
-        azureIoTExplorer.sw();
-        vscode.window.showInformationMessage('swsw');
-        
+    let showSimulatorWebview = vscode.commands.registerCommand('extension.showSimulatorWebview', () => {
+        azureIoTExplorer.showSimulatorWebview();
 	});
-	context.subscriptions.push(sw);
+	context.subscriptions.push(showSimulatorWebview);
 
     return { azureIoTExplorer };
 }

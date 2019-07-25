@@ -279,12 +279,8 @@
         "category": "%azure-iot-toolkit.category%"
       },
       {
-        "command": "extension.sayhello",
-        "title": "sayhello"
-      },
-      {
-        "command": "extension.sw",
-        "title": "sw"
+        "command": "extension.showSimulatorWebview",
+        "title": "showSimulatorWebview"
       }
     ],
     "menus": {
