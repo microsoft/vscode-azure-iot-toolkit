@@ -20,6 +20,7 @@ import { INode } from "./Nodes/INode";
 import { TelemetryClient } from "./telemetryClient";
 import iothub = require("azure-iothub");
 import { EventData } from "@azure/event-hubs";
+import { AxiosRequestConfig } from "axios";
 import { IotHubDescription } from "azure-arm-iothub/lib/models";
 import { AzureAccount } from "./azure-account.api";
 import { CredentialStore } from "./credentialStore";
@@ -421,6 +422,18 @@ export class Utility {
     public static async deleteIoTHubInfo() {
         await Constants.ExtensionContext.globalState.update(Constants.StateKeySubsID, "");
         await Constants.ExtensionContext.globalState.update(Constants.StateKeyIoTHubID, "");
+    }
+
+    public static generateIoTHubAxiosRequestConfig(iotHubConnectionString: string, url: string, method: string, data?: any): AxiosRequestConfig {
+        return {
+            url,
+            method,
+            baseURL: `https://${Utility.getHostName(iotHubConnectionString)}`,
+            headers: {
+                Authorization: Utility.generateSasTokenForService(iotHubConnectionString),
+            },
+            data,
+        };
     }
 
     private static tryGetStringFromCharCode(source) {

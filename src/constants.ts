@@ -123,6 +123,8 @@ export class Constants {
     public static CREATE_OPTIONS_MAX_CHUNKS = 8;
     public static StateKeySubsID = "subscriptionId";
     public static StateKeyIoTHubID = "iothubid";
+    public static IoTHubAILoadInterfacesTreeStartEvent = "AZ.LoadInterfacesTree.Start";
+    public static IoTHubAILoadInterfacesTreeDoneEvent = "AZ.LoadInterfacesTree.Done";
 
     public static DeleteLabel = "Delete";
     public static DeleteMessage = "Are you sure you want to delete";    public static readonly DISTRIBUTED_TWIN_NAME: string = "azureiot*com^dtracing^1";
@@ -138,7 +140,7 @@ export class Constants {
 
     public static ShowIoTHubInfoKey = "showIoTHubInfo";
     public static ShowConnectionStringInputBoxKey = "showConnectionStringInputBox";
-    public static IoTHubApiVersion = "2018-06-30";
+    public static IoTHubApiVersion = "2019-07-01-preview";
 
     public static CodeTemplates = {
         [TemplateLanguage.CSharp]: {
