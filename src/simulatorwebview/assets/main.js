@@ -8,6 +8,8 @@ try {
 const app = new Vue({
     el: '#app',
     data: {
+        value: 0,
+        modal: false,
         step: 1,
         inputDevice: [],
         msg: '',
@@ -29,7 +31,7 @@ const app = new Vue({
             const list = (await axios.get(`${this.endpoint}/api/getinputdevicelist`)).data;
             this.inputDeviceList = []
             for (const device of list) {
-                device.key = device.deviceId;
+                device.key = device.connectionString;
                 this.inputDeviceList.push(device)
             }
         },
@@ -52,6 +54,19 @@ const app = new Vue({
         deviceListTransferChangeHandler (newTargetKeys) {
             this.inputDevice = newTargetKeys;
         },
+        add (name) {
+            if (name === 'Number') {
+                this.modal = true;
+            } else {
+                
+            }
+        },
+        ok () {
+            this.$Message.info('Clicked ok');
+        },
+        cancel () {
+            this.$Message.info('Clicked cancel');
+        }
     }
 });
   

@@ -40,29 +40,65 @@
             </Transfer>
         </Card>
         <Card v-if="step===2">
-            <Tabs value="constant">
-                <TabPane label="ConstantMessage" name="constant">
-                    <i-input v-model="msg" placeholder="Enter msg..."></i-input>
-                    <i-input v-model="times" placeholder="Enter times..."></i-input>
-                    <i-input v-model="interval" placeholder="Enter interval..."></i-input>
-                    <i-input v-model="result"></i-input>
-                </TabPane>
-                <TabPane label="GeneratedPlainMessage" name="generatedplain">
-                    aaaaa
-                </TabPane>
-                <TabPane label="GeneratedJsonMessage" name="generatedjson">
-                    bbbbbb
-                </TabPane>
-                <TabPane label="UserUploadedTestCase" name="testcase">
-                    cccccc
-                </TabPane>
-                <TabPane label="UserUploadedJson" name="userjson">
-                    dddddd
-                </TabPane>
-            </Tabs>
+            <Collapse value="1" accordion >
+                <Panel name="constant">
+                    ConstantMessage
+                    <p slot="content">
+                        <i-input v-model="msg" placeholder="Enter msg..."></i-input>
+                        <input-number v-model="times" placeholder="Enter times..."></input-number>
+                        <input-number v-model="interval" placeholder="Enter interval..."></input-number>
+                        <i-button @click="send()" type="success" long> Send </i-button>
+                    </p>
+                </Panel>
+                <Panel name="2">
+                    GeneratedPlainMessage
+                    <p slot="content">
+                        <Dropdown @on-click="add">
+                            <i-button type="primary">
+                                Add
+                                <Icon type="ios-arrow-down"></Icon>
+                            </i-button>
+                            <DropdownMenu slot="list">
+                                <dropdown-item name="Number">Number</dropdown-item>
+                                <dropdown-item name="String">String</dropdown-item>
+                            </DropdownMenu>
+                        </Dropdown>
+                    </p>
+                    <Modal
+                        v-model="modal"
+                        title="Common Modal dialog box title"
+                        ok-Text="Add"
+                        cancel-Text="Cancle"
+                        @on-ok="ok"
+                        @on-cancel="cancel">
+                        <Slider v-model="value" range></Slider>
+                        <p>Content of dialog</p>
+                        <p>Content of dialog</p>
+                        <p>Content of dialog</p>
+                    </Modal>
+                </Panel>
+                <Panel name="GeneratedJsonMessage">
+                    GeneratedJsonMessage
+                    <p slot="content">
+                        
+                    </p>
+                </Panel>
+                <Panel name="UserUploadedTestCase">
+                    UserUploadedTestCase
+                    <p slot="content">
+                        
+                    </p>
+                </Panel>
+                <Panel name="UserUploadedJson">
+                    UserUploadedJson
+                    <p slot="content">
+                        
+                    </p>
+                </Panel>       
+            </Collapse>
         </Card>
         <Card v-if="step===3">
-            {{inputDeviceList}}
+            
         </Card>
         <Card v-if="step===4">
             4
