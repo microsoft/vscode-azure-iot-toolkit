@@ -7,6 +7,7 @@ try {
 
 const app = new Vue({
     el: '#app',
+    // TODO: refactor: rename variable name
     data: {
         value: 0,
         modal: false,
@@ -16,12 +17,16 @@ const app = new Vue({
         times: '',
         interval: '',
         result: '',
+        animal: '',
+        sub: '',
+        subs: [],
         inputDeviceList: [],
         endpoint: document.getElementById('app').getAttribute('data-endpoint'),
     },
     created: async function () {
         try {
             const list = await this.getInputDeviceList();
+            const subs = await this.loadSubscriptionItemsForWebview();
         } catch (error) {
             this.errorMessageInitialization = error.toString();
         }
@@ -34,6 +39,9 @@ const app = new Vue({
                 device.key = device.connectionString;
                 this.inputDeviceList.push(device)
             }
+        },
+        async loadSubscriptionItemsForWebview () {
+            this.subs = (await axios.get(`${this.endpoint}/api/loadsubscriptionitemsforwebview`)).data;
         },
         nextStep () {
             this.step = this.step + 1;

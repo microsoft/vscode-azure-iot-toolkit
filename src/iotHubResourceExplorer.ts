@@ -222,6 +222,17 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         return subscriptionItems;
     }
 
+    public static async loadSubscriptionItemsForWebview () {
+        const api = Utility.getAzureAccountApi();
+        await api.waitForFilters();
+        const subscriptionItems: SubscriptionItem[] = api.filters.map((filter) => new SubscriptionItem(filter.subscription, filter.session));
+        TelemetryClient.sendEvent("General.Load.Subscription", { SubscriptionCount: subscriptionItems.length.toString() });
+        if (subscriptionItems.length === 0) {
+            vscode.window.showInformationMessage("No subscription found, click an Azure account at the bottom left corner and choose Select All.");
+        }
+        return subscriptionItems;
+    }
+
     private async loadIoTHubItems(subscriptionItem: SubscriptionItem) {
         const iotHubItems: IotHubItem[] = [];
         const { session, subscription } = subscriptionItem;

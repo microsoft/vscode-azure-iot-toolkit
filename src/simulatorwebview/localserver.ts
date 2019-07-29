@@ -5,6 +5,7 @@ import * as vscode from "vscode";
 import { AddressInfo } from 'net';
 import { Simulator } from "../simulator";
 import { SimulatorMessageSender } from '../simulatorMessageSender'
+import { IoTHubResourceExplorer } from "../iotHubResourceExplorer";
 
 export class LocalServer {
     private app: express.Express;
@@ -42,8 +43,10 @@ export class LocalServer {
 
     private initRouter() {
         this.router = express.Router();
+        this.router.get("/api/loadsubscriptionitemsforwebview", async(req, res, next) => await this.loadSubscriptionItemsForWebview(req, res, next));
         this.router.get("/api/getinputdevicelist", async(req, res, next) => await this.getInputDeviceList(req, res, next));
         this.router.post("/api/sendmessagerepeatedly", async(req, res, next) => await this.sendMessageRepeatedly(req, res, next));
+    
     }
 
     private initApp() {
@@ -81,6 +84,15 @@ export class LocalServer {
             return res.status(200).json(result);
         } catch (err) {
             next(err);
+        }   
+    }
+
+    private async loadSubscriptionItemsForWebview(req: express.Request, res: express.Response, next: express.NextFunction) {
+        try {
+            const result = await IoTHubResourceExplorer.loadSubscriptionItemsForWebview();
+            return res.status(200).json(result);
+        } catch (err) {
+            next(err);
         }
     }
 
@@ -90,7 +102,7 @@ export class LocalServer {
         const message: string = data.msg;
         const times: number = Number(data.times);
         const interval: number = Number(data.interval);
-        vscode.window.showInformationMessage(message);
+        vscode.window.showInformationMessage('message');
         let outputChannel = vscode.window.createOutputChannel("Azure IoT Hub Toolkit Simulator");
         const simulatorMessageSender: SimulatorMessageSender = new SimulatorMessageSender(outputChannel);
         simulatorMessageSender.sendD2CMessageRepeatedly(inputDeviceConnectionStrings, message, times, interval);

@@ -24,6 +24,9 @@
             Welcome!!
         </Card>
         <Card v-if="step===1">
+            <i-select v-model="sub" style="width:600px" placeholder="Please select your subscription">
+                <i-option v-for="item in subs" :value="item.value" :key="item.value">{{ item.label }}</i-option>
+            </i-select>
             <Transfer
             :data="inputDeviceList"
             :target-keys="inputDevice"
@@ -33,6 +36,8 @@
             filterable
             filter-placeholder="Type something to search..."
             not-found-text="List is empty"
+            style="width: 600px"
+            :list-style="{height: '600px'}"
             @on-change="deviceListTransferChangeHandler">
                 <div :style="{float: 'right', margin: '5px'}">
                     <i-button size="small" @click="getInputDeviceList">Reload</i-button>
@@ -40,30 +45,24 @@
             </Transfer>
         </Card>
         <Card v-if="step===2">
-            <Collapse value="1" accordion >
-                <Panel name="constant">
-                    ConstantMessage
-                    <p slot="content">
-                        <i-input v-model="msg" placeholder="Enter msg..."></i-input>
-                        <input-number v-model="times" placeholder="Enter times..."></input-number>
-                        <input-number v-model="interval" placeholder="Enter interval..."></input-number>
-                        <i-button @click="send()" type="success" long> Send </i-button>
-                    </p>
-                </Panel>
-                <Panel name="2">
-                    GeneratedPlainMessage
-                    <p slot="content">
-                        <Dropdown @on-click="add">
-                            <i-button type="primary">
-                                Add
-                                <Icon type="ios-arrow-down"></Icon>
-                            </i-button>
-                            <DropdownMenu slot="list">
-                                <dropdown-item name="Number">Number</dropdown-item>
-                                <dropdown-item name="String">String</dropdown-item>
-                            </DropdownMenu>
-                        </Dropdown>
-                    </p>
+            <Tabs value="msgbody">
+                <tab-pane label="ConstantMessage" name="constant">
+                    <i-input v-model="msg" placeholder="Enter msg..."></i-input>
+                    <input-number v-model="times" placeholder="Enter times..."></input-number>
+                    <input-number v-model="interval" placeholder="Enter interval..."></input-number>
+                    <i-button @click="send()" type="success" long> Send </i-button>
+                </tab-pane>
+                <tab-pane label="GeneratedPlainMessage" name="name2">
+                    <Dropdown @on-click="add">
+                        <i-button type="primary">
+                            Add
+                            <Icon type="ios-arrow-down"></Icon>
+                        </i-button>
+                        <DropdownMenu slot="list">
+                            <dropdown-item name="Number">Number</dropdown-item>
+                            <dropdown-item name="String">String</dropdown-item>
+                        </DropdownMenu>
+                    </Dropdown>
                     <Modal
                         v-model="modal"
                         title="Common Modal dialog box title"
@@ -71,34 +70,60 @@
                         cancel-Text="Cancle"
                         @on-ok="ok"
                         @on-cancel="cancel">
+                        <p>The range of your numbers(min, max):</p>
                         <Slider v-model="value" range></Slider>
-                        <p>Content of dialog</p>
-                        <p>Content of dialog</p>
-                        <p>Content of dialog</p>
+                        <p>Repeate Times</p>
+                        <input-number v-model="times" placeholder="Enter times..."></input-number>
+                        <p>Intervals</p>
+                        <input-number v-model="interval" placeholder="Enter interval..."></input-number>
+                        <p>Select the distribution</p>
+                        <RadioGroup v-model="animal">
+                            <Radio label="Random"></Radio>
+                            <Radio label="Standard Normal Distribution"></Radio>
+                            <Radio label="Uniform Distribution"></Radio>
+                        </RadioGroup>
                     </Modal>
-                </Panel>
-                <Panel name="GeneratedJsonMessage">
+                    <Collapse value="1" accordion>
+                        <Panel name="1">
+                            Number
+                            <i-button> Modify </i-button>
+                            <i-button> Delete </i-button>
+                            <p slot="content">
+                                max: 100
+                                min: 20
+                                Repeate 10 times
+                                interval 100 ms
+                                Random
+                            </p>
+                        </Panel>
+                        <Panel name="2">
+                            String
+                            <i-button> Modify </i-button>
+                            <i-button> Delete </i-button>
+                            <p slot="content">
+                                max: 100
+                                min: 20
+                                Repeate 10 times
+                                interval 100 ms
+                                Random
+                            </p>
+                        </Panel>
+                    </Collapse>
+                </tab-pane>
+                <tab-pane label="GeneratedJsonMessage" name="GeneratedJsonMessage">
                     GeneratedJsonMessage
-                    <p slot="content">
-                        
-                    </p>
-                </Panel>
-                <Panel name="UserUploadedTestCase">
+                </tab-pane>
+                <tab-pane label="UserUploadedTestCase" name="UserUploadedTestCase">
                     UserUploadedTestCase
-                    <p slot="content">
-                        
-                    </p>
-                </Panel>
-                <Panel name="UserUploadedJson">
+                </tab-pane>
+                <tab-pane label="UserUploadedJson" name="UserUploadedJson">
                     UserUploadedJson
-                    <p slot="content">
-                        
-                    </p>
-                </Panel>       
-            </Collapse>
+                </tab-pane>
+            </Tabs>
+        
         </Card>
         <Card v-if="step===3">
-            
+            3
         </Card>
         <Card v-if="step===4">
             4
