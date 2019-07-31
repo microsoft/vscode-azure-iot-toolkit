@@ -56,6 +56,12 @@ const app = new Vue({
             }
             await axios.post(`${this.endpoint}/api/sendmessagerepeatedly`, data);
         },
+        async dj () {
+            data = {
+                inputDevice: this.inputDevice,
+            }
+            this.result = await axios.post(`${this.endpoint}/api/dj`, data);
+        },
         deviceListTransferRender (item) {
             return item.label;
         },

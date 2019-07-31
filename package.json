@@ -769,6 +769,7 @@
     "azure-iothub": "^1.8.1",
     "body-parser": "^1.18.2",
     "dotenv": "^5.0.1",
+    "dummy-json": "^2.0.0",
     "express": "^4.16.3",
     "fs-extra": "^7.0.0",
     "is-port-reachable": "^2.0.1",

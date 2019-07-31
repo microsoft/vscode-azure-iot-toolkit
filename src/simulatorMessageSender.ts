@@ -13,16 +13,20 @@ export class SimulatorMessageSender extends IoTHubMessageBaseExplorer {
     }
 
     public async sendD2CMessageRepeatedly(inputDeviceConnectionStrings: string[], message: string, times: number, interval: number) {
+        let deviceCount: number = 1;
+        let totalCount = inputDeviceConnectionStrings.length;
         for (const deviceConnectionString of inputDeviceConnectionStrings) {
+            this.outputLine('Simulator', deviceCount + ' of ' + totalCount);
             vscode.window.showInformationMessage(deviceConnectionString);
             console.log(deviceConnectionString);
             if (message !== undefined) {
                 this._outputChannel.show();
+                let client = clientFromConnectionString(deviceConnectionString);
+                let stringify = Utility.getConfig<boolean>(Constants.IoTHubD2CMessageStringifyKey);
                 try {
                     let i: number = 0;
                     for (i = 0; i < times; i++) {
-                        let client = clientFromConnectionString(deviceConnectionString);
-                        let stringify = Utility.getConfig<boolean>(Constants.IoTHubD2CMessageStringifyKey);
+                        this.outputLine('Simulator', i + ' of ' + times);
                         client.sendEvent(new Message(stringify ? JSON.stringify(message) : message),
                             this.sendEventDone(client, Constants.IoTHubMessageLabel, Constants.IoTHub, Constants.IoTHubAIMessageDoneEvent));
                     }
