@@ -12,6 +12,37 @@ import { DeviceItem } from "./Model/DeviceItem";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
+export class SendStatus {
+    private succeed: number;
+    private failed: number;
+
+    constructor() {
+        this.succeed = 0;
+        this.failed = 0;
+    }
+    
+    public getSucceed(): number {
+        return this.succeed;
+    }
+    public getFailed(): number {
+        return this.failed;
+    }
+
+    private AddSucceed(): void {
+        this.succeed++;
+    }
+    private AddFailed(): void {
+        this.failed++;
+    }
+    public newStatus(succeed: boolean) {
+        if (succeed) {
+            this.AddSucceed();
+        } else {
+            this.AddFailed();
+        }
+    }
+}
+
 export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
     private _eventHubClient: EventHubClient;
 
@@ -21,25 +52,90 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
 
     public async sendD2CMessage(deviceItem?: DeviceItem) {
         deviceItem = await Utility.getInputDevice(deviceItem, Constants.IoTHubAIMessageStartEvent);
-
         if (!deviceItem || !deviceItem.connectionString) {
             return;
         }
-
         const deviceConnectionString: string = deviceItem.connectionString;
         vscode.window.showInputBox({ prompt: `Enter message to send to ${Constants.IoTHub}`, ignoreFocusOut: true }).then((message: string) => {
             if (message !== undefined) {
                 this._outputChannel.show();
                 try {
-                    let client = clientFromConnectionString(deviceConnectionString);
-                    let stringify = Utility.getConfig<boolean>(Constants.IoTHubD2CMessageStringifyKey);
-                    client.sendEvent(new Message(stringify ? JSON.stringify(message) : message),
-                        this.sendEventDone(client, Constants.IoTHubMessageLabel, Constants.IoTHub, Constants.IoTHubAIMessageDoneEvent));
+                    this.sendD2CMessageCore(deviceConnectionString, message);
                 } catch (e) {
                     this.outputLine(Constants.IoTHubMessageLabel, e);
                 }
             }
         });
+    }
+
+    public async sendD2CMessageCore(deviceConnectionString: string, message: string) {
+        let client = clientFromConnectionString(deviceConnectionString);
+        let stringify = Utility.getConfig<boolean>(Constants.IoTHubD2CMessageStringifyKey);
+        client.sendEvent(new Message(stringify ? JSON.stringify(message) : message),
+            this.sendEventDone(client, Constants.IoTHubMessageLabel, Constants.IoTHub, Constants.IoTHubAIMessageDoneEvent));
+    }
+
+    public async sendD2CMessageCoreWithStatus(deviceConnectionString: string, message: string, status: SendStatus) {
+        let client = clientFromConnectionString(deviceConnectionString);
+        let stringify = Utility.getConfig<boolean>(Constants.IoTHubD2CMessageStringifyKey);
+        client.sendEvent(new Message(stringify ? JSON.stringify(message) : message),
+            this.sendEventDoneWithStatus(client, Constants.IoTHubAIMessageDoneEvent, status));
+    }
+
+    private async delay(ms: number) {
+        return new Promise( resolve => setTimeout(resolve, ms));
+    }
+
+    public async sendD2CMessageRepeatedly(deviceConnectionString: string, message: string, times: number, interval: number) {
+        let i = 0;
+        for (i = 0; i < times; i++) {
+            await this.sendD2CMessageCore(deviceConnectionString, message);
+        }
+        await this.delay(interval);
+    }
+
+    public async sendD2CMessageFromMultipleDevicesRepeatedly(deviceConnectionStrings: string[], message: string, times: number, interval: number) {
+        for (const deviceConnectionString of deviceConnectionStrings) {
+            await this.sendD2CMessageRepeatedly(deviceConnectionString, message, times, interval);
+        }
+    }
+
+    public async sendD2CMessageWithProgressBar(deviceConnectionStrings: string[], message: string, times: number, interval: number) {
+        await vscode.window.withProgress({
+			location: vscode.ProgressLocation.Notification,
+			title: "Sending message(s)...",
+			cancellable: true
+		}, async (progress, token) => {
+			token.onCancellationRequested(() => {
+				console.log("You just canceled the long running operation.");
+			});
+            progress.report({ increment: 0 });
+            const total = deviceConnectionStrings.length * times;
+            const step = 100 / total;
+            let status = new SendStatus();
+            // TODO: Count the succeeded messages and failed messages.
+            for (const deviceConnectionString of deviceConnectionStrings) {
+                let i = 0;
+                for (i = 0; i < times; i++) {
+                    this.sendD2CMessageCoreWithStatus(deviceConnectionString, message, status);
+                    let succeeded = status.getSucceed();
+                    let failed = status.getFailed();
+                    progress.report({
+                        increment: step,
+                        message: "Sending " + (succeeded + failed) + " of " + total + ".With " + succeeded + " succeeded and " + failed + " failed."
+                    });
+                    await this.delay(interval);
+                }
+            }
+            
+            // Set time out for 3 second(maybe for users to know how many messages are failed), and then finish this sending progress
+			const p = new Promise(resolve => {
+				setTimeout(() => {
+					resolve();
+				}, 3000);
+			});
+			return p;
+		});
     }
 
     public async startMonitorIoTHubMessage(deviceItem?: DeviceItem) {

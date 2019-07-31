@@ -6,6 +6,7 @@ import * as vscode from "vscode";
 import { DeviceItem } from "./Model/DeviceItem";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
+import { SendStatus }  from "./iotHubMessageExplorer";
 
 export class BaseExplorer {
     protected _outputChannel: vscode.OutputChannel;
@@ -34,6 +35,20 @@ export class BaseExplorer {
             if (result) {
                 this.outputLine(label, `[Success] Message sent to [${target}]`);
                 TelemetryClient.sendEvent(aiEventName, { Result: "Success" });
+            }
+            client.close(() => { return; });
+        };
+    }
+
+    protected sendEventDoneWithStatus(client,  aiEventName: string, status: SendStatus) {
+        return (err, result) => {
+            if (err) {
+                TelemetryClient.sendEvent(aiEventName, { Result: "Fail" });
+                status.newStatus(false);
+            }
+            if (result) {
+                TelemetryClient.sendEvent(aiEventName, { Result: "Success" });
+                status.newStatus(true);
             }
             client.close(() => { return; });
         };

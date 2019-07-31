@@ -265,17 +265,7 @@ export class Utility {
 
     public static async getInputDevice(deviceItem: DeviceItem, eventName: string, onlyEdgeDevice: boolean = false, iotHubConnectionString?: string): Promise<DeviceItem> {
         if (!deviceItem) {
-            if (eventName) {
-                TelemetryClient.sendEvent(eventName, { entry: "commandPalette" });
-            }
-            if (!iotHubConnectionString) {
-                iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
-                if (!iotHubConnectionString) {
-                    return null;
-                }
-            }
-
-            const deviceList: Promise<DeviceItem[]> = Utility.getFilteredDeviceList(iotHubConnectionString, onlyEdgeDevice);
+            const deviceList: Promise<DeviceItem[]> = this.getInputDeviceList(eventName, onlyEdgeDevice, iotHubConnectionString);
             deviceItem = await vscode.window.showQuickPick(deviceList, { placeHolder: "Select an IoT Hub device" });
             return deviceItem;
         } else {

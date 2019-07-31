@@ -206,5 +206,13 @@ export class AzureIoTExplorer {
     public showSimulatorWebview() {
         this._simulator.showWebview();
     }
-    
+
+    public test() {
+        this._simulator.test();
+    }
+
+    public async send(inputDeviceConnectionStrings: string[], message: string, times: number, interval: number) {
+        await this._iotHubMessageExplorer.sendD2CMessageWithProgressBar(inputDeviceConnectionStrings, message, times, interval);
+    }
+
 }

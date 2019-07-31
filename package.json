@@ -281,6 +281,10 @@
       {
         "command": "extension.showSimulatorWebview",
         "title": "showSimulatorWebview"
+      },
+      {
+        "command": "extension.test",
+        "title": "test"
       }
     ],
     "menus": {
