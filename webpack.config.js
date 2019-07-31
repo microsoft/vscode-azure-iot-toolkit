@@ -32,7 +32,10 @@ const config = {
         'utf-8-validate': 'commonjs utf-8-validate'
     },
     resolve: { // support reading TypeScript and JavaScript files, 📖 -> https://github.com/TypeStrong/ts-loader
-        extensions: ['.ts', '.js']
+        extensions: ['.ts', '.js'],
+        alias: {
+            handlebars: 'handlebars/dist/handlebars.min.js'
+        }
     },
     module: {
         rules: [
