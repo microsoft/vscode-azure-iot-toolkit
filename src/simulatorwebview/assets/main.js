@@ -20,6 +20,7 @@ const app = new Vue({
         animal: '',
         sub: '',
         subs: [],
+        messageType: '',
         inputDeviceList: [],
         endpoint: document.getElementById('app').getAttribute('data-endpoint'),
     },
@@ -54,7 +55,11 @@ const app = new Vue({
                 times: this.times,
                 interval: this.interval
             }
-            await axios.post(`${this.endpoint}/api/sendmessagerepeatedly`, data);
+            if (this.messageType == 'Plain Text') {
+                await axios.post(`${this.endpoint}/api/sendmessagerepeatedly`, data);
+            } else {
+                await axios.post(`${this.endpoint}/api/dj`, data);
+            }
         },
         async dj () {
             data = {

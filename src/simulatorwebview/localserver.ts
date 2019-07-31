@@ -92,44 +92,14 @@ export class LocalServer {
 
     private async dj(req: express.Request, res: express.Response, next: express.NextFunction) {
         try {
-            const template = '{ \
-                "users": [\
-                  {{#repeat 2}}\
-                  {\
-                    "id": {{@index}},\
-                    "name": "{{firstName}} {{lastName}}",\
-                    "work": "{{company}}",\
-                    "email": "{{email}}",\
-                    "dob": "{{date \'1900\' \'2000\' \'YYYY\'}}",\
-                    "address": "{{int 1 100}} {{street}}",\
-                    "city": "{{city}}",\
-                    "optedin": {{boolean}}\
-                  }\
-                  {{/repeat}}\
-                ],\
-                "images": [\
-                  {{#repeat 3}}\
-                  "img{{@index}}.png"\
-                  {{/repeat}}\
-                ],\
-                "coordinates": {\
-                  "x": {{float -50 50 \'0.00\'}},\
-                  "y": {{float -25 25 \'0.00\'}}\
-                },\
-                "price": "${{int 0 99999 \'0,0\'}}"\
-              }';
-              
-              var result = dummyjson.parse(template); // Returns a string
-              const data = req.body;
+            const data = req.body;
             const inputDeviceConnectionStrings: string[] = data.inputDevice;
-            const message = result;
-            const times: number = 3;
-            const interval: number = 1;
-              let outputChannel = vscode.window.createOutputChannel("Azure IoT Hub Toolkit Simulator");
-             const simulatorMessageSender: SimulatorMessageSender = new SimulatorMessageSender(outputChannel);
-                simulatorMessageSender.sendD2CMessageRepeatedly(inputDeviceConnectionStrings, message, times, interval);
-              vscode.window.showInformationMessage(result);
-            return res.status(200).json(result);
+            const message = dummyjson.parse(data.msg);
+            vscode.window.showInformationMessage(message);
+            const times: number = Number(data.times);
+            const interval: number = Number(data.interval);
+            const x = new AzureIoTExplorer(this.context);
+            await x.send(inputDeviceConnectionStrings, message, times, interval);
         } catch (err) {
             next(err);
         }
