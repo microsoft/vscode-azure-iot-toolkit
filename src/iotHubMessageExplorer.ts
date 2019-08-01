@@ -12,6 +12,7 @@ import { DeviceItem } from "./Model/DeviceItem";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 import { Client } from 'azure-iot-device';
+import { RequestResponseLink } from "@azure/amqp-common";
 
 export class SendStatus {
     private succeed: number;
@@ -129,6 +130,9 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
                 title: Constants.SimulatorRecevingStatusProgressBarTitle,
                 cancellable: false
             }, async (statusProgress, receivingToken) => {
+                sendingToken.onCancellationRequested(() => {
+                    vscode.window.showInformationMessage(Constants.SimulatorProgressBarCancelLog);
+                })
                 sendingProgress.report({ increment: 0});
                 statusProgress.report({ increment: 0 });
                 const total = deviceConnectionStrings.length * times;
@@ -139,6 +143,9 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
                     let client = clientFromConnectionString(deviceConnectionString);
                     let i = 0;
                     for (i = 0; i < times; i++) {
+                        if (sendingToken.isCancellationRequested) {
+                            return;
+                        }
                         this.sendD2CMessageCoreWithProgress(client, message, status, statusProgress);
                         count++;
                         sendingProgress.report({
@@ -146,10 +153,6 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
                             message: `Sending message(s) ${count} of ${total}`
                         })
                         await this.delay(interval);
-                    }
-                    if (sendingToken.isCancellationRequested) {
-                        vscode.window.showInformationMessage('canceled');
-                        return;
                     }
                 }
                 while (status.sum() != total) {
