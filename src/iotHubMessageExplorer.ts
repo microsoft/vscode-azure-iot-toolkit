@@ -96,10 +96,10 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
             })
         const succeeded = status.getSucceed();
         const failed = status.getFailed();
-        const sum = succeeded + failed;
+        const sum = status.sum();
         progress.report({
             increment: step,
-            message: `Sending ${sum} of ${total}. With ${succeeded} succeeded and ${failed} failed.`
+            message: `Sending ${sum} of ${total}, with ${succeeded} succeeded and ${failed} failed.`
         });
     }
 
@@ -110,11 +110,11 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
     public async sendD2CMessageFromMultipleDevicesRepeatedlyWithProgressBar(deviceConnectionStrings: string[], message: string, times: number, interval: number) {
         await vscode.window.withProgress({
 			location: vscode.ProgressLocation.Notification,
-			title: "Sending message(s)...",
+			title: Constants.SimulatorSendingMessageProgressBarTitle,
 			cancellable: true
 		}, async (progress, token) => {
 			token.onCancellationRequested(() => {
-				console.log("You just canceled the long running operation.");
+				console.log(Constants.SimulatorSendingMessageProgressBarCancelLog);
 			});
             progress.report({ increment: 0 });
             const total = deviceConnectionStrings.length * times;
@@ -127,8 +127,11 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
                     await this.delay(interval);
                 }
             }
-
-            vscode.window.showInformationMessage('All sent');
+            
+            const succeeded = status.getSucceed();
+            const failed = status.getFailed();
+            this._outputChannel.show();
+            this.outputLine(Constants.SimulatorSummaryLabel, `Sending ${total} message(s) done, with ${succeeded} succeeded and ${failed} failed.`);
 
             // Set time out for 3 second(maybe for users to know how many messages are failed), and then finish this sending progress
 			const p = new Promise(resolve => {

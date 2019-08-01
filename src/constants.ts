@@ -123,6 +123,9 @@ export class Constants {
     public static CREATE_OPTIONS_MAX_CHUNKS = 8;
     public static StateKeySubsID = "subscriptionId";
     public static StateKeyIoTHubID = "iothubid";
+    public static SimulatorSummaryLabel = "Simulator Summary";
+    public static SimulatorSendingMessageProgressBarTitle = "Sending Simulated Message(s)";
+    public static SimulatorSendingMessageProgressBarCancelLog = "You just canceled the long running operation.";
 
     public static DeleteLabel = "Delete";
     public static DeleteMessage = "Are you sure you want to delete";    public static readonly DISTRIBUTED_TWIN_NAME: string = "azureiot*com^dtracing^1";
