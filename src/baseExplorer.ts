@@ -42,11 +42,10 @@ export class BaseExplorer {
         };
     }
 
-    protected sendEventDoneWithProgress(client, aiEventName: string, status: SendStatus, progress: vscode.Progress<{
+    protected sendEventDoneAndUpdateProgressBar(client, aiEventName: string, status: SendStatus, progress: vscode.Progress<{
         message?: string;
         increment?: number;
-    }>, step: number, total: number) {
-
+    }>) {
         return (err, result) => {
             if (err) {
                 status.newStatus(false);
@@ -59,14 +58,16 @@ export class BaseExplorer {
             const succeeded = status.getSucceed();
             const failed = status.getFailed();
             const sum = status.sum();
+            const step = status.getStep();
+            const total = status.getTotal();
             progress.report({
                 increment: step,
                 message: `Receiving sending status: ${succeeded} succeeded and ${failed} failed.`
             })
             if (sum == total) {
+                this._outputChannel.show();
                 this.outputLine(Constants.SimulatorSummaryLabel, `Sending ${total} message(s) done, with ${succeeded} succeeded and ${failed} failed.`);
             }
-            client.close(() => { return; });
         };
     }
 }
