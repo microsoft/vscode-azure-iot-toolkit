@@ -79,28 +79,17 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
             this.sendEventDone(client, Constants.IoTHubMessageLabel, Constants.IoTHub, Constants.IoTHubAIMessageDoneEvent));
     }
 
+    
+
     private async sendD2CMessageCoreWithProgress(deviceConnectionString: string, message: string, status: SendStatus, progress: vscode.Progress<{
         message?: string;
         increment?: number;
     }>, step: number, total: number) {
         let client = clientFromConnectionString(deviceConnectionString);
         let stringify = Utility.getConfig<boolean>(Constants.IoTHubD2CMessageStringifyKey);
-        await client.sendEvent(new Message(stringify ? JSON.stringify(message) : message))
-            .then(() => {
-                status.newStatus(true);
-                TelemetryClient.sendEvent(Constants.IoTHubAIMessageDoneEvent, { Result: "Success" });
-            })
-            .catch(() => {
-                status.newStatus(false);
-                TelemetryClient.sendEvent(Constants.IoTHubAIMessageDoneEvent, { Result: "Fail" });
-            })
-        const succeeded = status.getSucceed();
-        const failed = status.getFailed();
-        const sum = status.sum();
-        progress.report({
-            increment: step,
-            message: `Sending ${sum} of ${total}, with ${succeeded} succeeded and ${failed} failed.`
-        });
+        client.sendEvent(new Message(stringify ? JSON.stringify(message) : message),
+            this.sendEventDoneWithProgress(client, Constants.IoTHubAIMessageDoneEvent, status, progress, step, total));
+
     }
 
     private async delay(ms: number) {
@@ -112,35 +101,41 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
 			location: vscode.ProgressLocation.Notification,
 			title: Constants.SimulatorSendingMessageProgressBarTitle,
 			cancellable: true
-		}, async (progress, token) => {
-			token.onCancellationRequested(() => {
-				console.log(Constants.SimulatorSendingMessageProgressBarCancelLog);
-			});
-            progress.report({ increment: 0 });
-            const total = deviceConnectionStrings.length * times;
-            const step = 100 / total;
-            let status = new SendStatus();
-            for (const deviceConnectionString of deviceConnectionStrings) {
-                let i = 0;
-                for (i = 0; i < times; i++) {
-                    await this.sendD2CMessageCoreWithProgress(deviceConnectionString, message, status, progress, step, total);
-                    await this.delay(interval);
+		}, async (sendingProgress, sendingToken) => {
+            sendingToken.onCancellationRequested(() => {
+                console.log(Constants.SimulatorProgressBarCancelLog);
+            });
+            await vscode.window.withProgress({
+                location: vscode.ProgressLocation.Notification,
+                title: Constants.SimulatorRecevingStatusProgressBarTitle,
+                cancellable: true
+            }, async (statusProgress, receivingToken) => {
+                receivingToken.onCancellationRequested(() => {
+                    console.log(Constants.SimulatorProgressBarCancelLog);
+                });
+                sendingProgress.report({ increment: 0});
+                statusProgress.report({ increment: 0 });
+                const total = deviceConnectionStrings.length * times;
+                const step = 100 / total;
+                let status = new SendStatus();
+                let count = 0;
+                for (const deviceConnectionString of deviceConnectionStrings) {
+                    let i = 0;
+                    for (i = 0; i < times; i++) {
+                        this.sendD2CMessageCoreWithProgress(deviceConnectionString, message, status, statusProgress, step, total);
+                        count++;
+                        sendingProgress.report({
+                            increment: step,
+                            message: `Sending message(s) ${count} of ${total}`
+                        })
+                        await this.delay(interval);
+                    }
                 }
-            }
-            
-            const succeeded = status.getSucceed();
-            const failed = status.getFailed();
-            this._outputChannel.show();
-            this.outputLine(Constants.SimulatorSummaryLabel, `Sending ${total} message(s) done, with ${succeeded} succeeded and ${failed} failed.`);
-
-            // Set time out for 3 second(maybe for users to know how many messages are failed), and then finish this sending progress
-			const p = new Promise(resolve => {
-				setTimeout(() => {
-					resolve();
-				}, 3000);
-			});
-			return p;
-		});
+                while (status.sum() != total) {
+                    await this.delay(1);
+                }
+            });
+        });
     }
 
     public async startMonitorIoTHubMessage(deviceItem?: DeviceItem) {
