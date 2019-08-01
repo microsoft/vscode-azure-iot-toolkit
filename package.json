@@ -202,7 +202,7 @@
       {
         "command": "azure-iot-toolkit.refresh",
         "title": "%azure-iot-toolkit.command.refresh.title%",
-        "category": "%azure-iot-toolkit.category%,",
+        "category": "%azure-iot-toolkit.category%",
         "icon": {
           "light": "resources/light/refresh.svg",
           "dark": "resources/dark/refresh.svg"
