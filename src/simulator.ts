@@ -7,52 +7,25 @@ import { SimulatorWebview } from "./simulatorwebview/simulatorwebview";
 import { Utility } from "./utility";
 import { DeviceItem } from "./Model/DeviceItem";
 import { Constants } from "./constants";
-
+import { IoTHubMessageExplorer } from "./iotHubMessageExplorer";
 
 export class Simulator {
 
+	private _iotHubMessageExplorer: IoTHubMessageExplorer;
+
     constructor(private context: vscode.ExtensionContext) {
+		let outputChannel = vscode.window.createOutputChannel("Azure IoT Hub Toolkit Simulator");
+		this._iotHubMessageExplorer = new IoTHubMessageExplorer(outputChannel);
     }
 
-    
     public async showWebview(): Promise<void> {
         const simulatorwebview = SimulatorWebview.getInstance(this.context);
         await simulatorwebview.openSimulatorWebviewPage();
         return;
-    }
-
-    public async test() {
-        vscode.window.withProgress({
-			location: vscode.ProgressLocation.Notification,
-			title: "I am long running!",
-			cancellable: true
-		}, (progress, token) => {
-			token.onCancellationRequested(() => {
-				console.log("User canceled the long running operation");
-			});
-
-			progress.report({ increment: 0 });
-
-			setTimeout(() => {
-				progress.report({ increment: 10, message: "I am long running! - still going..." });
-			}, 1000);
-
-			setTimeout(() => {
-				progress.report({ increment: 40, message: "I am long running! - still going even more..." });
-			}, 2000);
-
-			setTimeout(() => {
-				progress.report({ increment: 50, message: "I am long running! - almost there..." });
-			}, 3000);
-
-			var p = new Promise(resolve => {
-				setTimeout(() => {
-					resolve();
-				}, 5000);
-			});
-
-			return p;
-		});
+	}
+	
+	public async sendD2CMessage(inputDeviceConnectionStrings: string[], message: string, times: number, interval: number) {
+        await this._iotHubMessageExplorer.sendD2CMessageFromMultipleDevicesRepeatedlyWithProgressBar(inputDeviceConnectionStrings, message, times, interval);
     }
 
     public static async getInputDeviceList(): Promise<DeviceItem[]> {

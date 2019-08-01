@@ -7,27 +7,18 @@ try {
 
 const app = new Vue({
     el: '#app',
-    // TODO: refactor: rename variable name
     data: {
-        value: 0,
-        modal: false,
-        step: 1,
+        inputDeviceList: [],
         inputDevice: [],
         msg: '',
         times: '',
         interval: '',
-        result: '',
-        animal: '',
-        sub: '',
-        subs: [],
         messageType: '',
-        inputDeviceList: [],
         endpoint: document.getElementById('app').getAttribute('data-endpoint'),
     },
     created: async function () {
         try {
-            const list = await this.getInputDeviceList();
-            const subs = await this.loadSubscriptionItemsForWebview();
+            await this.getInputDeviceList();
         } catch (error) {
             this.errorMessageInitialization = error.toString();
         }
@@ -41,12 +32,6 @@ const app = new Vue({
                 this.inputDeviceList.push(device)
             }
         },
-        async loadSubscriptionItemsForWebview () {
-            this.subs = (await axios.get(`${this.endpoint}/api/loadsubscriptionitemsforwebview`)).data;
-        },
-        nextStep () {
-            this.step = this.step + 1;
-        },
         async send () {
             // TODO: Add validator here
             data = {
@@ -58,33 +43,8 @@ const app = new Vue({
             if (this.messageType == 'Plain Text') {
                 await axios.post(`${this.endpoint}/api/sendmessagerepeatedly`, data);
             } else {
-                await axios.post(`${this.endpoint}/api/dj`, data);
+                await axios.post(`${this.endpoint}/api/senddummyjsonrepeatedly`, data);
             }
-        },
-        async dj () {
-            data = {
-                inputDevice: this.inputDevice,
-            }
-            this.result = await axios.post(`${this.endpoint}/api/dj`, data);
-        },
-        deviceListTransferRender (item) {
-            return item.label;
-        },
-        deviceListTransferChangeHandler (newTargetKeys) {
-            this.inputDevice = newTargetKeys;
-        },
-        add (name) {
-            if (name === 'Number') {
-                this.modal = true;
-            } else {
-                
-            }
-        },
-        ok () {
-            this.$Message.info('Clicked ok');
-        },
-        cancel () {
-            this.$Message.info('Clicked cancel');
         }
     }
 });

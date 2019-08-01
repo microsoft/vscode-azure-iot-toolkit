@@ -39,18 +39,4 @@ export class BaseExplorer {
             client.close(() => { return; });
         };
     }
-
-    protected sendEventDoneWithStatus(client,  aiEventName: string, status: SendStatus) {
-        return (err, result) => {
-            if (err) {
-                TelemetryClient.sendEvent(aiEventName, { Result: "Fail" });
-                status.newStatus(false);
-            }
-            if (result) {
-                TelemetryClient.sendEvent(aiEventName, { Result: "Success" });
-                status.newStatus(true);
-            }
-            client.close(() => { return; });
-        };
-    }
 }

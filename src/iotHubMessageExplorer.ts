@@ -41,6 +41,10 @@ export class SendStatus {
             this.AddFailed();
         }
     }
+
+    public sum(): number {
+        return this.succeed + this.failed;
+    }
 }
 
 export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
@@ -68,39 +72,42 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
         });
     }
 
-    public async sendD2CMessageCore(deviceConnectionString: string, message: string) {
+    private async sendD2CMessageCore(deviceConnectionString: string, message: string) {
         let client = clientFromConnectionString(deviceConnectionString);
         let stringify = Utility.getConfig<boolean>(Constants.IoTHubD2CMessageStringifyKey);
         client.sendEvent(new Message(stringify ? JSON.stringify(message) : message),
             this.sendEventDone(client, Constants.IoTHubMessageLabel, Constants.IoTHub, Constants.IoTHubAIMessageDoneEvent));
     }
 
-    public async sendD2CMessageCoreWithStatus(deviceConnectionString: string, message: string, status: SendStatus) {
+    private async sendD2CMessageCoreWithProgress(deviceConnectionString: string, message: string, status: SendStatus, progress: vscode.Progress<{
+        message?: string;
+        increment?: number;
+    }>, step: number, total: number) {
         let client = clientFromConnectionString(deviceConnectionString);
         let stringify = Utility.getConfig<boolean>(Constants.IoTHubD2CMessageStringifyKey);
-        client.sendEvent(new Message(stringify ? JSON.stringify(message) : message),
-            this.sendEventDoneWithStatus(client, Constants.IoTHubAIMessageDoneEvent, status));
+        await client.sendEvent(new Message(stringify ? JSON.stringify(message) : message))
+            .then(() => {
+                status.newStatus(true);
+                TelemetryClient.sendEvent(Constants.IoTHubAIMessageDoneEvent, { Result: "Success" });
+            })
+            .catch(() => {
+                status.newStatus(false);
+                TelemetryClient.sendEvent(Constants.IoTHubAIMessageDoneEvent, { Result: "Fail" });
+            })
+        const succeeded = status.getSucceed();
+        const failed = status.getFailed();
+        const sum = succeeded + failed;
+        progress.report({
+            increment: step,
+            message: `Sending ${sum} of ${total}. With ${succeeded} succeeded and ${failed} failed.`
+        });
     }
 
     private async delay(ms: number) {
         return new Promise( resolve => setTimeout(resolve, ms));
     }
 
-    public async sendD2CMessageRepeatedly(deviceConnectionString: string, message: string, times: number, interval: number) {
-        let i = 0;
-        for (i = 0; i < times; i++) {
-            await this.sendD2CMessageCore(deviceConnectionString, message);
-        }
-        await this.delay(interval);
-    }
-
-    public async sendD2CMessageFromMultipleDevicesRepeatedly(deviceConnectionStrings: string[], message: string, times: number, interval: number) {
-        for (const deviceConnectionString of deviceConnectionStrings) {
-            await this.sendD2CMessageRepeatedly(deviceConnectionString, message, times, interval);
-        }
-    }
-
-    public async sendD2CMessageWithProgressBar(deviceConnectionStrings: string[], message: string, times: number, interval: number) {
+    public async sendD2CMessageFromMultipleDevicesRepeatedlyWithProgressBar(deviceConnectionStrings: string[], message: string, times: number, interval: number) {
         await vscode.window.withProgress({
 			location: vscode.ProgressLocation.Notification,
 			title: "Sending message(s)...",
@@ -113,21 +120,16 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
             const total = deviceConnectionStrings.length * times;
             const step = 100 / total;
             let status = new SendStatus();
-            // TODO: Count the succeeded messages and failed messages.
             for (const deviceConnectionString of deviceConnectionStrings) {
                 let i = 0;
                 for (i = 0; i < times; i++) {
-                    this.sendD2CMessageCoreWithStatus(deviceConnectionString, message, status);
-                    let succeeded = status.getSucceed();
-                    let failed = status.getFailed();
-                    progress.report({
-                        increment: step,
-                        message: "Sending " + (succeeded + failed) + " of " + total + ".With " + succeeded + " succeeded and " + failed + " failed."
-                    });
+                    await this.sendD2CMessageCoreWithProgress(deviceConnectionString, message, status, progress, step, total);
                     await this.delay(interval);
                 }
             }
-            
+
+            vscode.window.showInformationMessage('All sent');
+
             // Set time out for 3 second(maybe for users to know how many messages are failed), and then finish this sending progress
 			const p = new Promise(resolve => {
 				setTimeout(() => {

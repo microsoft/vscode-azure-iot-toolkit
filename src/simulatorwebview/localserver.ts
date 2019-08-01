@@ -4,10 +4,6 @@ import * as http from "http";
 import * as vscode from "vscode";
 import { AddressInfo } from 'net';
 import { Simulator } from "../simulator";
-import { SimulatorMessageSender } from '../simulatorMessageSender'
-import { IoTHubResourceExplorer } from "../iotHubResourceExplorer";
-import { IoTHubMessageExplorer } from "../iotHubMessageExplorer";
-import { AzureIoTExplorer } from "../azureIoTExplorer";
 const dummyjson = require('dummy-json');
 
 export class LocalServer {
@@ -17,12 +13,14 @@ export class LocalServer {
     private router: express.Router;
     private context: vscode.ExtensionContext;
     private _modules: string[];
+    private _simulator: Simulator;
 
     constructor(context: vscode.ExtensionContext) {
         this.initRouter();
         this.initApp();
         this.server = http.createServer(this.app);
         this.context = context;
+        this._simulator = new Simulator(this.context);
     }
 
     set modules(modules: string[]) {
@@ -48,7 +46,7 @@ export class LocalServer {
         this.router = express.Router();
         this.router.get("/api/getinputdevicelist", async(req, res, next) => await this.getInputDeviceList(req, res, next));
         this.router.post("/api/sendmessagerepeatedly", async(req, res, next) => await this.sendMessageRepeatedly(req, res, next));
-        this.router.post("/api/dj", async(req, res, next) => await this.dj(req, res, next));
+        this.router.post("/api/senddummyjsonrepeatedly", async(req, res, next) => await this.sendDummyJsonRepeatedly(req, res, next));
     
     }
 
@@ -90,7 +88,7 @@ export class LocalServer {
         }   
     }
 
-    private async dj(req: express.Request, res: express.Response, next: express.NextFunction) {
+    private async sendDummyJsonRepeatedly(req: express.Request, res: express.Response, next: express.NextFunction) {
         try {
             const data = req.body;
             const inputDeviceConnectionStrings: string[] = data.inputDevice;
@@ -98,8 +96,7 @@ export class LocalServer {
             vscode.window.showInformationMessage(message);
             const times: number = Number(data.times);
             const interval: number = Number(data.interval);
-            const x = new AzureIoTExplorer(this.context);
-            await x.send(inputDeviceConnectionStrings, message, times, interval);
+            await this._simulator.sendD2CMessage(inputDeviceConnectionStrings, message, times, interval);
         } catch (err) {
             next(err);
         }
@@ -111,8 +108,6 @@ export class LocalServer {
         const message: string = data.msg;
         const times: number = Number(data.times);
         const interval: number = Number(data.interval);
-        const x = new AzureIoTExplorer(this.context);
-        await x.send(inputDeviceConnectionStrings, message, times, interval);
-
+        await this._simulator.sendD2CMessage(inputDeviceConnectionStrings, message, times, interval);
     }
 }

@@ -286,7 +286,7 @@ export class Utility {
                 return null;
             }
         }
-        return Utility.getFilteredDeviceList(iotHubConnectionString, onlyEdgeDevice);
+        return await Utility.getFilteredDeviceList(iotHubConnectionString, onlyEdgeDevice);
     }
 
     public static async getDeviceList(iotHubConnectionString: string, context?: vscode.ExtensionContext): Promise<DeviceItem[]> {

@@ -217,11 +217,6 @@ export function activate(context: vscode.ExtensionContext) {
         azureIoTExplorer.showSimulatorWebview();
 	});
     context.subscriptions.push(showSimulatorWebview);
-    
-    let test = vscode.commands.registerCommand('extension.test', () => {
-        azureIoTExplorer.test();
-    });
-    context.subscriptions.push(test);
 
     return { azureIoTExplorer };
 }
