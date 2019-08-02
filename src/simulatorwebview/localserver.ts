@@ -4,6 +4,8 @@ import * as http from "http";
 import * as vscode from "vscode";
 import { AddressInfo } from 'net';
 import { Simulator } from "../simulator";
+import { Utility } from "../utility";
+import { Constants } from "../constants";
 import { ConnectionString } from 'azure-iot-common';
 const dummyjson = require('dummy-json');
 
@@ -97,7 +99,7 @@ export class LocalServer {
                     await this.sendD2C(req, res, next);
                     break;
                 case 'C2D':
-                    
+                    await this.sendC2D(req, res, next);
                     break;
             }
         } catch (err) {
@@ -128,10 +130,15 @@ export class LocalServer {
 
     private async sendC2D(req: express.Request, res: express.Response, next: express.NextFunction) {
         try {
-            // const deviceId = ConnectionString.parse(deviceConnectionString).DeviceId;
+            const iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
             const data = req.body;
             const messageType = data.messageType;
             const deviceConnectionStrings: string[] = data.deviceConnectionStrings;
+            const deviceIds: string[] = [];
+            for (const deviceConnectionString of deviceConnectionStrings) {
+                const deviceId = ConnectionString.parse(deviceConnectionString).DeviceId;
+                deviceIds.push(deviceId);
+            }
             const message: string = data.message;
             const times: number = Number(data.times);
             const interval: number = Number(data.interval);
@@ -142,7 +149,7 @@ export class LocalServer {
                 // case 'Plain Text':
                 //     // Nothing to do
             }
-            await this._simulator.sendD2CMessage(deviceConnectionStrings, message, times, interval);
+            await this._simulator.sendC2DMessage(iotHubConnectionString, deviceIds, message, times, interval);
         } catch (err) {
             next(err);
         }   

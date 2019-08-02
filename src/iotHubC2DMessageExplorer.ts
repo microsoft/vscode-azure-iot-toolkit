@@ -12,6 +12,7 @@ import { IoTHubMessageBaseExplorer } from "./iotHubMessageBaseExplorer";
 import { DeviceItem } from "./Model/DeviceItem";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
+import { SendStatus }  from "./iotHubMessageExplorer";
 
 export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
     private _deviceClient: Client;
@@ -73,34 +74,100 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
                         this.outputLine(Constants.IoTHubC2DMessageLabel, err.message);
                     } else {
                         let message = new Message(messageBody);
-                        serviceClient.send(deviceId, message.getData(),
-                            this.sendEventDone(serviceClient, Constants.IoTHubC2DMessageLabel, deviceId, Constants.IoTHubAIC2DMessageDoneEvent));
+                        this.sendC2DMessageByIdCore(serviceClient, deviceId, message);
                     }
                 });
             }
         });
     }
 
-    private sendC2DMessageByIdCore(iotHubConnectionString: string, deviceId: string, messageBody: string) {
-        let serviceClient = ServiceClient.fromConnectionString(iotHubConnectionString);
-        serviceClient.open((err) => {
-            if (err) {
-                this.outputLine(Constants.IoTHubC2DMessageLabel, err.message);
-            } else {
-                let message = new Message(messageBody);
-                serviceClient.send(deviceId, message.getData(),
-                    this.sendEventDone(serviceClient, Constants.IoTHubC2DMessageLabel, deviceId, Constants.IoTHubAIC2DMessageDoneEvent));
-            }
-        });
+    private sendC2DMessageByIdCore(serviceClient: ServiceClient, deviceId: string, message: Message) {
+        serviceClient.send(deviceId, message.getData(),
+            this.sendEventDone(serviceClient, Constants.IoTHubC2DMessageLabel, deviceId, Constants.IoTHubAIC2DMessageDoneEvent));
     }
 
-    public sendC2DMessageByIdRepeatedly(iotHubConnectionString: string, deviceId: string): void {
-        const messageBody = 'hello';    
-        this._outputChannel.show();
-        let i = 0;
-        for (i = 0; i < 10; i++) {
-            this.sendC2DMessageByIdCore(iotHubConnectionString, deviceId, messageBody);
-        }
+    private async sendC2DMessageByIdCoreWithProgress(serviceClient: ServiceClient, deviceId: string, message: Message, status: SendStatus, progress: vscode.Progress<{
+        message?: string;
+        increment?: number;
+    }>) {
+        await serviceClient.send(deviceId, message.getData())
+        .then(() => {
+            status.newStatus(true);
+            const succeeded = status.getSucceed();
+            const failed = status.getFailed();
+            const sum = status.sum();
+            const step = status.getStep();
+            const total = status.getTotal();
+            progress.report({
+                increment: step,
+                message: `${succeeded} succeeded and ${failed} failed.`
+            })
+            if (sum == total) {
+                this._outputChannel.show();
+                this.outputLine(Constants.SimulatorSummaryLabel, `Sending ${total} message(s) done, with ${succeeded} succeeded and ${failed} failed.`);
+                serviceClient.close();
+            }
+        })
+    }
+
+    private async sendC2DMessageByIdWithProgress(serviceClient: ServiceClient, deviceId: string, messageBody: string, status: SendStatus, progress: vscode.Progress<{
+        message?: string;
+        increment?: number;
+    }>) {
+        let message = new Message(messageBody);
+        this.sendC2DMessageByIdCoreWithProgress(serviceClient, deviceId, message, status, progress);
+    }
+
+    private async delay(ms: number) {
+        return new Promise( resolve => setTimeout(resolve, ms));
+    }
+
+    public async sendC2DMessageToMultipleDevicesRepeatedlyWithProgressBar(iotHubConnectionString: string, deviceIds: string[], message: string, times: number, interval: number) {
+        await vscode.window.withProgress({
+			location: vscode.ProgressLocation.Notification,
+			title: Constants.SimulatorSendingMessageProgressBarTitle,
+			cancellable: true
+		}, async (sendingProgress, sendingToken) => {
+            await vscode.window.withProgress({
+                location: vscode.ProgressLocation.Notification,
+                title: Constants.SimulatorRecevingStatusProgressBarTitle,
+                cancellable: false
+            }, async (statusProgress) => {
+                sendingToken.onCancellationRequested(() => {
+                    vscode.window.showInformationMessage(Constants.SimulatorProgressBarCancelLog);
+                })
+                sendingProgress.report({ increment: 0});
+                statusProgress.report({ increment: 0 });
+                const total = deviceIds.length * times;
+                const step = 100 / total;
+                let status = new SendStatus(step, total);
+                let count = 0;
+                const serviceClient = ServiceClient.fromConnectionString(iotHubConnectionString);
+                serviceClient.open((err) => {
+                    if (err) {
+                        this.outputLine(Constants.IoTHubC2DMessageLabel, err.message);
+                    }
+                });
+                for (const deviceId of deviceIds) {
+                    let i = 0;
+                    for (i = 0; i < times; i++) {
+                        if (sendingToken.isCancellationRequested) {
+                            return;
+                        }
+                        this.sendC2DMessageByIdWithProgress(serviceClient, deviceId, message, status, statusProgress);
+                        count++;
+                        sendingProgress.report({
+                            increment: step,
+                            message: `Sending message(s) ${count} of ${total}`
+                        })
+                        await this.delay(interval);
+                    }
+                }
+                while (status.sum() != total) {
+                    await this.delay(1);
+                }
+            });
+        });
     }
 
     private connectCallback(deviceConnectionString: string) {

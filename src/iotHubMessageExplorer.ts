@@ -111,6 +111,7 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
             if (sum == total) {
                 this._outputChannel.show();
                 this.outputLine(Constants.SimulatorSummaryLabel, `Sending ${total} message(s) done, with ${succeeded} succeeded and ${failed} failed.`);
+                client.close();
             }
         })
     }
