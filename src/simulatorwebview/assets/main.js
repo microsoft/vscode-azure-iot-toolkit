@@ -51,7 +51,8 @@ const app = new Vue({
                 message: [
                     {required: true, trigger: 'blur'},
                 ]
-            }
+            },
+            dummyJsonTemplate: ''
         }
     },
     created: async function () {
@@ -96,6 +97,9 @@ const app = new Vue({
                     this.failedValidation = true;
                 }
               });
+        },
+        handleClick (name) {
+            this.formItem.message = name;
         }
     }
 });

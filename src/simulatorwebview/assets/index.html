@@ -33,7 +33,7 @@
                 </form-item>
                 <form-item prop="interval" label="Interval">
                     <i-input v-model="formItem.interval" placeholder="Enter interval...">
-                        <i-select v-model="intervalUnit" slot="append" style="width: 70px">
+                        <i-select v-model="intervalUnit" slot="append" style="width: 150px">
                             <i-option value="millisecond">millisecond(s)</i-option>
                             <i-option value="second">second(s)</i-option>
                             <i-option value="minute">minute(s)</i-option>
@@ -55,6 +55,19 @@
                     </radio-group>
                 </form-item>
                 <form-item prop="message" label="Message" >
+                    <Dropdown v-if="messageType=='Dummy Json'" @on-click="handleClick">
+                        <a>
+                            Show Dummy Json Template
+                            <Icon type="ios-arrow-down"></Icon>
+                        </a>
+                        <dropdown-menu slot="list">
+                            <dropdown-item name="a">a</dropdown-item>
+                            <dropdown-item name="aa">aa</dropdown-item>
+                            <dropdown-item name="aaa">aaa</dropdown-item>
+                            <dropdown-item name="aaaa">aaaa</dropdown-item>
+                            <dropdown-item name="aaaaa">aaaaa</dropdown-item>
+                        </dropdown-menu>
+                    </Dropdown>
                     <i-input v-model="formItem.message" placeholder="Enter message..." type="textarea" :autosize="{minRows: 10,maxRows: 20}"></i-input>
                 </form-item>
                 <form-item>
