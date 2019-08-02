@@ -7,15 +7,52 @@ try {
 
 const app = new Vue({
     el: '#app',
-    data: {
-        inputDeviceList: [],
-        deviceConnectionStrings: [],
-        message: '',
-        times: '',
-        interval: '',
-        messageType: '',
-        sendType: 'D2C',
-        endpoint: document.getElementById('app').getAttribute('data-endpoint'),
+    data () { 
+        const numberValidator = (rule, value, callback) => {
+            if (value === '') {
+              callback(new Error('Required'));
+            } else {
+              const s = value.toString();
+              for (let i = 0; i < s.length; i++) {
+                if (s.charAt(i) < '0' || s.charAt(i) > '9') {
+                  callback(new Error('You cannot enter any character other than 0-9.'));
+                }
+              }
+              const v = parseFloat(s);
+              if (v > 0) {
+                callback();
+              } else {
+                callback(new Error('Don\'t you think this should be a positive integer?'));
+              }
+            }
+          }; 
+        return {
+            inputDeviceList: [],
+            formItem: {
+                deviceConnectionStrings: [],
+                message: '',
+                times: '',
+                interval: '',
+            },
+            intervalUnit: 'millisecond',
+            messageType: 'Plain Text',
+            sendType: 'D2C',
+            failedValidation: false,
+            endpoint: document.getElementById('app').getAttribute('data-endpoint'),
+            ruleValidation: {
+                times: [
+                    {required: true, trigger: 'blur'},
+                    {validator: numberValidator, trigger: 'blur'}
+                ],
+                interval: [
+                    {required: true, trigger: 'blur'},
+                    {validator: numberValidator, trigger: 'blur'}
+                ],
+                message: [
+                    {required: true, trigger: 'blur'},
+                ]
+            }
+        }
     },
     created: async function () {
         try {
@@ -34,16 +71,31 @@ const app = new Vue({
             }
         },
         async send () {
-            // TODO: Add validator here
-            data = {
-                deviceConnectionStrings: this.deviceConnectionStrings,
-                message: this.message,
-                times: this.times,
-                interval: this.interval,
-                messageType: this.messageType,
-                sendType: this.sendType
-            }
-            await axios.post(`${this.endpoint}/api/send`, data);
+            this.$refs['formItem'].validate(async (valid) => {
+                if (valid) {
+                    let intervalInMilliSecond = Number(this.formItem.interval);
+                    switch (this.intervalUnit) {
+                        // No break in this switch-case.
+                        case 'minute':
+                            intervalInMilliSecond *= 60;
+                        case 'second':
+                            intervalInMilliSecond *= 1000;
+                        case 'millisecond':
+                            intervalInMilliSecond *= 1;
+                    }
+                    data = {
+                        deviceConnectionStrings: this.formItem.deviceConnectionStrings,
+                        message: this.formItem.message,
+                        times: this.formItem.times,
+                        interval: intervalInMilliSecond,
+                        messageType: this.messageType,
+                        sendType: this.sendType
+                    }
+                    await axios.post(`${this.endpoint}/api/send`, data);
+                } else {
+                    this.failedValidation = true;
+                }
+              });
         }
     }
 });

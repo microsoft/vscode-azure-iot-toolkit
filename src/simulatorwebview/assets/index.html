@@ -11,10 +11,10 @@
 <body>
     <div id="app" data-endpoint="{{endpoint}}" v-cloak>
         <Card>
-            <i-form>
-                <form-item prop="Input Device" label="Input Device">
+            <i-form ref="formItem" :model="formItem" :rules="ruleValidation">
+                <form-item prop="deviceConnectionStrings" label="Input Device">
                     <i-select
-                        v-model="deviceConnectionStrings"
+                        v-model="formItem.deviceConnectionStrings"
                         multiple
                         filterable
                         placeholder="Please select the device(s) you want to send message to..."
@@ -28,19 +28,25 @@
                         </i-option>
                     </i-select>
                 </form-item>
-                <form-item prop="Times" label="Times">
-                    <i-input v-model="times" placeholder="Enter times..."></i-input>
+                <form-item prop="times" label="Times">
+                    <i-input v-model="formItem.times" placeholder="Enter times..."></i-input>
                 </form-item>
-                <form-item prop="Interval" label="Interval">
-                    <i-input v-model="interval" placeholder="Enter interval..."></i-input>
+                <form-item prop="interval" label="Interval">
+                    <i-input v-model="formItem.interval" placeholder="Enter interval...">
+                        <i-select v-model="intervalUnit" slot="append" style="width: 70px">
+                            <i-option value="millisecond">millisecond(s)</i-option>
+                            <i-option value="second">second(s)</i-option>
+                            <i-option value="minute">minute(s)</i-option>
+                        </i-select>
+                    </i-input>
                 </form-item>
-                <form-item prop="SendType" label="Send Type">
+                <form-item prop="sendType" label="Send Type">
                     <radio-group v-model="sendType">
                         <Radio label="D2C">D2C</Radio>
                         <Radio label="C2D">C2D</Radio>
                     </radio-group>
                 </form-item>
-                <form-item prop="MessageType" label="Message Type">
+                <form-item prop="messageType" label="Message Type">
                     <radio-group v-model="messageType">
                         <Radio label="Plain Text">Plain Text</Radio>
                         <Radio label="Dummy Json">Dummy Json</Radio>
@@ -48,14 +54,27 @@
                         <Radio label="File Upload" disabled>File Upload</Radio>
                     </radio-group>
                 </form-item>
-                <form-item prop="Message" label="Message" >
-                        <i-input v-model="message" placeholder="Enter message..." type="textarea" :autosize="{minRows: 10,maxRows: 20}"></i-input>
+                <form-item prop="message" label="Message" >
+                    <i-input v-model="formItem.message" placeholder="Enter message..." type="textarea" :autosize="{minRows: 10,maxRows: 20}"></i-input>
                 </form-item>
                 <form-item>
                     <i-button type="primary" @click="send()" long>send</i-button>
                 </form-item>
             </i-form>
         </Card>
+        <Modal v-model="failedValidation" width="360">
+            <p slot="header" style="color:#f60;text-align:center">
+                <Icon type="ios-information-circle"></Icon>
+                <span>Failed Validation</span>
+            </p>
+            <div style="text-align:center">
+                <p>Something wrong with your input.</p>
+                <p>Would you please Check your information again?</p>
+            </div>
+            <div slot="footer">
+                <i-button type="error" size="large" long @click="failedValidation=false">Close</i-button>
+            </div>
+        </Modal>
     </div>
     <script type="text/javascript" src="{{root}}/src/simulatorwebview/assets/vue.min.js"></script>
     <script type="text/javascript" src="./vue.min.js"></script>
