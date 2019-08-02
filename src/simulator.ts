@@ -24,8 +24,8 @@ export class Simulator {
         return;
 	}
 	
-	public async sendD2CMessage(inputDeviceConnectionStrings: string[], message: string, times: number, interval: number) {
-        await this._iotHubMessageExplorer.sendD2CMessageFromMultipleDevicesRepeatedlyWithProgressBar(inputDeviceConnectionStrings, message, times, interval);
+	public async sendD2CMessage(deviceConnectionStrings: string[], message: string, times: number, interval: number) {
+        await this._iotHubMessageExplorer.sendD2CMessageFromMultipleDevicesRepeatedlyWithProgressBar(deviceConnectionStrings, message, times, interval);
     }
 
     public static async getInputDeviceList(): Promise<DeviceItem[]> {

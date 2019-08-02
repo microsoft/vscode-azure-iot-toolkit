@@ -14,7 +14,7 @@
             <i-form>
                 <form-item prop="Input Device" label="Input Device">
                     <i-select
-                        v-model="inputDevice"
+                        v-model="deviceConnectionStrings"
                         multiple
                         filterable
                         placeholder="Please select the device(s) you want to send message to..."
@@ -34,14 +34,22 @@
                 <form-item prop="Interval" label="Interval">
                     <i-input v-model="interval" placeholder="Enter interval..."></i-input>
                 </form-item>
+                <form-item prop="SendType" label="Send Type">
+                    <radio-group v-model="sendType">
+                        <Radio label="D2C">D2C</Radio>
+                        <Radio label="C2D" disabled>C2D</Radio>
+                    </radio-group>
+                </form-item>
                 <form-item prop="MessageType" label="Message Type">
                     <radio-group v-model="messageType">
                         <Radio label="Plain Text">Plain Text</Radio>
                         <Radio label="Dummy Json">Dummy Json</Radio>
+                        <Radio label="Test Case" disabled>Test Case</Radio>
+                        <Radio label="File Upload" disabled>File Upload</Radio>
                     </radio-group>
                 </form-item>
                 <form-item prop="Message" label="Message" >
-                        <i-input v-model="msg" placeholder="Enter msg..." type="textarea" :autosize="{minRows: 10,maxRows: 20}"></i-input>
+                        <i-input v-model="message" placeholder="Enter message..." type="textarea" :autosize="{minRows: 10,maxRows: 20}"></i-input>
                 </form-item>
                 <form-item>
                     <i-button type="primary" @click="send()" long>send</i-button>

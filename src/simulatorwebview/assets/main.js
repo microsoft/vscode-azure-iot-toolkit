@@ -9,11 +9,12 @@ const app = new Vue({
     el: '#app',
     data: {
         inputDeviceList: [],
-        inputDevice: [],
-        msg: '',
+        deviceConnectionStrings: [],
+        message: '',
         times: '',
         interval: '',
         messageType: '',
+        sendType: 'D2C',
         endpoint: document.getElementById('app').getAttribute('data-endpoint'),
     },
     created: async function () {
@@ -35,16 +36,14 @@ const app = new Vue({
         async send () {
             // TODO: Add validator here
             data = {
-                inputDevice: this.inputDevice,
-                msg: this.msg,
+                deviceConnectionStrings: this.deviceConnectionStrings,
+                message: this.message,
                 times: this.times,
-                interval: this.interval
+                interval: this.interval,
+                messageType: this.messageType,
+                sendType: this.sendType
             }
-            if (this.messageType == 'Plain Text') {
-                await axios.post(`${this.endpoint}/api/sendmessagerepeatedly`, data);
-            } else {
-                await axios.post(`${this.endpoint}/api/senddummyjsonrepeatedly`, data);
-            }
+            await axios.post(`${this.endpoint}/api/send`, data);
         }
     }
 });

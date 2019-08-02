@@ -129,7 +129,7 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
                 location: vscode.ProgressLocation.Notification,
                 title: Constants.SimulatorRecevingStatusProgressBarTitle,
                 cancellable: false
-            }, async (statusProgress, receivingToken) => {
+            }, async (statusProgress) => {
                 sendingToken.onCancellationRequested(() => {
                     vscode.window.showInformationMessage(Constants.SimulatorProgressBarCancelLog);
                 })
@@ -140,7 +140,7 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
                 let status = new SendStatus(step, total);
                 let count = 0;
                 for (const deviceConnectionString of deviceConnectionStrings) {
-                    let client = clientFromConnectionString(deviceConnectionString);
+                    let client = await clientFromConnectionString(deviceConnectionString);
                     let i = 0;
                     for (i = 0; i < times; i++) {
                         if (sendingToken.isCancellationRequested) {

@@ -4,6 +4,7 @@ import * as http from "http";
 import * as vscode from "vscode";
 import { AddressInfo } from 'net';
 import { Simulator } from "../simulator";
+import { ConnectionString } from 'azure-iot-common';
 const dummyjson = require('dummy-json');
 
 export class LocalServer {
@@ -45,8 +46,7 @@ export class LocalServer {
     private initRouter() {
         this.router = express.Router();
         this.router.get("/api/getinputdevicelist", async(req, res, next) => await this.getInputDeviceList(req, res, next));
-        this.router.post("/api/sendmessagerepeatedly", async(req, res, next) => await this.sendMessageRepeatedly(req, res, next));
-        this.router.post("/api/senddummyjsonrepeatedly", async(req, res, next) => await this.sendDummyJsonRepeatedly(req, res, next));
+        this.router.post("/api/send", async(req, res, next) => await this.send(req, res, next));
     
     }
 
@@ -88,26 +88,66 @@ export class LocalServer {
         }   
     }
 
-    private async sendDummyJsonRepeatedly(req: express.Request, res: express.Response, next: express.NextFunction) {
+    private async send(req: express.Request, res: express.Response, next: express.NextFunction) {
         try {
             const data = req.body;
-            const inputDeviceConnectionStrings: string[] = data.inputDevice;
-            const message = dummyjson.parse(data.msg);
-            vscode.window.showInformationMessage(message);
-            const times: number = Number(data.times);
-            const interval: number = Number(data.interval);
-            await this._simulator.sendD2CMessage(inputDeviceConnectionStrings, message, times, interval);
+            const sendType = data.sendType;
+            switch (sendType) {
+                case 'D2C':
+                    await this.sendD2C(req, res, next);
+                    break;
+                case 'C2D':
+                    
+                    break;
+            }
         } catch (err) {
             next(err);
-        }
+        }   
     }
 
-    private async sendMessageRepeatedly(req: express.Request, res: express.Response, next: express.NextFunction) {
-        const data = req.body;
-        const inputDeviceConnectionStrings: string[] = data.inputDevice;
-        const message: string = data.msg;
-        const times: number = Number(data.times);
-        const interval: number = Number(data.interval);
-        await this._simulator.sendD2CMessage(inputDeviceConnectionStrings, message, times, interval);
+    private async sendD2C(req: express.Request, res: express.Response, next: express.NextFunction) {
+        try {
+            const data = req.body;
+            const messageType = data.messageType;
+            const deviceConnectionStrings: string[] = data.deviceConnectionStrings;
+            const message: string = data.message;
+            const times: number = Number(data.times);
+            const interval: number = Number(data.interval);
+            switch (messageType) {
+                case 'Dummy Json':
+                    const message = dummyjson.parse(data.message);
+                    break;
+                // case 'Plain Text':
+                //     // Nothing to do
+            }
+            await this._simulator.sendD2CMessage(deviceConnectionStrings, message, times, interval);
+        } catch (err) {
+            next(err);
+        }   
     }
+
+    private async sendC2D(req: express.Request, res: express.Response, next: express.NextFunction) {
+        try {
+            // const deviceId = ConnectionString.parse(deviceConnectionString).DeviceId;
+            const data = req.body;
+            const messageType = data.messageType;
+            const deviceConnectionStrings: string[] = data.deviceConnectionStrings;
+            const message: string = data.message;
+            const times: number = Number(data.times);
+            const interval: number = Number(data.interval);
+            switch (messageType) {
+                case 'Dummy Json':
+                    const message = dummyjson.parse(data.message);
+                    break;
+                // case 'Plain Text':
+                //     // Nothing to do
+            }
+            await this._simulator.sendD2CMessage(deviceConnectionStrings, message, times, interval);
+        } catch (err) {
+            next(err);
+        }   
+    }
+
+
+
 }
