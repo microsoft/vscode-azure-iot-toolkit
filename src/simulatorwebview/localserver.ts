@@ -49,7 +49,7 @@ export class LocalServer {
         this.router = express.Router();
         this.router.get("/api/getinputdevicelist", async(req, res, next) => await this.getInputDeviceList(req, res, next));
         this.router.post("/api/send", async(req, res, next) => await this.send(req, res, next));
-    
+        this.router.post("/api/generaterandomjson", async(req, res, next) => await this.generateRandomJson(req, res, next));
     }
 
     private initApp() {
@@ -153,6 +153,13 @@ export class LocalServer {
         } catch (err) {
             next(err);
         }   
+    }
+
+    private async generateRandomJson(req: express.Request, res: express.Response, next: express.NextFunction) {
+        const data = req.body;
+        const template = data.template;
+        const message = dummyjson.parse(template);
+        return res.status(200).json(message);
     }
 
 

@@ -83,6 +83,7 @@ const app = new Vue({
             intervalUnit: 'millisecond',
             messageType: 'Plain Text',
             sendType: 'D2C',
+            generatedMessage: '111',
             failedValidation: false,
             endpoint: document.getElementById('app').getAttribute('data-endpoint'),
             ruleValidation: {
@@ -153,6 +154,13 @@ const app = new Vue({
                     this.formItem.message = dummyJsonTemplateData;
                     break;
             }
+            this.generateDummyJson();
+        },
+        async generateDummyJson () {
+          const template = {
+            template: this.formItem.message
+          };
+          this.generatedMessage = (await axios.post(`${this.endpoint}/api/generaterandomjson`, template)).data;
         }
     }
 });

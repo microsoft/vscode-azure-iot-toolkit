@@ -68,8 +68,9 @@
                             <dropdown-item name="e" disabled>More</dropdown-item>
                         </dropdown-menu>
                     </Dropdown>
-                    <i-input v-model="formItem.message" placeholder="Enter message..." type="textarea" :autosize="{minRows: 10,maxRows: 20}"></i-input>
+                    <i-input style="width: 100%" v-model="formItem.message" @on-change="generateDummyJson" placeholder="Enter message..." type="textarea" :autosize="{minRows: 10,maxRows: 20}"></i-input>
                 </form-item>
+                <i-input style="width: 100%" v-model="generatedMessage"  readonly type="textarea" :autosize="{minRows: 10,maxRows: 20}"></i-input>
                 <form-item>
                     <i-button type="primary" @click="send()" long>send</i-button>
                 </form-item>
