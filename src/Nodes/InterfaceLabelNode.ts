@@ -18,7 +18,7 @@ export class InterfaceLabelNode implements INode {
 
     public getTreeItem(): vscode.TreeItem {
         return {
-            label: "Interfaces",
+            label: "Interfaces (Preview)",
             collapsibleState: vscode.TreeItemCollapsibleState.Collapsed,
             contextValue: "interfaces-label",
         };
