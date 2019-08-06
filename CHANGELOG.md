@@ -1,6 +1,6 @@
-## 2.10.0
-### Added
-* List PnP Interfaces in tree view
+## 2.10.0 (2019-08-06)
+### Fixed
+* Fix typo
 
 ## 2.9.0 (2019-07-19)
 ### Added
