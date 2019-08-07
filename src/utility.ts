@@ -296,6 +296,7 @@ export class Utility {
             if (edgeDeviceIdSet.has(device.deviceId)) {
                 deviceType = "edge";
                 device.contextValue = "edge";
+                device.tooltip = "";
             } else {
                 deviceType = "device";
             }
