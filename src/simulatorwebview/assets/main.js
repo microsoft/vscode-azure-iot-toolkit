@@ -73,6 +73,7 @@ const app = new Vue({
             }
           }; 
         return {
+            hostName: 'a',
             inputDeviceList: [],
             formItem: {
                 deviceConnectionStrings: [],
@@ -105,12 +106,16 @@ const app = new Vue({
     },
     async mounted () {
         try {
+          await this.getIoTHubHostName();
           await this.getInputDeviceList();
         } catch (error) {
             this.errorMessageInitialization = error.toString();
         }
     },
     methods: {
+        async getIoTHubHostName () {
+          this.hostName = (await axios.get(`${this.endpoint}/api/getiothubhostname`)).data;
+        },
         async getInputDeviceList () {
             const list = (await axios.get(`${this.endpoint}/api/getinputdevicelist`)).data;
             this.inputDeviceList = []

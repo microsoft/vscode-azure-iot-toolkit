@@ -37,6 +37,9 @@ export class SimulatorWebview {
             const _IoTHubResourceExplorer = new IoTHubResourceExplorer(outputChannel);
             await _IoTHubResourceExplorer.selectIoTHub();
         }
+        if (!iotHubConnectionString) {
+            return;
+        }
         if (!this.panel) {
             this.localServer.startServer();
             this.panel = vscode.window.createWebviewPanel(

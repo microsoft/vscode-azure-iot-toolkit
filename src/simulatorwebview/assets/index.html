@@ -87,6 +87,7 @@
                     </form-item>
                     <i-input style="width: 100%" v-model="generatedMessage"  readonly type="textarea" :autosize="{minRows: 10,maxRows: 20}"></i-input>
                     <form-item>
+                        <p>  You are sending message(s) to {{ hostName }}</p>
                         <i-button :disabled="isProcessing" type="primary" @click="send()" long>send</i-button>
                     </form-item>
                 </i-form>
