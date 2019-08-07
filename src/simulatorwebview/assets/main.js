@@ -81,7 +81,7 @@ const app = new Vue({
                 times: '',
                 interval: '',
             },
-            intervalUnit: 'millisecond',
+            intervalUnit: 'second',
             messageType: 'Plain Text',
             sendType: 'D2C',
             generatedMessage: '111',
