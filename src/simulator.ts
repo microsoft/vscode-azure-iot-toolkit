@@ -14,11 +14,15 @@ export class Simulator {
 
     private _iotHubMessageExplorer: IoTHubMessageExplorer;
     private _iotHubC2DMessageExplorer: IotHubC2DMessageExplorer;
+    private static simulatorOutputChannel: vscode.OutputChannel = vscode.window.createOutputChannel("Azure IoT Hub Toolkit Simulator");
 
     constructor(private context: vscode.ExtensionContext) {
-		let outputChannel = vscode.window.createOutputChannel("Azure IoT Hub Toolkit Simulator");
-        this._iotHubMessageExplorer = new IoTHubMessageExplorer(outputChannel);
-        this._iotHubC2DMessageExplorer = new IotHubC2DMessageExplorer(outputChannel);
+        this._iotHubMessageExplorer = new IoTHubMessageExplorer(Simulator.getSimulatorOutputChannel());
+        this._iotHubC2DMessageExplorer = new IotHubC2DMessageExplorer(Simulator.getSimulatorOutputChannel());
+    }
+
+    public static getSimulatorOutputChannel(): vscode.OutputChannel {
+        return Simulator.simulatorOutputChannel;
     }
 
     public async showWebview(): Promise<void> {

@@ -105,7 +105,7 @@ const app = new Vue({
     },
     async mounted () {
         try {
-            await this.getInputDeviceList();
+          await this.getInputDeviceList();
         } catch (error) {
             this.errorMessageInitialization = error.toString();
         }

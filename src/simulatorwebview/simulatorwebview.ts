@@ -6,6 +6,10 @@ import * as fs from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
 import { LocalServer } from "./localserver";
+import { Utility } from "../utility";
+import { Constants } from  "../constants";
+import { IoTHubResourceExplorer } from "../iotHubResourceExplorer";
+import { Simulator } from "../simulator";
 
 const simulatorWebviewPanelViewType = "IoT Edge SimulatorWebview";
 const simulatorWebviewPanelViewTitle = "IoT Edge SimulatorWebview";
@@ -27,6 +31,12 @@ export class SimulatorWebview {
     }
 
     public async openSimulatorWebviewPage(): Promise<any> {
+        const iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle, false);
+        if (!iotHubConnectionString) {
+            let outputChannel = Simulator.getSimulatorOutputChannel();
+            const _IoTHubResourceExplorer = new IoTHubResourceExplorer(outputChannel);
+            await _IoTHubResourceExplorer.selectIoTHub();
+        }
         if (!this.panel) {
             this.localServer.startServer();
             this.panel = vscode.window.createWebviewPanel(
@@ -53,5 +63,6 @@ export class SimulatorWebview {
         } else {
             this.panel.reveal();
         }
+        
     }
 }
