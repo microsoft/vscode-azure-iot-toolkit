@@ -51,7 +51,10 @@ body {
 .vscode-dark .ivu-select-item,
 .vscode-dark .ivu-select-dropdown,
 .vscode-dark .ivu-dropdown-item,
-.vscode-dark .ivu-select {
+.vscode-dark .ivu-select,
+.vscode-dark .ivu-dropdown-item-divided,
+.vscode-dark .ivu-dropdown-item-divided:before,
+.vscode-dark .ivu-modal-content {
 	background-color: #3C3C3C;
 }
 
