@@ -82,8 +82,9 @@ const app = new Vue({
                 interval: '',
             },
             intervalUnit: 'second',
-            messageType: 'Plain Text',
             sendType: 'D2C',
+            messageType: 'Text Content',
+            messageBody: 'Plain Text',
             generatedMessage: '111',
             failedValidation: false,
             isProcessing: false,
@@ -143,7 +144,8 @@ const app = new Vue({
                         times: this.formItem.times,
                         interval: intervalInMilliSecond,
                         messageType: this.messageType,
-                        sendType: this.sendType
+                        sendType: this.sendType,
+                        messageBody: this.messageBody
                     }
                     vscode.setState({isProcessing: true});
                     this.isProcessing = vscode.getState().isProcessing;
@@ -159,6 +161,7 @@ const app = new Vue({
               });
         },
         handleClick (name) {
+            // name should be changed, in order for a clean code.
             switch (name) {
                 case 'a':
                     this.formItem.message = dummyJsonTemplateA;
@@ -167,7 +170,10 @@ const app = new Vue({
                     this.formItem.message = dummyJsonTemplateData;
                     break;
             }
-            this.generateDummyJson();
+            if (name != 'c') {
+              // 'c' indicates the website hyper link
+              this.generateDummyJson();
+            }
         },
         async generateDummyJson () {
           const template = {

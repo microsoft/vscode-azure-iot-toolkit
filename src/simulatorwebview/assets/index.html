@@ -43,51 +43,60 @@
                             </i-option>
                         </i-select>
                     </form-item>
-                    <form-item prop="times" label="Times">
-                        <i-input v-model="formItem.times" placeholder="Enter times..."></i-input>
-                    </form-item>
-                    <form-item prop="interval" label="Interval">
-                        <i-input v-model="formItem.interval" placeholder="Enter interval...">
-                            <i-select v-model="intervalUnit" slot="append" style="width: 150px">
-                                <i-option value="millisecond">millisecond(s)</i-option>
-                                <i-option value="second">second(s)</i-option>
-                                <i-option value="minute">minute(s)</i-option>
-                            </i-select>
-                        </i-input>
-                    </form-item>
-                    <form-item prop="sendType" label="Send Type">
-                        <radio-group v-model="sendType">
-                            <Radio label="D2C">D2C</Radio>
-                            <Radio label="C2D">C2D</Radio>
-                        </radio-group>
-                    </form-item>
+                    <Row>
+                        <i-col span="10">
+                            <form-item prop="times" label="Times">
+                                <i-input v-model="formItem.times" placeholder="Enter times..."></i-input>
+                            </form-item>
+                        </i-col>
+                        <i-col span="10" offset="2">
+                            <form-item prop="interval" label="Interval">
+                                <i-input v-model="formItem.interval" placeholder="Enter interval...">
+                                    <i-select v-model="intervalUnit" slot="append" style="width: 150px">
+                                        <i-option value="millisecond">millisecond(s)</i-option>
+                                        <i-option value="second">second(s)</i-option>
+                                        <i-option value="minute">minute(s)</i-option>
+                                    </i-select>
+                                </i-input>
+                            </form-item>
+                        </i-col>
+                    </Row>
                     <form-item prop="messageType" label="Message Type">
                         <radio-group v-model="messageType">
-                            <Radio label="Plain Text">Plain Text</Radio>
-                            <Radio label="Dummy Json">Dummy Json</Radio>
-                            <Radio label="Test Case" disabled>Test Case</Radio>
+                            <Radio label="Text Content">Text Content</Radio>
                             <Radio label="File Upload" disabled>File Upload</Radio>
                         </radio-group>
                     </form-item>
+                    <form-item prop="messageBody" label="Message Body">
+                        <radio-group v-model="messageBody">
+                            <Radio label="Plain Text">Plain Text</Radio>
+                            <Radio label="Dummy Json">Dummy Json</Radio>
+                            <Radio label="Test Case" disabled>Test Case</Radio>
+                        </radio-group>
+                    </form-item>
                     <form-item prop="message" label="Message" >
-                        <Dropdown v-if="messageType=='Dummy Json'" @on-click="handleClick">
+                        <Dropdown v-if="messageBody=='Dummy Json'" @on-click="handleClick">
                             <a>
-                                Show Dummy Json Template
+                                Need Help?
                                 <Icon type="ios-arrow-down"></Icon>
                             </a>
                             <dropdown-menu slot="list">
-                                <dropdown-item name="a">Template A</dropdown-item>
-                                <dropdown-item name="b">Template Data</dropdown-item>
-                                <dropdown-item name="c" disabled>More</dropdown-item>
-                                <dropdown-item name="d" disabled>More</dropdown-item>
-                                <dropdown-item name="e" disabled>More</dropdown-item>
+                                <dropdown-item name="a">Insert a template</dropdown-item>
+                                <dropdown-item name="b">Insert another template</dropdown-item>
+                                <dropdown-item name="c" divided><a href="https://github.com/webroo/dummy-json">See more from website...</a></dropdown-item>
                             </dropdown-menu>
                         </Dropdown>
-                        <i-input style="width: 100%" v-model="formItem.message" @on-change="generateDummyJson" placeholder="Enter message..." type="textarea" :autosize="{minRows: 10,maxRows: 20}"></i-input>
+                        <Row>
+                            <i-col span="10">
+                                <i-input style="width: 100%" v-model="formItem.message" @on-change="generateDummyJson" placeholder="Enter message..." type="textarea" :autosize="{minRows: 10,maxRows: 20}"></i-input>
+                            </i-col>
+                            <i-col span="10">
+                                <i-input style="width: 100%" v-model="generatedMessage"  readonly type="textarea" :autosize="{minRows: 10,maxRows: 20}"></i-input>
+                            </i-col>    
+                        </Row>
                     </form-item>
-                    <i-input style="width: 100%" v-model="generatedMessage"  readonly type="textarea" :autosize="{minRows: 10,maxRows: 20}"></i-input>
                     <form-item>
-                        <p>  You are sending message(s) to {{ hostName }}</p>
+                        <Alert type="warning">You are sending message(s) to {{ hostName }}</Alert>
                         <i-button :disabled="isProcessing" type="primary" @click="send()" long>send</i-button>
                     </form-item>
                 </i-form>
