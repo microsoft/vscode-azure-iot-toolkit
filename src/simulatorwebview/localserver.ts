@@ -102,10 +102,8 @@ export class LocalServer {
     }
 
     private async send(req: express.Request, res: express.Response, next: express.NextFunction) {
-        try {
-            vscode.window.showInformationMessage('triggered');            
+        try {      
             const data = req.body;
-            console.log(req);
             const sendType = data.sendType;
             switch (sendType) {
                 case 'D2C':
@@ -125,16 +123,24 @@ export class LocalServer {
         try {
             const data = req.body;
             const messageType = data.messageType;
+            const messageBody = data.messageBody;
             const deviceConnectionStrings: string[] = data.deviceConnectionStrings;
-            const message: string = data.message;
+            let message: string = data.message;
             const times: number = Number(data.times);
             const interval: number = Number(data.interval);
             switch (messageType) {
-                case 'Dummy Json':
-                    const message = dummyjson.parse(data.message);
+                case 'File Upload':
+                    // TODO: File Upload
                     break;
-                // case 'Plain Text':
-                //     // Nothing to do
+                case 'Text Content':
+                    switch (messageBody) {
+                        case 'Dummy Json':
+                            message = dummyjson.parse(data.message);
+                            break;
+                        // case 'Plain Text':
+                        //     // Nothing to do
+                    }
+                    break;
             }
             await this._simulator.sendD2CMessage(deviceConnectionStrings, message, times, interval);
         } catch (err) {
