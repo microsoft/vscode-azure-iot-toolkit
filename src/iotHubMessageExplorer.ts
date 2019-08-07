@@ -98,8 +98,21 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
             this.sendEventDoneWithProgress(client, Constants.IoTHubAIMessageDoneEvent, status, totalStatus));
     }
 
-    private async delay(ms: number) {
-        return new Promise( resolve => setTimeout(resolve, ms));
+    private async delay(ms: number, token?: vscode.CancellationToken) {
+        if (ms <= 1000) {
+            return new Promise( resolve => setTimeout(resolve, ms));
+        } else {
+            await new Promise( resolve => setTimeout(resolve, 1000));
+            if (token) {
+                if (token.isCancellationRequested) {
+                    return;
+                } else {
+                    await this.delay(ms - 1000, token);
+                }
+            } else {
+                await this.delay(ms - 1000);
+            }
+        }
     }
 
     public async sendD2CMessageFromMultipleDevicesRepeatedlyWithProgressBar(deviceConnectionStrings: string[], message: string, times: number, interval: number) {
@@ -136,7 +149,7 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
                 if (token.isCancellationRequested) {
                     break;
                 }
-                await this.delay(interval);
+                await this.delay(interval, token);
             }
             while ((!token.isCancellationRequested) && (totalStatus.sum() != totalStatus.getTotal())) {
                 await this.delay(1);
