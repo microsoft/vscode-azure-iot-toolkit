@@ -24,7 +24,6 @@
 
 <body>
     <div id="app" data-endpoint="{{endpoint}}" v-cloak>
-        {{messageType}}
         <Card>
                 <i-form ref="formItem" :model="formItem" :rules="ruleValidation">
                     <form-item prop="deviceConnectionStrings" label="Input Device">
@@ -33,6 +32,7 @@
                             multiple
                             filterable
                             placeholder="Please select the device(s) you want to send message to..."
+                            not-found-text="No Device Found"
                             >
                             <i-option
                                 v-for="item in inputDeviceList"
@@ -92,6 +92,19 @@
                     </form-item>
                 </i-form>
             </Card>
+            <Modal v-model="failedValidation" width="360">
+                <p slot="header" style="color:#f60;text-align:center">
+                    <Icon type="ios-information-circle"></Icon>
+                    <span>Failed Validation</span>
+                </p>
+                <div style="text-align:center">
+                    <p>Something wrong with your input.</p>
+                    <p>Would you please Check your information again?</p>
+                </div>
+                <div slot="footer">
+                    <i-button type="error" size="large" long @click="failedValidation=false">Close</i-button>
+                </div>
+            </Modal>
     </div>
     <!-- The loading sequence is critical, iview.js must be executed before main.js,
         otherwise unexpected placeholder will show on the page before they get properly rendered -->

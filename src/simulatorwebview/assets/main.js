@@ -121,7 +121,7 @@ const app = new Vue({
         },
         async send () {
             this.$refs['formItem'].validate(async (valid) => {
-                if (valid) {
+                if (valid && this.formItem.deviceConnectionStrings.length > 0) {
                     let intervalInMilliSecond = Number(this.formItem.interval);
                     switch (this.intervalUnit) {
                         // No break in this switch-case.
