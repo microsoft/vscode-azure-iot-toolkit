@@ -39,7 +39,7 @@ export class BaseExplorer {
         };
     }
 
-    protected sendEventDoneWithProgress(client, aiEventName: string, status: SendStatus) {
+    protected sendEventDoneWithProgress(client, aiEventName: string, status: SendStatus, totalStatus: SendStatus) {
         return (err, result) => {
             const id = status.getId();
             const total = status.getTotal();
@@ -47,12 +47,13 @@ export class BaseExplorer {
             if (err) {
                 TelemetryClient.sendEvent(aiEventName, { Result: "Fail" });
                 status.newStatus(false);
-                this.outputLine(Constants.SimulatorSummaryLabel, `Device ${id}: Error`);
-                // TODO: Then print error message 
+                totalStatus.newStatus(false);
+                this.outputLine(Constants.SimulatorSummaryLabel, `Device ${id}: Error: ${err.toString()}`);
             }
             if (result) {
                 TelemetryClient.sendEvent(aiEventName, { Result: "Success" });
                 status.newStatus(true);
+                totalStatus.newStatus(true);
             }
             const succeeded = status.getSucceed();
             const failed = status.getFailed();

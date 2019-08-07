@@ -121,51 +121,7 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
     }
 
     public async sendC2DMessageToMultipleDevicesRepeatedlyWithProgressBar(iotHubConnectionString: string, deviceIds: string[], message: string, times: number, interval: number) {
-        await vscode.window.withProgress({
-			location: vscode.ProgressLocation.Notification,
-			title: Constants.SimulatorSendingMessageProgressBarTitle,
-			cancellable: true
-		}, async (sendingProgress, sendingToken) => {
-            await vscode.window.withProgress({
-                location: vscode.ProgressLocation.Notification,
-                title: Constants.SimulatorRecevingStatusProgressBarTitle,
-                cancellable: false
-            }, async (statusProgress) => {
-                sendingToken.onCancellationRequested(() => {
-                    vscode.window.showInformationMessage(Constants.SimulatorProgressBarCancelLog);
-                })
-                sendingProgress.report({ increment: 0});
-                statusProgress.report({ increment: 0 });
-                const total = deviceIds.length * times;
-                const step = 100 / total;
-                let status = new SendStatus(step, total);
-                let count = 0;
-                const serviceClient = ServiceClient.fromConnectionString(iotHubConnectionString);
-                serviceClient.open((err) => {
-                    if (err) {
-                        this.outputLine(Constants.IoTHubC2DMessageLabel, err.message);
-                    }
-                });
-                for (const deviceId of deviceIds) {
-                    let i = 0;
-                    for (i = 0; i < times; i++) {
-                        if (sendingToken.isCancellationRequested) {
-                            return;
-                        }
-                        this.sendC2DMessageByIdWithProgress(serviceClient, deviceId, message, status, statusProgress);
-                        count++;
-                        sendingProgress.report({
-                            increment: step,
-                            message: `Sending message(s) ${count} of ${total}`
-                        })
-                        await this.delay(interval);
-                    }
-                }
-                while (status.sum() != total) {
-                    await this.delay(1);
-                }
-            });
-        });
+        
     }
 
     private connectCallback(deviceConnectionString: string) {

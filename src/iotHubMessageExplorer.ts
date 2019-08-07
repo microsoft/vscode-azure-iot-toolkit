@@ -12,22 +12,23 @@ import { DeviceItem } from "./Model/DeviceItem";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 import { Client } from 'azure-iot-device';
-import { Worker, isMainThread, parentPort } from 'worker_threads';
+import { ConnectionString } from 'azure-iot-common';
+import { Send } from "express-serve-static-core";
 
 export class SendStatus {
-    private id: number;
+    private id: string;
     private succeed: number;
     private failed: number;
     private total: number;
 
-    constructor(id: number, total: number) {
+    constructor(id: string, total: number) {
         this.id = id;
         this.succeed = 0;
         this.failed = 0;
         this.total = total;
     }
     
-    public getId(): number {
+    public getId(): string {
         return this.id;
     }
     public getSucceed(): number {
@@ -91,10 +92,10 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
             this.sendEventDone(client, Constants.IoTHubMessageLabel, Constants.IoTHub, Constants.IoTHubAIMessageDoneEvent));
     }
 
-    private async sendD2CMessageCoreWithProgress(client: Client, message: string, status: SendStatus) {
+    private async sendD2CMessageCoreWithProgress(client: Client, message: string, status: SendStatus, totalStatus: SendStatus) {
         let stringify = Utility.getConfig<boolean>(Constants.IoTHubD2CMessageStringifyKey);
         await client.sendEvent(new Message(stringify ? JSON.stringify(message) : message),
-            this.sendEventDoneWithProgress(client, Constants.IoTHubAIMessageDoneEvent, status));
+            this.sendEventDoneWithProgress(client, Constants.IoTHubAIMessageDoneEvent, status, totalStatus));
     }
 
     private async delay(ms: number) {
@@ -102,6 +103,8 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
     }
 
     public async sendD2CMessageFromMultipleDevicesRepeatedlyWithProgressBar(deviceConnectionStrings: string[], message: string, times: number, interval: number) {
+        const startTime = new Date();
+        this.outputLine(Constants.SimulatorSummaryLabel, `Start at ${startTime}`)
         await vscode.window.withProgress({
 			location: vscode.ProgressLocation.Notification,
 			title: Constants.SimulatorSendingMessageProgressBarTitle,
@@ -117,23 +120,30 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
             let count = 0;
             let clients = [];
             let statuses = [];
+            let totalStatus = new SendStatus('Total', total);
             for(let i = 0; i < deviceCount; i++) {
                 clients.push(await clientFromConnectionString(deviceConnectionStrings[i]));
-                statuses.push(new SendStatus(i, times));
+                statuses.push(new SendStatus(ConnectionString.parse(deviceConnectionStrings[i]).DeviceId, times));
             }
             for(let i = 0; i < times; i++) {
                 for (let j = 0; j < deviceCount; j++) {
-                    this.sendD2CMessageCoreWithProgress(clients[j], message, statuses[j]);
+                    this.sendD2CMessageCoreWithProgress(clients[j], message, statuses[j], totalStatus);
                     progress.report({
                         increment: step,
                         message: `Sending message(s) ${count} of ${total}`
                     })
                 }
                 if (token.isCancellationRequested) {
-                    return;
+                    break;
                 }
                 await this.delay(interval);
             }
+            while ((!token.isCancellationRequested) && (totalStatus.sum() != totalStatus.getTotal())) {
+                await this.delay(1);
+            };
+            const endTime = new Date();
+            this.outputLine(Constants.SimulatorSummaryLabel, `${token.isCancellationRequested ? 'User aborted' : 'All device(s) finished'} at ${endTime}`);
+            this.outputLine(Constants.SimulatorSummaryLabel, `Duration: ${(endTime.getTime() - startTime.getTime()) / 1000} second(s), with ${totalStatus.getSucceed()} succeed, and ${totalStatus.getFailed()} failed.`);            
         });
     }
 
