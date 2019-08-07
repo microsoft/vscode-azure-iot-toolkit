@@ -200,12 +200,12 @@ export class Utility {
                 const moduleId = module.moduleId.substring(1);
                 if (desiredTwin.systemModules && desiredTwin.systemModules[moduleId]) {
                     return new ModuleItem(deviceItem, module.moduleId, module.connectionString, module.connectionState,
-                        isConnected && reportedTwin ? this.getModuleRuntimeStatus(moduleId, reportedTwin.systemModules) : undefined, iconPath, "edge-module");
+                        reportedTwin ? this.getModuleRuntimeStatus(moduleId, reportedTwin.systemModules) : undefined, iconPath, "edge-module");
                 }
             } else {
                 if (desiredTwin.modules && desiredTwin.modules[module.moduleId]) {
                     return new ModuleItem(deviceItem, module.moduleId, module.connectionString, module.connectionState,
-                        isConnected && reportedTwin ? this.getModuleRuntimeStatus(module.moduleId, reportedTwin.modules) : undefined, iconPath, "edge-module");
+                        reportedTwin ? this.getModuleRuntimeStatus(module.moduleId, reportedTwin.modules) : undefined, iconPath, "edge-module");
                 }
             }
             const moduleType = module.moduleId.startsWith("$") ? "edge-module" : "module";
@@ -292,9 +292,6 @@ export class Utility {
         return deviceList.map((device) => {
             const isConnected = device.connectionState.toString() === "Connected";
             const state: string = isConnected ? "on" : "off";
-            if (isConnected) {
-                device.description = device.connectionState.toString();
-            }
             let deviceType: string;
             if (edgeDeviceIdSet.has(device.deviceId)) {
                 deviceType = "edge";
