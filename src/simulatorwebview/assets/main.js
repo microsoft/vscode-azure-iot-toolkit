@@ -85,7 +85,7 @@ const app = new Vue({
             sendType: 'D2C',
             messageType: 'Text Content',
             messageBody: 'Plain Text',
-            generatedMessage: '111',
+            generatedMessage: 'Type anything in the left, and see preview here...',
             failedValidation: false,
             isProcessing: false,
             endpoint: document.getElementById('app').getAttribute('data-endpoint'),

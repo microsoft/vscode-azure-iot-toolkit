@@ -130,7 +130,7 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
                     this.sendD2CMessageCoreWithProgress(clients[j], message, statuses[j], totalStatus);
                     progress.report({
                         increment: step,
-                        message: `Sending message(s) ${count} of ${total}`
+                        message: `Sending message(s) ${totalStatus.sum()} of ${total}`
                     })
                 }
                 if (token.isCancellationRequested) {
