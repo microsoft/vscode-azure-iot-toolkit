@@ -96,10 +96,8 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
             const succeeded = status.getSucceed();
             const failed = status.getFailed();
             const sum = status.sum();
-            const step = status.getStep();
             const total = status.getTotal();
             progress.report({
-                increment: step,
                 message: `${succeeded} succeeded and ${failed} failed.`
             })
             if (sum == total) {

@@ -12,29 +12,29 @@ import { DeviceItem } from "./Model/DeviceItem";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 import { Client } from 'azure-iot-device';
-import { RequestResponseLink } from "@azure/amqp-common";
+import { Worker, isMainThread, parentPort } from 'worker_threads';
 
 export class SendStatus {
+    private id: number;
     private succeed: number;
     private failed: number;
-    private step: number;
     private total: number;
 
-    constructor(step: number, total: number) {
+    constructor(id: number, total: number) {
+        this.id = id;
         this.succeed = 0;
         this.failed = 0;
-        this.step = step;
         this.total = total;
     }
     
+    public getId(): number {
+        return this.id;
+    }
     public getSucceed(): number {
         return this.succeed;
     }
     public getFailed(): number {
         return this.failed;
-    }
-    public getStep(): number {
-        return this.step;
     }
     public getTotal(): number {
         return this.total;
@@ -91,29 +91,10 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
             this.sendEventDone(client, Constants.IoTHubMessageLabel, Constants.IoTHub, Constants.IoTHubAIMessageDoneEvent));
     }
 
-    private async sendD2CMessageCoreWithProgress(client: Client, message: string, status: SendStatus, progress: vscode.Progress<{
-        message?: string;
-        increment?: number;
-    }>) {
+    private async sendD2CMessageCoreWithProgress(client: Client, message: string, status: SendStatus) {
         let stringify = Utility.getConfig<boolean>(Constants.IoTHubD2CMessageStringifyKey);
-        await client.sendEvent(new Message(stringify ? JSON.stringify(message) : message))
-        .then(() => {
-            status.newStatus(true);
-            const succeeded = status.getSucceed();
-            const failed = status.getFailed();
-            const sum = status.sum();
-            const step = status.getStep();
-            const total = status.getTotal();
-            progress.report({
-                increment: step,
-                message: `${succeeded} succeeded and ${failed} failed.`
-            })
-            if (sum == total) {
-                this._outputChannel.show();
-                this.outputLine(Constants.SimulatorSummaryLabel, `Sending ${total} message(s) done, with ${succeeded} succeeded and ${failed} failed.`);
-                client.close();
-            }
-        })
+        await client.sendEvent(new Message(stringify ? JSON.stringify(message) : message),
+            this.sendEventDoneWithProgress(client, Constants.IoTHubAIMessageDoneEvent, status));
     }
 
     private async delay(ms: number) {
@@ -125,41 +106,34 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
 			location: vscode.ProgressLocation.Notification,
 			title: Constants.SimulatorSendingMessageProgressBarTitle,
 			cancellable: true
-		}, async (sendingProgress, sendingToken) => {
-            await vscode.window.withProgress({
-                location: vscode.ProgressLocation.Notification,
-                title: Constants.SimulatorRecevingStatusProgressBarTitle,
-                cancellable: false
-            }, async (statusProgress) => {
-                sendingToken.onCancellationRequested(() => {
-                    vscode.window.showInformationMessage(Constants.SimulatorProgressBarCancelLog);
-                })
-                sendingProgress.report({ increment: 0});
-                statusProgress.report({ increment: 0 });
-                const total = deviceConnectionStrings.length * times;
-                const step = 100 / total;
-                let status = new SendStatus(step, total);
-                let count = 0;
-                for (const deviceConnectionString of deviceConnectionStrings) {
-                    let client = await clientFromConnectionString(deviceConnectionString);
-                    let i = 0;
-                    for (i = 0; i < times; i++) {
-                        if (sendingToken.isCancellationRequested) {
-                            return;
-                        }
-                        this.sendD2CMessageCoreWithProgress(client, message, status, statusProgress);
-                        count++;
-                        sendingProgress.report({
-                            increment: step,
-                            message: `Sending message(s) ${count} of ${total}`
-                        })
-                        await this.delay(interval);
-                    }
+		}, async (progress, token) => {
+            token.onCancellationRequested(() => {
+                vscode.window.showInformationMessage(Constants.SimulatorProgressBarCancelLog);
+            })
+            progress.report({ increment: 0});
+            const deviceCount = deviceConnectionStrings.length;
+            const total = deviceCount * times;
+            const step = 100 / total;
+            let count = 0;
+            let clients = [];
+            let statuses = [];
+            for(let i = 0; i < deviceCount; i++) {
+                clients.push(await clientFromConnectionString(deviceConnectionStrings[i]));
+                statuses.push(new SendStatus(i, times));
+            }
+            for(let i = 0; i < times; i++) {
+                for (let j = 0; j < deviceCount; j++) {
+                    this.sendD2CMessageCoreWithProgress(clients[j], message, statuses[j]);
+                    progress.report({
+                        increment: step,
+                        message: `Sending message(s) ${count} of ${total}`
+                    })
                 }
-                while (status.sum() != total) {
-                    await this.delay(1);
+                if (token.isCancellationRequested) {
+                    return;
                 }
-            });
+                await this.delay(interval);
+            }
         });
     }
 

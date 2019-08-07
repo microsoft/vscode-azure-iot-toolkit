@@ -85,6 +85,7 @@ const app = new Vue({
             sendType: 'D2C',
             generatedMessage: '111',
             failedValidation: false,
+            isProcessing: false,
             endpoint: document.getElementById('app').getAttribute('data-endpoint'),
             ruleValidation: {
                 times: [
@@ -139,7 +140,14 @@ const app = new Vue({
                         messageType: this.messageType,
                         sendType: this.sendType
                     }
-                    await axios.post(`${this.endpoint}/api/send`, data);
+                    vscode.setState({isProcessing: true});
+                    this.isProcessing = vscode.getState().isProcessing;
+          
+                    await axios.post(`${this.endpoint}/api/send`, data)
+                    .then(() => {
+                      vscode.setState({isProcessing: false});
+                    this.isProcessing = vscode.getState().isProcessing;
+                    })
                 } else {
                     this.failedValidation = true;
                 }

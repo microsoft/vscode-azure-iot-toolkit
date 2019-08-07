@@ -104,6 +104,7 @@ export class LocalServer {
                     await this.sendC2D(req, res, next);
                     break;
             }
+            res.sendStatus(200);
         } catch (err) {
             next(err);
         }   
