@@ -92,7 +92,9 @@ export class LocalServer {
 
     private async send(req: express.Request, res: express.Response, next: express.NextFunction) {
         try {
+            vscode.window.showInformationMessage('triggered');            
             const data = req.body;
+            console.log(req);
             const sendType = data.sendType;
             switch (sendType) {
                 case 'D2C':

@@ -102,7 +102,7 @@ const app = new Vue({
             dummyJsonTemplate: ''
         }
     },
-    created: async function () {
+    async mounted () {
         try {
             await this.getInputDeviceList();
         } catch (error) {

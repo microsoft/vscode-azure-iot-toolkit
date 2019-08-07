@@ -2,102 +2,102 @@
 <html>
 
 <head>
+    <!-- The loading sequence is critical, and should not be changed,
+        otherwise webview may show in blank because some variable cannot get the initial data
+        (e.g. axios.js is missing so that we can't do POST in main.js ) -->
     <link rel="stylesheet" href="{{root}}/src/simulatorwebview/assets/main.css">
     <link rel="stylesheet" href="./main.css">
     <link rel="stylesheet" href="{{root}}/src/simulatorwebview/assets/iview.css">
     <link rel="stylesheet" href="./iview.css">
+    <script type="text/javascript" src="{{root}}/src/simulatorwebview/assets/axios.min.js"></script>
+    <script type="text/javascript" src="./axios.min.js"></script>
+    <script type="text/javascript" src="{{root}}/src/simulatorwebview/assets/vue.min.js"></script>
+    <script type="text/javascript" src="./vue.min.js"></script>
+    <!-- v-cloak will remain on the element until the associated Vue instance finishes compilation.
+        Combined with CSS rules, this directive can be used to hide un-compiled mustache bindings until the Vue instance is ready.  -->
+    <style type="text/css">
+        [v-cloak] {
+          display: none !important;
+        }
+    </style>
 </head>
 
 <body>
     <div id="app" data-endpoint="{{endpoint}}" v-cloak>
+        {{messageType}}
         <Card>
-            <i-form ref="formItem" :model="formItem" :rules="ruleValidation">
-                <form-item prop="deviceConnectionStrings" label="Input Device">
-                    <i-select
-                        v-model="formItem.deviceConnectionStrings"
-                        multiple
-                        filterable
-                        placeholder="Please select the device(s) you want to send message to..."
-                        >
-                        <i-option
-                            v-for="item in inputDeviceList"
-                            :value="item.connectionString"
-                            :key="item.connectionString"
+                <i-form ref="formItem" :model="formItem" :rules="ruleValidation">
+                    <form-item prop="deviceConnectionStrings" label="Input Device">
+                        <i-select
+                            v-model="formItem.deviceConnectionStrings"
+                            multiple
+                            filterable
+                            placeholder="Please select the device(s) you want to send message to..."
                             >
-                            {{ item.label }}
-                        </i-option>
-                    </i-select>
-                </form-item>
-                <form-item prop="times" label="Times">
-                    <i-input v-model="formItem.times" placeholder="Enter times..."></i-input>
-                </form-item>
-                <form-item prop="interval" label="Interval">
-                    <i-input v-model="formItem.interval" placeholder="Enter interval...">
-                        <i-select v-model="intervalUnit" slot="append" style="width: 150px">
-                            <i-option value="millisecond">millisecond(s)</i-option>
-                            <i-option value="second">second(s)</i-option>
-                            <i-option value="minute">minute(s)</i-option>
+                            <i-option
+                                v-for="item in inputDeviceList"
+                                :value="item.connectionString"
+                                :key="item.connectionString"
+                                >
+                                {{ item.label }}
+                            </i-option>
                         </i-select>
-                    </i-input>
-                </form-item>
-                <form-item prop="sendType" label="Send Type">
-                    <radio-group v-model="sendType">
-                        <Radio label="D2C">D2C</Radio>
-                        <Radio label="C2D">C2D</Radio>
-                    </radio-group>
-                </form-item>
-                <form-item prop="messageType" label="Message Type">
-                    <radio-group v-model="messageType">
-                        <Radio label="Plain Text">Plain Text</Radio>
-                        <Radio label="Dummy Json">Dummy Json</Radio>
-                        <Radio label="Test Case" disabled>Test Case</Radio>
-                        <Radio label="File Upload" disabled>File Upload</Radio>
-                    </radio-group>
-                </form-item>
-                <form-item prop="message" label="Message" >
-                    <Dropdown v-if="messageType=='Dummy Json'" @on-click="handleClick">
-                        <a>
-                            Show Dummy Json Template
-                            <Icon type="ios-arrow-down"></Icon>
-                        </a>
-                        <dropdown-menu slot="list">
-                            <dropdown-item name="a">Template A</dropdown-item>
-                            <dropdown-item name="b">Template Data</dropdown-item>
-                            <dropdown-item name="c" disabled>More</dropdown-item>
-                            <dropdown-item name="d" disabled>More</dropdown-item>
-                            <dropdown-item name="e" disabled>More</dropdown-item>
-                        </dropdown-menu>
-                    </Dropdown>
-                    <i-input style="width: 100%" v-model="formItem.message" @on-change="generateDummyJson" placeholder="Enter message..." type="textarea" :autosize="{minRows: 10,maxRows: 20}"></i-input>
-                </form-item>
-                <i-input style="width: 100%" v-model="generatedMessage"  readonly type="textarea" :autosize="{minRows: 10,maxRows: 20}"></i-input>
-                <form-item>
-                    <i-button type="primary" @click="send()" long>send</i-button>
-                </form-item>
-            </i-form>
-        </Card>
-        <Modal v-model="failedValidation" width="360">
-            <p slot="header" style="color:#f60;text-align:center">
-                <Icon type="ios-information-circle"></Icon>
-                <span>Failed Validation</span>
-            </p>
-            <div style="text-align:center">
-                <p>Something wrong with your input.</p>
-                <p>Would you please Check your information again?</p>
-            </div>
-            <div slot="footer">
-                <i-button type="error" size="large" long @click="failedValidation=false">Close</i-button>
-            </div>
-        </Modal>
+                    </form-item>
+                    <form-item prop="times" label="Times">
+                        <i-input v-model="formItem.times" placeholder="Enter times..."></i-input>
+                    </form-item>
+                    <form-item prop="interval" label="Interval">
+                        <i-input v-model="formItem.interval" placeholder="Enter interval...">
+                            <i-select v-model="intervalUnit" slot="append" style="width: 150px">
+                                <i-option value="millisecond">millisecond(s)</i-option>
+                                <i-option value="second">second(s)</i-option>
+                                <i-option value="minute">minute(s)</i-option>
+                            </i-select>
+                        </i-input>
+                    </form-item>
+                    <form-item prop="sendType" label="Send Type">
+                        <radio-group v-model="sendType">
+                            <Radio label="D2C">D2C</Radio>
+                            <Radio label="C2D">C2D</Radio>
+                        </radio-group>
+                    </form-item>
+                    <form-item prop="messageType" label="Message Type">
+                        <radio-group v-model="messageType">
+                            <Radio label="Plain Text">Plain Text</Radio>
+                            <Radio label="Dummy Json">Dummy Json</Radio>
+                            <Radio label="Test Case" disabled>Test Case</Radio>
+                            <Radio label="File Upload" disabled>File Upload</Radio>
+                        </radio-group>
+                    </form-item>
+                    <form-item prop="message" label="Message" >
+                        <Dropdown v-if="messageType=='Dummy Json'" @on-click="handleClick">
+                            <a>
+                                Show Dummy Json Template
+                                <Icon type="ios-arrow-down"></Icon>
+                            </a>
+                            <dropdown-menu slot="list">
+                                <dropdown-item name="a">Template A</dropdown-item>
+                                <dropdown-item name="b">Template Data</dropdown-item>
+                                <dropdown-item name="c" disabled>More</dropdown-item>
+                                <dropdown-item name="d" disabled>More</dropdown-item>
+                                <dropdown-item name="e" disabled>More</dropdown-item>
+                            </dropdown-menu>
+                        </Dropdown>
+                        <i-input style="width: 100%" v-model="formItem.message" @on-change="generateDummyJson" placeholder="Enter message..." type="textarea" :autosize="{minRows: 10,maxRows: 20}"></i-input>
+                    </form-item>
+                    <i-input style="width: 100%" v-model="generatedMessage"  readonly type="textarea" :autosize="{minRows: 10,maxRows: 20}"></i-input>
+                    <form-item>
+                        <i-button type="primary" @click="send()" long>send</i-button>
+                    </form-item>
+                </i-form>
+            </Card>
     </div>
-    <script type="text/javascript" src="{{root}}/src/simulatorwebview/assets/vue.min.js"></script>
-    <script type="text/javascript" src="./vue.min.js"></script>
-    <script type="text/javascript" src="{{root}}/src/simulatorwebview/assets/axios.min.js"></script>
-    <script type="text/javascript" src="./axios.min.js"></script>
-    <script type="text/javascript" src="{{root}}/src/simulatorwebview/assets/main.js"></script>
-    <script type="text/javascript" src="./main.js"></script>
+    <!-- The loading sequence is critical, iview.js must be executed before main.js,
+        otherwise unexpected placeholder will show on the page before they get properly rendered -->
     <script type="text/javascript" src="{{root}}/src/simulatorwebview/assets/iview.min.js"></script>
     <script type="text/javascript" src="./iview.min.js"></script>
+    <script type="text/javascript" src="{{root}}/src/simulatorwebview/assets/main.js"></script>
+    <script type="text/javascript" src="./main.js"></script>
 </body>
 
 </html>
