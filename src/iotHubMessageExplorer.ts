@@ -129,6 +129,10 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
             progress.report({ increment: 0});
             const deviceCount = deviceConnectionStrings.length;
             const total = deviceCount * times;
+            if (total <= 0) {
+                this.outputLine(Constants.SimulatorSummaryLabel, `Invalid Operation.`);
+                return;
+            }
             const step = 100 / total;
             let clients = [];
             let statuses = [];
