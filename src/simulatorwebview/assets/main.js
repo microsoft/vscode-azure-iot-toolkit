@@ -73,7 +73,7 @@ const app = new Vue({
             }
           }; 
         return {
-            hostName: 'a',
+            hostName: '',
             inputDeviceList: [],
             formItem: {
                 deviceConnectionStrings: [],
@@ -107,6 +107,8 @@ const app = new Vue({
     },
     async mounted () {
         try {
+          // this.isProcessing = (await axios.get(`${this.endpoint}/api/isprocessing`)).data;
+          await this.tryLatestProcessingStatus();
           await this.getIoTHubHostName();
           await this.getInputDeviceList();
         } catch (error) {
@@ -114,6 +116,19 @@ const app = new Vue({
         }
     },
     methods: {
+        async getProcessingStatus() {
+          console.log('aa');
+          this.isProcessing = (await axios.get(`${this.endpoint}/api/isprocessing`)).data;
+        },
+        // if the simulation is in processing, and user close the webview
+        // next time he/she opens it again, the sending status will remain 'processing', but cannot refresh itself
+        // this function aims at trying to get status every second, if isProcessing=true when the page is loaded
+        async tryLatestProcessingStatus() {
+          await this.getProcessingStatus();
+          if (this.isProcessing) {
+            setTimeout(this.tryLatestProcessingStatus, 1000);
+          }
+        },
         async getIoTHubHostName () {
           this.hostName = (await axios.get(`${this.endpoint}/api/getiothubhostname`)).data;
         },
@@ -138,7 +153,7 @@ const app = new Vue({
                         case 'millisecond':
                             intervalInMilliSecond *= 1;
                     }
-                    data = {
+                    const data = {
                         deviceConnectionStrings: this.formItem.deviceConnectionStrings,
                         message: this.formItem.message,
                         times: this.formItem.times,
@@ -147,21 +162,28 @@ const app = new Vue({
                         sendType: this.sendType,
                         messageBody: this.messageBody
                     }
-                    vscode.setState({isProcessing: true});
-                    this.isProcessing = vscode.getState().isProcessing;
-          
-                    await axios.post(`${this.endpoint}/api/send`, data)
-                    .then(() => {
-                      vscode.setState({isProcessing: false});
-                    this.isProcessing = vscode.getState().isProcessing;
-                    })
+                    const toProcess = {
+                      processing: true
+                    }
+                    const doneProcess = {
+                      processing: false
+                    }
+                    await axios.post(`${this.endpoint}/api/setprocessing`, toProcess)
+                      .then((res) => {
+                        this.isProcessing = res.data;
+                      })
+                    await axios.post(`${this.endpoint}/api/send`, data);
+                    await axios.post(`${this.endpoint}/api/setprocessing`, doneProcess)
+                      .then((res) => {
+                        this.isProcessing = res.data;
+                      })
                 } else {
                     this.failedValidation = true;
                 }
               });
         },
         handleClick (name) {
-            // name should be changed, in order for a clean code.
+            // TODO: name should be changed, in order for a clean code.
             switch (name) {
                 case 'a':
                     this.formItem.message = dummyJsonTemplateA;
@@ -171,7 +193,7 @@ const app = new Vue({
                     break;
             }
             if (name != 'c') {
-              // 'c' indicates the website hyper link
+              // 'c' indicates the website hyper link towards dummy-json wiki/github
               this.generateDummyJson();
             }
         },

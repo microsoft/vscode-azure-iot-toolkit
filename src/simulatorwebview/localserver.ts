@@ -49,8 +49,10 @@ export class LocalServer {
         this.router = express.Router();
         this.router.get("/api/getinputdevicelist", async(req, res, next) => await this.getInputDeviceList(req, res, next));
         this.router.get("/api/getiothubhostname", async(req, res, next) => await this.getIoTHubHostName(req, res, next));
+        this.router.get("/api/isprocessing", async(req, res, next) => await this.isProcessing(req, res, next));
         this.router.post("/api/send", async(req, res, next) => await this.send(req, res, next));
         this.router.post("/api/generaterandomjson", async(req, res, next) => await this.generateRandomJson(req, res, next));
+        this.router.post("/api/setprocessing", async(req, res, next) => await this.setProcessing(req, res, next));
     }
 
     private initApp() {
@@ -82,6 +84,26 @@ export class LocalServer {
         });
     }
 
+    private async isProcessing(req: express.Request, res: express.Response, next: express.NextFunction) {
+        try {
+            const processing = await Simulator.isProcessing();
+            return res.status(200).json(processing);
+        } catch (err) {
+            next(err);
+        }   
+    }
+
+    private async setProcessing(req: express.Request, res: express.Response, next: express.NextFunction) {
+        try {
+            const data = req.body;
+            const processing = data.processing;
+            Simulator.setProcessing(processing);
+            return res.status(200).json(processing);
+        } catch (err) {
+            next(err);
+        }   
+    }
+
     private async getIoTHubHostName(req: express.Request, res: express.Response, next: express.NextFunction) {
         try {
             const iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle, false);
@@ -102,7 +124,7 @@ export class LocalServer {
     }
 
     private async send(req: express.Request, res: express.Response, next: express.NextFunction) {
-        try {      
+        try {
             const data = req.body;
             const sendType = data.sendType;
             switch (sendType) {
@@ -113,7 +135,7 @@ export class LocalServer {
                     await this.sendC2D(req, res, next);
                     break;
             }
-            res.sendStatus(200);
+            res.sendStatus(200); // Must return a status here. If no success or failure returned, the webview may retry and cause unexpected re-send behavior.
         } catch (err) {
             next(err);
         }   
