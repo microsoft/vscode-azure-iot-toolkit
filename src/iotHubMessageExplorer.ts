@@ -130,27 +130,29 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
             const deviceCount = deviceConnectionStrings.length;
             const total = deviceCount * times;
             const step = 100 / total;
-            let count = 0;
             let clients = [];
             let statuses = [];
+            let ids = [];
             let totalStatus = new SendStatus('Total', total);
             for(let i = 0; i < deviceCount; i++) {
                 clients.push(await clientFromConnectionString(deviceConnectionStrings[i]));
                 statuses.push(new SendStatus(ConnectionString.parse(deviceConnectionStrings[i]).DeviceId, times));
+                ids.push(i);
             }
+            const sendingStartTime = new Date();
             for(let i = 0; i < times; i++) {
-                for (let j = 0; j < deviceCount; j++) {
-                    this.sendD2CMessageCoreWithProgress(clients[j], message, statuses[j], totalStatus);
-                    progress.report({
-                        increment: step,
-                        message: `Sending message(s) ${totalStatus.sum()} of ${total}`
-                    })
-                }
+                await ids.map(async j => await this.sendD2CMessageCoreWithProgress(clients[j], message, statuses[j], totalStatus));
+                progress.report({
+                    increment: step * deviceCount,
+                    message: `Sending message(s) ${totalStatus.sum()} of ${total}`
+                })
                 if (token.isCancellationRequested) {
                     break;
                 }
                 await this.delay(interval, token);
             }
+            const sendingEndTime = new Date();
+            this.outputLine(Constants.SimulatorSummaryLabel, `Sending ${total} message(s) done in ${(sendingEndTime.getTime() - sendingStartTime.getTime()) / 1000} second(s), please wait a few seconds for the result.`);
             while ((!token.isCancellationRequested) && (totalStatus.sum() != totalStatus.getTotal())) {
                 await this.delay(1);
             };
