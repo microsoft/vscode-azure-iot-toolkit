@@ -132,7 +132,7 @@ export class LocalServer {
                     await this.sendD2C(req, res, next);
                     break;
                 case 'C2D':
-                    await this.sendC2D(req, res, next);
+                    // Not supported yet
                     break;
             }
             res.sendStatus(200); // Must return a status here. If no success or failure returned, the webview may retry and cause unexpected re-send behavior.
@@ -165,33 +165,6 @@ export class LocalServer {
                     break;
             }
             await this._simulator.sendD2CMessage(deviceConnectionStrings, message, times, interval);
-        } catch (err) {
-            next(err);
-        }   
-    }
-
-    private async sendC2D(req: express.Request, res: express.Response, next: express.NextFunction) {
-        try {
-            const iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
-            const data = req.body;
-            const messageType = data.messageType;
-            const deviceConnectionStrings: string[] = data.deviceConnectionStrings;
-            const deviceIds: string[] = [];
-            for (const deviceConnectionString of deviceConnectionStrings) {
-                const deviceId = ConnectionString.parse(deviceConnectionString).DeviceId;
-                deviceIds.push(deviceId);
-            }
-            const message: string = data.message;
-            const times: number = Number(data.times);
-            const interval: number = Number(data.interval);
-            switch (messageType) {
-                case 'Dummy Json':
-                    const message = dummyjson.parse(data.message);
-                    break;
-                // case 'Plain Text':
-                //     // Nothing to do
-            }
-            await this._simulator.sendC2DMessage(iotHubConnectionString, deviceIds, message, times, interval);
         } catch (err) {
             next(err);
         }   

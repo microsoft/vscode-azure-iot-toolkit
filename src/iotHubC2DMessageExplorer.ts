@@ -12,7 +12,6 @@ import { IoTHubMessageBaseExplorer } from "./iotHubMessageBaseExplorer";
 import { DeviceItem } from "./Model/DeviceItem";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
-import { SendStatus }  from "./iotHubMessageExplorer";
 
 export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
     private _deviceClient: Client;
@@ -84,44 +83,6 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
     private sendC2DMessageByIdCore(serviceClient: ServiceClient, deviceId: string, message: Message) {
         serviceClient.send(deviceId, message.getData(),
             this.sendEventDone(serviceClient, Constants.IoTHubC2DMessageLabel, deviceId, Constants.IoTHubAIC2DMessageDoneEvent));
-    }
-
-    private async sendC2DMessageByIdCoreWithProgress(serviceClient: ServiceClient, deviceId: string, message: Message, status: SendStatus, progress: vscode.Progress<{
-        message?: string;
-        increment?: number;
-    }>) {
-        await serviceClient.send(deviceId, message.getData())
-        .then(() => {
-            status.newStatus(true);
-            const succeeded = status.getSucceed();
-            const failed = status.getFailed();
-            const sum = status.sum();
-            const total = status.getTotal();
-            progress.report({
-                message: `${succeeded} succeeded and ${failed} failed.`
-            })
-            if (sum == total) {
-                this._outputChannel.show();
-                this.outputLine(Constants.SimulatorSummaryLabel, `Sending ${total} message(s) done, with ${succeeded} succeeded and ${failed} failed.`);
-                serviceClient.close();
-            }
-        })
-    }
-
-    private async sendC2DMessageByIdWithProgress(serviceClient: ServiceClient, deviceId: string, messageBody: string, status: SendStatus, progress: vscode.Progress<{
-        message?: string;
-        increment?: number;
-    }>) {
-        let message = new Message(messageBody);
-        this.sendC2DMessageByIdCoreWithProgress(serviceClient, deviceId, message, status, progress);
-    }
-
-    private async delay(ms: number) {
-        return new Promise( resolve => setTimeout(resolve, ms));
-    }
-
-    public async sendC2DMessageToMultipleDevicesRepeatedlyWithProgressBar(iotHubConnectionString: string, deviceIds: string[], message: string, times: number, interval: number) {
-        
     }
 
     private connectCallback(deviceConnectionString: string) {
