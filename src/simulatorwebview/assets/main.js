@@ -86,20 +86,22 @@ const app = new Vue({
             messageType: 'Text Content',
             messageBody: 'Plain Text',
             generatedMessage: 'Type anything in the left, and see preview here...',
-            failedValidation: false,
             isProcessing: false,
             endpoint: document.getElementById('app').getAttribute('data-endpoint'),
             ruleValidation: {
                 times: [
-                    {required: true, trigger: 'blur'},
-                    {validator: numberValidator, trigger: 'blur'}
+                  {required: true, trigger: 'blur'},
+                  {validator: numberValidator, trigger: 'blur'}
                 ],
                 interval: [
-                    {required: true, trigger: 'blur'},
-                    {validator: numberValidator, trigger: 'blur'}
+                  {required: true, trigger: 'blur'},
+                  {validator: numberValidator, trigger: 'blur'}
                 ],
                 message: [
-                    {required: true, trigger: 'blur'},
+                  {required: true, trigger: 'blur'},
+                ],
+                deviceConnectionStrings: [
+                  { required: true, type: 'array', min: 1, message: 'Choose at least one device', trigger: 'change' }
                 ]
             },
             dummyJsonTemplate: ''
@@ -138,13 +140,13 @@ const app = new Vue({
                 this.inputDeviceList.push(device)
             }
             const preSelected = (await axios.get(`${this.endpoint}/api/getpreselected`)).data;
-            if (preSelected !== undefined) {
+            if (preSelected !== '') {
               this.formItem.deviceConnectionStrings.push(preSelected.connectionString);
             }
         },
         async send () {
             this.$refs['formItem'].validate(async (valid) => {
-                if (valid && this.formItem.deviceConnectionStrings.length > 0) {
+                if (valid) {
                     let intervalInMilliSecond = Number(this.formItem.interval);
                     switch (this.intervalUnit) {
                         // No break in this switch-case.
@@ -179,8 +181,6 @@ const app = new Vue({
                       .then((res) => {
                         this.isProcessing = res.data;
                       })
-                } else {
-                    this.failedValidation = true;
                 }
               });
         },

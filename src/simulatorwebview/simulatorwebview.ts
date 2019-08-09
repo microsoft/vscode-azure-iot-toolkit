@@ -41,12 +41,9 @@ export class SimulatorWebview {
         if (!iotHubConnectionString) {
             return;
         }
+        this.localServer.setPreSelectedDevice(deviceItem);
         if (!this.panel) {
             this.localServer.startServer();
-            // the following statement aims at setting a specific device as default
-            if (deviceItem !== undefined) {
-                this.localServer.setPreSelectedDevice(deviceItem);
-            }
             this.panel = vscode.window.createWebviewPanel(
                 simulatorWebviewPanelViewType,
                 simulatorWebviewPanelViewTitle,

@@ -101,19 +101,6 @@
                 </form-item>
             </i-form>
         </Card>
-        <Modal v-model="failedValidation" width="360">
-            <p slot="header" style="color:#f60;text-align:center">
-                <Icon type="ios-information-circle"></Icon>
-                <span>Failed Validation</span>
-            </p>
-            <div style="text-align:center">
-                <p>Something wrong with your input.</p>
-                <p>Would you please Check your information again?</p>
-            </div>
-            <div slot="footer">
-                <i-button type="error" size="large" long @click="failedValidation=false">Close</i-button>
-            </div>
-        </Modal>
     </div>
     <!-- The loading sequence is critical, iview.js must be executed before main.js,
         otherwise unexpected placeholder will show on the page before they get properly rendered -->
