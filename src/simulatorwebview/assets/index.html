@@ -31,7 +31,7 @@
                         v-model="formItem.deviceConnectionStrings"
                         multiple
                         filterable
-                        placeholder="Please select the device(s) you want to send message to..."
+                        placeholder="Please select the device(s) you want to send message from..."
                         not-found-text="No Device Found"
                         >
                         <i-option
@@ -61,17 +61,10 @@
                         </form-item>
                     </i-col>
                 </Row>
-                <form-item prop="messageType" label="Message Type">
-                    <radio-group v-model="messageType">
-                        <Radio label="Text Content">Text Content</Radio>
-                        <Radio label="File Upload" disabled>File Upload</Radio>
-                    </radio-group>
-                </form-item>
                 <form-item prop="messageBody" label="Message Body">
                     <radio-group v-model="messageBody">
                         <Radio label="Plain Text">Plain Text</Radio>
                         <Radio label="Dummy Json">Dummy Json</Radio>
-                        <Radio label="Test Case" disabled>Test Case</Radio>
                     </radio-group>
                 </form-item>
                 <form-item prop="message" label="Message" >

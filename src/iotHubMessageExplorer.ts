@@ -79,7 +79,10 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
                 if (token.isCancellationRequested) {
                     break;
                 }
-                await this.delay(interval, token);
+                if (i < times - 1) {
+                    // there won't be a delay after the last iteration
+                    await this.delay(interval, token);
+                }
             }
             const sendingEndTime = new Date();
             this.outputLine(Constants.SimulatorSummaryLabel,
