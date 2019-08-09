@@ -3,7 +3,7 @@ out
 # vscode
 #
 .vscode-test
-.vscode/
+.vscode/tasks.json
 
 # node.js
 #
