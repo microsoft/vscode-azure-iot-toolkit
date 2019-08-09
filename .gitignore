@@ -1,5 +1,18 @@
 out
-node_modules
-npm-debug.log
-dist
-.vscode-test 
+
+# vscode
+#
+.vscode-test
+.vscode/
+
+# node.js
+#
+node_modules/
+/dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IntelliJ
+#
+.idea/
