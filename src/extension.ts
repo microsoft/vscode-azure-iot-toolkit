@@ -212,10 +212,10 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(updateDistributedTracingSetting);
     context.subscriptions.push(editDistributedTracingMode);
     context.subscriptions.push(editDistributedTracingSamplingRate);
-    
-    let showSimulatorWebview = vscode.commands.registerCommand('extension.showSimulatorWebview', async (deviceNode: DeviceNode) => {
+
+    let showSimulatorWebview = vscode.commands.registerCommand("extension.showSimulatorWebview", async (deviceNode: DeviceNode) => {
         await azureIoTExplorer.showSimulatorWebview(deviceNode ? deviceNode.deviceItem : undefined);
-	});
+    });
     context.subscriptions.push(showSimulatorWebview);
 
     return { azureIoTExplorer };

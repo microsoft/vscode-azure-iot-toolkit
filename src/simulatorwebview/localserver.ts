@@ -1,22 +1,21 @@
+import { ConnectionString } from "azure-iot-common";
 import * as bodyParser from "body-parser";
+import * as dummyjson from "dummy-json";
 import * as express from "express";
 import * as http from "http";
+import { AddressInfo } from "net";
 import * as vscode from "vscode";
-import { AddressInfo } from 'net';
+import { Constants } from "../constants";
+import { DeviceItem } from "../Model/DeviceItem";
 import { Simulator } from "../simulator";
 import { Utility } from "../utility";
-import { Constants } from "../constants";
-import { ConnectionString } from 'azure-iot-common';
-import { DeviceItem } from "../Model/DeviceItem";
-const dummyjson = require('dummy-json');
 
 export class LocalServer {
     private app: express.Express;
     private server: http.Server;
     private serverPort = 0;
     private router: express.Router;
-    private context: vscode.ExtensionContext;
-    private _modules: string[];
+    private readonly context: vscode.ExtensionContext;
     private _simulator: Simulator;
     private preSelectedDevice: DeviceItem;
 
@@ -27,10 +26,6 @@ export class LocalServer {
         this.context = context;
         this._simulator = new Simulator(this.context);
         this.preSelectedDevice = undefined;
-    }
-
-    set modules(modules: string[]) {
-        this._modules = modules;
     }
 
     public startServer(): void {
@@ -69,10 +64,10 @@ export class LocalServer {
             res.setHeader("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, PATCH, OPTIONS");
             res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
             res.setHeader("Access-Control-Allow-Credentials", "true");
-            if (req.method === 'OPTIONS') {
-                res.end()
+            if (req.method === "OPTIONS") {
+                res.end();
             } else {
-                next()
+                next();
             }
         });
         this.app.use(bodyParser.json());
@@ -97,7 +92,7 @@ export class LocalServer {
             return res.status(200).json(processing);
         } catch (err) {
             next(err);
-        }   
+        }
     }
 
     private async setProcessing(req: express.Request, res: express.Response, next: express.NextFunction) {
@@ -108,7 +103,7 @@ export class LocalServer {
             return res.status(200).json(processing);
         } catch (err) {
             next(err);
-        }   
+        }
     }
 
     private async getIoTHubHostName(req: express.Request, res: express.Response, next: express.NextFunction) {
@@ -118,7 +113,7 @@ export class LocalServer {
             return res.status(200).json(result);
         } catch (err) {
             next(err);
-        }   
+        }
     }
 
     private async getInputDeviceList(req: express.Request, res: express.Response, next: express.NextFunction) {
@@ -127,10 +122,10 @@ export class LocalServer {
             let result = [];
             // Since the webview takes the first device as default
             // if user starts simulation from a specific device, we should put it on the top of the list
-            if (this.preSelectedDevice != undefined) {
+            if (this.preSelectedDevice !== undefined) {
                 result.push(this.preSelectedDevice);
                 for (const device of list) {
-                    if (device.connectionString != this.preSelectedDevice.connectionString) {
+                    if (device.connectionString !== this.preSelectedDevice.connectionString) {
                         result.push(device);
                     }
                 }
@@ -141,7 +136,7 @@ export class LocalServer {
             }
         } catch (err) {
             next(err);
-        }   
+        }
     }
 
     private async send(req: express.Request, res: express.Response, next: express.NextFunction) {
@@ -149,17 +144,19 @@ export class LocalServer {
             const data = req.body;
             const sendType = data.sendType;
             switch (sendType) {
-                case 'D2C':
+                case "D2C":
                     await this.sendD2C(req, res, next);
                     break;
-                case 'C2D':
+                case "C2D":
                     // Not supported yet
+                    break;
+                default:
                     break;
             }
             res.sendStatus(200); // Must return a status here. If no success or failure returned, the webview may retry and cause unexpected re-send behavior.
         } catch (err) {
             next(err);
-        }   
+        }
     }
 
     private async sendD2C(req: express.Request, res: express.Response, next: express.NextFunction) {
@@ -172,23 +169,27 @@ export class LocalServer {
             const times: number = Number(data.times);
             const interval: number = Number(data.interval);
             switch (messageType) {
-                case 'File Upload':
+                case "File Upload":
                     // TODO: File Upload
                     break;
-                case 'Text Content':
+                case "Text Content":
                     switch (messageBody) {
-                        case 'Dummy Json':
+                        case "Dummy Json":
                             message = dummyjson.parse(data.message);
                             break;
                         // case 'Plain Text':
                         //     // Nothing to do
+                        default:
+                            break;
                     }
+                    break;
+                default:
                     break;
             }
             await this._simulator.sendD2CMessage(deviceConnectionStrings, message, times, interval);
         } catch (err) {
             next(err);
-        }   
+        }
     }
 
     private async generateRandomJson(req: express.Request, res: express.Response, next: express.NextFunction) {
@@ -197,7 +198,5 @@ export class LocalServer {
         const message = dummyjson.parse(template);
         return res.status(200).json(message);
     }
-
-
 
 }

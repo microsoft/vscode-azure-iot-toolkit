@@ -3,20 +3,16 @@
 
 "use strict";
 import * as vscode from "vscode";
-import { SimulatorWebview } from "./simulatorwebview/simulatorwebview";
-import { Utility } from "./utility";
-import { DeviceItem } from "./Model/DeviceItem";
 import { Constants } from "./constants";
 import { IoTHubMessageExplorer } from "./iotHubMessageExplorer";
+import { DeviceItem } from "./Model/DeviceItem";
+import { SimulatorWebview } from "./simulatorwebview/simulatorwebview";
+import { Utility } from "./utility";
 
 export class Simulator {
 
-    private _iotHubMessageExplorer: IoTHubMessageExplorer;
-    private static simulatorOutputChannel: vscode.OutputChannel = vscode.window.createOutputChannel(Constants.SimulatorOutputChannelTitle);
-    private static processing: boolean = false;
-
-    constructor(private context: vscode.ExtensionContext) {
-        this._iotHubMessageExplorer = new IoTHubMessageExplorer(Simulator.getSimulatorOutputChannel());
+    public static async getInputDeviceList(): Promise<DeviceItem[]> {
+        return await Utility.getInputDeviceList(Constants.IoTHubAIMessageStartEvent);
     }
 
     public static getSimulatorOutputChannel(): vscode.OutputChannel {
@@ -31,14 +27,19 @@ export class Simulator {
         this.processing = processing;
     }
 
+    private static simulatorOutputChannel: vscode.OutputChannel = vscode.window.createOutputChannel(Constants.SimulatorOutputChannelTitle);
+    private static processing: boolean = false;
+
+    private _iotHubMessageExplorer: IoTHubMessageExplorer;
+
+    constructor(private context: vscode.ExtensionContext) {
+        this._iotHubMessageExplorer = new IoTHubMessageExplorer(Simulator.getSimulatorOutputChannel());
+    }
+
     public async showWebview(deviceItem: DeviceItem): Promise<void> {
         const simulatorwebview = SimulatorWebview.getInstance(this.context);
         await simulatorwebview.openSimulatorWebviewPage(deviceItem);
         return;
-	}
-
-    public static async getInputDeviceList(): Promise<DeviceItem[]> {
-        return await Utility.getInputDeviceList(Constants.IoTHubAIMessageStartEvent);
     }
 
     public async sendD2CMessage(deviceConnectionStrings: string[], message: string, times: number, interval: number) {
@@ -46,5 +47,4 @@ export class Simulator {
         await this._iotHubMessageExplorer.sendD2CMessageFromMultipleDevicesRepeatedlyWithProgressBar(deviceConnectionStrings, message, times, interval);
         Simulator.setProcessing(false);
     }
-
 }

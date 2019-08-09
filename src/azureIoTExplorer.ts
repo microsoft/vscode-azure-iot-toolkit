@@ -20,10 +20,10 @@ import { EventHubItem } from "./Model/EventHubItem";
 import { ModuleItem } from "./Model/ModuleItem";
 import { DeviceNode } from "./Nodes/DeviceNode";
 import { ModuleItemNode } from "./Nodes/ModuleItemNode";
+import { Simulator } from "./simulator";
 import { SnippetManager } from "./snippetManager";
 import { Utility } from "./utility";
 import { WelcomePage } from "./welcomePage";
-import { Simulator } from "./simulator";
 
 export class AzureIoTExplorer {
     private _iotHubC2DMessageExplorer: IotHubC2DMessageExplorer;
@@ -39,7 +39,7 @@ export class AzureIoTExplorer {
     private _iotHubModuleExplorer: IotHubModuleExplorer;
     private _distributedTracingManager: DistributedTracingManager;
     private _eventHubManager: EventHubManager;
-    private _simulator : Simulator;
+    private _simulator: Simulator;
 
     constructor(private context: vscode.ExtensionContext) {
         let outputChannel = vscode.window.createOutputChannel("Azure IoT Hub Toolkit");

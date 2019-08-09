@@ -3,54 +3,17 @@
 
 "use strict";
 import { EventData, EventHubClient, EventPosition } from "@azure/event-hubs";
+import { ConnectionString } from "azure-iot-common";
 import { Message } from "azure-iot-device";
+import { Client } from "azure-iot-device";
 import { clientFromConnectionString } from "azure-iot-device-mqtt";
 import * as vscode from "vscode";
 import { Constants } from "./constants";
 import { IoTHubMessageBaseExplorer } from "./iotHubMessageBaseExplorer";
 import { DeviceItem } from "./Model/DeviceItem";
+import { SendStatus } from "./sendStatus";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
-import { Client } from 'azure-iot-device';
-import { ConnectionString } from 'azure-iot-common';
-
-export class SendStatus {
-    private deviceId: string;
-    private succeed: number;
-    private failed: number;
-    private total: number;
-
-    constructor(deviceId: string, total: number) {
-        this.deviceId = deviceId;
-        this.succeed = 0;
-        this.failed = 0;
-        this.total = total;
-    }
-    
-    public getDeviceId(): string {
-        return this.deviceId;
-    }
-    public getSucceed(): number {
-        return this.succeed;
-    }
-    public getFailed(): number {
-        return this.failed;
-    }
-    public getTotal(): number {
-        return this.total;
-    }
-
-    public AddSucceed(): void {
-        this.succeed++;
-    }
-    public AddFailed(): void {
-        this.failed++;
-    }
-
-    public sum(): number {
-        return this.succeed + this.failed;
-    }
-}
 
 export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
     private _eventHubClient: EventHubClient;
@@ -78,41 +41,6 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
         });
     }
 
-    private async sendD2CMessageCore(client: Client, message: string) {
-        let stringify = Utility.getConfig<boolean>(Constants.IoTHubD2CMessageStringifyKey);
-        client.sendEvent(new Message(stringify ? JSON.stringify(message) : message),
-            this.sendEventDone(client, Constants.IoTHubMessageLabel, Constants.IoTHub, Constants.IoTHubAIMessageDoneEvent));
-    }
-
-    private async sendD2CMessageCoreWithProgress(client: Client, message: string, status: SendStatus, totalStatus: SendStatus) {
-        let stringify = Utility.getConfig<boolean>(Constants.IoTHubD2CMessageStringifyKey);
-        await client.sendEvent(new Message(stringify ? JSON.stringify(message) : message),
-            this.sendEventDoneWithProgress(client, Constants.IoTHubAIMessageDoneEvent, status, totalStatus));
-    }
-
-    private async delay(ms: number, token?: vscode.CancellationToken) {
-        if (ms <= 1000) {
-            return new Promise( resolve => setTimeout(resolve, ms));
-        } else {
-            await new Promise( resolve => setTimeout(resolve, 1000));
-            if (token) {
-                if (token.isCancellationRequested) {
-                    return;
-                } else {
-                    await this.delay(ms - 1000, token);
-                }
-            } else {
-                await this.delay(ms - 1000);
-            }
-        }
-    }
-
-    private timeFormat(date: Date): string {
-        let format = `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}-${("0" + date.getDate()).slice(-2)}`;
-        format += ` ${("0" + (date.getHours())).slice(-2)}:${("0" + (date.getMinutes())).slice(-2)}:${("0" + (date.getSeconds())).slice(-2)}`;
-        return format;
-    }
-
     public async sendD2CMessageFromMultipleDevicesRepeatedlyWithProgressBar(deviceConnectionStrings: string[], message: string, times: number, interval: number) {
         const deviceCount = deviceConnectionStrings.length;
         const total = deviceCount * times;
@@ -122,45 +50,51 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
         }
         const step = 100 / total;
         const startTime = new Date();
-        this.outputLine(Constants.SimulatorSummaryLabel, `[${this.timeFormat(startTime)}] Start sending messages from ${deviceCount} device(s) to IoT Hub.`)
+        this.outputLine(Constants.SimulatorSummaryLabel, `[${this.timeFormat(startTime)}] Start sending messages from ${deviceCount} device(s) to IoT Hub.`);
         await vscode.window.withProgress({
-			location: vscode.ProgressLocation.Notification,
-			title: Constants.SimulatorSendingMessageProgressBarTitle,
-			cancellable: true
-		}, async (progress, token) => {
+            location: vscode.ProgressLocation.Notification,
+            title: Constants.SimulatorSendingMessageProgressBarTitle,
+            cancellable: true,
+        }, async (progress, token) => {
             token.onCancellationRequested(() => {
                 vscode.window.showInformationMessage(Constants.SimulatorProgressBarCancelLog);
-            })
+            });
             progress.report({ increment: 0});
             let clients = [];
             let statuses = [];
             let ids = [];
-            let totalStatus = new SendStatus('Total', total);
-            for(let i = 0; i < deviceCount; i++) {
+            let totalStatus = new SendStatus("Total", total);
+            for (let i = 0; i < deviceCount; i++) {
                 clients.push(await clientFromConnectionString(deviceConnectionStrings[i]));
                 statuses.push(new SendStatus(ConnectionString.parse(deviceConnectionStrings[i]).DeviceId, times));
                 ids.push(i);
             }
             const sendingStartTime = new Date();
-            for(let i = 0; i < times; i++) {
-                await ids.map(async j => await this.sendD2CMessageCoreWithProgress(clients[j], message, statuses[j], totalStatus));
+            for (let i = 0; i < times; i++) {
+                await ids.map(async (j) => await this.sendD2CMessageCoreWithProgress(clients[j], message, statuses[j], totalStatus));
                 progress.report({
                     increment: step * deviceCount,
-                    message: `Sending message(s) ${totalStatus.sum()} of ${total}`
-                })
+                    message: `Sending message(s) ${totalStatus.sum()} of ${total}`,
+                });
                 if (token.isCancellationRequested) {
                     break;
                 }
                 await this.delay(interval, token);
             }
             const sendingEndTime = new Date();
-            this.outputLine(Constants.SimulatorSummaryLabel, `Sending ${total} message(s) done in ${(sendingEndTime.getTime() - sendingStartTime.getTime()) / 1000} second(s), please wait a few seconds for the result.`);
-            while ((!token.isCancellationRequested) && (totalStatus.sum() != totalStatus.getTotal())) {
+            this.outputLine(Constants.SimulatorSummaryLabel,
+                `Sending ${total} message(s) done in ${(sendingEndTime.getTime() - sendingStartTime.getTime()) / 1000} second(s), please wait a few seconds for the result.`,
+            );
+            while ((!token.isCancellationRequested) && (totalStatus.sum() !== totalStatus.getTotal())) {
                 await this.delay(1);
-            };
+            }
             const endTime = new Date();
-            this.outputLine(Constants.SimulatorSummaryLabel, `${token.isCancellationRequested ? 'User aborted' : 'All device(s) finished'} at ${this.timeFormat(endTime)}`);
-            this.outputLine(Constants.SimulatorSummaryLabel, `Duration: ${(endTime.getTime() - startTime.getTime()) / 1000} second(s), with ${totalStatus.getSucceed()} succeed, and ${totalStatus.getFailed()} failed.`);            
+            this.outputLine(Constants.SimulatorSummaryLabel,
+                `${token.isCancellationRequested ? "User aborted" : "All device(s) finished"} at ${this.timeFormat(endTime)}`,
+            );
+            this.outputLine(Constants.SimulatorSummaryLabel,
+                `Duration: ${(endTime.getTime() - startTime.getTime()) / 1000} second(s), with ${totalStatus.getSucceed()} succeed, and ${totalStatus.getFailed()} failed.`,
+            );
         });
     }
 
@@ -195,6 +129,41 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
 
     public stopMonitorIoTHubMessage(): void {
         this.stopMonitorEventHubEndpoint(Constants.IoTHubMonitorLabel, Constants.IoTHubAIStopMonitorEvent, this._eventHubClient, "built-in event endpoint");
+    }
+
+    private async sendD2CMessageCore(client: Client, message: string) {
+        let stringify = Utility.getConfig<boolean>(Constants.IoTHubD2CMessageStringifyKey);
+        client.sendEvent(new Message(stringify ? JSON.stringify(message) : message),
+            this.sendEventDone(client, Constants.IoTHubMessageLabel, Constants.IoTHub, Constants.IoTHubAIMessageDoneEvent));
+    }
+
+    private async sendD2CMessageCoreWithProgress(client: Client, message: string, status: SendStatus, totalStatus: SendStatus) {
+        let stringify = Utility.getConfig<boolean>(Constants.IoTHubD2CMessageStringifyKey);
+        await client.sendEvent(new Message(stringify ? JSON.stringify(message) : message),
+            this.sendEventDoneWithProgress(client, Constants.IoTHubAIMessageDoneEvent, status, totalStatus));
+    }
+
+    private async delay(ms: number, token?: vscode.CancellationToken) {
+        if (ms <= 1000) {
+            return new Promise( (resolve) => setTimeout(resolve, ms));
+        } else {
+            await new Promise( (resolve) => setTimeout(resolve, 1000));
+            if (token) {
+                if (token.isCancellationRequested) {
+                    return;
+                } else {
+                    await this.delay(ms - 1000, token);
+                }
+            } else {
+                await this.delay(ms - 1000);
+            }
+        }
+    }
+
+    private timeFormat(date: Date): string {
+        let format = `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}-${("0" + date.getDate()).slice(-2)}`;
+        format += ` ${("0" + (date.getHours())).slice(-2)}:${("0" + (date.getMinutes())).slice(-2)}:${("0" + (date.getSeconds())).slice(-2)}`;
+        return format;
     }
 
     private async startMonitor(label: string, consumerGroup: string, deviceItem?: DeviceItem) {

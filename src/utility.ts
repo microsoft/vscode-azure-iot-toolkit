@@ -426,6 +426,16 @@ export class Utility {
         await Constants.ExtensionContext.globalState.update(Constants.StateKeyIoTHubID, "");
     }
 
+    // Temp utility to solve the compatible issue because of the schema change in IoT Hub Service.
+    // moduleContent -> modulesContent
+    public static updateSchema(deployment: any): any {
+        if (deployment && deployment.moduleContent) {
+            deployment.modulesContent = deployment.moduleContent;
+            delete deployment.moduleContent;
+        }
+        return deployment;
+    }
+
     private static tryGetStringFromCharCode(source) {
         if (source instanceof Uint8Array) {
             try {
@@ -537,15 +547,5 @@ export class Utility {
         } else {
             return undefined;
         }
-    }
-
-    // Temp utility to solve the compatible issue because of the schema change in IoT Hub Service.
-    // moduleContent -> modulesContent
-    public static updateSchema(deployment: any): any {
-        if (deployment && deployment.moduleContent) {
-            deployment.modulesContent = deployment.moduleContent;
-            delete deployment.moduleContent;
-        }
-        return deployment;
     }
 }

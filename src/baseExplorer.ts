@@ -3,9 +3,9 @@
 
 "use strict";
 import * as vscode from "vscode";
-import { TelemetryClient } from "./telemetryClient";
-import { SendStatus } from "./iotHubMessageExplorer";
 import { Constants } from "./constants";
+import { SendStatus } from "./sendStatus";
+import { TelemetryClient } from "./telemetryClient";
 
 export class BaseExplorer {
     protected _outputChannel: vscode.OutputChannel;
@@ -58,7 +58,7 @@ export class BaseExplorer {
             const succeeded = status.getSucceed();
             const failed = status.getFailed();
             const sum = status.sum();
-            if (sum == total) {
+            if (sum === total) {
                 this._outputChannel.show();
                 this.outputLine(Constants.SimulatorSummaryLabel, `Device ${id}: Sending ${sum} message(s) done, with ${succeeded} succeeded and ${failed} failed.`);
                 client.close(() => { return; });

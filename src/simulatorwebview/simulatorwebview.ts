@@ -5,12 +5,12 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
-import { LocalServer } from "./localserver";
-import { Utility } from "../utility";
 import { Constants } from  "../constants";
 import { IoTHubResourceExplorer } from "../iotHubResourceExplorer";
-import { Simulator } from "../simulator";
 import { DeviceItem } from "../Model/DeviceItem";
+import { Simulator } from "../simulator";
+import { Utility } from "../utility";
+import { LocalServer } from "./localserver";
 
 const simulatorWebviewPanelViewType = "IoT Edge SimulatorWebview";
 const simulatorWebviewPanelViewTitle = "IoT Edge SimulatorWebview";
@@ -43,8 +43,8 @@ export class SimulatorWebview {
         }
         if (!this.panel) {
             this.localServer.startServer();
-            // the following statement aims at setting a specific device as default, if user starts simulation from right-click menu 
-            if (deviceItem != undefined) {
+            // the following statement aims at setting a specific device as default
+            if (deviceItem !== undefined) {
                 this.localServer.setPreSelectedDevice(deviceItem);
             }
             this.panel = vscode.window.createWebviewPanel(
@@ -71,6 +71,5 @@ export class SimulatorWebview {
         } else {
             this.panel.reveal();
         }
-        
     }
 }
