@@ -77,9 +77,9 @@ const app = new Vue({
             inputDeviceList: [],
             formItem: {
                 deviceConnectionStrings: [],
-                message: '',
-                times: '',
-                interval: '',
+                message: 'Hello from Azure IoT Simulator!',
+                times: '1',
+                interval: '1',
             },
             intervalUnit: 'second',
             sendType: 'D2C',
@@ -107,7 +107,6 @@ const app = new Vue({
     },
     async mounted () {
         try {
-          // this.isProcessing = (await axios.get(`${this.endpoint}/api/isprocessing`)).data;
           await this.tryLatestProcessingStatus();
           await this.getIoTHubHostName();
           await this.getInputDeviceList();
@@ -117,7 +116,6 @@ const app = new Vue({
     },
     methods: {
         async getProcessingStatus() {
-          console.log('aa');
           this.isProcessing = (await axios.get(`${this.endpoint}/api/isprocessing`)).data;
         },
         // if the simulation is in processing, and user close the webview
@@ -138,6 +136,10 @@ const app = new Vue({
             for (const device of list) {
                 device.key = device.connectionString;
                 this.inputDeviceList.push(device)
+            }
+            if (this.inputDeviceList.length > 0) {
+              console.log(this.inputDeviceList[0].connectionString);
+              this.formItem.deviceConnectionStrings.push(this.inputDeviceList[0].connectionString);
             }
         },
         async send () {

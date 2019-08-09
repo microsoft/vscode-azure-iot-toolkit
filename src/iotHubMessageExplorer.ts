@@ -13,7 +13,6 @@ import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 import { Client } from 'azure-iot-device';
 import { ConnectionString } from 'azure-iot-common';
-import { Send } from "express-serve-static-core";
 
 export class SendStatus {
     private id: string;
