@@ -72,17 +72,17 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
             const sendingStartTime = new Date();
             for (let i = 0; i < times; i++) {
                 await ids.map(async (j) => await this.sendD2CMessageCoreWithProgress(clients[j], message, statuses[j], totalStatus));
-                progress.report({
-                    increment: step * deviceCount,
-                    message: `Sending message(s) ${totalStatus.sum()} of ${total}`,
-                });
                 if (token.isCancellationRequested) {
                     break;
                 }
                 if (i < times - 1) {
                     // there won't be a delay after the last iteration
-                    await this.delay(interval, token);
+                    await this.delay(interval, token, progress, totalStatus);
                 }
+                progress.report({
+                    increment: step * deviceCount,
+                    message: `Sent message(s) ${totalStatus.sum()} of ${totalStatus.getTotal()}`,
+                });
             }
             const sendingEndTime = new Date();
             this.outputLine(Constants.SimulatorSummaryLabel,
@@ -146,7 +146,18 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
             this.sendEventDoneWithProgress(client, Constants.IoTHubAIMessageDoneEvent, status, totalStatus));
     }
 
-    private async delay(ms: number, token?: vscode.CancellationToken) {
+    private async delay(ms: number, token?: vscode.CancellationToken, progress?: vscode.Progress<{
+        message?: string;
+        increment?: number;
+    }>, totalStatus?: SendStatus) {
+        // update progress bar every second, even in a long interval
+        if (progress) {
+            progress.report({
+                // do not increase the progress, just update the message here
+                increment: 0,
+                message: `Sent message(s) ${totalStatus.sum()} of ${totalStatus.getTotal()}`,
+            });
+        }
         if (ms <= 1000) {
             return new Promise( (resolve) => setTimeout(resolve, ms));
         } else {
