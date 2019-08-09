@@ -31,9 +31,9 @@ export class Simulator {
         this.processing = processing;
     }
 
-    public async showWebview(): Promise<void> {
+    public async showWebview(deviceItem: DeviceItem): Promise<void> {
         const simulatorwebview = SimulatorWebview.getInstance(this.context);
-        await simulatorwebview.openSimulatorWebviewPage();
+        await simulatorwebview.openSimulatorWebviewPage(deviceItem);
         return;
 	}
 

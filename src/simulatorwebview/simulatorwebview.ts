@@ -10,6 +10,7 @@ import { Utility } from "../utility";
 import { Constants } from  "../constants";
 import { IoTHubResourceExplorer } from "../iotHubResourceExplorer";
 import { Simulator } from "../simulator";
+import { DeviceItem } from "../Model/DeviceItem";
 
 const simulatorWebviewPanelViewType = "IoT Edge SimulatorWebview";
 const simulatorWebviewPanelViewTitle = "IoT Edge SimulatorWebview";
@@ -30,7 +31,7 @@ export class SimulatorWebview {
         this.localServer = new LocalServer(context);
     }
 
-    public async openSimulatorWebviewPage(): Promise<any> {
+    public async openSimulatorWebviewPage(deviceItem: DeviceItem): Promise<any> {
         const iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle, false);
         if (!iotHubConnectionString) {
             let outputChannel = Simulator.getSimulatorOutputChannel();
@@ -42,6 +43,10 @@ export class SimulatorWebview {
         }
         if (!this.panel) {
             this.localServer.startServer();
+            // the following statement aims at setting a specific device as default, if user starts simulation from right-click menu 
+            if (deviceItem != undefined) {
+                this.localServer.setPreSelectedDevice(deviceItem);
+            }
             this.panel = vscode.window.createWebviewPanel(
                 simulatorWebviewPanelViewType,
                 simulatorWebviewPanelViewTitle,

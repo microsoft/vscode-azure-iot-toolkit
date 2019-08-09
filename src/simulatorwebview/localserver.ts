@@ -7,6 +7,7 @@ import { Simulator } from "../simulator";
 import { Utility } from "../utility";
 import { Constants } from "../constants";
 import { ConnectionString } from 'azure-iot-common';
+import { DeviceItem } from "../Model/DeviceItem";
 const dummyjson = require('dummy-json');
 
 export class LocalServer {
@@ -17,6 +18,7 @@ export class LocalServer {
     private context: vscode.ExtensionContext;
     private _modules: string[];
     private _simulator: Simulator;
+    private preSelectedDevice: DeviceItem;
 
     constructor(context: vscode.ExtensionContext) {
         this.initRouter();
@@ -24,6 +26,7 @@ export class LocalServer {
         this.server = http.createServer(this.app);
         this.context = context;
         this._simulator = new Simulator(this.context);
+        this.preSelectedDevice = undefined;
     }
 
     set modules(modules: string[]) {
@@ -43,6 +46,10 @@ export class LocalServer {
 
     public getServerUri(): string {
         return `http://localhost:${this.serverPort}`;
+    }
+
+    public setPreSelectedDevice(deviceItem: DeviceItem) {
+        this.preSelectedDevice = deviceItem;
     }
 
     private initRouter() {
@@ -116,8 +123,22 @@ export class LocalServer {
 
     private async getInputDeviceList(req: express.Request, res: express.Response, next: express.NextFunction) {
         try {
-            const result = await Simulator.getInputDeviceList();
-            return res.status(200).json(result);
+            const list = await Simulator.getInputDeviceList();
+            let result = [];
+            // Since the webview takes the first device as default
+            // if user starts simulation from a specific device, we should put it on the top of the list
+            if (this.preSelectedDevice != undefined) {
+                result.push(this.preSelectedDevice);
+                for (const device of list) {
+                    if (device.connectionString != this.preSelectedDevice.connectionString) {
+                        result.push(device);
+                    }
+                }
+                return res.status(200).json(result);
+            } else {
+                // if no device is pre-selected, no need to go through the list again
+                return res.status(200).json(list);
+            }
         } catch (err) {
             next(err);
         }   

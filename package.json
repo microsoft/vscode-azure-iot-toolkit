@@ -344,6 +344,11 @@
           "command": "azure-iot-toolkit.updateDistributedTracingSetting",
           "when": "view == iotHubDevices",
           "group": "azure-iot-toolkit-4@1"
+        },
+        {
+          "command": "extension.showSimulatorWebview",
+          "when": "view == iotHubDevices",
+          "group": "azure-iot-toolkit-5@0"
         }
       ],
       "view/item/context": [
@@ -418,6 +423,11 @@
           "group": "azure-iot-toolkit-4@0"
         },
         {
+          "command": "extension.showSimulatorWebview",
+          "when": "view == iotHubDevices && viewItem == device",
+          "group": "azure-iot-toolkit-5@0"
+        },
+        {
           "command": "azure-iot-toolkit.refresh",
           "when": "view == iotHubDevices && viewItem == edge",
           "group": "inline"
@@ -476,6 +486,11 @@
           "command": "azure-iot-toolkit.deleteDevice",
           "when": "view == iotHubDevices && viewItem == edge",
           "group": "azure-iot-toolkit-4@0"
+        },
+        {
+          "command": "extension.showSimulatorWebview",
+          "when": "view == iotHubDevices && viewItem == edge",
+          "group": "azure-iot-toolkit-5@0"
         },
         {
           "command": "azure-iot-toolkit.createDeployment",

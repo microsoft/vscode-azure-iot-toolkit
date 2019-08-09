@@ -203,8 +203,8 @@ export class AzureIoTExplorer {
         return Utility.getConnectionStringWithId(Constants.IotHubConnectionStringKey);
     }
 
-    public showSimulatorWebview() {
-        this._simulator.showWebview();
+    public async showSimulatorWebview(deviceItem: DeviceItem) {
+        await this._simulator.showWebview(deviceItem);
     }
 
 }
