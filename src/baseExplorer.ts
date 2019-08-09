@@ -41,19 +41,19 @@ export class BaseExplorer {
 
     protected sendEventDoneWithProgress(client, aiEventName: string, status: SendStatus, totalStatus: SendStatus) {
         return (err, result) => {
-            const id = status.getId();
+            const id = status.getDeviceId();
             const total = status.getTotal();
 
             if (err) {
                 TelemetryClient.sendEvent(aiEventName, { Result: "Fail" });
-                status.newStatus(false);
-                totalStatus.newStatus(false);
+                status.AddFailed();
+                totalStatus.AddFailed();
                 this.outputLine(Constants.SimulatorSummaryLabel, `Device ${id}: Error: ${err.toString()}`);
             }
             if (result) {
                 TelemetryClient.sendEvent(aiEventName, { Result: "Success" });
-                status.newStatus(true);
-                totalStatus.newStatus(true);
+                status.AddSucceed();
+                totalStatus.AddSucceed();
             }
             const succeeded = status.getSucceed();
             const failed = status.getFailed();

@@ -15,20 +15,20 @@ import { Client } from 'azure-iot-device';
 import { ConnectionString } from 'azure-iot-common';
 
 export class SendStatus {
-    private id: string;
+    private deviceId: string;
     private succeed: number;
     private failed: number;
     private total: number;
 
-    constructor(id: string, total: number) {
-        this.id = id;
+    constructor(deviceId: string, total: number) {
+        this.deviceId = deviceId;
         this.succeed = 0;
         this.failed = 0;
         this.total = total;
     }
     
-    public getId(): string {
-        return this.id;
+    public getDeviceId(): string {
+        return this.deviceId;
     }
     public getSucceed(): number {
         return this.succeed;
@@ -40,18 +40,11 @@ export class SendStatus {
         return this.total;
     }
 
-    private AddSucceed(): void {
+    public AddSucceed(): void {
         this.succeed++;
     }
-    private AddFailed(): void {
+    public AddFailed(): void {
         this.failed++;
-    }
-    public newStatus(succeed: boolean) {
-        if (succeed) {
-            this.AddSucceed();
-        } else {
-            this.AddFailed();
-        }
     }
 
     public sum(): number {
@@ -114,9 +107,22 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
         }
     }
 
+    private timeFormat(date: Date): string {
+        let format = `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}-${("0" + date.getDate()).slice(-2)}`;
+        format += ` ${("0" + (date.getHours())).slice(-2)}:${("0" + (date.getMinutes())).slice(-2)}:${("0" + (date.getSeconds())).slice(-2)}`;
+        return format;
+    }
+
     public async sendD2CMessageFromMultipleDevicesRepeatedlyWithProgressBar(deviceConnectionStrings: string[], message: string, times: number, interval: number) {
+        const deviceCount = deviceConnectionStrings.length;
+        const total = deviceCount * times;
+        if (total <= 0) {
+            this.outputLine(Constants.SimulatorSummaryLabel, `Invalid Operation.`);
+            return Promise.reject();
+        }
+        const step = 100 / total;
         const startTime = new Date();
-        this.outputLine(Constants.SimulatorSummaryLabel, `Start at ${startTime}`)
+        this.outputLine(Constants.SimulatorSummaryLabel, `[${this.timeFormat(startTime)}] Start sending messages from ${deviceCount} device(s) to IoT Hub.`)
         await vscode.window.withProgress({
 			location: vscode.ProgressLocation.Notification,
 			title: Constants.SimulatorSendingMessageProgressBarTitle,
@@ -126,13 +132,6 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
                 vscode.window.showInformationMessage(Constants.SimulatorProgressBarCancelLog);
             })
             progress.report({ increment: 0});
-            const deviceCount = deviceConnectionStrings.length;
-            const total = deviceCount * times;
-            if (total <= 0) {
-                this.outputLine(Constants.SimulatorSummaryLabel, `Invalid Operation.`);
-                return;
-            }
-            const step = 100 / total;
             let clients = [];
             let statuses = [];
             let ids = [];
@@ -160,7 +159,7 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
                 await this.delay(1);
             };
             const endTime = new Date();
-            this.outputLine(Constants.SimulatorSummaryLabel, `${token.isCancellationRequested ? 'User aborted' : 'All device(s) finished'} at ${endTime}`);
+            this.outputLine(Constants.SimulatorSummaryLabel, `${token.isCancellationRequested ? 'User aborted' : 'All device(s) finished'} at ${this.timeFormat(endTime)}`);
             this.outputLine(Constants.SimulatorSummaryLabel, `Duration: ${(endTime.getTime() - startTime.getTime()) / 1000} second(s), with ${totalStatus.getSucceed()} succeed, and ${totalStatus.getFailed()} failed.`);            
         });
     }

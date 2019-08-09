@@ -12,7 +12,7 @@ import { IoTHubMessageExplorer } from "./iotHubMessageExplorer";
 export class Simulator {
 
     private _iotHubMessageExplorer: IoTHubMessageExplorer;
-    private static simulatorOutputChannel: vscode.OutputChannel = vscode.window.createOutputChannel("Azure IoT Hub Toolkit Simulator");
+    private static simulatorOutputChannel: vscode.OutputChannel = vscode.window.createOutputChannel(Constants.SimulatorOutputChannelTitle);
     private static processing: boolean = false;
 
     constructor(private context: vscode.ExtensionContext) {

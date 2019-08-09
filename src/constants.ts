@@ -125,8 +125,8 @@ export class Constants {
     public static StateKeyIoTHubID = "iothubid";
     public static SimulatorSummaryLabel = "Simulator Summary";
     public static SimulatorSendingMessageProgressBarTitle = "Sending Simulated Message(s)";
-    public static SimulatorRecevingStatusProgressBarTitle = "Receiving Status";
-    public static SimulatorProgressBarCancelLog = "You just canceled the long running operation.";
+    public static SimulatorProgressBarCancelLog = "You just canceled sending simulated messages.";
+    public static SimulatorOutputChannelTitle = "Azure IoT Hub Toolkit Device Simulator";
 
     public static DeleteLabel = "Delete";
     public static DeleteMessage = "Are you sure you want to delete";    public static readonly DISTRIBUTED_TWIN_NAME: string = "azureiot*com^dtracing^1";
