@@ -52,6 +52,7 @@ export class LocalServer {
         this.router.get("/api/getinputdevicelist", async(req, res, next) => await this.getInputDeviceList(req, res, next));
         this.router.get("/api/getiothubhostname", async(req, res, next) => await this.getIoTHubHostName(req, res, next));
         this.router.get("/api/isprocessing", async(req, res, next) => await this.isProcessing(req, res, next));
+        this.router.get("/api/getpreselected", async(req, res, next) => await this.getPreSelected(req, res, next));
         this.router.post("/api/send", async(req, res, next) => await this.send(req, res, next));
         this.router.post("/api/generaterandomjson", async(req, res, next) => await this.generateRandomJson(req, res, next));
         this.router.post("/api/setprocessing", async(req, res, next) => await this.setProcessing(req, res, next));
@@ -84,6 +85,14 @@ export class LocalServer {
               res.status(404).json({error: "I don\'t have that"});
             }
         });
+    }
+
+    private async getPreSelected(req: express.Request, res: express.Response, next: express.NextFunction) {
+        try {
+            return res.status(200).json(this.preSelectedDevice);
+        } catch (err) {
+            next(err);
+        }
     }
 
     private async isProcessing(req: express.Request, res: express.Response, next: express.NextFunction) {
@@ -119,21 +128,7 @@ export class LocalServer {
     private async getInputDeviceList(req: express.Request, res: express.Response, next: express.NextFunction) {
         try {
             const list = await Simulator.getInputDeviceList();
-            let result = [];
-            // Since the webview takes the first device as default
-            // if user starts simulation from a specific device, we should put it on the top of the list
-            if (this.preSelectedDevice !== undefined) {
-                result.push(this.preSelectedDevice);
-                for (const device of list) {
-                    if (device.connectionString !== this.preSelectedDevice.connectionString) {
-                        result.push(device);
-                    }
-                }
-                return res.status(200).json(result);
-            } else {
-                // if no device is pre-selected, no need to go through the list again
-                return res.status(200).json(list);
-            }
+            return res.status(200).json(list);
         } catch (err) {
             next(err);
         }

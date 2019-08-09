@@ -137,9 +137,9 @@ const app = new Vue({
                 device.key = device.connectionString;
                 this.inputDeviceList.push(device)
             }
-            if (this.inputDeviceList.length > 0) {
-              console.log(this.inputDeviceList[0].connectionString);
-              this.formItem.deviceConnectionStrings.push(this.inputDeviceList[0].connectionString);
+            const preSelected = (await axios.get(`${this.endpoint}/api/getpreselected`)).data;
+            if (preSelected !== undefined) {
+              this.formItem.deviceConnectionStrings.push(preSelected.connectionString);
             }
         },
         async send () {
