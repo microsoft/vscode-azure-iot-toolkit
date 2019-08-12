@@ -12,7 +12,8 @@ import { Utility } from "./utility";
 export class Simulator {
 
     public static async getInputDeviceList(): Promise<DeviceItem[]> {
-        return await Utility.getInputDeviceList(Constants.IoTHubAIMessageStartEvent);
+        const iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle, false);
+        return await Utility.getFilteredDeviceList(iotHubConnectionString, false);
     }
 
     public static getSimulatorOutputChannel(): vscode.OutputChannel {

@@ -265,7 +265,17 @@ export class Utility {
 
     public static async getInputDevice(deviceItem: DeviceItem, eventName: string, onlyEdgeDevice: boolean = false, iotHubConnectionString?: string): Promise<DeviceItem> {
         if (!deviceItem) {
-            const deviceList: Promise<DeviceItem[]> = this.getInputDeviceList(eventName, onlyEdgeDevice, iotHubConnectionString);
+            if (eventName) {
+                TelemetryClient.sendEvent(eventName, { entry: "commandPalette" });
+            }
+            if (!iotHubConnectionString) {
+                iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
+                if (!iotHubConnectionString) {
+                    return null;
+                }
+            }
+
+            const deviceList: Promise<DeviceItem[]> = Utility.getFilteredDeviceList(iotHubConnectionString, onlyEdgeDevice);
             deviceItem = await vscode.window.showQuickPick(deviceList, { placeHolder: "Select an IoT Hub device" });
             return deviceItem;
         } else {
@@ -276,18 +286,6 @@ export class Utility {
         }
     }
 
-    public static async getInputDeviceList(eventName: string, onlyEdgeDevice: boolean = false, iotHubConnectionString?: string): Promise<DeviceItem[]> {
-        if (eventName) {
-            TelemetryClient.sendEvent(eventName, { entry: "commandPalette" });
-        }
-        if (!iotHubConnectionString) {
-            iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
-            if (!iotHubConnectionString) {
-                return null;
-            }
-        }
-        return await Utility.getFilteredDeviceList(iotHubConnectionString, onlyEdgeDevice);
-    }
 
     public static async getDeviceList(iotHubConnectionString: string, context?: vscode.ExtensionContext): Promise<DeviceItem[]> {
         const [deviceList, edgeDeviceIdSet] = await Promise.all([Utility.getIoTDeviceList(iotHubConnectionString), Utility.getEdgeDeviceIdSet(iotHubConnectionString)]);
@@ -436,7 +434,7 @@ export class Utility {
         return source;
     }
 
-    private static async getFilteredDeviceList(iotHubConnectionString: string, onlyEdgeDevice: boolean): Promise<DeviceItem[]> {
+    public static async getFilteredDeviceList(iotHubConnectionString: string, onlyEdgeDevice: boolean): Promise<DeviceItem[]> {
         if (onlyEdgeDevice) {
             const [deviceList, edgeDeviceIdSet] = await Promise.all([Utility.getIoTDeviceList(iotHubConnectionString), Utility.getEdgeDeviceIdSet(iotHubConnectionString)]);
             return deviceList.filter((device) => edgeDeviceIdSet.has(device.deviceId));
