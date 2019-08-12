@@ -139,7 +139,7 @@ export class LocalServer {
             // Since we do not support C2D yet, here is just one call on sendD2C()
             await this.sendD2C(req, res, next);
             // Must return a status here. If no success or failure returned, the webview may retry and cause unexpected re-send behavior.
-            res.sendStatus(200); 
+            res.sendStatus(200);
         } catch (err) {
             next(err);
         }
