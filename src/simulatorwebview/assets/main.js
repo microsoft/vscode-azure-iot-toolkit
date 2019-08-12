@@ -5,8 +5,7 @@ try {
     
 }
 
-const dummyJsonTemplate = `
-{
+const dummyJsonTemplate = `{
   "devicesA": [
     {{#repeat 2}}
     {
@@ -40,6 +39,12 @@ const dummyJsonTemplate = `
 }
 `;
 
+const plainTextTemplate = `Hello from Azure IoT Simulator!`;
+
+const introductionTemplate = `This page is intended to help you quickly send D2C messages.
+You only need to specify the device, the number of times, the delivery interval, and the data template.
+We will randomly generate data in your specified format for you and send it out.`
+
 const app = new Vue({
     el: '#app',
     data () { 
@@ -62,16 +67,16 @@ const app = new Vue({
             }
           }; 
         return {
+            introduction: introductionTemplate,
             hostName: '',
             inputDeviceList: [],
             formItem: {
                 deviceConnectionStrings: [],
-                message: 'Hello from Azure IoT Simulator!',
+                message: plainTextTemplate,
                 times: '1',
                 interval: '1',
             },
             intervalUnit: 'second',
-            sendType: 'D2C',
             messageType: 'Text Content',
             messageBody: 'Plain Text',
             generatedMessage: 'Type anything in the left, and see preview here...',
@@ -152,7 +157,6 @@ const app = new Vue({
                         times: this.formItem.times,
                         interval: intervalInMilliSecond,
                         messageType: this.messageType,
-                        sendType: this.sendType,
                         messageBody: this.messageBody
                     }
                     const toProcess = {
@@ -173,20 +177,13 @@ const app = new Vue({
                 }
               });
         },
-        handleClick (name) {
-            // TODO: name should be changed, in order for a clean code.
-            switch (name) {
-                case 'a':
-                    this.formItem.message = dummyJsonTemplateA;
-                    break;
-                case 'b':
-                    this.formItem.message = dummyJsonTemplateData;
-                    break;
-            }
-            if (name != 'c') {
-              // 'c' indicates the website hyper link towards dummy-json wiki/github
-              this.generateDummyJson();
-            }
+        messageBodyChange (name) {
+          if (name === 'Dummy Json') {
+            this.formItem.message = dummyJsonTemplate;
+          } else if (name === 'Plain Text') {
+            this.formItem.message = plainTextTemplate;
+          }
+          this.generateDummyJson();
         },
         async generateDummyJson () {
           const template = {

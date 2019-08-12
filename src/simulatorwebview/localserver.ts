@@ -136,19 +136,10 @@ export class LocalServer {
 
     private async send(req: express.Request, res: express.Response, next: express.NextFunction) {
         try {
-            const data = req.body;
-            const sendType = data.sendType;
-            switch (sendType) {
-                case "D2C":
-                    await this.sendD2C(req, res, next);
-                    break;
-                case "C2D":
-                    // Not supported yet
-                    break;
-                default:
-                    break;
-            }
-            res.sendStatus(200); // Must return a status here. If no success or failure returned, the webview may retry and cause unexpected re-send behavior.
+            // Since we do not support C2D yet, here is just one call on sendD2C()
+            await this.sendD2C(req, res, next);
+            // Must return a status here. If no success or failure returned, the webview may retry and cause unexpected re-send behavior.
+            res.sendStatus(200); 
         } catch (err) {
             next(err);
         }
