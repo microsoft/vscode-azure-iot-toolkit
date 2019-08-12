@@ -33,7 +33,9 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
                 this._outputChannel.show();
                 try {
                     let client = clientFromConnectionString(deviceConnectionString);
-                    this.sendD2CMessageCore(client, message);
+                    let stringify = Utility.getConfig<boolean>(Constants.IoTHubD2CMessageStringifyKey);
+                    client.sendEvent(new Message(stringify ? JSON.stringify(message) : message),
+                        this.sendEventDone(client, Constants.IoTHubMessageLabel, Constants.IoTHub, Constants.IoTHubAIMessageDoneEvent));
                 } catch (e) {
                     this.outputLine(Constants.IoTHubMessageLabel, e);
                 }
@@ -132,12 +134,6 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
 
     public stopMonitorIoTHubMessage(): void {
         this.stopMonitorEventHubEndpoint(Constants.IoTHubMonitorLabel, Constants.IoTHubAIStopMonitorEvent, this._eventHubClient, "built-in event endpoint");
-    }
-
-    private async sendD2CMessageCore(client: Client, message: string) {
-        let stringify = Utility.getConfig<boolean>(Constants.IoTHubD2CMessageStringifyKey);
-        client.sendEvent(new Message(stringify ? JSON.stringify(message) : message),
-            this.sendEventDone(client, Constants.IoTHubMessageLabel, Constants.IoTHub, Constants.IoTHubAIMessageDoneEvent));
     }
 
     private async sendD2CMessageCoreWithProgress(client: Client, message: string, status: SendStatus, totalStatus: SendStatus) {

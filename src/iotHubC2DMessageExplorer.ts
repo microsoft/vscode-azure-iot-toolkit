@@ -73,16 +73,12 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
                         this.outputLine(Constants.IoTHubC2DMessageLabel, err.message);
                     } else {
                         let message = new Message(messageBody);
-                        this.sendC2DMessageByIdCore(serviceClient, deviceId, message);
+                        serviceClient.send(deviceId, message.getData(),
+                            this.sendEventDone(serviceClient, Constants.IoTHubC2DMessageLabel, deviceId, Constants.IoTHubAIC2DMessageDoneEvent));
                     }
                 });
             }
         });
-    }
-
-    private sendC2DMessageByIdCore(serviceClient: ServiceClient, deviceId: string, message: Message) {
-        serviceClient.send(deviceId, message.getData(),
-            this.sendEventDone(serviceClient, Constants.IoTHubC2DMessageLabel, deviceId, Constants.IoTHubAIC2DMessageDoneEvent));
     }
 
     private connectCallback(deviceConnectionString: string) {
