@@ -79,7 +79,7 @@ const app = new Vue({
             intervalUnit: 'second',
             messageType: 'Text Content',
             messageBody: 'Plain Text',
-            generatedMessage: 'Type anything in the left, and see preview here...',
+            generatedMessage: '',
             isProcessing: false,
             endpoint: document.getElementById('app').getAttribute('data-endpoint'),
             ruleValidation: {
@@ -97,8 +97,7 @@ const app = new Vue({
                 deviceConnectionStrings: [
                   { required: true, type: 'array', min: 1, message: 'Choose at least one device', trigger: 'change' }
                 ]
-            },
-            dummyJsonTemplate: ''
+            }
         }
     },
     async mounted () {
@@ -185,13 +184,18 @@ const app = new Vue({
           } else if (name === 'Plain Text') {
             this.formItem.message = plainTextTemplate;
           }
-          this.generateDummyJson();
         },
         async generateDummyJson () {
           const template = {
             template: this.formItem.message
           };
-          this.generatedMessage = (await axios.post(`${this.endpoint}/api/generaterandomjson`, template)).data;
+          await axios.post(`${this.endpoint}/api/generaterandomjson`, template)
+          .then((res) => {
+              this.generatedMessage = res.data;
+          })
+          .catch((err) => {
+            this.generatedMessage = 'Malformed dummy json syntax.';
+          })
         }
     }
 });

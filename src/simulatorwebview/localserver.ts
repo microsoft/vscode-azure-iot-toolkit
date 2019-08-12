@@ -181,8 +181,12 @@ export class LocalServer {
     private async generateRandomJson(req: express.Request, res: express.Response, next: express.NextFunction) {
         const data = req.body;
         const template = data.template;
-        const message = dummyjson.parse(template);
-        return res.status(200).json(message);
+        try {
+            const message = dummyjson.parse(template);
+            return res.status(200).json(message);
+        } catch (err) {
+            return res.sendStatus(400);
+        }
     }
 
 }

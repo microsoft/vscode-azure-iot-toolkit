@@ -28,7 +28,6 @@ body {
 .vscode-dark .ivu-select-item:hover,
 .vscode-dark .ivu-select-item-selected,
 .vscode-dark .ivu-select-item-selected:hover,
-.vscode-dark .ivu-tag,
 .vscode-dark .ivu-select-multiple .ivu-select-item-focus,
 .vscode-dark .ivu-select-multiple .ivu-select-item-selected,
 .vscode-dark .ivu-select-multiple .ivu-select-item-selected:hover,
@@ -79,6 +78,7 @@ body {
 .vscode-dark .ivu-form .ivu-form-item-label,
 .vscode-dark .ivu-card,
 .vscode-dark .ivu-dropdown-item,
-.vscode-dark .ivu-input {
+.vscode-dark .ivu-input,
+.vscode-dark .ivu-tabs-nav {
     color: #D4D4D4;
 }

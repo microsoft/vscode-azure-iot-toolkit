@@ -97,12 +97,12 @@
                             </a>
                         <Row>
                             <i-col span="24">
-                                <Tabs>
+                                <Tabs @on-click="generateDummyJson">
                                     <tab-pane label="Write" name="Write">
-                                        <i-input style="width: 100%" v-model="formItem.message" @on-change="generateDummyJson" placeholder="Enter message..." type="textarea" :autosize="{minRows: 5,maxRows: 15}"></i-input>
+                                        <i-input style="width: 100%" v-model="formItem.message" placeholder="Enter message..." type="textarea" :autosize="{minRows: 10,maxRows: 10}"></i-input>
                                     </tab-pane>
                                     <tab-pane v-if="messageBody=='Dummy Json'" label="Preview" name="Preview">
-                                        <i-input style="width: 100%" v-model="generatedMessage"  readonly type="textarea" :autosize="{minRows: 5,maxRows: 15}"></i-input>
+                                        <i-input style="width: 100%" v-model="generatedMessage"  readonly type="textarea" :autosize="{minRows: 10,maxRows: 10}"></i-input>
                                     </tab-pane>   
                                 </Tabs>
                             </i-col>
