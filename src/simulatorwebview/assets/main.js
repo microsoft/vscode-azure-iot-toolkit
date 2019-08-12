@@ -73,7 +73,7 @@ const app = new Vue({
             formItem: {
                 deviceConnectionStrings: [],
                 message: plainTextTemplate,
-                times: '1',
+                times: '10',
                 interval: '1',
             },
             intervalUnit: 'second',
@@ -143,13 +143,15 @@ const app = new Vue({
                 if (valid) {
                     let intervalInMilliSecond = Number(this.formItem.interval);
                     switch (this.intervalUnit) {
-                        // No break in this switch-case.
                         case 'minute':
-                            intervalInMilliSecond *= 60;
+                            intervalInMilliSecond *= 60000;
+                            break;
                         case 'second':
                             intervalInMilliSecond *= 1000;
+                            break;
                         case 'millisecond':
                             intervalInMilliSecond *= 1;
+                            break;
                     }
                     const data = {
                         deviceConnectionStrings: this.formItem.deviceConnectionStrings,
