@@ -86,7 +86,7 @@ const config = {
             /getos/,
             /logic[\/\\].*\.js/
         ),
-		// Express
+        // Express
 		new webpack.ContextReplacementPlugin(
             /express[\/\\]lib/,
             false,
