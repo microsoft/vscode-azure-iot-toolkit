@@ -97,7 +97,7 @@
                             </a>
                         <Row>
                             <i-col span="24">
-                                <Tabs @on-click="generateDummyJson">
+                                <Tabs v-model="messageInputAreaTab" @on-click="generateDummyJson">
                                     <tab-pane label="Write" name="Write">
                                         <i-input style="width: 100%" v-model="formItem.message" placeholder="Enter message..." type="textarea" :autosize="{minRows: 10,maxRows: 10}"></i-input>
                                     </tab-pane>

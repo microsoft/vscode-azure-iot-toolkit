@@ -97,7 +97,8 @@ const app = new Vue({
                 deviceConnectionStrings: [
                   { required: true, type: 'array', min: 1, message: 'Choose at least one device', trigger: 'change' }
                 ]
-            }
+            },
+            messageInputAreaTab: 'Write'
         }
     },
     async mounted () {
@@ -183,6 +184,7 @@ const app = new Vue({
             this.formItem.message = dummyJsonTemplate;
           } else if (name === 'Plain Text') {
             this.formItem.message = plainTextTemplate;
+            this.messageInputAreaTab = 'Write';
           }
         },
         async generateDummyJson () {
