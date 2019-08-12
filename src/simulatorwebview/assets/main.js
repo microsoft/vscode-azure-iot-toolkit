@@ -5,50 +5,39 @@ try {
     
 }
 
-const dummyJsonTemplateA = `
+const dummyJsonTemplate = `
 {
-    "users": [
-      {{#repeat 2}}
-      {
-        "id": {{@index}},
-        "name": "{{firstName}} {{lastName}}",
-        "work": "{{company}}",
-        "email": "{{email}}",
-        "dob": "{{date '1900' '2000' 'YYYY'}}",
-        "address": "{{int 1 100}} {{street}}",
-        "city": "{{city}}",
-        "optedin": {{boolean}}
-      }
-      {{/repeat}}
-    ],
-    "images": [
-      {{#repeat 3}}
-      "img{{@index}}.png"
-      {{/repeat}}
-    ],
-    "coordinates": {
-      "x": {{float -50 50 '0.00'}},
-      "y": {{float -25 25 '0.00'}}
-    },
-    "price": "\${{int 0 99999 '0,0'}}"
-  }
-`;
-
-const dummyJsonTemplateData = `
-// Generate a random date between midnight 2010-01-01 and midnight 2015-01-01
-{{date '2010' '2015'}} // Thu Jan 26 2012 03:04:15 GMT+0000 (GMT)
- 
-// Generate a random date between more specific values
-{{date '2015-06-01' '2015-06-30'}} // Mon Jun 22 2015 01:02:36 GMT+0100 (BST)
- 
-// Generate a random date between even more specific values (inc. time)
-{{date '2015-06-01T09:00' '2015-06-30T17:30'}} // Sun Jun 07 2015 23:55:16 GMT+0100 (BST)
- 
-// Format the date using fecha
-{{date '2010' '2015' 'DD/MM/YYYY'}} // 16/06/2012
- 
-// Format the date using a unix timestamp
-{{date '2010' '2015' 'unix'}} // 1340417344
+  "devicesA": [
+    {{#repeat 2}}
+    {
+      "deviceId": {{@index}},
+      "city": "{{city}}",
+      "online": {{boolean}},
+      "data": [
+		{{#repeat 3}}
+		{
+			"date": "{{date '2019-01-01' '2019-12-31' 'YYYY-MM-DD'}}",
+			"time": "{{time '00:00' '23:59' 'hh:mm'}}",
+			"temperature": "{{float 1 100 round=0.01}} °C",
+		}
+		{{/repeat}}
+	  ]
+    }
+    {{/repeat}}
+  ],
+  "devicesB": [
+	{{#repeat 2}}
+    {
+      "deviceId": {{@index}},
+	  "coordinates": {
+		"x": {{float -50 50 '0.00'}},
+		"y": {{float -25 25 '0.00'}}
+	  },
+	  "speed": "{{int 0 10000 '0,0.00'}} m/s"
+	}
+    {{/repeat}}
+  ]
+}
 `;
 
 const app = new Vue({
