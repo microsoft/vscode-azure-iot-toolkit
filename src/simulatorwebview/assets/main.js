@@ -113,7 +113,7 @@ const app = new Vue({
                 ],
                 message: [
                   {required: true, trigger: 'blur'},
-                  {validator: messageParseValidator, trigger: 'change'}
+                  {validator: messageParseValidator, trigger: 'blur'}
                 ],
                 deviceConnectionStrings: [
                   { required: true, type: 'array', min: 1, message: 'Choose at least one device', trigger: 'change' }
