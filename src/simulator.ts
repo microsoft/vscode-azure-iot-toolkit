@@ -43,9 +43,9 @@ export class Simulator {
         return;
     }
 
-    public async sendD2CMessage(deviceConnectionStrings: string[], message: string, times: number, interval: number) {
+    public async sendD2CMessage(deviceConnectionStrings: string[], message: string, numbers: number, interval: number) {
         Simulator.setProcessing(true);
-        await this._iotHubMessageExplorer.sendD2CMessageFromMultipleDevicesRepeatedlyWithProgressBar(deviceConnectionStrings, message, times, interval);
+        await this._iotHubMessageExplorer.sendD2CMessageFromMultipleDevicesRepeatedlyWithProgressBar(deviceConnectionStrings, message, numbers, interval);
         Simulator.setProcessing(false);
     }
 }

@@ -44,9 +44,9 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
         });
     }
 
-    public async sendD2CMessageFromMultipleDevicesRepeatedlyWithProgressBar(deviceConnectionStrings: string[], template: string, times: number, interval: number) {
+    public async sendD2CMessageFromMultipleDevicesRepeatedlyWithProgressBar(deviceConnectionStrings: string[], template: string, numbers: number, interval: number) {
         const deviceCount = deviceConnectionStrings.length;
-        const total = deviceCount * times;
+        const total = deviceCount * numbers;
         if (total <= 0) {
             this.outputLine(`${this.timeFormat(new Date())}`, `Invalid Operation.`);
             return Promise.reject();
@@ -69,17 +69,17 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
             let totalStatus = new SendStatus("Total", total);
             for (let i = 0; i < deviceCount; i++) {
                 clients.push(await clientFromConnectionString(deviceConnectionStrings[i]));
-                statuses.push(new SendStatus(ConnectionString.parse(deviceConnectionStrings[i]).DeviceId, times));
+                statuses.push(new SendStatus(ConnectionString.parse(deviceConnectionStrings[i]).DeviceId, numbers));
                 ids.push(i);
             }
-            for (let i = 0; i < times; i++) {
+            for (let i = 0; i < numbers; i++) {
                 // No await here, beacause the interval should begin as soon as it called send(), not after it sent.
                 // We use a template so that each time the message can be randomly generated.
                 ids.map((j) => this.sendD2CMessageCoreWithProgress(clients[j], dummyjson.parse(template), statuses[j], totalStatus));
                 if (token.isCancellationRequested) {
                     break;
                 }
-                if (i < times - 1) {
+                if (i < numbers - 1) {
                     // There won't be a delay after the last iteration.
                     await this.cancellableDelayAndUpdateProgress(interval, token, progress, totalStatus);
                 }

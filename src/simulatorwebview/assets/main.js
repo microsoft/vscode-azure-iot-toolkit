@@ -68,6 +68,22 @@ const app = new Vue({
               }
             }
           }; 
+        const messageParseValidator = async (rule, value, callback) => {
+          if (value === '') {
+            callback(new Error('Required'));
+          } else {
+            if (this.messageBody === 'Plain Text') {
+              callback();
+            } else if (this.messageBody === 'Dummy Json') {
+              const validated = await this.generateDummyJson();
+              if (validated) {
+                callback();
+              } else {
+                callback(new Error('Malformed dummy json syntax.'));
+              }
+            }
+          }
+        };
         return {
             introduction: introductionTemplate,
             hostName: '',
@@ -75,7 +91,7 @@ const app = new Vue({
             formItem: {
                 deviceConnectionStrings: [],
                 message: plainTextTemplate,
-                times: '10',
+                numbers: '10',
                 interval: '1',
             },
             intervalUnit: 'second',
@@ -85,16 +101,19 @@ const app = new Vue({
             isProcessing: false,
             endpoint: document.getElementById('app').getAttribute('data-endpoint'),
             ruleValidation: {
-                times: [
+              numbers: [
                   {required: true, trigger: 'blur'},
-                  {validator: numberValidator, trigger: 'blur'}
+                  {validator: numberValidator, trigger: 'blur'},
+                  {validator: numberValidator, trigger: 'change'}
                 ],
                 interval: [
                   {required: true, trigger: 'blur'},
-                  {validator: numberValidator, trigger: 'blur'}
+                  {validator: numberValidator, trigger: 'blur'},
+                  {validator: numberValidator, trigger: 'change'}
                 ],
                 message: [
                   {required: true, trigger: 'blur'},
+                  {validator: messageParseValidator, trigger: 'change'}
                 ],
                 deviceConnectionStrings: [
                   { required: true, type: 'array', min: 1, message: 'Choose at least one device', trigger: 'change' }
@@ -158,7 +177,7 @@ const app = new Vue({
                     const data = {
                         deviceConnectionStrings: this.formItem.deviceConnectionStrings,
                         message: this.formItem.message,
-                        times: this.formItem.times,
+                        numbers: this.formItem.numbers,
                         interval: intervalInMilliSecond,
                         messageType: this.messageType,
                         messageBody: this.messageBody
@@ -182,6 +201,7 @@ const app = new Vue({
               });
         },
         messageBodyChange (name) {
+          this.messageBody = name;
           // The input area will be replaced with template only when the content is empty or default.
           // If user makes any change, we will keep the change.
           if (name === 'Dummy Json') {
@@ -199,14 +219,18 @@ const app = new Vue({
           const template = {
             template: this.formItem.message
           };
-          await axios.post(`${this.endpoint}/api/generaterandomjson`, template)
+          const validated = await axios.post(`${this.endpoint}/api/generaterandomjson`, template)
           .then((res) => {
               this.generatedMessage = res.data;
+              return true;
           })
           .catch((err) => {
             this.generatedMessage = 'Malformed dummy json syntax.';
+            return false;
           })
+          return validated;
         }
+        
     }
 });
   

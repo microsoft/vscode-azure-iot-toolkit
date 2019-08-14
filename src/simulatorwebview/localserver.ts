@@ -152,7 +152,7 @@ export class LocalServer {
             const messageBody = data.messageBody;
             const deviceConnectionStrings: string[] = data.deviceConnectionStrings;
             let message: string = data.message;
-            const times: number = Number(data.times);
+            const numbers: number = Number(data.numbers);
             const interval: number = Number(data.interval);
             switch (messageType) {
                 case "File Upload":
@@ -172,7 +172,7 @@ export class LocalServer {
                 default:
                     break;
             }
-            await this._simulator.sendD2CMessage(deviceConnectionStrings, message, times, interval);
+            await this._simulator.sendD2CMessage(deviceConnectionStrings, message, numbers, interval);
         } catch (err) {
             next(err);
         }

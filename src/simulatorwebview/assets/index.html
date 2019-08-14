@@ -65,14 +65,14 @@
                             </Row>
                         </form-item>
                         <Row>
-                            <i-col span="4">
-                                <form-item prop="times" label="Message numbers per device">
-                                    <i-input v-model="formItem.times" placeholder="The number of messages to send per device..."></i-input>
+                            <i-col span="5">
+                                <form-item prop="numbers" label="Message numbers per device">
+                                    <i-input v-model="formItem.numbers" placeholder="Number of messages for per device"></i-input>
                                 </form-item>
                             </i-col>
                             <i-col span="10" offset="4">
                                 <form-item prop="interval" label="Interval">
-                                    <i-input v-model="formItem.interval" placeholder="The interval between two messages...">
+                                    <i-input v-model="formItem.interval" placeholder="Interval between two messages">
                                         <i-select v-model="intervalUnit" slot="append" style="width: 150px">
                                             <i-option value="millisecond">millisecond(s)</i-option>
                                             <i-option value="second">second(s)</i-option>
@@ -101,7 +101,7 @@
                             <i-col span="24">
                                 <Tabs v-model="messageInputAreaTab" @on-click="generateDummyJson">
                                     <tab-pane label="Write" name="Write">
-                                        <i-input style="width: 100%" v-model="formItem.message" placeholder="Enter message..." type="textarea" :autosize="{minRows: 10,maxRows: 10}"></i-input>
+                                        <i-input style="width: 100%" v-model="formItem.message" @on-change="generateDummyJson" placeholder="Enter message..." type="textarea" :autosize="{minRows: 10,maxRows: 10}"></i-input>
                                     </tab-pane>
                                     <tab-pane v-if="messageBody=='Dummy Json'" label="Preview" name="Preview">
                                         <i-input style="width: 100%" v-model="generatedMessage"  readonly type="textarea" :autosize="{minRows: 10,maxRows: 10}"></i-input>
