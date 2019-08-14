@@ -95,6 +95,14 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
             this.outputLine(`${this.timeFormat(new Date())}`,
                 `Duration: ${(endTime.getTime() - startTime.getTime()) / 1000} second(s), with ${totalStatus.getSucceed()} succeed, and ${totalStatus.getFailed()} failed.`,
             );
+            // Only output the devices with failed messages.
+            for (const status of statuses) {
+                if (status.failed() !== 0) {
+                    this.outputLine(`Failed`,
+                        `${status.getFailed()} message(s) failed from ${status.getDeviceId()}.`,
+                    );
+                }
+            }
         });
     }
 
