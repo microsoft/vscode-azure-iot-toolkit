@@ -88,7 +88,7 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
                 `Sending ${total} message(s) done in ${(sendingEndTime.getTime() - sendingStartTime.getTime()) / 1000} second(s), please wait a few seconds for the result.`,
             );
             while ((!token.isCancellationRequested) && (totalStatus.sum() !== totalStatus.getTotal())) {
-                await this.delay(1);
+                await this.delay(1000);
             }
             const endTime = new Date();
             this.outputLine(Constants.SimulatorSummaryLabel,
