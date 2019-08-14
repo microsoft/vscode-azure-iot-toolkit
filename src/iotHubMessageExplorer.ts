@@ -79,12 +79,9 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
                 }
                 if (i < times - 1) {
                     // there won't be a delay after the last iteration
-                    await this.delay(interval, token, progress, totalStatus);
+                    await this.cancellableDelayAndUpdateProgress(interval, token, progress, totalStatus);
                 }
-                progress.report({
-                    increment: step * deviceCount,
-                    message: `Sent message(s) ${totalStatus.sum()} of ${totalStatus.getTotal()}`,
-                });
+                this.updateProgressBar(progress, totalStatus, step * deviceCount);
             }
             const sendingEndTime = new Date();
             this.outputLine(Constants.SimulatorSummaryLabel,
@@ -141,39 +138,38 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
         await client.sendEvent(new Message(stringify ? JSON.stringify(message) : message),
             this.sendEventDoneWithProgress(client, Constants.IoTHubAIMessageDoneEvent, status, totalStatus));
     }
-
-    private async delay(ms: number, token?: vscode.CancellationToken, progress?: vscode.Progress<{
+    
+    private updateProgressBar(progress: vscode.Progress<{
         message?: string;
         increment?: number;
-    }>, totalStatus?: SendStatus) {
-        // update progress bar every second, even in a long interval
-        if (progress) {
-            progress.report({
-                // do not increase the progress, just update the message here
-                increment: 0,
-                message: `Sent message(s) ${totalStatus.sum()} of ${totalStatus.getTotal()}`,
-            });
-        }
-        if (ms <= 1000) {
-            return new Promise( (resolve) => setTimeout(resolve, ms));
-        } else {
-            await new Promise( (resolve) => setTimeout(resolve, 1000));
-            if (token) {
-                if (token.isCancellationRequested) {
-                    return;
-                } else {
-                    await this.delay(ms - 1000, token);
-                }
-            } else {
-                await this.delay(ms - 1000);
-            }
-        }
+    }>, totalStatus: SendStatus, increment: number = 0) {
+        progress.report({
+            increment: increment,
+            message: `Sent message(s) ${totalStatus.sum()} of ${totalStatus.getTotal()}`,
+        });
     }
 
-    private timeFormat(date: Date): string {
-        let format = `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}-${("0" + date.getDate()).slice(-2)}`;
-        format += ` ${("0" + (date.getHours())).slice(-2)}:${("0" + (date.getMinutes())).slice(-2)}:${("0" + (date.getSeconds())).slice(-2)}`;
-        return format;
+    private async delay(milliSecond: number) {
+        return new Promise( (resolve) => setTimeout(resolve, milliSecond));
+    }
+
+    private async cancellableDelayAndUpdateProgress(milliSecond: number, token: vscode.CancellationToken, progress: vscode.Progress<{
+        message?: string;
+        increment?: number;
+    }>, totalStatus: SendStatus) {
+        while (milliSecond > 1000) {
+            await this.delay(1000);
+            this.updateProgressBar(progress, totalStatus, 0);
+            if (token.isCancellationRequested) {
+                return;
+            } else {
+                milliSecond -= 1000;
+            }
+        }
+        if (milliSecond > 0) {
+            await this.delay(milliSecond);
+        }
+        this.updateProgressBar(progress, totalStatus, 0);
     }
 
     private async startMonitor(label: string, consumerGroup: string, deviceItem?: DeviceItem) {
