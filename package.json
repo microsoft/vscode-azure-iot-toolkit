@@ -346,9 +346,9 @@
           "group": "azure-iot-toolkit-4@1"
         },
         {
-          "command": "extension.showSimulatorWebview",
+          "command": "azure-iot-toolkit.showSimulatorWebview",
           "when": "view == iotHubDevices",
-          "group": "azure-iot-toolkit-5@0"
+          "group": "azure-iot-toolkit-0@1"
         }
       ],
       "view/item/context": [
@@ -423,9 +423,9 @@
           "group": "azure-iot-toolkit-4@0"
         },
         {
-          "command": "extension.showSimulatorWebview",
+          "command": "azure-iot-toolkit.showSimulatorWebview",
           "when": "view == iotHubDevices && viewItem == device",
-          "group": "azure-iot-toolkit-5@0"
+          "group": "azure-iot-toolkit-0@4"
         },
         {
           "command": "azure-iot-toolkit.refresh",
@@ -488,9 +488,9 @@
           "group": "azure-iot-toolkit-4@0"
         },
         {
-          "command": "extension.showSimulatorWebview",
+          "command": "azure-iot-toolkit.showSimulatorWebview",
           "when": "view == iotHubDevices && viewItem == edge",
-          "group": "azure-iot-toolkit-5@0"
+          "group": "azure-iot-toolkit-0@4"
         },
         {
           "command": "azure-iot-toolkit.createDeployment",

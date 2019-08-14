@@ -75,7 +75,7 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
             for (let i = 0; i < numbers; i++) {
                 // No await here, beacause the interval should begin as soon as it called send(), not after it sent.
                 // We use a template so that each time the message can be randomly generated.
-                ids.map((j) => this.sendD2CMessageCoreWithProgress(clients[j], dummyjson.parse(template), statuses[j], totalStatus));
+                await ids.map(async (j) => await this.sendD2CMessageCoreWithProgress(clients[j], dummyjson.parse(template), statuses[j], totalStatus));
                 if (token.isCancellationRequested) {
                     break;
                 }
@@ -85,24 +85,16 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
                 }
                 this.updateProgressBar(progress, totalStatus, step * deviceCount);
             }
-            while ((!token.isCancellationRequested) && (totalStatus.sum() !== totalStatus.getTotal())) {
-                await this.delay(1000);
-            }
             const endTime = new Date();
             this.outputLine(`${this.timeFormat(new Date())}`,
                 `${token.isCancellationRequested ? "User aborted" : "All device(s) finished"} at ${this.timeFormat(endTime)}`,
             );
+            while ((!token.isCancellationRequested) && (totalStatus.sum() !== totalStatus.getTotal())) {
+                await this.delay(500);
+            }
             this.outputLine(`${this.timeFormat(new Date())}`,
                 `Duration: ${(endTime.getTime() - startTime.getTime()) / 1000} second(s), with ${totalStatus.getSucceed()} succeed, and ${totalStatus.getFailed()} failed.`,
             );
-            // Only output the devices with failed messages.
-            for (const status of statuses) {
-                if (status.failed() !== 0) {
-                    this.outputLine(`Failed`,
-                        `${status.getFailed()} message(s) failed from ${status.getDeviceId()}.`,
-                    );
-                }
-            }
         });
     }
 
