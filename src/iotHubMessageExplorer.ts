@@ -7,6 +7,7 @@ import { ConnectionString } from "azure-iot-common";
 import { Message } from "azure-iot-device";
 import { Client } from "azure-iot-device";
 import { clientFromConnectionString } from "azure-iot-device-mqtt";
+import * as dummyjson from "dummy-json";
 import * as vscode from "vscode";
 import { Constants } from "./constants";
 import { IoTHubMessageBaseExplorer } from "./iotHubMessageBaseExplorer";
@@ -43,7 +44,7 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
         });
     }
 
-    public async sendD2CMessageFromMultipleDevicesRepeatedlyWithProgressBar(deviceConnectionStrings: string[], message: string, times: number, interval: number) {
+    public async sendD2CMessageFromMultipleDevicesRepeatedlyWithProgressBar(deviceConnectionStrings: string[], template: string, times: number, interval: number) {
         const deviceCount = deviceConnectionStrings.length;
         const total = deviceCount * times;
         if (total <= 0) {
@@ -72,7 +73,7 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
                 ids.push(i);
             }
             for (let i = 0; i < times; i++) {
-                await ids.map(async (j) => await this.sendD2CMessageCoreWithProgress(clients[j], message, statuses[j], totalStatus));
+                await ids.map(async (j) => await this.sendD2CMessageCoreWithProgress(clients[j], dummyjson.parse(template), statuses[j], totalStatus));
                 if (token.isCancellationRequested) {
                     break;
                 }
@@ -82,7 +83,6 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
                 }
                 this.updateProgressBar(progress, totalStatus, step * deviceCount);
             }
-            const sendingEndTime = new Date();
             while ((!token.isCancellationRequested) && (totalStatus.sum() !== totalStatus.getTotal())) {
                 await this.delay(1000);
             }
