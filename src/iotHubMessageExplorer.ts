@@ -47,12 +47,12 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
         const deviceCount = deviceConnectionStrings.length;
         const total = deviceCount * times;
         if (total <= 0) {
-            this.outputLine(Constants.SimulatorSummaryLabel, `Invalid Operation.`);
+            this.outputLine(`${this.timeFormat(new Date())}`, `Invalid Operation.`);
             return Promise.reject();
         }
         const step = 100 / total;
         const startTime = new Date();
-        this.outputLine(Constants.SimulatorSummaryLabel, `[${this.timeFormat(startTime)}] Start sending messages from ${deviceCount} device(s) to IoT Hub.`);
+        this.outputLine(`${this.timeFormat(new Date())}`, `Start sending messages from ${deviceCount} device(s) to IoT Hub.`);
         await vscode.window.withProgress({
             location: vscode.ProgressLocation.Notification,
             title: Constants.SimulatorSendingMessageProgressBarTitle,
@@ -71,7 +71,6 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
                 statuses.push(new SendStatus(ConnectionString.parse(deviceConnectionStrings[i]).DeviceId, times));
                 ids.push(i);
             }
-            const sendingStartTime = new Date();
             for (let i = 0; i < times; i++) {
                 await ids.map(async (j) => await this.sendD2CMessageCoreWithProgress(clients[j], message, statuses[j], totalStatus));
                 if (token.isCancellationRequested) {
@@ -84,17 +83,14 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
                 this.updateProgressBar(progress, totalStatus, step * deviceCount);
             }
             const sendingEndTime = new Date();
-            this.outputLine(Constants.SimulatorSummaryLabel,
-                `Sending ${total} message(s) done in ${(sendingEndTime.getTime() - sendingStartTime.getTime()) / 1000} second(s), please wait a few seconds for the result.`,
-            );
             while ((!token.isCancellationRequested) && (totalStatus.sum() !== totalStatus.getTotal())) {
                 await this.delay(1000);
             }
             const endTime = new Date();
-            this.outputLine(Constants.SimulatorSummaryLabel,
+            this.outputLine(`${this.timeFormat(new Date())}`,
                 `${token.isCancellationRequested ? "User aborted" : "All device(s) finished"} at ${this.timeFormat(endTime)}`,
             );
-            this.outputLine(Constants.SimulatorSummaryLabel,
+            this.outputLine(`${this.timeFormat(new Date())}`,
                 `Duration: ${(endTime.getTime() - startTime.getTime()) / 1000} second(s), with ${totalStatus.getSucceed()} succeed, and ${totalStatus.getFailed()} failed.`,
             );
         });
@@ -170,6 +166,10 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
             await this.delay(milliSecond);
         }
         this.updateProgressBar(progress, totalStatus, 0);
+    }
+
+    private timeFormat(date: Date) : string {
+        return date.toLocaleTimeString("en-US");
     }
 
     private async startMonitor(label: string, consumerGroup: string, deviceItem?: DeviceItem) {
