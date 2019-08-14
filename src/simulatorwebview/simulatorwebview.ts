@@ -12,8 +12,8 @@ import { Simulator } from "../simulator";
 import { Utility } from "../utility";
 import { LocalServer } from "./localserver";
 
-const simulatorWebviewPanelViewType = "IoT Edge SimulatorWebview";
-const simulatorWebviewPanelViewTitle = "IoT Edge SimulatorWebview";
+const simulatorWebviewPanelViewType = "IoT Device Simulator";
+const simulatorWebviewPanelViewTitle = "IoT Device Simulator";
 
 export class SimulatorWebview {
     public static getInstance(context: vscode.ExtensionContext) {

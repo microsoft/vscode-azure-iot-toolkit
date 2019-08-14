@@ -35,13 +35,15 @@
                             <p>
                                 {{ introduction }}
                             </p>
+                            <br/>
                             <p>
                                 You are sending message(s) to <b>{{ hostName }}</b>
                             </p>
+                            <br/>
                         </i-col>
                     </Row>
                     <i-form ref="formItem" :model="formItem" :rules="ruleValidation">
-                        <form-item prop="deviceConnectionStrings" label="Input Device">
+                        <form-item prop="deviceConnectionStrings" label="Device(s) to simulate">
                             <Row>
                                 <i-col span="24">
                                     <i-select
@@ -64,13 +66,13 @@
                         </form-item>
                         <Row>
                             <i-col span="4">
-                                <form-item prop="times" label="Times">
-                                    <i-input v-model="formItem.times" placeholder="Enter times..."></i-input>
+                                <form-item prop="times" label="Message numbers per device">
+                                    <i-input v-model="formItem.times" placeholder="The number of messages to send per device..."></i-input>
                                 </form-item>
                             </i-col>
                             <i-col span="10" offset="4">
                                 <form-item prop="interval" label="Interval">
-                                    <i-input v-model="formItem.interval" placeholder="Enter interval...">
+                                    <i-input v-model="formItem.interval" placeholder="The interval between two messages...">
                                         <i-select v-model="intervalUnit" slot="append" style="width: 150px">
                                             <i-option value="millisecond">millisecond(s)</i-option>
                                             <i-option value="second">second(s)</i-option>
