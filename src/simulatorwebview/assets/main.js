@@ -182,10 +182,16 @@ const app = new Vue({
               });
         },
         messageBodyChange (name) {
+          // The input area will be replaced with template only when the content is empty or default.
+          // If user makes any change, we will keep the change.
           if (name === 'Dummy Json') {
-            this.formItem.message = dummyJsonTemplate;
+            if (this.formItem.message === '' || this.formItem.message === plainTextTemplate) {
+              this.formItem.message = dummyJsonTemplate;
+            }
           } else if (name === 'Plain Text') {
-            this.formItem.message = plainTextTemplate;
+            if (this.formItem.message === '' || this.formItem.message === dummyJsonTemplate) {
+              this.formItem.message = plainTextTemplate;
+            }
             this.messageInputAreaTab = 'Write';
           }
         },
