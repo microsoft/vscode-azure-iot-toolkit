@@ -5,13 +5,15 @@ try {
     
 }
 
+// index, city, boolean, random number, date and time, coordinates...
+// These are common elements in IoT senario, so we generate a related template contains all of them.
 const dummyJsonTemplate = `{
-  "devicesA": [
+  "temperatureSensor": [
     {{#repeat 2}}
     {
-      "deviceId": {{@index}},
-      "city": "{{city}}",
-      "online": {{boolean}},
+      "sensorId": {{@index}},
+      "location": "{{city}}",
+      "healthy": {{boolean}},
       "data": [
 		{{#repeat 3}}
 		{
@@ -24,10 +26,10 @@ const dummyJsonTemplate = `{
     }
     {{/repeat}}
   ],
-  "devicesB": [
+  "speedSensor": [
 	{{#repeat 2}}
     {
-      "deviceId": {{@index}},
+      "sensorId": {{@index}},
 	  "coordinates": {
 		"x": {{float -50 50 '0.00'}},
 		"y": {{float -25 25 '0.00'}}

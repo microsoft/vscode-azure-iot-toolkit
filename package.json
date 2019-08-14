@@ -279,8 +279,8 @@
         "category": "%azure-iot-toolkit.category%"
       },
       {
-        "command": "extension.showSimulatorWebview",
-        "title": "showSimulatorWebview"
+        "command": "azure-iot-toolkit.showSimulatorWebview",
+        "title": "Show IoT Device Simulator"
       }
     ],
     "menus": {
