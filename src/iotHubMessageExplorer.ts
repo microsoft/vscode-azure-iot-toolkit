@@ -73,12 +73,14 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
                 ids.push(i);
             }
             for (let i = 0; i < times; i++) {
-                await ids.map(async (j) => await this.sendD2CMessageCoreWithProgress(clients[j], dummyjson.parse(template), statuses[j], totalStatus));
+                // No await here, beacause the interval should begin as soon as it called send(), not after it sent.
+                // We use a template so that each time the message can be randomly generated.
+                ids.map((j) => this.sendD2CMessageCoreWithProgress(clients[j], dummyjson.parse(template), statuses[j], totalStatus));
                 if (token.isCancellationRequested) {
                     break;
                 }
                 if (i < times - 1) {
-                    // there won't be a delay after the last iteration
+                    // There won't be a delay after the last iteration.
                     await this.cancellableDelayAndUpdateProgress(interval, token, progress, totalStatus);
                 }
                 this.updateProgressBar(progress, totalStatus, step * deviceCount);
