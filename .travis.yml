@@ -2,6 +2,8 @@ sudo: false
 language: node_js
 node_js:
 - lts/*
+services:
+- docker
 os:
 - osx
 - linux
@@ -20,6 +22,7 @@ script:
 - node scripts/genAiKey.js
 - echo "y" | vsce package
 - npm test --silent
+- docker run -ti --rm -v $PWD:/mnt:ro dkhamsing/awesome_bot --allow-dupe --allow-redirect --skip-save-results `ls *.md`
 deploy:
 - provider: releases
   skip_cleanup: true
