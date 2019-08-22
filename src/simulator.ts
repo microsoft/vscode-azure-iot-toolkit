@@ -49,7 +49,7 @@ export class Simulator {
   private constructor(context: vscode.ExtensionContext) {
     this.context = context;
     this.outputChannel = vscode.window.createOutputChannel(
-      Constants.SimulatorOutputChannelTitle
+      Constants.SimulatorOutputChannelTitle,
     );
     this.processing = false;
     this.cancelToken = false;
@@ -62,13 +62,13 @@ export class Simulator {
       intervalUnit: "",
       messageBody: "",
       plainTextArea: "",
-      dummyJsonArea: ""
+      dummyJsonArea: "",
     };
   }
 
   public async selectIoTHub() {
     const _IoTHubResourceExplorer = new IoTHubResourceExplorer(
-      this.outputChannel
+      this.outputChannel,
     );
     await _IoTHubResourceExplorer.selectIoTHub();
   }
@@ -77,7 +77,7 @@ export class Simulator {
     const iotHubConnectionString = await Utility.getConnectionString(
       Constants.IotHubConnectionStringKey,
       Constants.IotHubConnectionStringTitle,
-      false
+      false,
     );
     return await Utility.getFilteredDeviceList(iotHubConnectionString, false);
   }
@@ -104,7 +104,7 @@ export class Simulator {
       let iotHubConnectionString = await Utility.getConnectionString(
         Constants.IotHubConnectionStringKey,
         Constants.IotHubConnectionStringTitle,
-        false
+        false,
       );
       if (deviceItem) {
         const hostName = ConnectionString.parse(iotHubConnectionString)
@@ -117,7 +117,7 @@ export class Simulator {
           hostName !== hostNamePersisted ||
             deviceConnectionStrings !== deviceConnectionStringsPersisted,
           hostName,
-          deviceConnectionStrings
+          deviceConnectionStrings,
         );
       } else {
         if (!iotHubConnectionString) {
@@ -133,9 +133,9 @@ export class Simulator {
           .deviceConnectionStrings;
         await this.showWebview(
           hostName !== hostNamePersisted ||
-            deviceConnectionStringsPersisted.length != 0,
+            deviceConnectionStringsPersisted.length !== 0,
           hostName,
-          deviceConnectionStrings
+          deviceConnectionStrings,
         );
       }
     }
@@ -146,7 +146,7 @@ export class Simulator {
     template: string,
     isTemplate: boolean,
     numbers: number,
-    interval: number
+    interval: number,
   ) {
     if (!this.processing) {
       this.processing = true;
@@ -156,14 +156,14 @@ export class Simulator {
         template,
         isTemplate,
         numbers,
-        interval
+        interval,
       );
       this.processing = false;
       // The cancel token can only be re-initialized out of any send() or delay() functions.
       this.cancelToken = false;
     } else {
       vscode.window.showErrorMessage(
-        "A previous simulation is in progress, please wait or cancel it."
+        "A previous simulation is in progress, please wait or cancel it.",
       );
     }
   }
@@ -185,7 +185,7 @@ export class Simulator {
   }
 
   private setPreSelectedDeviceConnectionStrings(
-    deviceConnectionStrings: string[]
+    deviceConnectionStrings: string[],
   ) {
     this.persistedInputs.deviceConnectionStrings = deviceConnectionStrings;
   }
@@ -193,7 +193,7 @@ export class Simulator {
   private async showWebview(
     forceReload: boolean,
     hostName?: string,
-    deviceConnectionStrings?: string[]
+    deviceConnectionStrings?: string[],
   ): Promise<void> {
     const simulatorwebview = SimulatorWebview.getInstance(this.context);
     if (hostName) {
@@ -208,7 +208,7 @@ export class Simulator {
 
   private output(message: string) {
     this.outputChannel.appendLine(
-      `[${new Date().toLocaleTimeString("en-US")}] ${message}`
+      `[${new Date().toLocaleTimeString("en-US")}] ${message}`,
     );
   }
 
@@ -216,7 +216,7 @@ export class Simulator {
     client,
     aiEventName: string,
     status: SendStatus,
-    totalStatus: SendStatus
+    totalStatus: SendStatus,
   ) {
     return async (err, result) => {
       const total = await status.getTotal();
@@ -241,10 +241,10 @@ export class Simulator {
     client: Client,
     message: string,
     status: SendStatus,
-    totalStatus: SendStatus
+    totalStatus: SendStatus,
   ) {
     let stringify = Utility.getConfig<boolean>(
-      Constants.IoTHubD2CMessageStringifyKey
+      Constants.IoTHubD2CMessageStringifyKey,
     );
     await client.sendEvent(
       new Message(stringify ? JSON.stringify(message) : message),
@@ -252,13 +252,13 @@ export class Simulator {
         client,
         Constants.IoTHubAIMessageDoneEvent,
         status,
-        totalStatus
-      )
+        totalStatus,
+      ),
     );
   }
 
   private async delay(milliSecond: number) {
-    return new Promise(resolve => setTimeout(resolve, milliSecond));
+    return new Promise((resolve) => setTimeout(resolve, milliSecond));
   }
 
   private async cancellableDelay(milliSecond: number) {
@@ -280,7 +280,7 @@ export class Simulator {
     template: string,
     isTemplate: boolean,
     numbers: number,
-    interval: number
+    interval: number,
   ) {
     const deviceCount = deviceConnectionStrings.length;
     const total = deviceCount * numbers;
@@ -290,7 +290,7 @@ export class Simulator {
     }
     const startTime = new Date();
     this.output(
-      `Start sending messages from ${deviceCount} device(s) to IoT Hub.`
+      `Start sending messages from ${deviceCount} device(s) to IoT Hub.`,
     );
     let clients = [];
     let statuses = [];
@@ -298,19 +298,19 @@ export class Simulator {
     this.totalStatus = new SendStatus("Total", total);
     for (let i = 0; i < deviceCount; i++) {
       clients.push(
-        await clientFromConnectionString(deviceConnectionStrings[i])
+        await clientFromConnectionString(deviceConnectionStrings[i]),
       );
       statuses.push(
         new SendStatus(
           ConnectionString.parse(deviceConnectionStrings[i]).DeviceId,
-          numbers
-        )
+          numbers,
+        ),
       );
       ids.push(i);
     }
     for (let i = 0; i < numbers; i++) {
       // No await here, beacause the interval should begin as soon as it called send(), not after it sent.
-      ids.map(j => {
+      ids.map((j) => {
         // We use a template so that each time the message can be randomly generated.
         const generatedMessage = isTemplate
           ? dummyjson.parse(template)
@@ -319,7 +319,7 @@ export class Simulator {
           clients[j],
           generatedMessage,
           statuses[j],
-          this.totalStatus
+          this.totalStatus,
         );
       });
       this.totalStatus.addSent(deviceCount);
@@ -334,7 +334,7 @@ export class Simulator {
     const endTime = new Date();
     this.output(
       this.cancelToken ? `User aborted.` : `All device(s) finished sending in ${(endTime.getTime() - startTime.getTime()) /
-      1000} second(s).`
+      1000} second(s).`,
     );
     while (
       !this.cancelToken &&
@@ -343,7 +343,7 @@ export class Simulator {
       await this.delay(500);
     }
     this.output(
-      `${await this.totalStatus.getSucceed()} succeeded, and ${await this.totalStatus.getFailed()} failed.`
+      `${await this.totalStatus.getSucceed()} succeeded, and ${await this.totalStatus.getFailed()} failed.`,
     );
   }
 }
