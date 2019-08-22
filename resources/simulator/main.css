@@ -1,3 +1,16 @@
+.ivu-icon {
+	color: #2d8cf0;
+}
+
+.ivu-radio-group {
+	margin-top: -20px;
+}
+
+.ivu-tabs,
+.ivu-tabs-content {
+	margin-top: -10px;
+}
+
 * {
   box-sizing: border-box;
   font-family: "Segoe UI";
@@ -71,6 +84,12 @@ body {
 .vscode-dark .ivu-select .ivu-select-multiple .ivu-select-default,
 .vscode-dark .ivu-select-selection {
   border-color: #3c3c3c;
+}
+
+.vscode-dark .ivu-tabs-bar,
+.vscode-dark .ivu-modal-header,
+.vscode-dark .ivu-modal-footer {
+  border-color: #303030;
 }
 
 .vscode-dark

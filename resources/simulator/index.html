@@ -5,13 +5,13 @@
     <!-- The loading sequence is critical, and should not be changed,
         otherwise webview may show in blank because some variable cannot get the initial data
         (e.g. axios.js is missing so that we can't do POST in main.js ) -->
-    <link rel="stylesheet" href="{{root}}/resources/simulator/main.css">
+    <link rel="stylesheet" href="{{root}}/src/simulatorwebview/assets/main.css">
     <link rel="stylesheet" href="./main.css">
-    <link rel="stylesheet" href="{{root}}/resources/simulator/iview.css">
+    <link rel="stylesheet" href="{{root}}/src/simulatorwebview/assets/iview.css">
     <link rel="stylesheet" href="./iview.css">
-    <script type="text/javascript" src="{{root}}/resources/simulator/axios.min.js"></script>
+    <script type="text/javascript" src="{{root}}/src/simulatorwebview/assets/axios.min.js"></script>
     <script type="text/javascript" src="./axios.min.js"></script>
-    <script type="text/javascript" src="{{root}}/resources/simulator/vue.min.js"></script>
+    <script type="text/javascript" src="{{root}}/src/simulatorwebview/assets/vue.min.js"></script>
     <script type="text/javascript" src="./vue.min.js"></script>
     <!-- v-cloak will remain on the element until the associated Vue instance finishes compilation.
         Combined with CSS rules, this directive can be used to hide un-compiled mustache bindings until the Vue instance is ready.  -->
@@ -25,15 +25,14 @@
 <body>
     <div id="app" data-endpoint="{{endpoint}}" v-cloak>
         <Row>
-            <i-col span="15">
-                <Card :dis-hover="true" :bordered="false" :style="{width: 80}">
+            <i-col span="24" style="max-width: 800px; min-width: 400px;">
+                <Card :dis-hover="true" :bordered="false">
                     <Row>
                         <i-col span="24">
                             <p>
                                 {{ introduction }}
                             </p>
-                            <br />
-                            <p>
+                            <p style="margin-top: 20px">
                                 You are sending message(s) to <b>{{ hostName }}</b>
                             </p>
                             <br />
@@ -54,19 +53,19 @@
                                 </i-col>
                             </Row>
                         </form-item>
-                        <Row>
-                            <i-col span="7">
+                        <Row :gutter="10">
+                            <i-col span="7" style="width: 200px">
                                 <form-item prop="numbers" label="Message numbers per device">
                                     <i-input v-model="formItem.numbers" placeholder="Number of messages for per device"
-                                        @on-change="persistInputs"></i-input>
+                                        @on-change="persistInputs">
+										</i-input>
                                 </form-item>
                             </i-col>
-                            <i-col span="10" offset="1">
+                            <i-col span="10" style="width: 200px">
                                 <form-item prop="interval" label="Interval">
                                     <i-input v-model="formItem.interval" placeholder="Interval between two messages"
-                                        @on-change="persistInputs">
-                                        <i-select v-model="intervalUnit" slot="append" style="width: 150px"
-                                            @on-change="persistInputs">
+                                        @on-change="persistInputs" style="padding-top: 1px">
+                                        <i-select v-model="intervalUnit" slot="append" style="width: 120px" @on-change="persistInputs">
                                             <i-option value="millisecond">millisecond(s)</i-option>
                                             <i-option value="second">second(s)</i-option>
                                             <i-option value="minute">minute(s)</i-option>
@@ -85,15 +84,13 @@
                                                 <!-- Set transfer=true, to append the layer in body.
                                           When used in Tabs or a fixed Table column, by adding this property,
                                           Tooltip will not be affected by the parent style, resulting in better results. -->
-                                                <Icon type="ios-help-circle"></Icon>
+                                                <Icon type="ios-help-circle" size="18"></Icon>
                                                 <!-- In the content slot, content should begin from the left,
                                           otherwise unexpected space will be regarded as part of content -->
                                                 <div slot="content">
-                                                    <p>Dummy JSON is a Node utility that allows you to generate random
-                                                        JSON data using Handlebars templates.
-                                                        <a href="https://github.com/webroo/dummy-json">Click here to see
-                                                            advanced usage. <Icon type="md-open"></Icon></a>
-                                                    </p>
+<p>Dummy JSON is a Node utility that allows you to generate random JSON data using Handlebars templates.
+	<a href="https://github.com/webroo/dummy-json">Click here to see advanced usage. <Icon type="md-open"></Icon></a>
+</p>
                                                 </div>
                                             </Tooltip>
                                         </Radio>
@@ -125,8 +122,8 @@
                             </Row>
                         </form-item>
                         <form-item>
-                            <i-button :disabled="status.isProcessing" type="primary" @click="send()">
-                                {{ status.isProcessing ? 'A previous simulation is in progress, please wait or cancel it.' : 'Start simulation'}}
+                            <i-button :disabled="status.isProcessing" type="primary" @click="send()" style="margin-top: -30px">
+                                Start simulation
                             </i-button>
                         </form-item>
                     </i-form>
@@ -135,26 +132,29 @@
         </Row>
         <Modal v-model="status.isProcessing" width="380" :mask-closable="false" :closable="false">
             <p slot="header" style="text-align:center">
-                <Icon type="ios-information-circle"></Icon>
+                <Icon type="ios-information-circle" size="18" ></Icon>
                 <span>A simulation is in progress...</span>
             </p>
-            <div style="text-align:center">
-                <p><b>{{status.numberOfSuccessfulMessage}}</b> of them are successfully sent;</p>
-                <p><b>{{status.numberOfFailedMessage}}</b> of them are failed.</p>
+            <div style="text-align: left; margin: 24px;">
+                <p>
+					<b>{{status.numberOfSuccessfulMessage}}</b> of them are successfully sent;
+					<br/>
+					<b>{{status.numberOfFailedMessage}}</b> of them are failed.
+				</p>
                 <i-progress status="active"
                     :percent="Math.round((this.status.numberOfSuccessfulMessage + this.status.numberOfFailedMessage) / this.status.numberOfTotalMessage * 100)">
                 </i-progress>
             </div>
             <div slot="footer">
-                <i-button type="error" size="large" long @click="progressCancel">Cancel</i-button>
+				<i-button type="primary" @click="progressCancel" style="width: 80px;">Cancel</i-button>
             </div>
         </Modal>
     </div>
     <!-- The loading sequence is critical, iview.js must be executed before main.js,
         otherwise unexpected placeholder will show on the page before they get properly rendered -->
-    <script type="text/javascript" src="{{root}}/resources/simulator/iview.min.js"></script>
+    <script type="text/javascript" src="{{root}}/src/simulatorwebview/assets/iview.min.js"></script>
     <script type="text/javascript" src="./iview.min.js"></script>
-    <script type="text/javascript" src="{{root}}/resources/simulator/main.js"></script>
+    <script type="text/javascript" src="{{root}}/src/simulatorwebview/assets/main.js"></script>
     <script type="text/javascript" src="./main.js"></script>
 </body>
 
