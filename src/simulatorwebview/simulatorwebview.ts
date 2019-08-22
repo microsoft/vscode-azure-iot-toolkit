@@ -46,7 +46,7 @@ export class SimulatorWebview {
                     retainContextWhenHidden: true,
                 },
             );
-            let html = fs.readFileSync(this.context.asAbsolutePath(path.join("src", "simulatorwebview", "assets", "index.html")), "utf8");
+            let html = fs.readFileSync(this.context.asAbsolutePath(path.join("resources", "simulator", "index.html")), "utf8");
             html = html
                 .replace(/{{root}}/g, vscode.Uri.file(this.context.asAbsolutePath(".")).with({ scheme: "vscode-resource" }).toString())
                 .replace(/{{endpoint}}/g, this.localServer.getServerUri());
