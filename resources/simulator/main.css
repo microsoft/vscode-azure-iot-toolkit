@@ -69,7 +69,8 @@ body {
 }
 
 .vscode-dark .ivu-input-group-append,
-.vscode-dark .ivu-input-group-prepend {
+.vscode-dark .ivu-input-group-prepend,
+.vscode-dark .ivu-input[disabled], fieldset[disabled] .ivu-input {
   background-color: #303030;
 }
 
@@ -88,7 +89,9 @@ body {
 
 .vscode-dark .ivu-tabs-bar,
 .vscode-dark .ivu-modal-header,
-.vscode-dark .ivu-modal-footer {
+.vscode-dark .ivu-modal-footer,
+.vscode-dark .ivu-input[disabled],
+.vscode-dark .ivu-input[disabled]:hover {
   border-color: #303030;
 }
 

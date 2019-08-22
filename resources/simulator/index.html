@@ -113,7 +113,7 @@
                                             </i-input>
                                         </tab-pane>
                                         <tab-pane v-if="messageBody=='Dummy Json'" label="Preview" name="Preview">
-                                            <i-input style="width: 100%" v-model="textArea.generatedMessage" readonly
+                                            <i-input style="width: 100%" v-model="textArea.generatedMessage" disabled readonly
                                                 type="textarea" :autosize="{minRows: 10}">
                                             </i-input>
                                         </tab-pane>
@@ -122,7 +122,7 @@
                             </Row>
                         </form-item>
                         <form-item>
-                            <i-button :disabled="status.isProcessing" type="primary" @click="send()" style="margin-top: -30px">
+                            <i-button :disabled="status.isProcessing" type="primary" @click="send()">
                                 Start simulation
                             </i-button>
                         </form-item>
