@@ -20,7 +20,6 @@ import { INode } from "./Nodes/INode";
 import { TelemetryClient } from "./telemetryClient";
 import iothub = require("azure-iothub");
 import { EventData } from "@azure/event-hubs";
-import { AxiosRequestConfig } from "axios";
 import { IotHubDescription } from "azure-arm-iothub/lib/models";
 import { AzureAccount } from "./azure-account.api";
 import { CredentialStore } from "./credentialStore";
@@ -200,12 +199,12 @@ export class Utility {
                 const moduleId = module.moduleId.substring(1);
                 if (desiredTwin.systemModules && desiredTwin.systemModules[moduleId]) {
                     return new ModuleItem(deviceItem, module.moduleId, module.connectionString, module.connectionState,
-                        reportedTwin ? this.getModuleRuntimeStatus(moduleId, reportedTwin.systemModules) : undefined, iconPath, "edge-module");
+                        isConnected && reportedTwin ? this.getModuleRuntimeStatus(moduleId, reportedTwin.systemModules) : undefined, iconPath, "edge-module");
                 }
             } else {
                 if (desiredTwin.modules && desiredTwin.modules[module.moduleId]) {
                     return new ModuleItem(deviceItem, module.moduleId, module.connectionString, module.connectionState,
-                        reportedTwin ? this.getModuleRuntimeStatus(module.moduleId, reportedTwin.modules) : undefined, iconPath, "edge-module");
+                        isConnected && reportedTwin ? this.getModuleRuntimeStatus(module.moduleId, reportedTwin.modules) : undefined, iconPath, "edge-module");
                 }
             }
             const moduleType = module.moduleId.startsWith("$") ? "edge-module" : "module";
@@ -292,11 +291,13 @@ export class Utility {
         return deviceList.map((device) => {
             const isConnected = device.connectionState.toString() === "Connected";
             const state: string = isConnected ? "on" : "off";
+            if (isConnected) {
+                device.description = device.connectionState.toString();
+            }
             let deviceType: string;
             if (edgeDeviceIdSet.has(device.deviceId)) {
                 deviceType = "edge";
                 device.contextValue = "edge";
-                device.tooltip = "";
             } else {
                 deviceType = "device";
             }
@@ -429,18 +430,6 @@ export class Utility {
         } else {
             return Utility.getIoTDeviceList(iotHubConnectionString);
         }
-    }
-    
-    public static generateIoTHubAxiosRequestConfig(iotHubConnectionString: string, url: string, method: string, data?: any): AxiosRequestConfig {
-        return {
-            url,
-            method,
-            baseURL: `https://${Utility.getHostName(iotHubConnectionString)}`,
-            headers: {
-                Authorization: Utility.generateSasTokenForService(iotHubConnectionString),
-            },
-            data,
-        };
     }
 
     private static tryGetStringFromCharCode(source) {
