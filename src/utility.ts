@@ -286,7 +286,6 @@ export class Utility {
         }
     }
 
-
     public static async getDeviceList(iotHubConnectionString: string, context?: vscode.ExtensionContext): Promise<DeviceItem[]> {
         const [deviceList, edgeDeviceIdSet] = await Promise.all([Utility.getIoTDeviceList(iotHubConnectionString), Utility.getEdgeDeviceIdSet(iotHubConnectionString)]);
         return deviceList.map((device) => {
@@ -424,6 +423,15 @@ export class Utility {
         await Constants.ExtensionContext.globalState.update(Constants.StateKeyIoTHubID, "");
     }
 
+    public static async getFilteredDeviceList(iotHubConnectionString: string, onlyEdgeDevice: boolean): Promise<DeviceItem[]> {
+        if (onlyEdgeDevice) {
+            const [deviceList, edgeDeviceIdSet] = await Promise.all([Utility.getIoTDeviceList(iotHubConnectionString), Utility.getEdgeDeviceIdSet(iotHubConnectionString)]);
+            return deviceList.filter((device) => edgeDeviceIdSet.has(device.deviceId));
+        } else {
+            return Utility.getIoTDeviceList(iotHubConnectionString);
+        }
+    }
+
     private static tryGetStringFromCharCode(source) {
         if (source instanceof Uint8Array) {
             try {
@@ -432,15 +440,6 @@ export class Utility {
             }
         }
         return source;
-    }
-
-    public static async getFilteredDeviceList(iotHubConnectionString: string, onlyEdgeDevice: boolean): Promise<DeviceItem[]> {
-        if (onlyEdgeDevice) {
-            const [deviceList, edgeDeviceIdSet] = await Promise.all([Utility.getIoTDeviceList(iotHubConnectionString), Utility.getEdgeDeviceIdSet(iotHubConnectionString)]);
-            return deviceList.filter((device) => edgeDeviceIdSet.has(device.deviceId));
-        } else {
-            return Utility.getIoTDeviceList(iotHubConnectionString);
-        }
     }
 
     private static async getIoTDeviceList(iotHubConnectionString: string): Promise<DeviceItem[]> {

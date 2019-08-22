@@ -215,7 +215,7 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(createDeployment);
     context.subscriptions.push(updateDistributedTracingSetting);
     context.subscriptions.push(editDistributedTracingMode);
-    context.subscriptions.push(editDistributedTracingSamplingRate); 
+    context.subscriptions.push(editDistributedTracingSamplingRate);
     context.subscriptions.push(showSimulatorWebview);
 
     return { azureIoTExplorer };

@@ -41,6 +41,7 @@
   "azure-iot-toolkit.command.copyModuleConnectionString.title": "Copy Module Connection String",
   "azure-iot-toolkit.command.startMonitorCustomEventHubEndpoint.title": "Start Monitoring",
   "azure-iot-toolkit.command.stopMonitorCustomEventHubEndpoint.title": "Stop Monitoring Custom Event Hub Endpoint",
+  "azure-iot-toolkit.command.showSimulatorWebview.title": "Send D2C Messages",
   "azure-iot-toolkit.configuration.title": "Azure IoT Hub Toolkit configuration",
   "azure-iot-toolkit.configuration.deviceConnectionString.description": "Device Connection String",
   "azure-iot-toolkit.configuration.iotHubConnectionString.description": "IoT Hub Connection String",

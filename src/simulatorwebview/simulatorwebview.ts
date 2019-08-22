@@ -5,15 +5,10 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
-import { Constants } from  "../constants";
-import { IoTHubResourceExplorer } from "../iotHubResourceExplorer";
-import { DeviceItem } from "../Model/DeviceItem";
-import { Simulator } from "../simulator";
-import { Utility } from "../utility";
 import { LocalServer } from "./localserver";
 
-const simulatorWebviewPanelViewType = "IoT Device Simulator";
-const simulatorWebviewPanelViewTitle = "IoT Device Simulator";
+const simulatorWebviewPanelViewType = "Send D2C Messages";
+const simulatorWebviewPanelViewTitle = "Send D2C Messages";
 
 export class SimulatorWebview {
     public static getInstance(context: vscode.ExtensionContext) {
@@ -31,17 +26,14 @@ export class SimulatorWebview {
         this.localServer = new LocalServer(context);
     }
 
-    public async openSimulatorWebviewPage(deviceItem: DeviceItem): Promise<any> {
-        const iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle, false);
-        if (!iotHubConnectionString) {
-            let outputChannel = Simulator.getSimulatorOutputChannel();
-            const _IoTHubResourceExplorer = new IoTHubResourceExplorer(outputChannel);
-            await _IoTHubResourceExplorer.selectIoTHub();
+    public async showWebview(forceReload: boolean) {
+        if (forceReload && this.panel) {
+            this.panel.dispose();
         }
-        if (!iotHubConnectionString) {
-            return;
-        }
-        this.localServer.setPreSelectedDevice(deviceItem);
+        await this.openSimulatorWebviewPage();
+    }
+
+    private async openSimulatorWebviewPage(): Promise<any> {
         if (!this.panel) {
             this.localServer.startServer();
             this.panel = vscode.window.createWebviewPanel(
@@ -54,13 +46,11 @@ export class SimulatorWebview {
                     retainContextWhenHidden: true,
                 },
             );
-
             let html = fs.readFileSync(this.context.asAbsolutePath(path.join("src", "simulatorwebview", "assets", "index.html")), "utf8");
             html = html
                 .replace(/{{root}}/g, vscode.Uri.file(this.context.asAbsolutePath(".")).with({ scheme: "vscode-resource" }).toString())
                 .replace(/{{endpoint}}/g, this.localServer.getServerUri());
             this.panel.webview.html = html;
-
             this.panel.onDidDispose(() => {
                 this.panel = undefined;
                 this.localServer.stopServer();

@@ -1,28 +1,28 @@
 * {
-    box-sizing: border-box;
-    font-family: "Segoe UI";
+  box-sizing: border-box;
+  font-family: "Segoe UI";
 }
 
 .vscode-dark {
-    background: #1E1E1E;
-    color: #D4D4D4;
+  background: #1e1e1e;
+  color: #d4d4d4;
 }
 .vscode-light {
-    background: #FFFFFF;
-    color: #333333;
+  background: #ffffff;
+  color: #333333;
 }
 
 html,
 body {
-    height: 100%;
-    margin: 0;
-    padding: 0
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 #app {
-    display: table;
-    width: 100%;
-    height: 100%;
+  display: table;
+  width: 100%;
+  height: 100% !important;
 }
 
 .vscode-dark .ivu-select-item:hover,
@@ -35,50 +35,66 @@ body {
 .vscode-dark .ivu-dropdown-item,
 .vscode-dark .ivu-dropdown-item:hover,
 .vscode-dark .ivu-dropdown-item:after {
-	background: #062f4a;
+  background: #062f4a;
 }
 
 .vscode-dark .ivu-select-item-focus,
 .vscode-dark .ivu-radio-disabled .ivu-radio-inner {
-	background: #3C3C3C;
+  background: #3c3c3c;
 }
 
 .vscode-dark .ivu-input,
 .vscode-dark .ivu-select-selection,
-.vscode-dark .ivu-input-group-append,
-.vscode-dark .ivu-input-group-prepend,
 .vscode-dark .ivu-select-item,
 .vscode-dark .ivu-select-dropdown,
-.vscode-dark .ivu-dropdown-item,
-.vscode-dark .ivu-select,
-.vscode-dark .ivu-dropdown-item-divided,
-.vscode-dark .ivu-dropdown-item-divided:before,
-.vscode-dark .ivu-modal-content {
-	background-color: #3C3C3C;
+.vscode-dark .ivu-modal-content,
+.vscode-dark .ivu-tooltip-content,
+.vscode-dark .ivu-tooltip-light .ivu-tooltip-inner,
+.vscode-dark .ivu-tag .ivu-tag-checked,
+.vscode-dark .ivu-select-multiple .ivu-tag {
+  background-color: #3c3c3c;
+}
+
+.vscode-dark .ivu-input-group-append,
+.vscode-dark .ivu-input-group-prepend {
+  background-color: #303030;
 }
 
 .vscode-dark .ivu-card {
-    background-color: #1E1E1E;
+  background-color: #1e1e1e;
 }
 
 .vscode-dark .ivu-input,
-.vscode-dark .ivu-select-selection,
+.vscode-dark .ivu-select-item,
 .vscode-dark .ivu-input-group-append,
 .vscode-dark .ivu-input-group-prepend,
-.vscode-dark .ivu-card-bordered,
-.vscode-dark .ivu-card:hover {
-	border-color: #1E1E1E;
+.vscode-dark .ivu-select .ivu-select-multiple .ivu-select-default,
+.vscode-dark .ivu-select-selection {
+  border-color: #3c3c3c;
+}
+
+.vscode-dark
+  .ivu-tooltip-light.ivu-tooltip-popper[x-placement^="top"]
+  .ivu-tooltip-arrow:after {
+  border-top-color: #3c3c3c;
 }
 
 .vscode-dark .ivu-input-group-append,
-.vscode-dark .ivu-input-group-prepend
+.vscode-dark .ivu-input-group-prepend,
 .vscode-dark .ivu-tag-text,
 .vscode-dark .ivu-select,
 .vscode-dark .ivu-select-item,
+.vscode-dark .ivu-select-item-selected,
+.vscode-dark .ivu-select-item-selected:hover,
+.vscode-dark .ivu-select-multiple .ivu-select-item-selected,
 .vscode-dark .ivu-form .ivu-form-item-label,
 .vscode-dark .ivu-card,
 .vscode-dark .ivu-dropdown-item,
 .vscode-dark .ivu-input,
-.vscode-dark .ivu-tabs-nav {
-    color: #D4D4D4;
+.vscode-dark .ivu-tabs-nav,
+.vscode-dark .ivu-modal-header,
+.vscode-dark .ivu-modal-header p,
+.vscode-dark .ivu-modal-header-inner,
+.vscode-dark .ivu-tooltip-light .ivu-tooltip-inner {
+  color: #d4d4d4;
 }

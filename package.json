@@ -280,7 +280,8 @@
       },
       {
         "command": "azure-iot-toolkit.showSimulatorWebview",
-        "title": "Show IoT Device Simulator"
+        "title": "%azure-iot-toolkit.command.showSimulatorWebview.title%",
+        "category": "%azure-iot-toolkit.category%"
       }
     ],
     "menus": {

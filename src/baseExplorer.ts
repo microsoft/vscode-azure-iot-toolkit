@@ -3,8 +3,6 @@
 
 "use strict";
 import * as vscode from "vscode";
-import { Constants } from "./constants";
-import { SendStatus } from "./sendStatus";
 import { TelemetryClient } from "./telemetryClient";
 
 export class BaseExplorer {
@@ -36,27 +34,6 @@ export class BaseExplorer {
                 TelemetryClient.sendEvent(aiEventName, { Result: "Success" });
             }
             client.close(() => { return; });
-        };
-    }
-
-    protected sendEventDoneWithProgress(client, aiEventName: string, status: SendStatus, totalStatus: SendStatus) {
-        return (err, result) => {
-            const total = status.getTotal();
-
-            if (err) {
-                TelemetryClient.sendEvent(aiEventName, { Result: "Fail" });
-                status.AddFailed();
-                totalStatus.AddFailed();
-            }
-            if (result) {
-                TelemetryClient.sendEvent(aiEventName, { Result: "Success" });
-                status.AddSucceed();
-                totalStatus.AddSucceed();
-            }
-            const sum = status.sum();
-            if (sum === total) {
-                client.close(() => { return; });
-            }
         };
     }
 }

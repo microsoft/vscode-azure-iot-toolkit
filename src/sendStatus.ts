@@ -1,37 +1,45 @@
 export class SendStatus {
     private readonly deviceId: string;
+    private readonly total: number;
+    private sent: number;
     private succeed: number;
     private failed: number;
-    private readonly total: number;
 
     constructor(deviceId: string, total: number) {
         this.deviceId = deviceId;
+        this.total = total;
+        this.sent = 0;
         this.succeed = 0;
         this.failed = 0;
-        this.total = total;
     }
 
     public getDeviceId(): string {
         return this.deviceId;
     }
-    public getSucceed(): number {
-        return this.succeed;
-    }
-    public getFailed(): number {
-        return this.failed;
-    }
     public getTotal(): number {
         return this.total;
     }
+    public async getSent(): Promise<number> {
+        return this.sent;
+    }
+    public async getSucceed(): Promise<number> {
+        return this.succeed;
+    }
+    public async getFailed(): Promise<number> {
+        return this.failed;
+    }
 
-    public AddSucceed(): void {
+    public async addSent(deviceCount: number): Promise<void> {
+        this.sent += deviceCount;
+    }
+    public async addSucceed(): Promise<void> {
         this.succeed++;
     }
-    public AddFailed(): void {
+    public async addFailed(): Promise<void> {
         this.failed++;
     }
 
-    public sum(): number {
+    public async sum(): Promise<number> {
         return this.succeed + this.failed;
     }
 }
