@@ -11,6 +11,7 @@ import * as vscode from "vscode";
 import { Constants } from "./constants";
 import { IoTHubResourceExplorer } from "./iotHubResourceExplorer";
 import { DeviceItem } from "./Model/DeviceItem";
+import { DeviceNode } from "./Nodes/DeviceNode";
 import { SendStatus } from "./sendStatus";
 import { SimulatorWebview } from "./simulatorwebview/simulatorwebview";
 import { Utility } from "./utility";
@@ -93,9 +94,6 @@ export class Simulator {
     let deviceConnectionStrings = [];
     if (this.isProcessing()) {
       this.closeDuration = 3500;
-      // vscode.window.showInformationMessage(
-      //     "A previous simulation is in progress, please wait or cancel it.",
-      // );
       await this.showWebview(false);
       await this.delay(this.closeDuration);
       this.closeDuration = 0;
@@ -123,7 +121,14 @@ export class Simulator {
           await Simulator.getInstance().selectIoTHub();
         }
         if (!iotHubConnectionString) {
+          vscode.window.showErrorMessage("No IoT Connection String Found.");
           return;
+        }
+        try {
+          const deviceList: vscode.TreeItem[] = await Utility.getDeviceList(iotHubConnectionString, Constants.ExtensionContext);
+          deviceList.map((item) => new DeviceNode(item as DeviceItem));
+        } catch (err) {
+          vscode.window.showErrorMessage("Failed to list IoT Devices. Error: " + err.message);
         }
         const hostName = ConnectionString.parse(iotHubConnectionString)
           .HostName;
