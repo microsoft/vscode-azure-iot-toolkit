@@ -104,17 +104,17 @@
                                             <i-input v-if="messageBody=='Plain Text'" v-model="textArea.plainTextArea"
                                                 style="width: 100%" @on-change="textAreaOnChange"
                                                 placeholder="Enter the message content here..." type="textarea"
-                                                :autosize="{minRows: 10,maxRows: 10}">
+                                                :autosize="{minRows: 10}">
                                             </i-input>
                                             <i-input v-if="messageBody=='Dummy Json'" v-model="textArea.dummyJsonArea"
                                                 style="width: 100%" @on-change="textAreaOnChange"
                                                 placeholder="Enter the dummy-json template here..." type="textarea"
-                                                :autosize="{minRows: 10,maxRows: 10}">
+                                                :autosize="{minRows: 10}">
                                             </i-input>
                                         </tab-pane>
                                         <tab-pane v-if="messageBody=='Dummy Json'" label="Preview" name="Preview">
                                             <i-input style="width: 100%" v-model="textArea.generatedMessage" readonly
-                                                type="textarea" :autosize="{minRows: 10,maxRows: 10}">
+                                                type="textarea" :autosize="{minRows: 10}">
                                             </i-input>
                                         </tab-pane>
                                     </Tabs>
