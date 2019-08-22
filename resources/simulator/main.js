@@ -17,7 +17,7 @@ const dummyJsonTemplate = `{
 		{
 			"date": "{{date '2019-01-01' '2019-12-31' 'YYYY-MM-DD'}}",
 			"time": "{{time '00:00' '23:59' 'hh:mm'}}",
-			"temperature": "{{float 1 100 round=0.01}} °C",
+			"temperature": "{{float 1 100 round=0.01}} °C"
 		}
 		{{/repeat}}
 	  ]
