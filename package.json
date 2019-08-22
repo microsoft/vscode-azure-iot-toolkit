@@ -2,7 +2,7 @@
   "name": "azure-iot-toolkit",
   "displayName": "Azure IoT Hub Toolkit",
   "description": "Interact with Azure IoT Hub, IoT Device Management, IoT Edge Management, IoT Hub Device Simulation, IoT Hub Code Generation",
-  "version": "2.9.0-rc2",
+  "version": "2.10.0",
   "publisher": "vsciot-vscode",
   "aiKey": "0caaff90-cc1c-4def-b64c-3ef33615bc9b",
   "icon": "logo.png",
@@ -202,7 +202,7 @@
       {
         "command": "azure-iot-toolkit.refresh",
         "title": "%azure-iot-toolkit.command.refresh.title%",
-        "category": "%azure-iot-toolkit.category%,",
+        "category": "%azure-iot-toolkit.category%",
         "icon": {
           "light": "resources/light/refresh.svg",
           "dark": "resources/dark/refresh.svg"
@@ -590,6 +590,11 @@
         {
           "command": "azure-iot-toolkit.startMonitorIoTHubMessageWithAbbreviation",
           "when": "view == iotHubDevices && viewItem == events"
+        },
+        {
+          "command": "azure-iot-toolkit.refresh",
+          "when": "view == iotHubDevices && viewItem == interfaces-label",
+          "group": "inline"
         }
       ],
       "editor/context": [

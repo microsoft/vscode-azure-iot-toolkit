@@ -1,4 +1,8 @@
-## 2.9.0
+## 2.10.0 (2019-08-06)
+### Fixed
+* Fix typo
+
+## 2.9.0 (2019-07-19)
 ### Added
 * Update infrastructure to support localization (Thanks [@matsujirushi](https://github.com/matsujirushi)!)
 * Localization for Japanese language (Thanks [@matsujirushi](https://github.com/matsujirushi)!)

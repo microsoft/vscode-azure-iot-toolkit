@@ -13,6 +13,7 @@ export class DeviceItem extends TreeItem implements QuickPickItem {
         public description: string) {
         super(deviceId);
         this.contextValue = "device";
+        this.tooltip = this.connectionState;
         this.collapsibleState = TreeItemCollapsibleState.Collapsed;
     }
 }
