@@ -13,7 +13,6 @@ import { IoTHubResourceExplorer } from "./iotHubResourceExplorer";
 import { DeviceItem } from "./Model/DeviceItem";
 import { SendStatus } from "./sendStatus";
 import { SimulatorWebview } from "./simulatorwebview/simulatorwebview";
-import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
 export class Simulator {
@@ -239,7 +238,7 @@ export class Simulator {
 
   private async sendD2CMessageCore(
     client: Client,
-    message: string,
+    message: any,
     status: SendStatus,
     totalStatus: SendStatus,
   ) {
@@ -311,10 +310,11 @@ export class Simulator {
     for (let i = 0; i < numbers; i++) {
       // No await here, beacause the interval should begin as soon as it called send(), not after it sent.
       ids.map((j) => {
+        console.log(template);
         // We use a template so that each time the message can be randomly generated.
         const generatedMessage = isTemplate
-          ? dummyjson.parse(template)
-          : template;
+        ? dummyjson.parse(template)
+        : template;
         this.sendD2CMessageCore(
           clients[j],
           generatedMessage,
