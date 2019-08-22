@@ -55,8 +55,8 @@
                         </form-item>
                         <Row :gutter="10">
                             <i-col span="7" style="width: 200px">
-                                <form-item prop="numbers" label="Message numbers per device">
-                                    <i-input v-model="formItem.numbers" placeholder="Number of messages for per device"
+                                <form-item prop="numbers" label="Message iterations per device">
+                                    <i-input v-model="formItem.numbers" placeholder="Message iterations per device"
                                         @on-change="persistInputs">
 										</i-input>
                                 </form-item>
@@ -79,7 +79,7 @@
                                 <i-col span="24">
                                     <radio-group v-model="messageBody" @on-change="messageBodyChange">
                                         <Radio label="Plain Text">Plain Text</Radio>
-                                        <Radio label="Dummy Json">Dummy Json
+                                        <Radio label="Dummy Json">Dummy JSON
                                             <Tooltip theme="light" transfer max-width="500" placement="top">
                                                 <!-- Set transfer=true, to append the layer in body.
                                           When used in Tabs or a fixed Table column, by adding this property,
@@ -137,9 +137,9 @@
             </p>
             <div style="text-align: left; margin: 24px;">
                 <p>
-					<b>{{status.numberOfSuccessfulMessage}}</b> of them are successfully sent;
+					<b>{{status.numberOfSuccessfulMessage}}</b> message(s) are successfully sent;
 					<br/>
-					<b>{{status.numberOfFailedMessage}}</b> of them are failed.
+					<b>{{status.numberOfFailedMessage}}</b> message(s) are failed.
 				</p>
                 <i-progress status="active"
                     :percent="Math.round((this.status.numberOfSuccessfulMessage + this.status.numberOfFailedMessage) / this.status.numberOfTotalMessage * 100)">
