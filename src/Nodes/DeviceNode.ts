@@ -7,6 +7,7 @@ import { DeviceItem } from "../Model/DeviceItem";
 import { TelemetryClient } from "../telemetryClient";
 import { DistributedTracingLabelNode } from "./DistributedTracingLabelNode";
 import { INode } from "./INode";
+import { InterfaceLabelNode } from "./InterfaceLabelNode";
 import { ModuleLabelNode } from "./ModuleLabelNode";
 
 export class DeviceNode implements INode {
@@ -24,6 +25,7 @@ export class DeviceNode implements INode {
     public async getChildren(context: vscode.ExtensionContext, iotHubConnectionString: string): Promise<INode[]> {
         let nodeList: INode[] = [];
         nodeList.push(new ModuleLabelNode(this));
+        nodeList.push(new InterfaceLabelNode(this));
         if (this.deviceItem.contextValue === "device" && iotHubConnectionString.toLowerCase().indexOf("azure-devices.cn;") < 0) {
             nodeList.push(new DistributedTracingLabelNode(this));
         }
