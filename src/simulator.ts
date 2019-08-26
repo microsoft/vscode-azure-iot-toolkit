@@ -117,9 +117,11 @@ export class Simulator {
           deviceConnectionStrings,
         );
       } else {
+        // If no connection string is set, call selectIoTHub().
         if (!iotHubConnectionString) {
           await Simulator.getInstance().selectIoTHub();
         }
+        // Exit when no connection string found or the connection string is invalid.
         if (!iotHubConnectionString) {
           vscode.window.showErrorMessage("No IoT Connection String Found.");
           return;
@@ -129,6 +131,7 @@ export class Simulator {
           deviceList.map((item) => new DeviceNode(item as DeviceItem));
         } catch (err) {
           vscode.window.showErrorMessage("Failed to list IoT Devices. Error: " + err.message);
+          return;
         }
         const hostName = ConnectionString.parse(iotHubConnectionString)
           .HostName;
