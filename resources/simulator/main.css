@@ -121,6 +121,8 @@ body {
 .vscode-dark .ivu-modal-header,
 .vscode-dark .ivu-modal-header p,
 .vscode-dark .ivu-modal-header-inner,
-.vscode-dark .ivu-tooltip-light .ivu-tooltip-inner {
+.vscode-dark .ivu-tooltip-light .ivu-tooltip-inner,
+.vscode-dark .ivu-tag .ivu-icon-ios-close,
+.vscode-dark .ivu-select-input {
   color: #d4d4d4;
 }
