@@ -148,8 +148,10 @@
                     :percent="Math.round((this.status.numberOfSuccessfulMessage + this.status.numberOfFailedMessage) / this.status.numberOfTotalMessage * 100)">
                 </i-progress>
             </div>
-            <div slot="footer" style=" align: left">
-				<i-button type="primary" @click="progressCancel" style="width: 80px;">Cancel</i-button>
+            <div slot="footer">
+                <div style="width: 80px;">
+				    <i-button type="primary" @click="progressCancel" style="width: 80px;">Cancel</i-button>
+                </div>
             </div>
         </Modal>
     </div>

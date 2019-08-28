@@ -307,7 +307,6 @@ const app = new Vue({
       }
     },
     resetFilter (status) {
-      console.log('aa')
       this.filteredInputDeviceList = this.inputDeviceList;
     }
   }
