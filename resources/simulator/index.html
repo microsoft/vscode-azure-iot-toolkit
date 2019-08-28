@@ -65,6 +65,7 @@
                                 <form-item prop="interval" label="Interval">
                                     <i-input v-model="formItem.interval" placeholder="Interval between two messages"
                                         @on-change="persistInputs" style="padding-top: 1px">
+                                        <!-- padding-top=1px: because the ivu-input with append or prepend slot will have -1 px in padding -->
                                         <i-select v-model="intervalUnit" slot="append" style="width: 120px" @on-change="persistInputs">
                                             <i-option value="millisecond">millisecond(s)</i-option>
                                             <i-option value="second">second(s)</i-option>
@@ -130,7 +131,7 @@
                 </Card>
             </i-col>
         </Row>
-        <Modal v-model="status.isProcessing" width="380" :mask-closable="false" :closable="false">
+        <Modal v-model="status.isProcessing" scrollable width="380" :mask-closable="false" :closable="false">
             <p slot="header" style="text-align:center">
                 <Icon type="ios-information-circle" size="18" ></Icon>
                 <span>A simulation is in progress...</span>
@@ -145,7 +146,7 @@
                     :percent="Math.round((this.status.numberOfSuccessfulMessage + this.status.numberOfFailedMessage) / this.status.numberOfTotalMessage * 100)">
                 </i-progress>
             </div>
-            <div slot="footer">
+            <div slot="footer" style=" align: left">
 				<i-button type="primary" @click="progressCancel" style="width: 80px;">Cancel</i-button>
             </div>
         </Modal>

@@ -11,6 +11,10 @@
 	margin-top: -10px;
 }
 
+.ivu-modal-body {
+  padding: 0px !important;
+}
+
 * {
   box-sizing: border-box;
   font-family: "Segoe UI";
