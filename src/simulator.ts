@@ -293,7 +293,7 @@ export class Simulator {
     const total = deviceCount * numbers;
     if (total <= 0) {
       this.output(`Invalid Operation.`);
-      return Promise.reject();
+      return;
     }
     const startTime = new Date();
     this.output(

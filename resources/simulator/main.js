@@ -100,6 +100,7 @@ const app = new Vue({
       introduction: introductionTemplate,
       hostName: "",
       inputDeviceList: [],
+      filteredInputDeviceList: [],
       formItem: {
         deviceConnectionStrings: [],
         message: "",
@@ -208,6 +209,7 @@ const app = new Vue({
         device.key = device.connectionString;
         this.inputDeviceList.push(device);
       }
+      this.resetFilter(false);
     },
     async send() {
       this.$refs["formItem"].validate(async valid => {
@@ -224,16 +226,8 @@ const app = new Vue({
               intervalInMilliSecond *= 1;
               break;
           }
-          let deviceConnectionStringsToPost = [];
-          for (const connectionString of this.formItem.deviceConnectionStrings) {
-            for (let i = 0; i < this.inputDeviceList.length; i++) {
-              if (this.inputDeviceList[i].label === connectionString) {
-                deviceConnectionStringsToPost.push(this.inputDeviceList[i].connectionString);
-              }
-            }
-          }
           const data = {
-            deviceConnectionStrings: deviceConnectionStringsToPost,
+            deviceConnectionStrings: this.formItem.deviceConnectionStrings,
             message: this.formItem.message,
             numbers: this.formItem.numbers,
             interval: intervalInMilliSecond,
@@ -300,6 +294,21 @@ const app = new Vue({
         dummyJsonArea: this.textArea.dummyJsonArea
       };
       await axios.post(`${this.endpoint}/api/presistinputs`, inputs);
+    },
+    deviceSelectFilter (query) {
+      query = query.toLowerCase();
+      if (query != '') {
+        this.filteredInputDeviceList = [];
+        for (let i = 0; i < this.inputDeviceList.length; i++) {
+          if (this.inputDeviceList[i].label.toLowerCase().includes(query)) {
+            this.filteredInputDeviceList.push(this.inputDeviceList[i]);
+          }
+        }
+      }
+    },
+    resetFilter (status) {
+      console.log('aa')
+      this.filteredInputDeviceList = this.inputDeviceList;
     }
   }
 });
