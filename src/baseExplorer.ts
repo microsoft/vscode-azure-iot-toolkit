@@ -3,9 +3,7 @@
 
 "use strict";
 import * as vscode from "vscode";
-import { DeviceItem } from "./Model/DeviceItem";
 import { TelemetryClient } from "./telemetryClient";
-import { Utility } from "./utility";
 
 export class BaseExplorer {
     protected _outputChannel: vscode.OutputChannel;

@@ -277,6 +277,11 @@
         "command": "azure-iot-toolkit.stopMonitorCustomEventHubEndpoint",
         "title": "%azure-iot-toolkit.command.stopMonitorCustomEventHubEndpoint.title%",
         "category": "%azure-iot-toolkit.category%"
+      },
+      {
+        "command": "azure-iot-toolkit.showSimulatorWebview",
+        "title": "%azure-iot-toolkit.command.showSimulatorWebview.title%",
+        "category": "%azure-iot-toolkit.category%"
       }
     ],
     "menus": {
@@ -340,6 +345,11 @@
           "command": "azure-iot-toolkit.updateDistributedTracingSetting",
           "when": "view == iotHubDevices",
           "group": "azure-iot-toolkit-4@1"
+        },
+        {
+          "command": "azure-iot-toolkit.showSimulatorWebview",
+          "when": "view == iotHubDevices",
+          "group": "azure-iot-toolkit-0@1"
         }
       ],
       "view/item/context": [
@@ -414,6 +424,11 @@
           "group": "azure-iot-toolkit-4@0"
         },
         {
+          "command": "azure-iot-toolkit.showSimulatorWebview",
+          "when": "view == iotHubDevices && viewItem == device",
+          "group": "azure-iot-toolkit-0@4"
+        },
+        {
           "command": "azure-iot-toolkit.refresh",
           "when": "view == iotHubDevices && viewItem == edge",
           "group": "inline"
@@ -472,6 +487,11 @@
           "command": "azure-iot-toolkit.deleteDevice",
           "when": "view == iotHubDevices && viewItem == edge",
           "group": "azure-iot-toolkit-4@0"
+        },
+        {
+          "command": "azure-iot-toolkit.showSimulatorWebview",
+          "when": "view == iotHubDevices && viewItem == edge",
+          "group": "azure-iot-toolkit-0@4"
         },
         {
           "command": "azure-iot-toolkit.createDeployment",
@@ -729,6 +749,8 @@
     "webpack-dev": "rimraf dist && webpack --mode development --watch"
   },
   "devDependencies": {
+    "@types/body-parser": "^1.16.8",
+    "@types/express": "^4.11.1",
     "@types/fs-extra": "^5.0.4",
     "@types/keytar": "^4.4.0",
     "@types/mocha": "^2.2.32",
@@ -758,6 +780,9 @@
     "azure-iot-device": "^1.8.1",
     "azure-iot-device-mqtt": "^1.8.1",
     "azure-iothub": "^1.8.1",
+    "body-parser": "^1.18.2",
+    "dummy-json": "^2.0.0",
+    "express": "^4.16.3",
     "fs-extra": "^7.0.0",
     "ms-rest": "^2.3.2",
     "ms-rest-azure": "^2.5.5",

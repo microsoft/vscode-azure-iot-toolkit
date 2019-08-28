@@ -123,6 +123,9 @@ export class Constants {
     public static CREATE_OPTIONS_MAX_CHUNKS = 8;
     public static StateKeySubsID = "subscriptionId";
     public static StateKeyIoTHubID = "iothubid";
+    public static SimulatorOutputChannelTitle = "Send D2C Messages";
+    public static SimulatorProgressBarCancelLog = "You just canceled sending simulated messages.";
+    public static SimulatorSendingMessageProgressBarTitle = "Sending Simulated Message(s)";
     public static IoTHubAILoadInterfacesTreeStartEvent = "AZ.LoadInterfacesTree.Start";
     public static IoTHubAILoadInterfacesTreeDoneEvent = "AZ.LoadInterfacesTree.Done";
 
