@@ -24,6 +24,7 @@
 
 <body>
     <div id="app" data-endpoint="{{endpoint}}" v-cloak>
+        {{formItem.deviceConnectionStrings}}
         <Row>
             <i-col span="24" style="max-width: 800px; min-width: 400px;">
                 <Card :dis-hover="true" :bordered="false">
@@ -45,9 +46,9 @@
                                     <i-select v-model="formItem.deviceConnectionStrings" multiple filterable
                                         placeholder="Please select the device(s) you want to send message from..."
                                         not-found-text="No Device Found" @on-change="persistInputs">
-                                        <i-option v-for="item in inputDeviceList" :value="item.connectionString"
-                                            :key="item.connectionString">
-                                            {{ item.label }}
+                                        <i-option v-for="item in inputDeviceList" :value="item.label"
+                                            :key="item.label">
+                                            {{item.label}}
                                         </i-option>
                                     </i-select>
                                 </i-col>

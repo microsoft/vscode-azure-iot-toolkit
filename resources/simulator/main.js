@@ -224,8 +224,16 @@ const app = new Vue({
               intervalInMilliSecond *= 1;
               break;
           }
+          let deviceConnectionStringsToPost = [];
+          for (const connectionString of this.formItem.deviceConnectionStrings) {
+            for (let i = 0; i < this.inputDeviceList.length; i++) {
+              if (this.inputDeviceList[i].label === connectionString) {
+                deviceConnectionStringsToPost.push(this.inputDeviceList[i].connectionString);
+              }
+            }
+          }
           const data = {
-            deviceConnectionStrings: this.formItem.deviceConnectionStrings,
+            deviceConnectionStrings: deviceConnectionStringsToPost,
             message: this.formItem.message,
             numbers: this.formItem.numbers,
             interval: intervalInMilliSecond,
