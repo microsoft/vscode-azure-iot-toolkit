@@ -120,14 +120,14 @@ export class Simulator {
       } else {
         // Exit when no connection string found or the connection string is invalid.
         if (!iotHubConnectionString) {
-          vscode.window.showErrorMessage("No IoT Connection String Found.");
+          vscode.window.showErrorMessage("Failed to launch Simulator: No IoT Connection String Found.");
           return;
         }
         try {
           const deviceList: vscode.TreeItem[] = await Utility.getDeviceList(iotHubConnectionString, Constants.ExtensionContext);
           deviceList.map((item) => new DeviceNode(item as DeviceItem));
         } catch (err) {
-          vscode.window.showErrorMessage("Failed to list IoT Devices. Error: " + err.message);
+          vscode.window.showErrorMessage("Failed to launch Simulator: " + err.message);
           return;
         }
         const hostName = ConnectionString.parse(iotHubConnectionString)
