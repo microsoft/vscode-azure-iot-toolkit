@@ -49,7 +49,7 @@ export class Utility {
             input.ignoreFocusOut = true;
             input.onDidAccept(async () => {
                 value = input.value;
-                if (true || this.isValidConnectionString(id, value)) {
+                if (this.isValidConnectionString(id, value)) {
                     TelemetryClient.sendEvent("General.SetConfig.Done", { Result: "Success" });
                     await CredentialStore.setPassword(id, value);
                     if (id === Constants.IotHubConnectionStringKey) {

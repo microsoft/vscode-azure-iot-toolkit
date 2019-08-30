@@ -277,8 +277,8 @@ const app = new Vue({
       }
       await this.persistInputs();
     },
-    async progressCancel() {
-      await axios.post(`${this.endpoint}/api/cancel`, {
+    progressCancel() {
+      axios.post(`${this.endpoint}/api/cancel`, {
         cancel: true
       });
     },
