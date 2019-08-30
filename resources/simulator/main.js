@@ -119,17 +119,17 @@ const app = new Vue({
       cancelRequested: false,
       ruleValidation: {
         numbers: [
-          { required: true, trigger: "blur" },
+          { required: true, message: 'Required', trigger: "blur" },
           { validator: numberValidator, trigger: "blur" },
           { validator: numberValidator, trigger: "change" }
         ],
         interval: [
-          { required: true, trigger: "blur" },
+          { required: true, message: 'Required', trigger: "blur" },
           { validator: numberValidator, trigger: "blur" },
           { validator: numberValidator, trigger: "change" }
         ],
         message: [
-          { required: true, trigger: "blur" },
+          { required: true, message: 'Required', trigger: "blur" },
           { validator: messageParseValidator, trigger: "blur" }
         ],
         deviceConnectionStrings: [

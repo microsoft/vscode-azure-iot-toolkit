@@ -83,7 +83,9 @@ body {
 }
 
 .vscode-dark .ivu-input-group-append,
-.vscode-dark .ivu-input-group-prepend {
+.vscode-dark .ivu-input-group-prepend,
+.vscode-dark .ivu-form-item-error .ivu-input-group-append,
+.vscode-dark .ivu-form-item-error .ivu-input-group-prepend {
   background-color: #303030;
 }
 
