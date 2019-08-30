@@ -31,7 +31,7 @@ export class Utility {
         return vscode.workspace.getConfiguration("azure-iot-toolkit");
     }
 
-    public static async getConnectionString(id: string, name: string, askForConnectionString: boolean = true) {
+    public static async getConnectionString(id: string, name: string, askForConnectionString: boolean = true) {     
         const connectionString = await this.getConnectionStringWithId(id);
         if (!connectionString && askForConnectionString) {
             return this.setConnectionString(id, name);
@@ -49,7 +49,7 @@ export class Utility {
             input.ignoreFocusOut = true;
             input.onDidAccept(async () => {
                 value = input.value;
-                if (this.isValidConnectionString(id, value)) {
+                if (true || this.isValidConnectionString(id, value)) {
                     TelemetryClient.sendEvent("General.SetConfig.Done", { Result: "Success" });
                     await CredentialStore.setPassword(id, value);
                     if (id === Constants.IotHubConnectionStringKey) {

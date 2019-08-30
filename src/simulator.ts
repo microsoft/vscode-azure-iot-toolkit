@@ -101,7 +101,7 @@ export class Simulator {
       let iotHubConnectionString = await Utility.getConnectionString(
         Constants.IotHubConnectionStringKey,
         Constants.IotHubConnectionStringTitle,
-        false,
+        true,
       );
       if (deviceItem) {
         const hostName = ConnectionString.parse(iotHubConnectionString)
@@ -117,10 +117,6 @@ export class Simulator {
           deviceConnectionStrings,
         );
       } else {
-        // If no connection string is set, call selectIoTHub().
-        if (!iotHubConnectionString) {
-          await Simulator.getInstance().selectIoTHub();
-        }
         // Exit when no connection string found or the connection string is invalid.
         if (!iotHubConnectionString) {
           vscode.window.showErrorMessage("No IoT Connection String Found.");
@@ -145,6 +141,7 @@ export class Simulator {
           deviceConnectionStrings,
         );
       }
+      vscode.commands.executeCommand("azure-iot-toolkit.refresh");
     }
   }
 
