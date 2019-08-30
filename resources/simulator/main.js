@@ -152,12 +152,13 @@ const app = new Vue({
       }
     };
   },
-  async created() {
+  async mounted() {
     try {
+      this.$Spin.show();
       await this.polling();
       await this.getInputDeviceList();
       await this.getPersistedInputs();
-      console.log('aaa');
+      this.$Spin.hide();
     } catch (error) {
       this.errorMessageInitialization = error.toString();
     }
@@ -211,7 +212,7 @@ const app = new Vue({
         device.key = device.connectionString;
         this.inputDeviceList.push(device);
       }
-      this.resetFilter(false);
+      this.resetFilter(true);
     },
     async send() {
       this.$refs["formItem"].validate(async valid => {
@@ -308,10 +309,14 @@ const app = new Vue({
             this.filteredInputDeviceList.push(this.inputDeviceList[i]);
           }
         }
+      } else {
+        this.resetFilter(true);
       }
     },
     resetFilter (status) {
-      this.filteredInputDeviceList = this.inputDeviceList;
+      if (status) {
+        this.filteredInputDeviceList = this.inputDeviceList;
+      }
     }
   }
 });
