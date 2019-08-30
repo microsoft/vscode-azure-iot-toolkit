@@ -121,7 +121,7 @@ export class LocalServer {
       const data = req.body;
       const cancel = data.cancel;
       if (cancel) {
-        this._simulator.cancel();
+        await this._simulator.cancel();
       }
       return res.sendStatus(200);
     } catch (err) {

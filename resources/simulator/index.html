@@ -150,7 +150,7 @@
             </div>
             <div slot="footer">
                 <div style="width: 80px;">
-				    <i-button type="primary" @click="progressCancel" style="width: 80px;">Cancel</i-button>
+				    <i-button type="primary" :disabled="cancelRequested" @click="progressCancel" style="width: 80px;">{{cancelRequested ? 'Canceling' : 'Cancel'}}</i-button>
                 </div>
             </div>
         </Modal>

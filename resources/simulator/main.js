@@ -116,6 +116,7 @@ const app = new Vue({
         generatedMessage: ""
       },
       endpoint: document.getElementById("app").getAttribute("data-endpoint"),
+      cancelRequested: false,
       ruleValidation: {
         numbers: [
           { required: true, trigger: "blur" },
@@ -151,11 +152,12 @@ const app = new Vue({
       }
     };
   },
-  async mounted() {
+  async created() {
     try {
       await this.polling();
       await this.getInputDeviceList();
       await this.getPersistedInputs();
+      console.log('aaa');
     } catch (error) {
       this.errorMessageInitialization = error.toString();
     }
@@ -234,6 +236,7 @@ const app = new Vue({
             messageType: this.messageType,
             messageBody: this.messageBody
           };
+          this.cancelRequested = false;
           await axios.post(`${this.endpoint}/api/send`, data);
         }
       });
@@ -277,8 +280,9 @@ const app = new Vue({
       }
       await this.persistInputs();
     },
-    progressCancel() {
-      axios.post(`${this.endpoint}/api/cancel`, {
+    async progressCancel() {
+      this.cancelRequested = true;
+      await axios.post(`${this.endpoint}/api/cancel`, {
         cancel: true
       });
     },

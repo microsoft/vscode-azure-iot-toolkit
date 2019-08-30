@@ -86,8 +86,9 @@ export class Simulator {
     return this.processing || this.closeDuration > 0;
   }
 
-  public cancel() {
+  public async cancel() {
     this.cancelToken = true;
+    await this.delay(1000);
   }
 
   public async launch(deviceItem: DeviceItem): Promise<void> {
