@@ -155,10 +155,10 @@ const app = new Vue({
   async mounted() {
     try {
       this.$Spin.show();
-      await this.polling();
       await this.getInputDeviceList();
       await this.getPersistedInputs();
       this.$Spin.hide();
+      await this.polling();
     } catch (error) {
       this.errorMessageInitialization = error.toString();
     }
