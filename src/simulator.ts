@@ -120,7 +120,7 @@ export class Simulator {
       } else {
         // Exit when no connection string found or the connection string is invalid.
         if (!iotHubConnectionString) {
-          vscode.window.showErrorMessage("Failed to launch Simulator: No IoT Connection String Found.");
+          vscode.window.showErrorMessage("Failed to launch Simulator: IoT Hub connection string is not set.");
           return;
         }
         try {

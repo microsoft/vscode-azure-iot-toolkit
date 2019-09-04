@@ -31,7 +31,7 @@ export class Utility {
         return vscode.workspace.getConfiguration("azure-iot-toolkit");
     }
 
-    public static async getConnectionString(id: string, name: string, askForConnectionString: boolean = true) {     
+    public static async getConnectionString(id: string, name: string, askForConnectionString: boolean = true) {
         const connectionString = await this.getConnectionStringWithId(id);
         if (!connectionString && askForConnectionString) {
             return this.setConnectionString(id, name);
