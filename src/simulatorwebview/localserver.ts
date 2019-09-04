@@ -7,6 +7,7 @@ import * as vscode from "vscode";
 import { DeviceItem } from "../Model/DeviceItem";
 import { SendStatus } from "../sendStatus";
 import { Simulator } from "../simulator";
+import { Constants } from "../constants";
 
 export class LocalServer {
   private app: express.Express;
@@ -75,6 +76,10 @@ export class LocalServer {
       "/api/presistinputs",
       async (req, res, next) => await this.persistInputs(req, res, next),
     );
+    this.router.post(
+      "/api/telemetry",
+      async (req, res, next) => await this.telemetry(req, res, next),
+    );
   }
 
   private initApp() {
@@ -137,6 +142,21 @@ export class LocalServer {
     try {
       const inputs = req.body;
       this._simulator.persistInputs(inputs);
+      res.sendStatus(200);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  private async telemetry(
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction,
+  ) {
+    try {
+      const data = req.body;
+      const status = data.status === "Success" ? true : false
+      this._simulator.telemetry(Constants.SimulatorSendEvent, status, data);
       res.sendStatus(200);
     } catch (err) {
       next(err);

@@ -6,6 +6,8 @@ import * as fs from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
 import { LocalServer } from "./localserver";
+import { Simulator } from "../simulator";
+import { Constants } from "../constants";
 
 const simulatorWebviewPanelViewType = "Send D2C Messages";
 const simulatorWebviewPanelViewTitle = "Send D2C Messages";
@@ -14,10 +16,12 @@ export class SimulatorWebview {
     public static getInstance(context: vscode.ExtensionContext) {
         if (!SimulatorWebview.instance) {
             SimulatorWebview.instance = new SimulatorWebview(context);
+            SimulatorWebview.simulator = Simulator.getInstance();
         }
         return SimulatorWebview.instance;
     }
 
+    private static simulator: Simulator;
     private static instance: SimulatorWebview;
     private panel: vscode.WebviewPanel;
     private localServer: LocalServer;
@@ -29,6 +33,9 @@ export class SimulatorWebview {
     public async showWebview(forceReload: boolean) {
         if (forceReload && this.panel) {
             this.panel.dispose();
+            SimulatorWebview.simulator.telemetry(Constants.SimulatorCloseEvent, true, {
+                reload: 'true'
+            });
         }
         await this.openSimulatorWebviewPage();
     }
@@ -52,6 +59,9 @@ export class SimulatorWebview {
                 .replace(/{{endpoint}}/g, this.localServer.getServerUri());
             this.panel.webview.html = html;
             this.panel.onDidDispose(() => {
+                SimulatorWebview.simulator.telemetry(Constants.SimulatorCloseEvent, true, {
+                    reload: 'false'
+                });
                 this.panel = undefined;
                 this.localServer.stopServer();
             });

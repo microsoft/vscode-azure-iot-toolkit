@@ -238,7 +238,18 @@ const app = new Vue({
             messageBody: this.messageBody
           };
           this.cancelRequested = false;
+          await axios.post(`${this.endpoint}/api/send`, {
+            status: "Succeeded",
+            devices: data.deviceConnectionStrings.length,
+            numbers: data.numbers,
+            interval: data.interval,
+            messageBody: data.messageBody,
+          });
           await axios.post(`${this.endpoint}/api/send`, data);
+        } else {
+          await axios.post(`${this.endpoint}/api/send`, {
+            status: "Failed"
+          });
         }
       });
     },

@@ -15,6 +15,7 @@ import { DeviceNode } from "./Nodes/DeviceNode";
 import { SendStatus } from "./sendStatus";
 import { SimulatorWebview } from "./simulatorwebview/simulatorwebview";
 import { Utility } from "./utility";
+import { TelemetryClient } from "./telemetryClient";
 
 export class Simulator {
   public static getInstance(context?: vscode.ExtensionContext) {
@@ -91,11 +92,47 @@ export class Simulator {
     await this.delay(1000);
   }
 
+  public async telemetry(eventName: string, status: boolean, properties?: { [key: string]: string; }) {
+    if (eventName === Constants.SimulatorLaunchEvent) {
+      const iotHubConnectionString = status ? await Utility.getConnectionString(
+        Constants.IotHubConnectionStringKey,
+        Constants.IotHubConnectionStringTitle,
+        false,
+      ) : undefined;
+      TelemetryClient.sendEvent(eventName, {
+        status: status ? "Succeeded" : "Failed",
+        message: status ? "OK" : properties.error
+      }, iotHubConnectionString);
+    } else if (eventName === Constants.SimulatorCloseEvent) {
+      if (status) {
+        TelemetryClient.sendEvent(eventName, {
+          status: "Succeeded",
+          devices: "" + properties.deviceConnectionStrings.length,
+          numbers: "" + properties.numbers,
+          interval: "" + properties.interval,
+          messageBody: properties.messageBody,
+        });
+      } else {
+        TelemetryClient.sendEvent(eventName, {
+          status: "Failed"
+        });
+      }
+    } else if (eventName === Constants.SimulatorSendEvent) {
+        TelemetryClient.sendEvent(eventName, {
+          status: status ? "Succeeded" : "Failed",
+          reload: properties.reload,
+          quitWhenProcessing: this.isProcessing() ? 'true' : 'false'
+        });
+    }
+    
+  }
+
   public async launch(deviceItem: DeviceItem): Promise<void> {
     let deviceConnectionStrings = [];
     if (this.isProcessing()) {
       this.closeDuration = 3500;
       await this.showWebview(false);
+      this.telemetry(Constants.SimulatorLaunchEvent, true);
       await this.delay(this.closeDuration);
       this.closeDuration = 0;
     } else {
@@ -117,10 +154,14 @@ export class Simulator {
           hostName,
           deviceConnectionStrings,
         );
+        this.telemetry(Constants.SimulatorLaunchEvent, true);
       } else {
         // Exit when no connection string found or the connection string is invalid.
         if (!iotHubConnectionString) {
           vscode.window.showErrorMessage("Failed to launch Simulator: No IoT Connection String Found.");
+          this.telemetry(Constants.SimulatorLaunchEvent, false, {
+            error: "Failed to launch Simulator: No IoT Connection String Found."
+          });
           return;
         }
         try {
@@ -128,6 +169,9 @@ export class Simulator {
           deviceList.map((item) => new DeviceNode(item as DeviceItem));
         } catch (err) {
           vscode.window.showErrorMessage("Failed to launch Simulator: " + err.message);
+          this.telemetry(Constants.SimulatorLaunchEvent, false, {
+            error: "Failed to launch Simulator: " + err.message
+          });
           return;
         }
         const hostName = ConnectionString.parse(iotHubConnectionString)
@@ -141,6 +185,7 @@ export class Simulator {
           hostName,
           deviceConnectionStrings,
         );
+        this.telemetry(Constants.SimulatorLaunchEvent, true);
       }
       vscode.commands.executeCommand("azure-iot-toolkit.refresh");
     }
