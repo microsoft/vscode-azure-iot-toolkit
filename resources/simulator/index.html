@@ -43,11 +43,13 @@
                             <Row>
                                 <i-col span="24">
                                     <i-select v-model="formItem.deviceConnectionStrings" multiple filterable
+                                        remote :remote-method="deviceSelectFilter"
+                                        @on-open-change="resetFilter"
                                         placeholder="Please select the device(s) you want to send message from..."
                                         not-found-text="No Device Found" @on-change="persistInputs">
-                                        <i-option v-for="item in inputDeviceList" :value="item.connectionString"
+                                        <i-option v-for="item in filteredInputDeviceList" :value="item.connectionString"
                                             :key="item.connectionString">
-                                            {{ item.label }}
+                                            {{item.label}}
                                         </i-option>
                                     </i-select>
                                 </i-col>
@@ -65,6 +67,7 @@
                                 <form-item prop="interval" label="Interval">
                                     <i-input v-model="formItem.interval" placeholder="Interval between two messages"
                                         @on-change="persistInputs" style="padding-top: 1px">
+                                        <!-- padding-top=1px: because the ivu-input with append or prepend slot will have -1 px in padding -->
                                         <i-select v-model="intervalUnit" slot="append" style="width: 120px" @on-change="persistInputs">
                                             <i-option value="millisecond">millisecond(s)</i-option>
                                             <i-option value="second">second(s)</i-option>
@@ -89,7 +92,7 @@
                                           otherwise unexpected space will be regarded as part of content -->
                                                 <div slot="content">
 <p>Dummy JSON is a Node utility that allows you to generate random JSON data using Handlebars templates.
-	<a href="https://github.com/webroo/dummy-json">Click here to see advanced usage. <Icon type="md-open"></Icon></a>
+<a href="https://github.com/webroo/dummy-json">Click here to see advanced usage. <Icon type="md-open"></Icon></a>
 </p>
                                                 </div>
                                             </Tooltip>
@@ -130,12 +133,12 @@
                 </Card>
             </i-col>
         </Row>
-        <Modal v-model="status.isProcessing" width="380" :mask-closable="false" :closable="false">
-            <p slot="header" style="text-align:center">
+        <Modal v-model="status.isProcessing" scrollable width="380" :mask-closable="false" :closable="false">
+            <p slot="header" style="text-align: left;">
                 <Icon type="ios-information-circle" size="18" ></Icon>
                 <span>A simulation is in progress...</span>
             </p>
-            <div style="text-align: left; margin: 24px;">
+            <div style="text-align: left; margin-left: 24px;">
                 <p>
 					<b>{{status.numberOfSuccessfulMessage}}</b> message(s) are successfully sent;
 					<br/>
@@ -146,7 +149,9 @@
                 </i-progress>
             </div>
             <div slot="footer">
-				<i-button type="primary" @click="progressCancel" style="width: 80px;">Cancel</i-button>
+                <div style="width: 80px;">
+				    <i-button type="primary" :disabled="cancelRequested" @click="progressCancel" style="width: 80px;">{{cancelRequested ? 'Canceling' : 'Cancel'}}</i-button>
+                </div>
             </div>
         </Modal>
     </div>

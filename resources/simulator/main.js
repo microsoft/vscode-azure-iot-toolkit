@@ -100,6 +100,7 @@ const app = new Vue({
       introduction: introductionTemplate,
       hostName: "",
       inputDeviceList: [],
+      filteredInputDeviceList: [],
       formItem: {
         deviceConnectionStrings: [],
         message: "",
@@ -115,19 +116,20 @@ const app = new Vue({
         generatedMessage: ""
       },
       endpoint: document.getElementById("app").getAttribute("data-endpoint"),
+      cancelRequested: false,
       ruleValidation: {
         numbers: [
-          { required: true, trigger: "blur" },
+          { required: true, message: 'Required', trigger: "blur" },
           { validator: numberValidator, trigger: "blur" },
           { validator: numberValidator, trigger: "change" }
         ],
         interval: [
-          { required: true, trigger: "blur" },
+          { required: true, message: 'Required', trigger: "blur" },
           { validator: numberValidator, trigger: "blur" },
           { validator: numberValidator, trigger: "change" }
         ],
         message: [
-          { required: true, trigger: "blur" },
+          { required: true, message: 'Required', trigger: "blur" },
           { validator: messageParseValidator, trigger: "blur" }
         ],
         deviceConnectionStrings: [
@@ -152,9 +154,11 @@ const app = new Vue({
   },
   async mounted() {
     try {
-      await this.polling();
+      this.$Spin.show();
       await this.getInputDeviceList();
       await this.getPersistedInputs();
+      this.$Spin.hide();
+      await this.polling();
     } catch (error) {
       this.errorMessageInitialization = error.toString();
     }
@@ -208,6 +212,7 @@ const app = new Vue({
         device.key = device.connectionString;
         this.inputDeviceList.push(device);
       }
+      this.resetFilter(true);
     },
     async send() {
       this.$refs["formItem"].validate(async valid => {
@@ -232,6 +237,7 @@ const app = new Vue({
             messageType: this.messageType,
             messageBody: this.messageBody
           };
+          this.cancelRequested = false;
           await axios.post(`${this.endpoint}/api/send`, data);
         }
       });
@@ -276,6 +282,7 @@ const app = new Vue({
       await this.persistInputs();
     },
     async progressCancel() {
+      this.cancelRequested = true;
       await axios.post(`${this.endpoint}/api/cancel`, {
         cancel: true
       });
@@ -292,6 +299,24 @@ const app = new Vue({
         dummyJsonArea: this.textArea.dummyJsonArea
       };
       await axios.post(`${this.endpoint}/api/presistinputs`, inputs);
+    },
+    deviceSelectFilter(query) {
+      query = query.toLowerCase();
+      if (query != '') {
+        this.filteredInputDeviceList = [];
+        for (let i = 0; i < this.inputDeviceList.length; i++) {
+          if (this.inputDeviceList[i].label.toLowerCase().includes(query)) {
+            this.filteredInputDeviceList.push(this.inputDeviceList[i]);
+          }
+        }
+      } else {
+        this.resetFilter(true);
+      }
+    },
+    resetFilter(status) {
+      if (status) {
+        this.filteredInputDeviceList = this.inputDeviceList;
+      }
     }
   }
 });

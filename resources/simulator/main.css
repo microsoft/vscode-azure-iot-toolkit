@@ -11,6 +11,20 @@
 	margin-top: -10px;
 }
 
+.ivu-modal-body {
+  padding: 0px !important;
+}
+
+.vscode-light .ivu-input[disabled], fieldset[disabled] .ivu-input {
+  background-color: #ffffff !important;
+  color: unset !important;
+}
+
+.vscode-dark .ivu-input[disabled], fieldset[disabled] .ivu-input {
+  background-color: #3c3c3c !important;
+  color: #d4d4d4 !important;
+}
+
 * {
   box-sizing: border-box;
   font-family: "Segoe UI";
@@ -70,7 +84,8 @@ body {
 
 .vscode-dark .ivu-input-group-append,
 .vscode-dark .ivu-input-group-prepend,
-.vscode-dark .ivu-input[disabled], fieldset[disabled] .ivu-input {
+.vscode-dark .ivu-form-item-error .ivu-input-group-append,
+.vscode-dark .ivu-form-item-error .ivu-input-group-prepend {
   background-color: #303030;
 }
 
@@ -117,6 +132,12 @@ body {
 .vscode-dark .ivu-modal-header,
 .vscode-dark .ivu-modal-header p,
 .vscode-dark .ivu-modal-header-inner,
-.vscode-dark .ivu-tooltip-light .ivu-tooltip-inner {
+.vscode-dark .ivu-tooltip-light .ivu-tooltip-inner,
+.vscode-dark .ivu-tag .ivu-icon-ios-close,
+.vscode-dark .ivu-select-input {
   color: #d4d4d4;
+}
+
+.vscode-dark .ivu-spin-fix {
+  background-color: rgba(60, 60, 60, .9)
 }

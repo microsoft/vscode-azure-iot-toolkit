@@ -86,7 +86,7 @@ export class Simulator {
     return this.processing || this.closeDuration > 0;
   }
 
-  public cancel() {
+  public async cancel() {
     this.cancelToken = true;
   }
 
@@ -101,7 +101,7 @@ export class Simulator {
       let iotHubConnectionString = await Utility.getConnectionString(
         Constants.IotHubConnectionStringKey,
         Constants.IotHubConnectionStringTitle,
-        false,
+        true,
       );
       if (deviceItem) {
         const hostName = ConnectionString.parse(iotHubConnectionString)
@@ -117,20 +117,16 @@ export class Simulator {
           deviceConnectionStrings,
         );
       } else {
-        // If no connection string is set, call selectIoTHub().
-        if (!iotHubConnectionString) {
-          await Simulator.getInstance().selectIoTHub();
-        }
         // Exit when no connection string found or the connection string is invalid.
         if (!iotHubConnectionString) {
-          vscode.window.showErrorMessage("No IoT Connection String Found.");
+          vscode.window.showErrorMessage("Failed to launch Simulator: IoT Hub connection string is not set.");
           return;
         }
         try {
           const deviceList: vscode.TreeItem[] = await Utility.getDeviceList(iotHubConnectionString, Constants.ExtensionContext);
           deviceList.map((item) => new DeviceNode(item as DeviceItem));
         } catch (err) {
-          vscode.window.showErrorMessage("Failed to list IoT Devices. Error: " + err.message);
+          vscode.window.showErrorMessage("Failed to launch Simulator: " + err.message);
           return;
         }
         const hostName = ConnectionString.parse(iotHubConnectionString)
@@ -145,6 +141,7 @@ export class Simulator {
           deviceConnectionStrings,
         );
       }
+      vscode.commands.executeCommand("azure-iot-toolkit.refresh");
     }
   }
 
@@ -293,7 +290,7 @@ export class Simulator {
     const total = deviceCount * numbers;
     if (total <= 0) {
       this.output(`Invalid Operation.`);
-      return Promise.reject();
+      return;
     }
     const startTime = new Date();
     this.output(
