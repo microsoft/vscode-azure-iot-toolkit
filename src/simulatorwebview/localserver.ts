@@ -4,10 +4,10 @@ import * as express from "express";
 import * as http from "http";
 import { AddressInfo } from "net";
 import * as vscode from "vscode";
+import { Constants } from "../constants";
 import { DeviceItem } from "../Model/DeviceItem";
 import { SendStatus } from "../sendStatus";
 import { Simulator } from "../simulator";
-import { Constants } from "../constants";
 
 export class LocalServer {
   private app: express.Express;
@@ -155,7 +155,7 @@ export class LocalServer {
   ) {
     try {
       const data = req.body;
-      const status = data.status === "Succeeded" ? true : false
+      const status = data.status === "Succeeded" ? true : false;
       this._simulator.telemetry(Constants.SimulatorSendEvent, status, data);
       res.sendStatus(200);
     } catch (err) {

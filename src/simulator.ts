@@ -14,8 +14,8 @@ import { DeviceItem } from "./Model/DeviceItem";
 import { DeviceNode } from "./Nodes/DeviceNode";
 import { SendStatus } from "./sendStatus";
 import { SimulatorWebview } from "./simulatorwebview/simulatorwebview";
-import { Utility } from "./utility";
 import { TelemetryClient } from "./telemetryClient";
+import { Utility } from "./utility";
 
 export class Simulator {
   public static getInstance(context?: vscode.ExtensionContext) {
@@ -116,7 +116,7 @@ export class Simulator {
       } else {
         TelemetryClient.sendEvent(eventName, {
           status: "Failed",
-          reason: "" + properties.reason
+          reason: "" + properties.reason,
         }, iotHubConnectionString);
       }
     } else if (eventName === Constants.SimulatorCloseEvent) {
@@ -126,7 +126,6 @@ export class Simulator {
           quitWhenProcessing: this.isProcessing() ? "true" : "false",
         }, iotHubConnectionString);
     }
-    
   }
 
   public async launch(deviceItem: DeviceItem): Promise<void> {
@@ -162,7 +161,7 @@ export class Simulator {
         if (!iotHubConnectionString) {
           vscode.window.showErrorMessage("Failed to launch Simulator: No IoT Connection String Found.");
           this.telemetry(Constants.SimulatorLaunchEvent, false, {
-            error: "Failed to launch Simulator: No IoT Connection String Found."
+            error: "Failed to launch Simulator: No IoT Connection String Found.",
           });
           return;
         }
@@ -172,7 +171,7 @@ export class Simulator {
         } catch (err) {
           vscode.window.showErrorMessage("Failed to launch Simulator: " + err.message);
           this.telemetry(Constants.SimulatorLaunchEvent, false, {
-            error: "Failed to launch Simulator: " + err.message
+            error: "Failed to launch Simulator: " + err.message,
           });
           return;
         }
@@ -363,7 +362,6 @@ export class Simulator {
     for (let i = 0; i < numbers; i++) {
       // No await here, beacause the interval should begin as soon as it called send(), not after it sent.
       ids.map((j) => {
-        console.log(template);
         // We use a template so that each time the message can be randomly generated.
         const generatedMessage = isTemplate
         ? dummyjson.parse(template)

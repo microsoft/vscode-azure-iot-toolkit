@@ -5,9 +5,9 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
-import { LocalServer } from "./localserver";
-import { Simulator } from "../simulator";
 import { Constants } from "../constants";
+import { Simulator } from "../simulator";
+import { LocalServer } from "./localserver";
 
 const simulatorWebviewPanelViewType = "Send D2C Messages";
 const simulatorWebviewPanelViewTitle = "Send D2C Messages";
@@ -34,7 +34,7 @@ export class SimulatorWebview {
         if (forceReload && this.panel) {
             this.panel.dispose();
             SimulatorWebview.simulator.telemetry(Constants.SimulatorCloseEvent, true, {
-                reload: 'true'
+                reload: "true",
             });
         }
         await this.openSimulatorWebviewPage();
@@ -60,7 +60,7 @@ export class SimulatorWebview {
             this.panel.webview.html = html;
             this.panel.onDidDispose(() => {
                 SimulatorWebview.simulator.telemetry(Constants.SimulatorCloseEvent, true, {
-                    reload: 'false'
+                    reload: "false",
                 });
                 this.panel = undefined;
                 this.localServer.stopServer();
