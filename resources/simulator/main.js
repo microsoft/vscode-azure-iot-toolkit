@@ -238,7 +238,7 @@ const app = new Vue({
             messageBody: this.messageBody
           };
           this.cancelRequested = false;
-          await axios.post(`${this.endpoint}/api/send`, {
+          await axios.post(`${this.endpoint}/api/telemetry`, {
             status: "Succeeded",
             devices: data.deviceConnectionStrings.length,
             numbers: data.numbers,
@@ -247,8 +247,9 @@ const app = new Vue({
           });
           await axios.post(`${this.endpoint}/api/send`, data);
         } else {
-          await axios.post(`${this.endpoint}/api/send`, {
-            status: "Failed"
+          await axios.post(`${this.endpoint}/api/telemetry`, {
+            status: "Failed",
+            reason: "Validation Failure"
           });
         }
       });
@@ -296,6 +297,10 @@ const app = new Vue({
       this.cancelRequested = true;
       await axios.post(`${this.endpoint}/api/cancel`, {
         cancel: true
+      });
+      await axios.post(`${this.endpoint}/api/telemetry`, {
+        status: "Failed",
+        reason: "User Canceled"
       });
     },
     async persistInputs() {

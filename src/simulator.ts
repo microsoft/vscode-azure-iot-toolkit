@@ -93,36 +93,38 @@ export class Simulator {
   }
 
   public async telemetry(eventName: string, status: boolean, properties?: { [key: string]: string; }) {
+    const iotHubConnectionString = status ? await Utility.getConnectionString(
+      Constants.IotHubConnectionStringKey,
+      Constants.IotHubConnectionStringTitle,
+      false,
+    ) : undefined;
     if (eventName === Constants.SimulatorLaunchEvent) {
-      const iotHubConnectionString = status ? await Utility.getConnectionString(
-        Constants.IotHubConnectionStringKey,
-        Constants.IotHubConnectionStringTitle,
-        false,
-      ) : undefined;
       TelemetryClient.sendEvent(eventName, {
         status: status ? "Succeeded" : "Failed",
-        message: status ? "OK" : properties.error
+        reason: status ? undefined : properties.error,
+        quitWhenProcessing: this.isProcessing() ? "true" : "false",
       }, iotHubConnectionString);
-    } else if (eventName === Constants.SimulatorCloseEvent) {
+    } else if (eventName === Constants.SimulatorSendEvent) {
       if (status) {
         TelemetryClient.sendEvent(eventName, {
           status: "Succeeded",
           devices: "" + properties.deviceConnectionStrings.length,
           numbers: "" + properties.numbers,
           interval: "" + properties.interval,
-          messageBody: properties.messageBody,
-        });
+          messageBody: "" + properties.messageBody,
+        }, iotHubConnectionString);
       } else {
         TelemetryClient.sendEvent(eventName, {
-          status: "Failed"
-        });
+          status: "Failed",
+          reason: "" + properties.reason
+        }, iotHubConnectionString);
       }
-    } else if (eventName === Constants.SimulatorSendEvent) {
+    } else if (eventName === Constants.SimulatorCloseEvent) {
         TelemetryClient.sendEvent(eventName, {
           status: status ? "Succeeded" : "Failed",
           reload: properties.reload,
-          quitWhenProcessing: this.isProcessing() ? 'true' : 'false'
-        });
+          quitWhenProcessing: this.isProcessing() ? "true" : "false",
+        }, iotHubConnectionString);
     }
     
   }

@@ -155,7 +155,7 @@ export class LocalServer {
   ) {
     try {
       const data = req.body;
-      const status = data.status === "Success" ? true : false
+      const status = data.status === "Succeeded" ? true : false
       this._simulator.telemetry(Constants.SimulatorSendEvent, status, data);
       res.sendStatus(200);
     } catch (err) {

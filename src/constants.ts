@@ -126,8 +126,8 @@ export class Constants {
     public static SimulatorOutputChannelTitle = "Send D2C Messages";
     public static SimulatorProgressBarCancelLog = "You just canceled sending simulated messages.";
     public static SimulatorSendingMessageProgressBarTitle = "Sending Simulated Message(s)";
-    public static SimulatorLaunchEvent = "General.Simulator.Lauch";
-    public static SimulatorCloseEvent = "General.Simulator.Close";
+    public static SimulatorLaunchEvent = "General.Simulator.Start";
+    public static SimulatorCloseEvent = "General.Simulator.Done";
     public static SimulatorSendEvent = "AZ.Simulator.Send";
     public static IoTHubAILoadInterfacesTreeStartEvent = "AZ.LoadInterfacesTree.Start";
     public static IoTHubAILoadInterfacesTreeDoneEvent = "AZ.LoadInterfacesTree.Done";
