@@ -35,8 +35,9 @@ export class InterfaceLabelNode implements INode {
             ))).data;
             TelemetryClient.sendEvent(Constants.IoTHubAILoadInterfacesTreeDoneEvent, { Result: "Success" });
             let interfaceIds = [];
-            if (Utility.getReportedInterfacesFromDigitalTwin(interfaces)) {
-                interfaceIds = Object.values(interfaces.interfaces[Constants.modelDiscoveryInterfaceName].properties.modelInformation.reported.value.interfaces);
+            const reportedInterfaces = Utility.getReportedInterfacesFromDigitalTwin(interfaces);
+            if (reportedInterfaces) {
+                interfaceIds = Object.values(reportedInterfaces);
             }
             if (interfaceIds.length === 0) {
                 return [new InfoNode("No Interfaces")];
