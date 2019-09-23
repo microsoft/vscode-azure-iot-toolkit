@@ -59,6 +59,7 @@ export class AzureIoTExplorer {
         this._simulator = Simulator.getInstance(this.context);
     }
 
+    // TODO: Remove the old send D2C message implementation
     public sendD2CMessage(deviceItem?: DeviceItem): void {
         this._iotHubMessageExplorer.sendD2CMessage(deviceItem);
     }
