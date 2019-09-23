@@ -50,7 +50,7 @@ const defaultValue = {
   interval: "1",
   intervalUnit: "second",
   messageType: "Text Content",
-  messageBody: "Plain Text",
+  messageBodyType: "Plain Text",
   plainTextArea: plainTextTemplate,
   dummyJsonArea: dummyJsonTemplate
 };
@@ -84,9 +84,9 @@ const app = new Vue({
       if (value === "") {
         callback(new Error("Required"));
       } else {
-        if (this.messageBody === "Plain Text") {
+        if (this.messageBodyType === "Plain Text") {
           callback();
-        } else if (this.messageBody === "Dummy Json") {
+        } else if (this.messageBodyType === "Dummy Json") {
           const validated = await this.generateDummyJson();
           if (validated) {
             callback();
@@ -109,7 +109,7 @@ const app = new Vue({
       },
       intervalUnit: "second",
       messageType: "Text Content",
-      messageBody: "Plain Text",
+      messageBodyType: "Plain Text",
       textArea: {
         plainTextArea: "",
         dummyJsonArea: "",
@@ -183,10 +183,10 @@ const app = new Vue({
             data.intervalUnit && data.intervalUnit !== ""
               ? data.intervalUnit
               : defaultValue.intervalUnit;
-          this.messageBody =
-            data.messageBody && data.messageBody !== ""
-              ? data.messageBody
-              : defaultValue.messageBody;
+          this.messageBodyType =
+            data.messageBodyType && data.messageBodyType !== ""
+              ? data.messageBodyType
+              : defaultValue.messageBodyType;
           this.textArea.plainTextArea =
             data.plainTextArea && data.plainTextArea !== ""
               ? data.plainTextArea
@@ -235,7 +235,7 @@ const app = new Vue({
             numbers: this.formItem.numbers,
             interval: intervalInMilliSecond,
             messageType: this.messageType,
-            messageBody: this.messageBody
+            messageBodyType: this.messageBodyType
           };
           this.cancelRequested = false;
           await axios.post(`${this.endpoint}/api/telemetry`, {
@@ -243,7 +243,7 @@ const app = new Vue({
             devices: data.deviceConnectionStrings.length,
             numbers: data.numbers,
             interval: data.interval,
-            messageBody: data.messageBody,
+            messageBodyType: data.messageBodyType,
           });
           await axios.post(`${this.endpoint}/api/send`, data);
         } else {
@@ -254,8 +254,8 @@ const app = new Vue({
         }
       });
     },
-    async messageBodyChange(name) {
-      this.messageBody = name;
+    async messageBodyTypeChange(name) {
+      this.messageBodyType = name;
       // If user clicks on 'Plain Text', the 'Preview' panel bacomes meaningless.
       // So we hide it, and (if user was on 'Preview', we) make the panel focus on 'Write' again.
       if (name === "Plain Text") {
@@ -285,10 +285,10 @@ const app = new Vue({
       return validated;
     },
     async textAreaOnChange() {
-      if (this.messageBody === "Dummy Json") {
+      if (this.messageBodyType === "Dummy Json") {
         this.formItem.message = this.textArea.dummyJsonArea;
         await this.generateDummyJson();
-      } else if (this.messageBody === "Plain Text") {
+      } else if (this.messageBodyType === "Plain Text") {
         this.formItem.message = this.textArea.plainTextArea;
       }
       await this.persistInputs();
@@ -310,7 +310,7 @@ const app = new Vue({
         numbers: this.formItem.numbers,
         interval: this.formItem.interval,
         intervalUnit: this.intervalUnit,
-        messageBody: this.messageBody,
+        messageBodyType: this.messageBodyType,
         plainTextArea: this.textArea.plainTextArea,
         dummyJsonArea: this.textArea.dummyJsonArea
       };

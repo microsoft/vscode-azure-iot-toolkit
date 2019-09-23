@@ -42,7 +42,7 @@ export class Simulator {
     numbers: string;
     interval: string;
     intervalUnit: string;
-    messageBody: string;
+    messageBodyType: string;
     plainTextArea: string;
     dummyJsonArea: string;
   };
@@ -61,7 +61,7 @@ export class Simulator {
       numbers: "",
       interval: "",
       intervalUnit: "",
-      messageBody: "",
+      messageBodyType: "",
       plainTextArea: "",
       dummyJsonArea: "",
     };
@@ -100,30 +100,30 @@ export class Simulator {
     ) : undefined;
     if (eventName === Constants.SimulatorLaunchEvent) {
       TelemetryClient.sendEvent(eventName, {
-        status: status ? "Succeeded" : "Failed",
-        reason: status ? undefined : properties.error,
-        quitWhenProcessing: this.isProcessing() ? "true" : "false",
+        Result: status ? "Success" : "Fail",
+        Error: status ? undefined : properties.error,
+        QuitWhenProcessing: this.isProcessing() ? "True" : "False",
       }, iotHubConnectionString);
     } else if (eventName === Constants.SimulatorSendEvent) {
       if (status) {
         TelemetryClient.sendEvent(eventName, {
-          status: "Succeeded",
-          devices: "" + properties.deviceConnectionStrings.length,
-          numbers: "" + properties.numbers,
-          interval: "" + properties.interval,
-          messageBody: "" + properties.messageBody,
+          Result: "Success",
+          DeviceNumber: "" + properties.deviceConnectionStrings.length,
+          IterationsPerDevice: "" + properties.numbers,
+          Interval: "" + properties.interval,
+          messageBodyType: "" + properties.messageBodyType,
         }, iotHubConnectionString);
       } else {
         TelemetryClient.sendEvent(eventName, {
-          status: "Failed",
-          reason: "" + properties.reason,
+          Result: "Fail",
+          Error: "" + properties.reason,
         }, iotHubConnectionString);
       }
     } else if (eventName === Constants.SimulatorCloseEvent) {
         TelemetryClient.sendEvent(eventName, {
-          status: status ? "Succeeded" : "Failed",
-          reload: properties.reload,
-          quitWhenProcessing: this.isProcessing() ? "true" : "false",
+          Reason: status ? "Success" : "Fail",
+          IsReload: properties.reload,
+          QuitWhenProcessing: this.isProcessing() ? "True" : "False",
         }, iotHubConnectionString);
     }
   }

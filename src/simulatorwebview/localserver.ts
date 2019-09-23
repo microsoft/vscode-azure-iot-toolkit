@@ -232,7 +232,7 @@ export class LocalServer {
     try {
       const data = req.body;
       const messageType = data.messageType;
-      const messageBody = data.messageBody;
+      const messageBodyType = data.messageBodyType;
       const deviceConnectionStrings: string[] = data.deviceConnectionStrings;
       let template: string = data.message;
       const numbers: number = Number(data.numbers);
@@ -242,7 +242,7 @@ export class LocalServer {
           // TODO: File Upload
           break;
         case "Text Content":
-          switch (messageBody) {
+          switch (messageBodyType) {
             case "Dummy Json":
               await this._simulator.sendD2CMessage(
                 deviceConnectionStrings,
