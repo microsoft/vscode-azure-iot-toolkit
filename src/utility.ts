@@ -430,7 +430,7 @@ export class Utility {
             return Utility.getIoTDeviceList(iotHubConnectionString);
         }
     }
-    
+
     public static generateIoTHubAxiosRequestConfig(iotHubConnectionString: string, url: string, method: string, data?: any): AxiosRequestConfig {
         return {
             url,

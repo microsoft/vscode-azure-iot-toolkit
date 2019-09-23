@@ -14,6 +14,7 @@ import { DeviceItem } from "./Model/DeviceItem";
 import { DeviceNode } from "./Nodes/DeviceNode";
 import { SendStatus } from "./sendStatus";
 import { SimulatorWebview } from "./simulatorwebview/simulatorwebview";
+import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
 export class Simulator {
@@ -31,6 +32,7 @@ export class Simulator {
   private static instance: Simulator;
   private readonly context: vscode.ExtensionContext;
   private readonly outputChannel: vscode.OutputChannel;
+  private iotHubConnectionString: string;
   private processing: boolean;
   private cancelToken: boolean;
   private totalStatus: SendStatus;
@@ -41,7 +43,7 @@ export class Simulator {
     numbers: string;
     interval: string;
     intervalUnit: string;
-    messageBody: string;
+    messageBodyType: string;
     plainTextArea: string;
     dummyJsonArea: string;
   };
@@ -54,13 +56,14 @@ export class Simulator {
     this.processing = false;
     this.cancelToken = false;
     this.closeDuration = 0;
+    this.iotHubConnectionString = undefined;
     this.persistedInputs = {
       hostName: "",
       deviceConnectionStrings: [],
       numbers: "",
       interval: "",
       intervalUnit: "",
-      messageBody: "",
+      messageBodyType: "",
       plainTextArea: "",
       dummyJsonArea: "",
     };
@@ -74,12 +77,12 @@ export class Simulator {
   }
 
   public async getInputDeviceList(): Promise<DeviceItem[]> {
-    const iotHubConnectionString = await Utility.getConnectionString(
+    this.iotHubConnectionString = await Utility.getConnectionString(
       Constants.IotHubConnectionStringKey,
       Constants.IotHubConnectionStringTitle,
       false,
     );
-    return await Utility.getFilteredDeviceList(iotHubConnectionString, false);
+    return await Utility.getFilteredDeviceList(this.iotHubConnectionString, false);
   }
 
   public isProcessing(): boolean {
@@ -90,21 +93,53 @@ export class Simulator {
     this.cancelToken = true;
   }
 
+  public async telemetry(eventName: string, result: boolean, properties?: { [key: string]: string; }) {
+    if (eventName === Constants.SimulatorLaunchEvent) {
+      TelemetryClient.sendEvent(eventName, {
+        Result: result ? "Success" : "Fail",
+        Error: result ? undefined : properties.error,
+        QuitWhenProcessing: this.isProcessing() ? "True" : "False",
+      }, this.iotHubConnectionString);
+    } else if (eventName === Constants.SimulatorSendEvent) {
+      if (result) {
+        TelemetryClient.sendEvent(eventName, {
+          Result: "Success",
+          DeviceNumber: "" + properties.deviceConnectionStrings.length,
+          IterationsPerDevice: "" + properties.numbers,
+          Interval: "" + properties.interval,
+          MessageBodyType: "" + properties.messageBodyType,
+        }, this.iotHubConnectionString);
+      } else {
+        TelemetryClient.sendEvent(eventName, {
+          Result: "Fail",
+          Error: "" + properties.reason,
+        }, this.iotHubConnectionString);
+      }
+    } else if (eventName === Constants.SimulatorCloseEvent) {
+        TelemetryClient.sendEvent(eventName, {
+          Result: result ? "Success" : "Fail",
+          IsReload: properties.reload,
+          QuitWhenProcessing: this.isProcessing() ? "True" : "False",
+        }, this.iotHubConnectionString);
+    }
+  }
+
   public async launch(deviceItem: DeviceItem): Promise<void> {
     let deviceConnectionStrings = [];
     if (this.isProcessing()) {
       this.closeDuration = 3500;
       await this.showWebview(false);
+      this.telemetry(Constants.SimulatorLaunchEvent, true);
       await this.delay(this.closeDuration);
       this.closeDuration = 0;
     } else {
-      let iotHubConnectionString = await Utility.getConnectionString(
+      this.iotHubConnectionString = await Utility.getConnectionString(
         Constants.IotHubConnectionStringKey,
         Constants.IotHubConnectionStringTitle,
         true,
       );
       if (deviceItem) {
-        const hostName = ConnectionString.parse(iotHubConnectionString)
+        const hostName = ConnectionString.parse(this.iotHubConnectionString)
           .HostName;
         const hostNamePersisted = this.persistedInputs.hostName;
         deviceConnectionStrings.push(deviceItem.connectionString);
@@ -116,20 +151,27 @@ export class Simulator {
           hostName,
           deviceConnectionStrings,
         );
+        this.telemetry(Constants.SimulatorLaunchEvent, true);
       } else {
         // Exit when no connection string found or the connection string is invalid.
-        if (!iotHubConnectionString) {
-          vscode.window.showErrorMessage("Failed to launch Simulator: IoT Hub connection string is not set.");
+        if (!this.iotHubConnectionString) {
+          vscode.window.showErrorMessage("Failed to launch Simulator: No IoT Connection String Found.");
+          this.telemetry(Constants.SimulatorLaunchEvent, false, {
+            error: "Failed to launch Simulator: No IoT Connection String Found.",
+          });
           return;
         }
         try {
-          const deviceList: vscode.TreeItem[] = await Utility.getDeviceList(iotHubConnectionString, Constants.ExtensionContext);
+          const deviceList: vscode.TreeItem[] = await Utility.getDeviceList(this.iotHubConnectionString, Constants.ExtensionContext);
           deviceList.map((item) => new DeviceNode(item as DeviceItem));
         } catch (err) {
           vscode.window.showErrorMessage("Failed to launch Simulator: " + err.message);
+          this.telemetry(Constants.SimulatorLaunchEvent, false, {
+            error: "Failed to launch Simulator: " + err.message,
+          });
           return;
         }
-        const hostName = ConnectionString.parse(iotHubConnectionString)
+        const hostName = ConnectionString.parse(this.iotHubConnectionString)
           .HostName;
         const hostNamePersisted = this.persistedInputs.hostName;
         const deviceConnectionStringsPersisted = this.persistedInputs
@@ -140,6 +182,7 @@ export class Simulator {
           hostName,
           deviceConnectionStrings,
         );
+        this.telemetry(Constants.SimulatorLaunchEvent, true);
       }
       vscode.commands.executeCommand("azure-iot-toolkit.refresh");
     }
@@ -315,7 +358,6 @@ export class Simulator {
     for (let i = 0; i < numbers; i++) {
       // No await here, beacause the interval should begin as soon as it called send(), not after it sent.
       ids.map((j) => {
-        console.log(template);
         // We use a template so that each time the message can be randomly generated.
         const generatedMessage = isTemplate
         ? dummyjson.parse(template)

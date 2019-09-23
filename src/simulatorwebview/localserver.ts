@@ -4,6 +4,7 @@ import * as express from "express";
 import * as http from "http";
 import { AddressInfo } from "net";
 import * as vscode from "vscode";
+import { Constants } from "../constants";
 import { DeviceItem } from "../Model/DeviceItem";
 import { SendStatus } from "../sendStatus";
 import { Simulator } from "../simulator";
@@ -75,6 +76,10 @@ export class LocalServer {
       "/api/presistinputs",
       async (req, res, next) => await this.persistInputs(req, res, next),
     );
+    this.router.post(
+      "/api/telemetry",
+      async (req, res, next) => await this.telemetry(req, res, next),
+    );
   }
 
   private initApp() {
@@ -137,6 +142,21 @@ export class LocalServer {
     try {
       const inputs = req.body;
       this._simulator.persistInputs(inputs);
+      res.sendStatus(200);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  private async telemetry(
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction,
+  ) {
+    try {
+      const data = req.body;
+      const result = data.status === "Succeeded" ? true : false;
+      this._simulator.telemetry(Constants.SimulatorSendEvent, result, data);
       res.sendStatus(200);
     } catch (err) {
       next(err);
@@ -212,7 +232,7 @@ export class LocalServer {
     try {
       const data = req.body;
       const messageType = data.messageType;
-      const messageBody = data.messageBody;
+      const messageBodyType = data.messageBodyType;
       const deviceConnectionStrings: string[] = data.deviceConnectionStrings;
       let template: string = data.message;
       const numbers: number = Number(data.numbers);
@@ -222,7 +242,7 @@ export class LocalServer {
           // TODO: File Upload
           break;
         case "Text Content":
-          switch (messageBody) {
+          switch (messageBodyType) {
             case "Dummy Json":
               await this._simulator.sendD2CMessage(
                 deviceConnectionStrings,

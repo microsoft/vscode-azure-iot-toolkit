@@ -80,7 +80,7 @@
                         <form-item prop="message" label="Message">
                             <Row>
                                 <i-col span="24">
-                                    <radio-group v-model="messageBody" @on-change="messageBodyChange">
+                                    <radio-group v-model="messageBodyType" @on-change="messageBodyTypeChange">
                                         <Radio label="Plain Text">Plain Text</Radio>
                                         <Radio label="Dummy Json">Dummy JSON
                                             <Tooltip theme="light" transfer max-width="500" placement="top">
@@ -104,18 +104,18 @@
                                 <i-col span="24">
                                     <Tabs v-model="messageInputAreaTab" @on-click="textAreaOnChange" :animated="false">
                                         <tab-pane label="Write" name="Write">
-                                            <i-input v-if="messageBody=='Plain Text'" v-model="textArea.plainTextArea"
+                                            <i-input v-if="messageBodyType=='Plain Text'" v-model="textArea.plainTextArea"
                                                 style="width: 100%" @on-change="textAreaOnChange"
                                                 placeholder="Enter the message content here..." type="textarea"
                                                 :autosize="{minRows: 10}">
                                             </i-input>
-                                            <i-input v-if="messageBody=='Dummy Json'" v-model="textArea.dummyJsonArea"
+                                            <i-input v-if="messageBodyType=='Dummy Json'" v-model="textArea.dummyJsonArea"
                                                 style="width: 100%" @on-change="textAreaOnChange"
                                                 placeholder="Enter the dummy-json template here..." type="textarea"
                                                 :autosize="{minRows: 10}">
                                             </i-input>
                                         </tab-pane>
-                                        <tab-pane v-if="messageBody=='Dummy Json'" label="Preview" name="Preview">
+                                        <tab-pane v-if="messageBodyType=='Dummy Json'" label="Preview" name="Preview">
                                             <i-input style="width: 100%" v-model="textArea.generatedMessage" disabled readonly
                                                 type="textarea" :autosize="{minRows: 10}">
                                             </i-input>
