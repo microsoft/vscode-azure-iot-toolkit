@@ -34,7 +34,7 @@ export class SimulatorWebview {
         if (forceReload && this.panel) {
             this.panel.dispose();
             SimulatorWebview.simulator.telemetry(Constants.SimulatorCloseEvent, true, {
-                reload: "true",
+                reload: "True",
             });
         }
         await this.openSimulatorWebviewPage();
@@ -60,7 +60,7 @@ export class SimulatorWebview {
             this.panel.webview.html = html;
             this.panel.onDidDispose(() => {
                 SimulatorWebview.simulator.telemetry(Constants.SimulatorCloseEvent, true, {
-                    reload: "false",
+                    reload: "False",
                 });
                 this.panel = undefined;
                 this.localServer.stopServer();

@@ -89,23 +89,22 @@ export class Simulator {
 
   public async cancel() {
     this.cancelToken = true;
-    await this.delay(1000);
   }
 
-  public async telemetry(eventName: string, status: boolean, properties?: { [key: string]: string; }) {
-    const iotHubConnectionString = status ? await Utility.getConnectionString(
+  public async telemetry(eventName: string, result: boolean, properties?: { [key: string]: string; }) {
+    const iotHubConnectionString = result ? await Utility.getConnectionString(
       Constants.IotHubConnectionStringKey,
       Constants.IotHubConnectionStringTitle,
       false,
     ) : undefined;
     if (eventName === Constants.SimulatorLaunchEvent) {
       TelemetryClient.sendEvent(eventName, {
-        Result: status ? "Success" : "Fail",
-        Error: status ? undefined : properties.error,
+        Result: result ? "Success" : "Fail",
+        Error: result ? undefined : properties.error,
         QuitWhenProcessing: this.isProcessing() ? "True" : "False",
       }, iotHubConnectionString);
     } else if (eventName === Constants.SimulatorSendEvent) {
-      if (status) {
+      if (result) {
         TelemetryClient.sendEvent(eventName, {
           Result: "Success",
           DeviceNumber: "" + properties.deviceConnectionStrings.length,
@@ -121,7 +120,7 @@ export class Simulator {
       }
     } else if (eventName === Constants.SimulatorCloseEvent) {
         TelemetryClient.sendEvent(eventName, {
-          Reason: status ? "Success" : "Fail",
+          Result: result ? "Success" : "Fail",
           IsReload: properties.reload,
           QuitWhenProcessing: this.isProcessing() ? "True" : "False",
         }, iotHubConnectionString);
