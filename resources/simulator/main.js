@@ -316,7 +316,7 @@ const app = new Vue({
       };
       await axios.post(`${this.endpoint}/api/presistinputs`, inputs);
     },
-    deviceSelectFilter (query) {
+    deviceSelectFilter(query) {
       query = query.toLowerCase();
       if (query != '') {
         this.filteredInputDeviceList = [];
@@ -329,7 +329,7 @@ const app = new Vue({
         this.resetFilter(true);
       }
     },
-    resetFilter (status) {
+    resetFilter(status) {
       if (status) {
         this.filteredInputDeviceList = this.inputDeviceList;
       }
