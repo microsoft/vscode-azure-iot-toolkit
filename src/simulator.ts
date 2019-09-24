@@ -210,7 +210,7 @@ export class Simulator {
       this.cancelToken = false;
     } else {
       vscode.window.showErrorMessage(
-        "A previous send D2C messages operation is in progress, please wait or cancel it.",
+        "A previous sending D2C messages operation is in progress, please wait or cancel it.",
       );
     }
   }
