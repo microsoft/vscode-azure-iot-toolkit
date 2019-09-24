@@ -39,7 +39,7 @@
                         </i-col>
                     </Row>
                     <i-form ref="formItem" :model="formItem" :rules="ruleValidation">
-                        <form-item prop="deviceConnectionStrings" label="Device(s) to simulate">
+                        <form-item prop="deviceConnectionStrings" label="Device(s) to send messages from">
                             <Row>
                                 <i-col span="24">
                                     <i-select v-model="formItem.deviceConnectionStrings" multiple filterable
@@ -126,7 +126,7 @@
                         </form-item>
                         <form-item>
                             <i-button :disabled="status.isProcessing" type="primary" @click="send()">
-                                Start simulation
+                                Send
                             </i-button>
                         </form-item>
                     </i-form>
@@ -136,7 +136,7 @@
         <Modal v-model="status.isProcessing" scrollable width="380" :mask-closable="false" :closable="false">
             <p slot="header" style="text-align: left;">
                 <Icon type="ios-information-circle" size="18" ></Icon>
-                <span>A simulation is in progress...</span>
+                <span>Sending D2C messages...</span>
             </p>
             <div style="text-align: left; margin-left: 24px;">
                 <p>

@@ -21,7 +21,7 @@ export class Simulator {
   public static getInstance(context?: vscode.ExtensionContext) {
     if (!Simulator.instance) {
       if (!context) {
-        vscode.window.showErrorMessage("Cannot create Simulator instance.");
+        vscode.window.showErrorMessage("Cannot create Send D2C Messages webview instance.");
       } else {
         Simulator.instance = new Simulator(context);
       }
@@ -155,9 +155,9 @@ export class Simulator {
       } else {
         // Exit when no connection string found or the connection string is invalid.
         if (!this.iotHubConnectionString) {
-          vscode.window.showErrorMessage("Failed to launch Simulator: No IoT Connection String Found.");
+          vscode.window.showErrorMessage("Failed to launch Send D2C Messages webview: No IoT Connection String Found.");
           this.telemetry(Constants.SimulatorLaunchEvent, false, {
-            error: "Failed to launch Simulator: No IoT Connection String Found.",
+            error: "Failed to launch Send D2C Messages webview: No IoT Connection String Found.",
           });
           return;
         }
@@ -165,9 +165,9 @@ export class Simulator {
           const deviceList: vscode.TreeItem[] = await Utility.getDeviceList(this.iotHubConnectionString, Constants.ExtensionContext);
           deviceList.map((item) => new DeviceNode(item as DeviceItem));
         } catch (err) {
-          vscode.window.showErrorMessage("Failed to launch Simulator: " + err.message);
+          vscode.window.showErrorMessage("Failed to launch Send D2C Messages webview: " + err.message);
           this.telemetry(Constants.SimulatorLaunchEvent, false, {
-            error: "Failed to launch Simulator: " + err.message,
+            error: "Failed to launch Send D2C Messages webview: " + err.message,
           });
           return;
         }
@@ -210,7 +210,7 @@ export class Simulator {
       this.cancelToken = false;
     } else {
       vscode.window.showErrorMessage(
-        "A previous simulation is in progress, please wait or cancel it.",
+        "A previous send D2C messages operation is in progress, please wait or cancel it.",
       );
     }
   }
