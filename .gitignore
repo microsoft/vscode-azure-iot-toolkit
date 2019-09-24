@@ -2,4 +2,4 @@ out
 node_modules
 npm-debug.log
 dist
-.vscode-test 
+.vscode-test

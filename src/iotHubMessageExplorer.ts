@@ -21,11 +21,9 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
 
     public async sendD2CMessage(deviceItem?: DeviceItem) {
         deviceItem = await Utility.getInputDevice(deviceItem, Constants.IoTHubAIMessageStartEvent);
-
         if (!deviceItem || !deviceItem.connectionString) {
             return;
         }
-
         const deviceConnectionString: string = deviceItem.connectionString;
         vscode.window.showInputBox({ prompt: `Enter message to send to ${Constants.IoTHub}`, ignoreFocusOut: true }).then((message: string) => {
             if (message !== undefined) {

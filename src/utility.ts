@@ -422,6 +422,15 @@ export class Utility {
         await Constants.ExtensionContext.globalState.update(Constants.StateKeyIoTHubID, "");
     }
 
+    public static async getFilteredDeviceList(iotHubConnectionString: string, onlyEdgeDevice: boolean): Promise<DeviceItem[]> {
+        if (onlyEdgeDevice) {
+            const [deviceList, edgeDeviceIdSet] = await Promise.all([Utility.getIoTDeviceList(iotHubConnectionString), Utility.getEdgeDeviceIdSet(iotHubConnectionString)]);
+            return deviceList.filter((device) => edgeDeviceIdSet.has(device.deviceId));
+        } else {
+            return Utility.getIoTDeviceList(iotHubConnectionString);
+        }
+    }
+
     public static generateIoTHubAxiosRequestConfig(iotHubConnectionString: string, url: string, method: string, data?: any): AxiosRequestConfig {
         return {
             url,
@@ -453,15 +462,6 @@ export class Utility {
             }
         }
         return source;
-    }
-
-    private static async getFilteredDeviceList(iotHubConnectionString: string, onlyEdgeDevice: boolean): Promise<DeviceItem[]> {
-        if (onlyEdgeDevice) {
-            const [deviceList, edgeDeviceIdSet] = await Promise.all([Utility.getIoTDeviceList(iotHubConnectionString), Utility.getEdgeDeviceIdSet(iotHubConnectionString)]);
-            return deviceList.filter((device) => edgeDeviceIdSet.has(device.deviceId));
-        } else {
-            return Utility.getIoTDeviceList(iotHubConnectionString);
-        }
     }
 
     private static async getIoTDeviceList(iotHubConnectionString: string): Promise<DeviceItem[]> {

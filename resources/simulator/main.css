@@ -1,0 +1,143 @@
+.ivu-icon {
+	color: #2d8cf0;
+}
+
+.ivu-radio-group {
+	margin-top: -20px;
+}
+
+.ivu-tabs,
+.ivu-tabs-content {
+	margin-top: -10px;
+}
+
+.ivu-modal-body {
+  padding: 0px !important;
+}
+
+.vscode-light .ivu-input[disabled], fieldset[disabled] .ivu-input {
+  background-color: #ffffff !important;
+  color: unset !important;
+}
+
+.vscode-dark .ivu-input[disabled], fieldset[disabled] .ivu-input {
+  background-color: #3c3c3c !important;
+  color: #d4d4d4 !important;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: "Segoe UI";
+}
+
+.vscode-dark {
+  background: #1e1e1e;
+  color: #d4d4d4;
+}
+.vscode-light {
+  background: #ffffff;
+  color: #333333;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#app {
+  display: table;
+  width: 100%;
+  height: 100% !important;
+}
+
+.vscode-dark .ivu-select-item:hover,
+.vscode-dark .ivu-select-item-selected,
+.vscode-dark .ivu-select-item-selected:hover,
+.vscode-dark .ivu-select-multiple .ivu-select-item-focus,
+.vscode-dark .ivu-select-multiple .ivu-select-item-selected,
+.vscode-dark .ivu-select-multiple .ivu-select-item-selected:hover,
+.vscode-dark .ivu-select-multiple .ivu-select-item-selected:after,
+.vscode-dark .ivu-dropdown-item,
+.vscode-dark .ivu-dropdown-item:hover,
+.vscode-dark .ivu-dropdown-item:after {
+  background: #062f4a;
+}
+
+.vscode-dark .ivu-select-item-focus,
+.vscode-dark .ivu-radio-disabled .ivu-radio-inner {
+  background: #3c3c3c;
+}
+
+.vscode-dark .ivu-input,
+.vscode-dark .ivu-select-selection,
+.vscode-dark .ivu-select-item,
+.vscode-dark .ivu-select-dropdown,
+.vscode-dark .ivu-modal-content,
+.vscode-dark .ivu-tooltip-content,
+.vscode-dark .ivu-tooltip-light .ivu-tooltip-inner,
+.vscode-dark .ivu-tag .ivu-tag-checked,
+.vscode-dark .ivu-select-multiple .ivu-tag {
+  background-color: #3c3c3c;
+}
+
+.vscode-dark .ivu-input-group-append,
+.vscode-dark .ivu-input-group-prepend,
+.vscode-dark .ivu-form-item-error .ivu-input-group-append,
+.vscode-dark .ivu-form-item-error .ivu-input-group-prepend {
+  background-color: #303030;
+}
+
+.vscode-dark .ivu-card {
+  background-color: #1e1e1e;
+}
+
+.vscode-dark .ivu-input,
+.vscode-dark .ivu-select-item,
+.vscode-dark .ivu-input-group-append,
+.vscode-dark .ivu-input-group-prepend,
+.vscode-dark .ivu-select .ivu-select-multiple .ivu-select-default,
+.vscode-dark .ivu-select-selection {
+  border-color: #3c3c3c;
+}
+
+.vscode-dark .ivu-tabs-bar,
+.vscode-dark .ivu-modal-header,
+.vscode-dark .ivu-modal-footer,
+.vscode-dark .ivu-input[disabled],
+.vscode-dark .ivu-input[disabled]:hover {
+  border-color: #303030;
+}
+
+.vscode-dark
+  .ivu-tooltip-light.ivu-tooltip-popper[x-placement^="top"]
+  .ivu-tooltip-arrow:after {
+  border-top-color: #3c3c3c;
+}
+
+.vscode-dark .ivu-input-group-append,
+.vscode-dark .ivu-input-group-prepend,
+.vscode-dark .ivu-tag-text,
+.vscode-dark .ivu-select,
+.vscode-dark .ivu-select-item,
+.vscode-dark .ivu-select-item-selected,
+.vscode-dark .ivu-select-item-selected:hover,
+.vscode-dark .ivu-select-multiple .ivu-select-item-selected,
+.vscode-dark .ivu-form .ivu-form-item-label,
+.vscode-dark .ivu-card,
+.vscode-dark .ivu-dropdown-item,
+.vscode-dark .ivu-input,
+.vscode-dark .ivu-tabs-nav,
+.vscode-dark .ivu-modal-header,
+.vscode-dark .ivu-modal-header p,
+.vscode-dark .ivu-modal-header-inner,
+.vscode-dark .ivu-tooltip-light .ivu-tooltip-inner,
+.vscode-dark .ivu-tag .ivu-icon-ios-close,
+.vscode-dark .ivu-select-input {
+  color: #d4d4d4;
+}
+
+.vscode-dark .ivu-spin-fix {
+  background-color: rgba(60, 60, 60, .9)
+}

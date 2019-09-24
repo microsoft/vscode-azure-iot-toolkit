@@ -32,7 +32,11 @@ const config = {
         'utf-8-validate': 'commonjs utf-8-validate'
     },
     resolve: { // support reading TypeScript and JavaScript files, 📖 -> https://github.com/TypeStrong/ts-loader
-        extensions: ['.ts', '.js']
+        extensions: ['.ts', '.js'],
+        // suppress warning: webpack + require handlebars error
+        alias: {
+            handlebars: 'handlebars/dist/handlebars.min.js'
+        }
     },
     module: {
         rules: [
@@ -40,7 +44,7 @@ const config = {
                 test: /\.ts$/,
                 exclude: /node_modules/,
                 use: [{
-                    loader: 'ts-loader',
+                    loader: 'ts-loader'
                 }]
             },
             {
@@ -81,6 +85,12 @@ const config = {
         new webpack.ContextReplacementPlugin(
             /getos/,
             /logic[\/\\].*\.js/
+        ),
+        // Express
+		new webpack.ContextReplacementPlugin(
+            /express[\/\\]lib/,
+            false,
+            /$^/
         ),
         // Fail on warnings so that CI can report new warnings which require attention
         new failOnErrorsPlugin({

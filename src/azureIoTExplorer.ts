@@ -20,6 +20,7 @@ import { EventHubItem } from "./Model/EventHubItem";
 import { ModuleItem } from "./Model/ModuleItem";
 import { DeviceNode } from "./Nodes/DeviceNode";
 import { ModuleItemNode } from "./Nodes/ModuleItemNode";
+import { Simulator } from "./simulator";
 import { SnippetManager } from "./snippetManager";
 import { Utility } from "./utility";
 import { WelcomePage } from "./welcomePage";
@@ -38,6 +39,7 @@ export class AzureIoTExplorer {
     private _iotHubModuleExplorer: IotHubModuleExplorer;
     private _distributedTracingManager: DistributedTracingManager;
     private _eventHubManager: EventHubManager;
+    private _simulator: Simulator;
 
     constructor(private context: vscode.ExtensionContext) {
         let outputChannel = vscode.window.createOutputChannel("Azure IoT Hub Toolkit");
@@ -54,8 +56,10 @@ export class AzureIoTExplorer {
         this._codeManager = new CodeManager(this.context);
         this._iotHubModuleExplorer = new IotHubModuleExplorer(outputChannel);
         this._eventHubManager = new EventHubManager(outputChannel);
+        this._simulator = Simulator.getInstance(this.context);
     }
 
+    // TODO: Remove the old send D2C message implementation
     public sendD2CMessage(deviceItem?: DeviceItem): void {
         this._iotHubMessageExplorer.sendD2CMessage(deviceItem);
     }
@@ -199,4 +203,9 @@ export class AzureIoTExplorer {
     public async getIotHubConnectionString(): Promise<string> {
         return Utility.getConnectionStringWithId(Constants.IotHubConnectionStringKey);
     }
+
+    public async showSimulatorWebview(deviceItem: DeviceItem) {
+        await this._simulator.launch(deviceItem);
+    }
+
 }

@@ -41,8 +41,8 @@ export function activate(context: vscode.ExtensionContext) {
         return azureIoTExplorer.getDevice(deviceNode ? deviceNode.deviceItem : undefined);
     }));
 
-    let sendD2CMessage = vscode.commands.registerCommand("azure-iot-toolkit.sendD2CMessage", (deviceNode: DeviceNode) => {
-        azureIoTExplorer.sendD2CMessage(deviceNode ? deviceNode.deviceItem : undefined);
+    let sendD2CMessage = vscode.commands.registerCommand("azure-iot-toolkit.sendD2CMessage", async (deviceNode: DeviceNode) => {
+        await azureIoTExplorer.showSimulatorWebview(deviceNode ? deviceNode.deviceItem : undefined);
     });
 
     let startMonitorIoTHubMessage = vscode.commands.registerCommand("azure-iot-toolkit.startMonitorIoTHubMessage", (deviceNode: DeviceNode) => {
