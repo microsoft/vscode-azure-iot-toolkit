@@ -277,11 +277,6 @@
         "command": "azure-iot-toolkit.stopMonitorCustomEventHubEndpoint",
         "title": "%azure-iot-toolkit.command.stopMonitorCustomEventHubEndpoint.title%",
         "category": "%azure-iot-toolkit.category%"
-      },
-      {
-        "command": "azure-iot-toolkit.showSimulatorWebview",
-        "title": "%azure-iot-toolkit.command.showSimulatorWebview.title%",
-        "category": "%azure-iot-toolkit.category%"
       }
     ],
     "menus": {
@@ -347,7 +342,7 @@
           "group": "azure-iot-toolkit-4@1"
         },
         {
-          "command": "azure-iot-toolkit.showSimulatorWebview",
+          "command": "azure-iot-toolkit.sendD2CMessage",
           "when": "view == iotHubDevices",
           "group": "azure-iot-toolkit-0@1"
         }
@@ -424,11 +419,6 @@
           "group": "azure-iot-toolkit-4@0"
         },
         {
-          "command": "azure-iot-toolkit.showSimulatorWebview",
-          "when": "view == iotHubDevices && viewItem == device",
-          "group": "azure-iot-toolkit-0@4"
-        },
-        {
           "command": "azure-iot-toolkit.refresh",
           "when": "view == iotHubDevices && viewItem == edge",
           "group": "inline"
@@ -487,11 +477,6 @@
           "command": "azure-iot-toolkit.deleteDevice",
           "when": "view == iotHubDevices && viewItem == edge",
           "group": "azure-iot-toolkit-4@0"
-        },
-        {
-          "command": "azure-iot-toolkit.showSimulatorWebview",
-          "when": "view == iotHubDevices && viewItem == edge",
-          "group": "azure-iot-toolkit-0@4"
         },
         {
           "command": "azure-iot-toolkit.createDeployment",

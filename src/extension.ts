@@ -41,8 +41,8 @@ export function activate(context: vscode.ExtensionContext) {
         return azureIoTExplorer.getDevice(deviceNode ? deviceNode.deviceItem : undefined);
     }));
 
-    let sendD2CMessage = vscode.commands.registerCommand("azure-iot-toolkit.sendD2CMessage", (deviceNode: DeviceNode) => {
-        azureIoTExplorer.sendD2CMessage(deviceNode ? deviceNode.deviceItem : undefined);
+    let sendD2CMessage = vscode.commands.registerCommand("azure-iot-toolkit.sendD2CMessage", async (deviceNode: DeviceNode) => {
+        await azureIoTExplorer.showSimulatorWebview(deviceNode ? deviceNode.deviceItem : undefined);
     });
 
     let startMonitorIoTHubMessage = vscode.commands.registerCommand("azure-iot-toolkit.startMonitorIoTHubMessage", (deviceNode: DeviceNode) => {
@@ -129,10 +129,6 @@ export function activate(context: vscode.ExtensionContext) {
         azureIoTExplorer.createDeployment(input);
     });
 
-    const showSimulatorWebview = vscode.commands.registerCommand("azure-iot-toolkit.showSimulatorWebview", async (deviceNode: DeviceNode) => {
-        await azureIoTExplorer.showSimulatorWebview(deviceNode ? deviceNode.deviceItem : undefined);
-    });
-
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.createDeploymentAtScale", (fileUri) => {
         azureIoTExplorer.createDeploymentAtScale(fileUri);
     }));
@@ -216,7 +212,6 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(updateDistributedTracingSetting);
     context.subscriptions.push(editDistributedTracingMode);
     context.subscriptions.push(editDistributedTracingSamplingRate);
-    context.subscriptions.push(showSimulatorWebview);
 
     return { azureIoTExplorer };
 }
