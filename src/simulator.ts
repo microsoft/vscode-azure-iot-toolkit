@@ -21,7 +21,7 @@ export class Simulator {
   public static getInstance(context?: vscode.ExtensionContext) {
     if (!Simulator.instance) {
       if (!context) {
-        vscode.window.showErrorMessage("Cannot initialize Send D2C Messages webview resources.");
+        vscode.window.showErrorMessage("Cannot initialize Send D2C Messages webview.");
       } else {
         Simulator.instance = new Simulator(context);
       }
