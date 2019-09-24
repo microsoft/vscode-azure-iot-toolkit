@@ -21,7 +21,7 @@ export class Simulator {
   public static getInstance(context?: vscode.ExtensionContext) {
     if (!Simulator.instance) {
       if (!context) {
-        vscode.window.showErrorMessage("Cannot create Send D2C Messages webview instance.");
+        vscode.window.showErrorMessage("Cannot initialize Send D2C Messages webview resources.");
       } else {
         Simulator.instance = new Simulator(context);
       }
@@ -155,9 +155,10 @@ export class Simulator {
       } else {
         // Exit when no connection string found or the connection string is invalid.
         if (!this.iotHubConnectionString) {
-          vscode.window.showErrorMessage("Failed to launch Send D2C Messages webview: No IoT Connection String Found.");
+          var errorMessage = "Failed to launch Send D2C Messages webview: No IoT Hub Connection String Found.";
+          vscode.window.showErrorMessage(errorMessage);
           this.telemetry(Constants.SimulatorLaunchEvent, false, {
-            error: "Failed to launch Send D2C Messages webview: No IoT Connection String Found.",
+            error: errorMessage,
           });
           return;
         }
