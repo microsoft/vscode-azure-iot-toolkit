@@ -124,11 +124,11 @@ export class Constants {
     public static StateKeySubsID = "subscriptionId";
     public static StateKeyIoTHubID = "iothubid";
     public static SimulatorOutputChannelTitle = "Send D2C Messages";
-    public static SimulatorProgressBarCancelLog = "You just canceled sending simulated messages.";
-    public static SimulatorSendingMessageProgressBarTitle = "Sending Simulated Message(s)";
-    public static SimulatorLaunchEvent = "General.Simulator.Start";
-    public static SimulatorCloseEvent = "General.Simulator.Done";
-    public static SimulatorSendEvent = "AZ.Simulator.Send";
+    public static SimulatorProgressBarCancelLog = "You just canceled sending D2C messages.";
+    public static SimulatorSendingMessageProgressBarTitle = "Sending D2C Message(s)";
+    public static SimulatorLaunchEvent = "General.D2C.V2.Start";
+    public static SimulatorCloseEvent = "General.D2C.V2.Done";
+    public static SimulatorSendEvent = "AZ.D2C.V2.Send";
     public static IoTHubAILoadInterfacesTreeStartEvent = "AZ.LoadInterfacesTree.Start";
     public static IoTHubAILoadInterfacesTreeDoneEvent = "AZ.LoadInterfacesTree.Done";
 

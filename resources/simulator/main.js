@@ -39,7 +39,7 @@ const dummyJsonTemplate = `{
 }
 `;
 
-const plainTextTemplate = `Hello from Azure IoT Simulator!`;
+const plainTextTemplate = `Hello from Azure IoT!`;
 
 const introductionTemplate = `This page is intended to help you quickly send D2C messages.
 You only need to specify the device, the number of times, the delivery interval, and the data template.
