@@ -34,10 +34,15 @@ export class InterfaceLabelNode implements INode {
                 "get",
             ))).data;
             TelemetryClient.sendEvent(Constants.IoTHubAILoadInterfacesTreeDoneEvent, { Result: "Success" });
-            if (!interfaces || !interfaces.interfaces || Object.keys(interfaces.interfaces).length === 0) {
+            let interfaceIds = [];
+            const reportedInterfaces = Utility.getReportedInterfacesFromDigitalTwin(interfaces);
+            if (reportedInterfaces) {
+                interfaceIds = Object.values(reportedInterfaces);
+            }
+            if (interfaceIds.length === 0) {
                 return [new InfoNode("No Interfaces")];
             }
-            return Object.keys(interfaces.interfaces).map((name) => new InterfaceNode(name, context.asAbsolutePath(path.join("resources", `interface.svg`))));
+            return interfaceIds.map((name) => new InterfaceNode(name, context.asAbsolutePath(path.join("resources", `interface.svg`))));
         } catch (err) {
             TelemetryClient.sendEvent(Constants.IoTHubAILoadInterfacesTreeDoneEvent, { Result: "Fail", Message: err.message });
             if (err.response && err.response.status === 400) {

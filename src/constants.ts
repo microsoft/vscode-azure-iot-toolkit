@@ -131,6 +131,7 @@ export class Constants {
     public static SimulatorSendEvent = "AZ.D2C.V2.Send";
     public static IoTHubAILoadInterfacesTreeStartEvent = "AZ.LoadInterfacesTree.Start";
     public static IoTHubAILoadInterfacesTreeDoneEvent = "AZ.LoadInterfacesTree.Done";
+    public static modelDiscoveryInterfaceName = "urn_azureiot_ModelDiscovery_DigitalTwin";
 
     public static DeleteLabel = "Delete";
     public static DeleteMessage = "Are you sure you want to delete";    public static readonly DISTRIBUTED_TWIN_NAME: string = "azureiot*com^dtracing^1";

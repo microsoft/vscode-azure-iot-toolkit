@@ -443,6 +443,17 @@ export class Utility {
         };
     }
 
+    public static getReportedInterfacesFromDigitalTwin(interfaces) {
+        return interfaces &&
+            interfaces.interfaces &&
+            interfaces.interfaces[Constants.modelDiscoveryInterfaceName] &&
+            interfaces.interfaces[Constants.modelDiscoveryInterfaceName].properties &&
+            interfaces.interfaces[Constants.modelDiscoveryInterfaceName].properties.modelInformation &&
+            interfaces.interfaces[Constants.modelDiscoveryInterfaceName].properties.modelInformation.reported &&
+            interfaces.interfaces[Constants.modelDiscoveryInterfaceName].properties.modelInformation.reported.value &&
+            interfaces.interfaces[Constants.modelDiscoveryInterfaceName].properties.modelInformation.reported.value.interfaces;
+    }
+
     private static tryGetStringFromCharCode(source) {
         if (source instanceof Uint8Array) {
             try {
