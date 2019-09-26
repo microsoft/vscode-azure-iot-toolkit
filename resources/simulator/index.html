@@ -57,15 +57,15 @@
                         </form-item>
                         <Row :gutter="10">
                             <i-col span="7" style="width: 200px">
-                                <form-item prop="numbers" label="Message iterations per device">
-                                    <i-input v-model="formItem.numbers" placeholder="Message iterations per device"
+                                <form-item prop="numbers" label="Message(s) per device">
+                                    <i-input v-model="formItem.numbers" placeholder=""
                                         @on-change="persistInputs">
 										</i-input>
                                 </form-item>
                             </i-col>
-                            <i-col span="10" style="width: 320px">
-                                <form-item prop="interval" label="Interval">
-                                    <i-input v-model="formItem.interval" placeholder="Interval between two messages"
+                            <i-col span="10" style="width: 200px">
+                                <form-item prop="interval" label="Interval between two messages">
+                                    <i-input v-model="formItem.interval" placeholder=""
                                         @on-change="persistInputs" style="padding-top: 1px">
                                         <!-- padding-top=1px: because the ivu-input with append or prepend slot will have -1 px in padding -->
                                         <i-select v-model="intervalUnit" slot="append" style="width: 120px" @on-change="persistInputs">
@@ -87,7 +87,7 @@
                                                 <!-- Set transfer=true, to append the layer in body.
                                           When used in Tabs or a fixed Table column, by adding this property,
                                           Tooltip will not be affected by the parent style, resulting in better results. -->
-                                                <Icon type="ios-help-circle" size="18"></Icon>
+                                                <Icon type="ios-information-circle" size="18"></Icon>
                                                 <!-- In the content slot, content should begin from the left,
                                           otherwise unexpected space will be regarded as part of content -->
                                                 <div slot="content">
@@ -103,7 +103,7 @@
                             <Row>
                                 <i-col span="24">
                                     <Tabs v-model="messageInputAreaTab" @on-click="textAreaOnChange" :animated="false">
-                                        <tab-pane label="Write" name="Write">
+                                        <tab-pane label="Edit" name="Write">
                                             <i-input v-if="messageBodyType=='Plain Text'" v-model="textArea.plainTextArea"
                                                 style="width: 100%" @on-change="textAreaOnChange"
                                                 placeholder="Enter the message content here..." type="textarea"
