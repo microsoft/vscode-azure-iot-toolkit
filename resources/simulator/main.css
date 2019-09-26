@@ -1,5 +1,9 @@
 .ivu-icon {
-	color: #2d8cf0;
+	color: #007acc;
+}
+
+.vscode-dark .ivu-icon {
+  color: #0e639c
 }
 
 .ivu-radio-group {
@@ -139,5 +143,18 @@ body {
 }
 
 .vscode-dark .ivu-spin-fix {
-  background-color: rgba(60, 60, 60, .9)
+  background-color: rgba(60, 60, 60, .9);
+}
+
+.vscode-dark .ivu-form-item-required .ivu-form-item-label:before {
+  content: '*';
+  color: #f2461b;
+}
+
+.ivu-tooltip-arrow {
+  display: none;
+}
+
+.ivu-select-input {
+  outline: none !important;
 }
