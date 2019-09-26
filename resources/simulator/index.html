@@ -57,14 +57,14 @@
                         </form-item>
                         <Row :gutter="10">
                             <i-col span="7" style="width: 200px">
-                                <form-item prop="numbers" label="Message(s) per device">
+                                <form-item prop="numbers" label="Message(s) per device" style="text-align: left">
                                     <i-input v-model="formItem.numbers" placeholder=""
                                         @on-change="persistInputs">
 										</i-input>
                                 </form-item>
                             </i-col>
                             <i-col span="10" style="width: 200px">
-                                <form-item prop="interval" label="Interval between two messages">
+                                <form-item prop="interval" label="Interval between two messages" style="text-align: left; width: 200px">
                                     <i-input v-model="formItem.interval" placeholder=""
                                         @on-change="persistInputs" style="padding-top: 1px">
                                         <!-- padding-top=1px: because the ivu-input with append or prepend slot will have -1 px in padding -->
@@ -83,11 +83,11 @@
                                     <radio-group v-model="messageBodyType" @on-change="messageBodyTypeChange">
                                         <Radio label="Plain Text">Plain Text</Radio>
                                         <Radio label="Dummy Json">Dummy JSON
-                                            <Tooltip theme="light" transfer max-width="500" placement="top">
+                                            <Tooltip theme="light" transfer max-width="500" placement="top-start">
                                                 <!-- Set transfer=true, to append the layer in body.
                                           When used in Tabs or a fixed Table column, by adding this property,
                                           Tooltip will not be affected by the parent style, resulting in better results. -->
-                                                <Icon type="ios-information-circle" size="18"></Icon>
+                                                <Icon type="md-information-circle" size="18"></Icon>
                                                 <!-- In the content slot, content should begin from the left,
                                           otherwise unexpected space will be regarded as part of content -->
                                                 <div slot="content">
