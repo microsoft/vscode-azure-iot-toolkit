@@ -1,3 +1,10 @@
+## 2.11.0
+### Changed
+* Brand new send D2C messages experience
+* Show interface ids instead of interface names
+* Use tooltip to show connection state
+* Show running status even when module is disconnected
+
 ## 2.10.0 (2019-08-06)
 ### Fixed
 * Fix typo
