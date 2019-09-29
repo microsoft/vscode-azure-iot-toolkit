@@ -1,3 +1,12 @@
+## 2.11.0
+### Added
+* List PnP Interfaces in tree view
+
+### Changed
+* Brand new 'Send D2C Messages' experience
+* Use tooltip to show connection state
+* Show running status even when module is disconnected
+
 ## 2.10.0 (2019-08-06)
 ### Fixed
 * Fix typo
