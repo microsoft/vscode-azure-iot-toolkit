@@ -5,7 +5,7 @@ import { ExtensionContext } from "vscode";
 import { AzExtTreeDataProvider } from "vscode-azureextensionui";
 
 /**
- * Namespace for common variables used throughout the extension. They must be initialized in the activate() method of extension.ts
+ * Common variables used throughout the extension. They must be initialized in the activate() method of extension.ts
  */
 
 export class ExtensionVariables {

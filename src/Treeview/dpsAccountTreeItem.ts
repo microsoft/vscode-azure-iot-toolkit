@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 import { AzureAccountTreeItemBase, ISubscriptionContext, SubscriptionTreeItemBase } from "vscode-azureextensionui";
-import { DpsProvider } from "./DpsProvider";
+import { DpsProvider } from "./dpsProvider";
 
 export class DpsAccountTreeItem extends AzureAccountTreeItemBase {
   public createSubscriptionTreeItem(root: ISubscriptionContext): SubscriptionTreeItemBase {

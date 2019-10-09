@@ -3,7 +3,7 @@
 
 import { IotDpsClient, IotDpsModels } from "azure-arm-deviceprovisioningservices";
 import { createAzureClient, IActionContext, SubscriptionTreeItemBase } from "vscode-azureextensionui";
-import { DpsTreeItem } from "./DpsTreeItem";
+import { DpsTreeItem } from "./dpsTreeItem";
 
 export class DpsProvider extends SubscriptionTreeItemBase {
     private _nextLink: string | undefined;
