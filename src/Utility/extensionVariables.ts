@@ -2,13 +2,13 @@
 // Licensed under the MIT license.
 
 import { ExtensionContext } from "vscode";
-import { AzExtTreeDataProvider } from 'vscode-azureextensionui';
+import { AzExtTreeDataProvider } from "vscode-azureextensionui";
 
 /**
  * Namespace for common variables used throughout the extension. They must be initialized in the activate() method of extension.ts
  */
 
-export namespace ExtensionVariables {
-   export let dpsExtTreeDataProvider: AzExtTreeDataProvider;
-   export let vscodeContext: ExtensionContext
-}
+export class ExtensionVariables {
+   public static dpsExtTreeDataProvider: AzExtTreeDataProvider;
+   public static vscodeContext: ExtensionContext;
+};

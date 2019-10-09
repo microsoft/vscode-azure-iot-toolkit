@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import { IotDpsClient, IotDpsModels } from 'azure-arm-deviceprovisioningservices';
+import { IotDpsClient, IotDpsModels } from "azure-arm-deviceprovisioningservices";
 import { createAzureClient, IActionContext, SubscriptionTreeItemBase } from "vscode-azureextensionui";
 import { DpsTreeItem } from "./DpsTreeItem";
 

@@ -3,7 +3,7 @@
 
 import { IotDpsModels } from "azure-arm-deviceprovisioningservices";
 import { AzureParentTreeItem, AzureTreeItem, TreeItemIconPath } from "vscode-azureextensionui";
-import { TreeUtils } from "../Utility/treeUtils"
+import { TreeUtils } from "../Utility/treeUtils";
 
 export class DpsTreeItem extends AzureTreeItem {
     public static contextValue: string = "IotDps";
@@ -31,6 +31,6 @@ export class DpsTreeItem extends AzureTreeItem {
     }
 
     public get iconPath(): TreeItemIconPath {
-        return TreeUtils.getThemedIconPath('dps');
+        return TreeUtils.getThemedIconPath("dps");
     }
 }
