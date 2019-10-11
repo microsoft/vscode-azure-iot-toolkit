@@ -1,7 +1,7 @@
 let vscode;
 try {
   vscode = acquireVsCodeApi();
-} catch (error) {}
+} catch (error) { }
 
 // index, city, boolean, random number, date and time, coordinates...
 // These are common elements in IoT senario, so we generate a related template contains all of them.
@@ -155,10 +155,14 @@ const app = new Vue({
   async mounted() {
     try {
       this.$Spin.show();
-      await this.getInputDeviceList();
-      await this.getPersistedInputs();
-      this.$Spin.hide();
       await this.polling();
+      await this.getPersistedInputs();
+      if (!this.status.isProcessing) {
+        await this.getInputDeviceList(); // Load current device list
+      } else {
+        this.resetFilter(true); // Load the persisted device list
+      }
+      this.$Spin.hide();
     } catch (error) {
       this.errorMessageInitialization = error.toString();
     }
@@ -170,6 +174,7 @@ const app = new Vue({
         .then(async res => {
           const data = res.data;
           this.hostName = data.hostName;
+          this.inputDeviceList = data.inputDeviceList;
           this.formItem.deviceConnectionStrings = data.deviceConnectionStrings;
           this.formItem.numbers =
             data.numbers && data.numbers !== ""
@@ -312,7 +317,8 @@ const app = new Vue({
         intervalUnit: this.intervalUnit,
         messageBodyType: this.messageBodyType,
         plainTextArea: this.textArea.plainTextArea,
-        dummyJsonArea: this.textArea.dummyJsonArea
+        dummyJsonArea: this.textArea.dummyJsonArea,
+        inputDeviceList: this.inputDeviceList
       };
       await axios.post(`${this.endpoint}/api/presistinputs`, inputs);
     },
