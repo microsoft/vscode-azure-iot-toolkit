@@ -11,5 +11,9 @@ export async function viewProperties(context: IActionContext, node?: DpsTreeItem
     }
 
     let data = node.dps;
-    await openReadOnlyJson(node, data);
+    let propertyInfo = {
+        label: node.label + "-properties",
+        fullId: node.fullId
+    }
+    await openReadOnlyJson(propertyInfo, data);
 }
