@@ -134,7 +134,7 @@ export class Constants {
     public static modelDiscoveryInterfaceName = "urn_azureiot_ModelDiscovery_DigitalTwin";
 
     public static DeleteLabel = "Delete";
-    public static DeleteMessage = "Are you sure you want to delete";    public static readonly DISTRIBUTED_TWIN_NAME: string = "azureiot*com^dtracing^1";
+    public static DeleteMessage = "Are you sure you want to delete"; public static readonly DISTRIBUTED_TWIN_NAME: string = "azureiot*com^dtracing^1";
     public static ConnectionStringFormat = {
         [Constants.IotHubConnectionStringKey]: "HostName=<my-hostname>;SharedAccessKeyName=<my-policy>;SharedAccessKey=<my-policy-key>",
         [Constants.DeviceConnectionStringKey]: "HostName=<my-hostname>;DeviceId=<known-device-id>;SharedAccessKey=<known-device-key>",
@@ -192,6 +192,9 @@ export class Constants {
         [TemplateLanguage.Python]: "python",
         [TemplateLanguage.Ruby]: "ruby",
     };
+
+    // Capture the {resource-group-name} in pattern /subscriptions/{subscription-id}/resourceGroups/{resource-group-name}/
+    public static DpsResourceGroupNameRegex = /\/subscriptions\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/resourcegroups\/([^/]*)\//i;
 
     public static initialize(context: vscode.ExtensionContext) {
         Constants.ExtensionContext = context;
