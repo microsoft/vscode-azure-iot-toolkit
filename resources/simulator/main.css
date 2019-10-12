@@ -158,3 +158,112 @@ body {
 .ivu-select-input {
   outline: none !important;
 }
+
+.vscode-high-contrast {
+  background: #1e1e1e;
+  color: #d4d4d4;
+}
+
+.vscode-high-contrast .ivu-input[disabled], fieldset[disabled] .ivu-input {
+  background-color: #3c3c3c !important;
+  color: #d4d4d4 !important;
+}
+
+.vscode-high-contrast .ivu-icon {
+  color: #0e639c
+}
+
+.vscode-high-contrast .ivu-select-item:hover,
+.vscode-high-contrast .ivu-select-item-selected,
+.vscode-high-contrast .ivu-select-item-selected:hover,
+.vscode-high-contrast .ivu-select-multiple .ivu-select-item-focus,
+.vscode-high-contrast .ivu-select-multiple .ivu-select-item-selected,
+.vscode-high-contrast .ivu-select-multiple .ivu-select-item-selected:hover,
+.vscode-high-contrast .ivu-select-multiple .ivu-select-item-selected:after,
+.vscode-high-contrast .ivu-dropdown-item,
+.vscode-high-contrast .ivu-dropdown-item:hover,
+.vscode-high-contrast .ivu-dropdown-item:after {
+  background: #062f4a;
+}
+
+.vscode-high-contrast .ivu-select-item-focus,
+.vscode-high-contrast .ivu-radio-disabled .ivu-radio-inner {
+  background: #3c3c3c;
+}
+
+.vscode-high-contrast .ivu-input,
+.vscode-high-contrast .ivu-select-selection,
+.vscode-high-contrast .ivu-select-item,
+.vscode-high-contrast .ivu-select-dropdown,
+.vscode-high-contrast .ivu-modal-content,
+.vscode-high-contrast .ivu-tooltip-content,
+.vscode-high-contrast .ivu-tooltip-light .ivu-tooltip-inner,
+.vscode-high-contrast .ivu-tag .ivu-tag-checked,
+.vscode-high-contrast .ivu-select-multiple .ivu-tag {
+  background-color: #3c3c3c;
+}
+
+.vscode-high-contrast .ivu-input-group-append,
+.vscode-high-contrast .ivu-input-group-prepend,
+.vscode-high-contrast .ivu-form-item-error .ivu-input-group-append,
+.vscode-high-contrast .ivu-form-item-error .ivu-input-group-prepend {
+  background-color: #303030;
+}
+
+.vscode-high-contrast .ivu-card {
+  background-color: #1e1e1e;
+}
+
+.vscode-high-contrast .ivu-input,
+.vscode-high-contrast .ivu-select-item,
+.vscode-high-contrast .ivu-input-group-append,
+.vscode-high-contrast .ivu-input-group-prepend,
+.vscode-high-contrast .ivu-select .ivu-select-multiple .ivu-select-default,
+.vscode-high-contrast .ivu-select-selection {
+  border-color: #3c3c3c;
+}
+
+.vscode-high-contrast .ivu-tabs-bar,
+.vscode-high-contrast .ivu-modal-header,
+.vscode-high-contrast .ivu-modal-footer,
+.vscode-high-contrast .ivu-input[disabled],
+.vscode-high-contrast .ivu-input[disabled]:hover {
+  border-color: #303030;
+}
+
+.vscode-high-contrast
+  .ivu-tooltip-light.ivu-tooltip-popper[x-placement^="top"]
+  .ivu-tooltip-arrow:after {
+  border-top-color: #3c3c3c;
+}
+
+.vscode-high-contrast .ivu-input-group-append,
+.vscode-high-contrast .ivu-input-group-prepend,
+.vscode-high-contrast .ivu-tag-text,
+.vscode-high-contrast .ivu-select,
+.vscode-high-contrast .ivu-select-item,
+.vscode-high-contrast .ivu-select-item-selected,
+.vscode-high-contrast .ivu-select-item-selected:hover,
+.vscode-high-contrast .ivu-select-multiple .ivu-select-item-selected,
+.vscode-high-contrast .ivu-form .ivu-form-item-label,
+.vscode-high-contrast .ivu-card,
+.vscode-high-contrast .ivu-dropdown-item,
+.vscode-high-contrast .ivu-input,
+.vscode-high-contrast .ivu-tabs-nav,
+.vscode-high-contrast .ivu-modal-header,
+.vscode-high-contrast .ivu-modal-header p,
+.vscode-high-contrast .ivu-modal-header-inner,
+.vscode-high-contrast .ivu-tooltip-light .ivu-tooltip-inner,
+.vscode-high-contrast .ivu-tag .ivu-icon-ios-close,
+.vscode-high-contrast .ivu-select-input {
+  color: #d4d4d4;
+}
+
+.vscode-high-contrast .ivu-spin-fix {
+  background-color: rgba(60, 60, 60, .9);
+}
+
+.vscode-high-contrast .ivu-form-item-required .ivu-form-item-label:before {
+  content: '*';
+  color: #f2461b;
+}
