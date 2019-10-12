@@ -69,7 +69,8 @@
     "onCommand:azure-iot-toolkit.startMonitorCustomEventHubEndpoint",
     "onCommand:azure-iot-toolkit.stopMonitorCustomEventHubEndpoint",
     "onCommand:azure-iot-dps.viewProperties",
-    "onCommand:azure-iot-dps.loadMore"
+    "onCommand:azure-iot-dps.loadMore",
+    "onCommand:azure-iot-dps.refresh"
   ],
   "main": "./dist/extension",
   "contributes": {
@@ -305,6 +306,11 @@
         "command": "azure-iot-dps.loadMore",
         "title": "%azure-iot-dps.command.loadMore.title%",
         "category": "%azure-iot-dps.category%"
+      },
+      {
+        "command": "azure-iot-dps.refresh",
+        "title": "%azure-iot-dps.command.refresh.title%",
+        "category": "%azure-iot-dps.category%"
       }
     ],
     "menus": {
@@ -373,6 +379,10 @@
           "command": "azure-iot-toolkit.sendD2CMessage",
           "when": "view == iotHubDevices",
           "group": "azure-iot-toolkit-0@1"
+        },
+        {
+          "command": "azure-iot-dps.refresh",
+          "when": "view == iotDpsExplorer"
         }
       ],
       "view/item/context": [
@@ -612,6 +622,10 @@
         {
           "command": "azure-iot-dps.viewProperties",
           "when": "view == iotDpsExplorer && viewItem == IotDps"
+        },
+        {
+          "command": "azure-iot-dps.refresh",
+          "when": "view == iotDpsExplorer && viewItem == azureextensionui.azureSubscription"
         }
       ],
       "editor/context": [

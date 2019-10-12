@@ -245,4 +245,6 @@ function activateDps(context: vscode.ExtensionContext) {
 
     registerCommand("azure-iot-dps.viewProperties", viewProperties);
     registerCommand("azure-iot-dps.loadMore", async (actionContext: IActionContext, node: AzureTreeItem) => await ExtensionVariables.dpsExtTreeDataProvider.loadMore(node, actionContext));
+    registerCommand("azure-iot-dps.refresh", async (actionContext: IActionContext, node?: AzureTreeItem) => await
+    ExtensionVariables.dpsExtTreeDataProvider.refresh(node));
 }
