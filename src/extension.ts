@@ -3,12 +3,14 @@
 
 "use strict";
 import * as vscode from "vscode";
-import { AzExtTreeDataProvider, AzureTreeItem, AzureUserInput, createAzExtOutputChannel,
-     createTelemetryReporter, IActionContext, registerCommand, registerUIExtensionVariables} from "vscode-azureextensionui";
+import {
+    AzExtTreeDataProvider, AzureTreeItem, AzureUserInput, createAzExtOutputChannel,
+    createTelemetryReporter, IActionContext, registerCommand, registerUIExtensionVariables
+} from "vscode-azureextensionui";
 import { AzureIoTExplorer } from "./azureIoTExplorer";
 import { Constants, DistributedSettingUpdateType } from "./constants";
-import { viewProperties } from "./Commands/viewProperties";
 import { DeviceTree } from "./deviceTree";
+import { DpsResourceExplorer } from "./dpsResourceExplorer";
 import { Executor } from "./executor";
 import { DeviceNode } from "./Nodes/DeviceNode";
 import { EventHubItemNode } from "./Nodes/Endpoints/EventHubItemNode";
@@ -17,8 +19,9 @@ import { ModuleLabelNode } from "./Nodes/ModuleLabelNode";
 import { DeviceTwinCodeLensProvider } from "./providers/deviceTwinCodeLensProvider";
 import { ModuleTwinCodeLensProvider } from "./providers/moduleTwinCodeLensProvider";
 import { TelemetryClient } from "./telemetryClient";
-import { DpsAccountTreeItem } from "./Treeview/dpsAccountTreeItem";
-import { ExtensionVariables } from "./Utility/extensionVariables";
+import { DpsAccountTreeItem } from "./Nodes/DpsAccountTreeItem";
+import { DpsResourceTreeItem } from "./Nodes/DpsResourceTreeItem"
+import { TelemetryReporterWrapper } from "./telemetryReporterWrapper";
 
 export function activate(context: vscode.ExtensionContext) {
     TelemetryClient.sendEvent("extensionActivated");
@@ -227,24 +230,36 @@ export function deactivate() {
 }
 
 function activateDps(context: vscode.ExtensionContext) {
-    ExtensionVariables.vscodeContext = context;
+    let packageJSON = vscode.extensions.getExtension(Constants.ExtensionId).packageJSON;
+    let telemetryReporter = new TelemetryReporterWrapper(Constants.ExtensionId, packageJSON.version, packageJSON.aiKey, context, "DPS.");
+    let outputChannel = createAzExtOutputChannel("Device Provisioning Service", "azure-iot-toolkit");
+
+    // No need to initialize Constants again here. But pay attention when refactor.
+    // Constants.initialize(context);
 
     let uiExtensionVariables = {
         context: context,
-        outputChannel: createAzExtOutputChannel("Device Provisioning Service", "azure-iot-toolkit"),
-        reporter: createTelemetryReporter(context),
+        outputChannel: outputChannel,
+        reporter: telemetryReporter,
         ui: new AzureUserInput(context.globalState),
     };
     registerUIExtensionVariables(uiExtensionVariables);
 
     let dpsTreeItem = new DpsAccountTreeItem();
-    ExtensionVariables.dpsExtTreeDataProvider = new AzExtTreeDataProvider(dpsTreeItem, "azure-iot-dps.loadMore");
+    let dpsExtTreeDataProvider = new AzExtTreeDataProvider(dpsTreeItem, "azure-iot-dps.loadMore");
 
     context.subscriptions.push(dpsTreeItem);
-    context.subscriptions.push(vscode.window.createTreeView("iotDpsExplorer", { treeDataProvider: ExtensionVariables.dpsExtTreeDataProvider, showCollapseAll: true }));
+    context.subscriptions.push(vscode.window.createTreeView("iotDpsExplorer", { treeDataProvider: dpsExtTreeDataProvider, showCollapseAll: true }));
 
-    registerCommand("azure-iot-dps.viewProperties", viewProperties);
-    registerCommand("azure-iot-dps.loadMore", async (actionContext: IActionContext, node: AzureTreeItem) => await ExtensionVariables.dpsExtTreeDataProvider.loadMore(node, actionContext));
-    registerCommand("azure-iot-dps.refresh", async (actionContext: IActionContext, node?: AzureTreeItem) => await
-    ExtensionVariables.dpsExtTreeDataProvider.refresh(node));
+    let dpsResourceExplorer = new DpsResourceExplorer(outputChannel, dpsExtTreeDataProvider);
+
+    registerCommand("azure-iot-dps.viewProperties", async (actionContext: IActionContext, node?: DpsResourceTreeItem) => {
+        await dpsResourceExplorer.viewProperties(actionContext, node);
+    });
+    registerCommand("azure-iot-dps.loadMore", async (actionContext: IActionContext, node: AzureTreeItem) => {
+        await dpsResourceExplorer.loadMore(actionContext, node);
+    });
+    registerCommand("azure-iot-dps.refresh", async (actionContext: IActionContext, node: AzureTreeItem) => {
+        await dpsResourceExplorer.refresh(actionContext, node);
+    });
 }

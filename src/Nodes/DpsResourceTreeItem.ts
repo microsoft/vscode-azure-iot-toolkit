@@ -5,9 +5,10 @@ import { IotDpsModels } from "azure-arm-deviceprovisioningservices";
 import { AzureParentTreeItem, AzureTreeItem, TreeItemIconPath } from "vscode-azureextensionui";
 import { TreeUtils } from "../Utility/treeUtils";
 
-export class DpsTreeItem extends AzureTreeItem {
+// Represents a DPS resource
+export class DpsResourceTreeItem extends AzureTreeItem {
     public static contextValue: string = "IotDps";
-    public readonly contextValue: string = DpsTreeItem.contextValue;
+    public readonly contextValue: string = DpsResourceTreeItem.contextValue;
     public readonly dps: IotDpsModels.ProvisioningServiceDescription;
     constructor(parent: AzureParentTreeItem, dps: IotDpsModels.ProvisioningServiceDescription) {
         super(parent);
