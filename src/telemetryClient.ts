@@ -21,7 +21,7 @@ export class TelemetryClient {
         this._client.sendTelemetryEvent(eventName, properties);
     }
 
-    private static _client : TelemetryReporterWrapper;
+    private static _client: TelemetryReporterWrapper;
 
     private static async addCommonProperties(properties?: { [key: string]: string; }, iotHubConnectionString?: string) {
         let newProperties = properties ? properties : {};

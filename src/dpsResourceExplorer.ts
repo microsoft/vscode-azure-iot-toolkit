@@ -19,7 +19,7 @@ export class DpsResourceExplorer extends BaseExplorer {
         if (!node) {
             node = await this._dpsTreeDataProvider.showTreeItemPicker<DpsResourceTreeItem>("IotDps", context);
         }
-    
+
         const client: IotDpsClient = createAzureClient(node.root, IotDpsClient);
         let matchResult = Constants.DpsResourceGroupNameRegex.exec(node.fullId);
         let dpsInfo: IotDpsModels.ProvisioningServiceDescription = null;

@@ -195,7 +195,7 @@ export class Constants {
 
     // Capture the {resource-group-name} in pattern /subscriptions/{subscription-id}/resourceGroups/{resource-group-name}/
     public static DpsResourceGroupNameRegex = /\/subscriptions\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/resourcegroups\/([^/]*)\//i;
-    public static ResourcesFolderPath : string;
+    public static ResourcesFolderPath: string;
 
     public static initialize(context: vscode.ExtensionContext) {
         Constants.ExtensionContext = context;
