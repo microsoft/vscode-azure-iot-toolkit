@@ -3,8 +3,10 @@
 
 "use strict";
 import * as vscode from "vscode";
-import { AzExtTreeDataProvider, AzureTreeItem, AzureUserInput, createAzExtOutputChannel,
-     IActionContext, registerCommand, registerUIExtensionVariables } from "vscode-azureextensionui";
+import {
+    AzExtTreeDataProvider, AzureTreeItem, AzureUserInput, createAzExtOutputChannel,
+    IActionContext, registerCommand, registerUIExtensionVariables
+} from "vscode-azureextensionui";
 import { AzureDpsExplorer } from "./azureDpsExplorer";
 import { AzureIoTExplorer } from "./azureIoTExplorer";
 import { Constants, DistributedSettingUpdateType } from "./constants";
@@ -19,7 +21,7 @@ import { ModuleTwinCodeLensProvider } from "./providers/moduleTwinCodeLensProvid
 import { TelemetryClient } from "./telemetryClient";
 import { DpsAccountTreeItem } from "./Nodes/DpsAccountTreeItem";
 import { DpsResourceTreeItem } from "./Nodes/DpsResourceTreeItem";
-import { TelemetryReporterWrapper } from "./telemetryReporterWrapper";
+import { TelemetryClientWrapper } from "./telemetryClientWrapper";
 
 export function activate(context: vscode.ExtensionContext) {
     TelemetryClient.sendEvent("extensionActivated");
@@ -228,8 +230,7 @@ export function deactivate() {
 }
 
 function activateDps(context: vscode.ExtensionContext) {
-    let packageJSON = vscode.extensions.getExtension(Constants.ExtensionId).packageJSON;
-    let telemetryReporter = new TelemetryReporterWrapper(Constants.ExtensionId, packageJSON.version, packageJSON.aiKey, context, "DPS.");
+    let telemetryReporter = new TelemetryClientWrapper("DPS.");
     let outputChannel = createAzExtOutputChannel("Device Provisioning Service", "azure-iot-toolkit");
 
     // No need to initialize Constants again here. But pay attention when refactor.
