@@ -16,10 +16,10 @@ import { ModuleTwinCodeLensProvider } from "./providers/moduleTwinCodeLensProvid
 import { TelemetryClient } from "./telemetryClient";
 
 export function activate(context: vscode.ExtensionContext) {
+    Constants.initialize(context);
+    TelemetryClient.initialize(context);
     TelemetryClient.sendEvent("extensionActivated");
 
-    TelemetryClient.initialize(context);
-    Constants.initialize(context);
     let azureIoTExplorer = new AzureIoTExplorer(context);
     let deviceTree = new DeviceTree(context);
 
