@@ -24,10 +24,10 @@ import { DpsResourceTreeItem } from "./Nodes/DpsResourceTreeItem";
 import { TelemetryClientWrapper } from "./telemetryClientWrapper";
 
 export function activate(context: vscode.ExtensionContext) {
+    Constants.initialize(context);
+    TelemetryClient.initialize(context);
     TelemetryClient.sendEvent("extensionActivated");
 
-    TelemetryClient.initialize(context);
-    Constants.initialize(context);
     activateDps(context);
 
     let azureIoTExplorer = new AzureIoTExplorer(context);

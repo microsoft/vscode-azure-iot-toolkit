@@ -109,6 +109,7 @@ const config = {
         minimizer: [
             new terserWebpackPlugin({
                 terserOptions: {
+                    mangle: false,
                     keep_fnames: true
                 }
             })

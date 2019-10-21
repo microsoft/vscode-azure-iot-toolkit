@@ -152,6 +152,7 @@ export class Constants {
     public static CodeTemplates = {
         [TemplateLanguage.CSharp]: {
             [TemplateType.SendD2C]: "csharp/sendD2C",
+            [TemplateType.DeviceManageDeviceTwin]: "csharp/deviceManageDeviceTwin"
         },
         [TemplateLanguage.FSharp]: {
             [TemplateType.SendD2C]: "fsharp/sendD2C",

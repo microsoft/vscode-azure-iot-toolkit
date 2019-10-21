@@ -1,4 +1,4 @@
-## 2.11.0
+## 2.11.0 (2019-10-14)
 ### Added
 * List PnP Interfaces in tree view
 

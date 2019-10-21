@@ -46,6 +46,7 @@ export class Simulator {
     messageBodyType: string;
     plainTextArea: string;
     dummyJsonArea: string;
+    inputDeviceList: string[];
   };
 
   private constructor(context: vscode.ExtensionContext) {
@@ -66,6 +67,7 @@ export class Simulator {
       messageBodyType: "",
       plainTextArea: "",
       dummyJsonArea: "",
+      inputDeviceList: [],
     };
   }
 
@@ -198,7 +200,6 @@ export class Simulator {
   ) {
     if (!this.processing) {
       this.processing = true;
-      this.outputChannel.show();
       await this.sendD2CMessageFromMultipleDevicesRepeatedly(
         deviceConnectionStrings,
         template,
