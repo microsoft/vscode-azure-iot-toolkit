@@ -17,9 +17,9 @@ export class TelemetryClient {
         this._extensionContext = context;
     }
 
-    public static async sendEvent(eventName: string, properties?: { [key: string]: string; }, iotHubConnectionString?: string) {
+    public static async sendEvent(eventName: string, properties?: { [key: string]: string; }, iotHubConnectionString?: string, measurements?: { [key: string]: number }) {
         properties = await this.addCommonProperties(properties, iotHubConnectionString);
-        this._client.sendTelemetryEvent(eventName, properties);
+        this._client.sendTelemetryEvent(eventName, properties, measurements);
 
         if (eventName.startsWith("AZ.") && eventName !== Constants.IoTHubAILoadDeviceTreeEvent) {
             if (this._extensionContext) {

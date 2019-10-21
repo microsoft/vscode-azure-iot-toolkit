@@ -7,6 +7,7 @@
 
 'use strict';
 
+const copyPlugin = require('copy-webpack-plugin');
 const failOnErrorsPlugin = require('fail-on-errors-webpack-plugin');
 const terserWebpackPlugin = require('terser-webpack-plugin');
 const path = require('path');
@@ -65,6 +66,8 @@ const config = {
         // Ignore all locale files of moment.js, which can save 50KB
         // https://webpack.js.org/plugins/ignore-plugin/#ignore-moment-locales
         new webpack.IgnorePlugin(/^\.\/locale$/, /[\/\\]moment$/),
+        // Ignore the optional requirement of applicationinsights, which is not used in this extension
+        new webpack.IgnorePlugin(/applicationinsights-native-metrics/),
         // Suppress warnings of known dynamic require
         new webpack.ContextReplacementPlugin(
             /applicationinsights[\/\\]out[\/\\]AutoCollection/,
@@ -87,11 +90,15 @@ const config = {
             /logic[\/\\].*\.js/
         ),
         // Express
-		new webpack.ContextReplacementPlugin(
+        new webpack.ContextReplacementPlugin(
             /express[\/\\]lib/,
             false,
             /$^/
         ),
+        // Copy required resources for Azure treeview
+        new copyPlugin([
+            path.join('node_modules', 'vscode-azureextensionui', 'resources', '**', '*.svg')
+        ]),
         // Fail on warnings so that CI can report new warnings which require attention
         new failOnErrorsPlugin({
             failOnErrors: true,
