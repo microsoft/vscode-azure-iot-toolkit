@@ -1,3 +1,10 @@
+## 2.12.0
+### Added
+* List IoT Hub Device Provisioning Service instances
+
+### Fixed
+* [#393](https://github.com/microsoft/vscode-azure-iot-toolkit/issues/393): Error during initialize
+
 ## 2.11.0 (2019-10-14)
 ### Added
 * List PnP Interfaces in tree view
