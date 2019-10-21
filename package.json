@@ -1,8 +1,8 @@
 {
   "name": "azure-iot-toolkit",
   "displayName": "Azure IoT Hub Toolkit",
-  "description": "Interact with Azure IoT Hub, IoT Device Management, IoT Edge Management, IoT Hub Device Simulation, IoT Hub Code Generation",
-  "version": "2.11.0",
+  "description": "Interact with Azure IoT Hub, IoT Device Management, IoT Edge Management, IoT Hub Device Simulation, IoT Hub Code Generation and IoT Hub Device Provisioning Service (DPS)",
+  "version": "2.12.0-rc",
   "publisher": "vsciot-vscode",
   "aiKey": "0caaff90-cc1c-4def-b64c-3ef33615bc9b",
   "icon": "logo.png",
@@ -28,11 +28,12 @@
     "iot",
     "device",
     "IoT Edge",
-    "simulator"
+    "dps"
   ],
   "activationEvents": [
     "*",
     "onView:iotHubDevices",
+    "onView:iotDpsExplorer",
     "onCommand:azure-iot-toolkit.sendD2CMessage",
     "onCommand:azure-iot-toolkit.startMonitorIoTHubMessage",
     "onCommand:azure-iot-toolkit.sendC2DMessage",
@@ -66,15 +67,33 @@
     "onCommand:azure-iot-toolkit.getModule",
     "onCommand:azure-iot-toolkit.copyModuleConnectionString",
     "onCommand:azure-iot-toolkit.startMonitorCustomEventHubEndpoint",
-    "onCommand:azure-iot-toolkit.stopMonitorCustomEventHubEndpoint"
+    "onCommand:azure-iot-toolkit.stopMonitorCustomEventHubEndpoint",
+    "onCommand:azure-iot-dps.viewProperties",
+    "onCommand:azure-iot-dps.loadMore",
+    "onCommand:azure-iot-dps.refresh"
   ],
   "main": "./dist/extension",
   "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "azure",
+          "title": "Azure",
+          "icon": "resources/azure.svg"
+        }
+      ]
+    },
     "views": {
       "explorer": [
         {
           "id": "iotHubDevices",
           "name": "%azure-iot-toolkit.name%"
+        }
+      ],
+      "azure": [
+        {
+          "id": "iotDpsExplorer",
+          "name": "IoT Hub Device Provisioning Service"
         }
       ]
     },
@@ -277,6 +296,21 @@
         "command": "azure-iot-toolkit.stopMonitorCustomEventHubEndpoint",
         "title": "%azure-iot-toolkit.command.stopMonitorCustomEventHubEndpoint.title%",
         "category": "%azure-iot-toolkit.category%"
+      },
+      {
+        "command": "azure-iot-dps.viewProperties",
+        "title": "%azure-iot-dps.command.viewProperties.title%",
+        "category": "%azure-iot-dps.category%"
+      },
+      {
+        "command": "azure-iot-dps.loadMore",
+        "title": "%azure-iot-dps.command.loadMore.title%",
+        "category": "%azure-iot-dps.category%"
+      },
+      {
+        "command": "azure-iot-dps.refresh",
+        "title": "%azure-iot-dps.command.refresh.title%",
+        "category": "%azure-iot-dps.category%"
       }
     ],
     "menus": {
@@ -345,6 +379,10 @@
           "command": "azure-iot-toolkit.sendD2CMessage",
           "when": "view == iotHubDevices",
           "group": "azure-iot-toolkit-0@1"
+        },
+        {
+          "command": "azure-iot-dps.refresh",
+          "when": "view == iotDpsExplorer"
         }
       ],
       "view/item/context": [
@@ -580,6 +618,14 @@
           "command": "azure-iot-toolkit.refresh",
           "when": "view == iotHubDevices && viewItem == interfaces-label",
           "group": "inline"
+        },
+        {
+          "command": "azure-iot-dps.viewProperties",
+          "when": "view == iotDpsExplorer && viewItem == IotDps"
+        },
+        {
+          "command": "azure-iot-dps.refresh",
+          "when": "view == iotDpsExplorer && viewItem == azureextensionui.azureSubscription"
         }
       ],
       "editor/context": [
@@ -656,6 +702,10 @@
         },
         {
           "command": "azure-iot-toolkit.startMonitorIoTHubMessageWithAbbreviation",
+          "when": "never"
+        },
+        {
+          "command": "azure-iot-dps.loadMore",
           "when": "never"
         }
       ]
@@ -742,6 +792,7 @@
     "@types/node": "^10.12.3",
     "@types/terser-webpack-plugin": "^1.2.0",
     "@types/webpack": "^4.4.24",
+    "copy-webpack-plugin": "^5.0.4",
     "fail-on-errors-webpack-plugin": "^3.0.0",
     "mocha": "^5.1.1",
     "rimraf": "^2.6.2",
@@ -758,6 +809,7 @@
     "@azure/event-hubs": "^2.0.0",
     "ajv": "^6.10.0",
     "axios": "^0.18.1",
+    "azure-arm-deviceprovisioningservices": "^2.1.0",
     "azure-arm-eventhub": "^3.2.0",
     "azure-arm-iothub": "^2.0.1",
     "azure-arm-resource": "^2.0.0-preview",
@@ -774,6 +826,7 @@
     "replace-in-file": "^3.4.0",
     "strip-json-comments": "^2.0.1",
     "uuid": "^3.3.2",
+    "vscode-azureextensionui": "^0.28.2",
     "vscode-extension-telemetry": "0.0.18"
   },
   "extensionDependencies": [

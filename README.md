@@ -9,7 +9,7 @@
 
 ## Overview
 
-Interact with Azure IoT Hub, IoT Device Management, IoT Edge Management, IoT Hub Device Simulation, IoT Hub Code Generation.
+Interact with Azure IoT Hub, IoT Device Management, IoT Edge Management, IoT Hub Device Simulation, IoT Hub Code Generation and IoT Hub Device Provisioning Service.
 
 ## Device Explorer
 The [Wiki page](https://github.com/Microsoft/vscode-azure-iot-toolkit/wiki) includes a comprehensive getting started guide as well as  detailed usage instructions of the following features:
@@ -85,6 +85,17 @@ Instead of copying and pasting to set IoT Hub Connection String, you could sign 
 5. The devices and endpoints list will be shown.
 
   ![IoT Hub Explorer](images/iot-hub-explorer.png)
+
+## Device Provisioning Service Explorer
+
+1. Open "Azure" view on the Activity Bar, and expand "IOT HUB DEVICE PROVISIONING SERVICE".
+
+![DPS Explorer](images/dps-explorer.png)
+
+2. If you're not signed in, click "Sign in to Azure..." to sign in.
+
+3. Expand one subscription to start exploring your device provisioning services.
+
 
 ## Code Generation
 
