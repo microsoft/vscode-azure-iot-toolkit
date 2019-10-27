@@ -64,7 +64,7 @@ if __name__ == '__main__':
     print ( "Press Ctrl-C to exit" )
     asyncio.run(iothub_client_telemetry_sample_run())
 
-    # If using Python 3.6 or below, use the following code instead of asyncio.run(main()):
+    # If using Python 3.6 or below, use the following code instead of asyncio.run(iothub_client_telemetry_sample_run()):
     # loop = asyncio.get_event_loop()
-    # loop.run_until_complete(main())
+    # loop.run_until_complete(iothub_client_telemetry_sample_run())
     # loop.close()
