@@ -1,4 +1,4 @@
-## 2.12.0
+## 2.12.0 (2019-10-28)
 ### Added
 * List IoT Hub Device Provisioning Service instances
 * Add C# code generation for device twin (Thanks [@tomaszbartoszewski](https://github.com/tomaszbartoszewski)!)
