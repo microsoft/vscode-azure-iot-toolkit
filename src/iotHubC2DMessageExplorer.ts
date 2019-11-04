@@ -17,7 +17,7 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
     private _deviceClient: Client;
 
     constructor(outputChannel: vscode.OutputChannel) {
-        super(outputChannel, "$(primitive-square) Stop Monitoring C2D Message", "azure-iot-toolkit.stopMonitorC2DMessage");
+        super(outputChannel, "$(primitive-square) Stop Receiving C2D Message", "azure-iot-toolkit.stopMonitorC2DMessage");
     }
 
     public async sendC2DMessage(deviceItem?: DeviceItem) {
@@ -36,7 +36,7 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
     public async startMonitorC2DMessage(deviceItem?: DeviceItem) {
         if (this._isMonitoring) {
             this._outputChannel.show();
-            this.outputLine(Constants.IoTHubC2DMessageMonitorLabel, "There is a running job to monitor C2D message. Please stop it first.");
+            this.outputLine(Constants.IoTHubC2DMessageMonitorLabel, "There is a running job to receive C2D message. Please stop it first.");
             return;
         }
 
@@ -55,7 +55,7 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
         TelemetryClient.sendEvent(Constants.IoTHubAIStopMonitorC2DEvent);
         this._outputChannel.show();
         if (this._isMonitoring) {
-            this.outputLine(Constants.IoTHubC2DMessageMonitorLabel, "C2D monitoring stopped.");
+            this.outputLine(Constants.IoTHubC2DMessageMonitorLabel, "C2D receiving stopped.");
             this._monitorStatusBarItem.hide();
             this._deviceClient.close(() => { this.updateMonitorStatus(false); });
         } else {
@@ -89,7 +89,7 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
             } else {
                 this.updateMonitorStatus(true);
                 let deviceId = ConnectionString.parse(deviceConnectionString).DeviceId;
-                this.outputLine(Constants.IoTHubC2DMessageMonitorLabel, `Start monitoring C2D message for [${deviceId}]...`);
+                this.outputLine(Constants.IoTHubC2DMessageMonitorLabel, `Start receiving C2D message for [${deviceId}]...`);
                 TelemetryClient.sendEvent(Constants.IoTHubAIStartMonitorC2DEvent);
                 this._deviceClient.on("message", (msg) => {
                     this.outputLine(Constants.IoTHubC2DMessageMonitorLabel, "Message Received: " + msg.getData());
