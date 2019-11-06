@@ -40,7 +40,7 @@ The [Wiki page](https://github.com/Microsoft/vscode-azure-iot-toolkit/wiki) incl
     * Send D2C message to IoT Hub
     * Monitor Built-in Event Endpoint
     * Send C2D message to device
-    * Monitor C2D message from IoT Hub
+    * Receive C2D message from IoT Hub
     * Invoke Device Direct Method
     * Edit Device Twin
     * Manage Azure IoT distributed tracing
