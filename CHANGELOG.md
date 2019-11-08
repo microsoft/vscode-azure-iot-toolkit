@@ -1,3 +1,7 @@
+## 2.13.0
+### Changed
+* Rename 'Monitoring C2D' to 'Receiving C2D'
+
 ## 2.12.0 (2019-10-28)
 ### Added
 * List IoT Hub Device Provisioning Service instances
