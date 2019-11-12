@@ -1,4 +1,4 @@
-## 2.13.0
+## 2.13.0 (2019-11-12)
 ### Changed
 * Rename 'Monitoring C2D' to 'Receiving C2D'
 
