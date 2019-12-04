@@ -34,6 +34,7 @@
     "*",
     "onView:iotHubDevices",
     "onView:iotDpsExplorer",
+    "onView:iotHubExplorer",
     "onCommand:azure-iot-toolkit.sendD2CMessage",
     "onCommand:azure-iot-toolkit.startMonitorIoTHubMessage",
     "onCommand:azure-iot-toolkit.sendC2DMessage",
@@ -94,6 +95,10 @@
         {
           "id": "iotDpsExplorer",
           "name": "IoT Hub Device Provisioning Service"
+        },
+        {
+          "id": "iotHubExplorer",
+          "name": "IoT Hub"
         }
       ]
     },
@@ -295,6 +300,11 @@
       {
         "command": "azure-iot-toolkit.stopMonitorCustomEventHubEndpoint",
         "title": "%azure-iot-toolkit.command.stopMonitorCustomEventHubEndpoint.title%",
+        "category": "%azure-iot-toolkit.category%"
+      },
+      {
+        "command": "azure-iot-toolkit.setIoTHub",
+        "title": "%azure-iot-toolkit.command.setIoTHub.title%",
         "category": "%azure-iot-toolkit.category%"
       },
       {
@@ -618,6 +628,10 @@
           "command": "azure-iot-toolkit.refresh",
           "when": "view == iotHubDevices && viewItem == interfaces-label",
           "group": "inline"
+        },
+        {
+          "command": "azure-iot-toolkit.setIoTHub",
+          "when": "view == iotHubExplorer && viewItem == IotHub"
         },
         {
           "command": "azure-iot-dps.viewProperties",

@@ -24,6 +24,8 @@ import { Simulator } from "./simulator";
 import { SnippetManager } from "./snippetManager";
 import { Utility } from "./utility";
 import { WelcomePage } from "./welcomePage";
+import { IActionContext, AzExtTreeDataProvider } from "vscode-azureextensionui";
+import { IoTHubResourceTreeItem } from "./Nodes/IoTHub/IoTHubResourceTreeItem";
 
 export class AzureIoTExplorer {
     private _iotHubC2DMessageExplorer: IotHubC2DMessageExplorer;
@@ -41,7 +43,7 @@ export class AzureIoTExplorer {
     private _eventHubManager: EventHubManager;
     private _simulator: Simulator;
 
-    constructor(private context: vscode.ExtensionContext) {
+    constructor(private context: vscode.ExtensionContext, iotHubTreeDataProvider: AzExtTreeDataProvider) {
         let outputChannel = vscode.window.createOutputChannel("Azure IoT Hub Toolkit");
         this._iotHubC2DMessageExplorer = new IotHubC2DMessageExplorer(outputChannel);
         this._iotHubMessageExplorer = new IoTHubMessageExplorer(outputChannel);
@@ -50,7 +52,7 @@ export class AzureIoTExplorer {
         this._snippetManager = new SnippetManager(outputChannel);
         this._iotHubDirectMethodExplorer = new IotHubDirectMethodExplorer(outputChannel);
         this._iotHubDeviceTwinExplorer = new IotHubDeviceTwinExplorer(outputChannel);
-        this._iotHubResourceExplorer = new IoTHubResourceExplorer(outputChannel);
+        this._iotHubResourceExplorer = new IoTHubResourceExplorer(outputChannel, iotHubTreeDataProvider);
         this._iotEdgeExplorer = new IoTEdgeExplorer(outputChannel);
         this._welcomePage = new WelcomePage(this.context);
         this._codeManager = new CodeManager(this.context);
@@ -126,6 +128,10 @@ export class AzureIoTExplorer {
 
     public selectIoTHub(outputChannel?: vscode.OutputChannel, subscriptionId?: string) {
         return this._iotHubResourceExplorer.selectIoTHub(outputChannel, subscriptionId);
+    }
+
+    public setIoTHub(context: IActionContext, node?: IoTHubResourceTreeItem) {
+        return this._iotHubResourceExplorer.setIoTHub(context, node);
     }
 
     public async copyIoTHubConnectionString() {

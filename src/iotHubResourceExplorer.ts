@@ -5,6 +5,7 @@
 import { IotHubClient } from "azure-arm-iothub";
 import { ResourceManagementClient, ResourceModels, SubscriptionClient } from "azure-arm-resource";
 import * as vscode from "vscode";
+import { IActionContext, AzExtTreeDataProvider } from "vscode-azureextensionui";
 import { IotHubDescription } from "../node_modules/azure-arm-iothub/lib/models";
 import { AzureAccount } from "./azure-account.api";
 import { BaseExplorer } from "./baseExplorer";
@@ -15,13 +16,16 @@ import { IotHubItem } from "./Model/IotHubItem";
 import { LocationItem } from "./Model/LocationItem";
 import { ResourceGroupItem } from "./Model/ResourceGroupItem";
 import { SubscriptionItem } from "./Model/SubscriptionItem";
+import { IoTHubResourceTreeItem } from "./Nodes/IoTHub/IoTHubResourceTreeItem";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
+import { ServiceClientCredentials } from "ms-rest";
+import { AzureEnvironment } from "ms-rest-azure";
 
 export class IoTHubResourceExplorer extends BaseExplorer {
     private readonly accountApi: AzureAccount;
 
-    constructor(outputChannel: vscode.OutputChannel) {
+    constructor(outputChannel: vscode.OutputChannel, private iotHubTreeDataProvider?: AzExtTreeDataProvider) {
         super(outputChannel);
         this.accountApi = Utility.getAzureAccountApi();
     }
@@ -105,7 +109,8 @@ export class IoTHubResourceExplorer extends BaseExplorer {
                 .then(async (iotHubDescription) => {
                     clearInterval(intervalID);
                     outputChannel.appendLine("");
-                    const newIotHubConnectionString = await this.getIoTHubConnectionString(subscriptionItem, iotHubDescription);
+                    const newIotHubConnectionString = await this.getIoTHubConnectionString(subscriptionItem.session.credentials,
+                        subscriptionItem.subscription.subscriptionId, subscriptionItem.session.environment , iotHubDescription);
                     outputChannel.appendLine(`IoT Hub '${name}' is created.`);
                     await this.updateIoTHubConnectionString(newIotHubConnectionString);
                     (iotHubDescription as any).iotHubConnectionString = newIotHubConnectionString;
@@ -146,13 +151,24 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         if (iotHubItem) {
             outputChannel.show();
             outputChannel.appendLine(`IoT Hub selected: ${iotHubItem.label}`);
-            const iotHubConnectionString = await this.getIoTHubConnectionString(subscriptionItem, iotHubItem.iotHubDescription);
+            const iotHubConnectionString = await this.getIoTHubConnectionString(subscriptionItem.session.credentials,
+                subscriptionItem.subscription.subscriptionId, subscriptionItem.session.environment , iotHubItem.iotHubDescription);
             await this.updateIoTHubConnectionString(iotHubConnectionString);
             (iotHubItem.iotHubDescription as any).iotHubConnectionString = iotHubConnectionString;
             TelemetryClient.sendEvent("AZ.Select.IoTHub.Done", undefined, iotHubConnectionString);
             await Utility.storeIoTHubInfo(subscriptionItem, iotHubItem.iotHubDescription);
             return iotHubItem.iotHubDescription;
         }
+    }
+
+    public async setIoTHub(context: IActionContext, node?: IoTHubResourceTreeItem) {
+        if (!node) {
+            node = await this.iotHubTreeDataProvider.showTreeItemPicker<IoTHubResourceTreeItem>("IotHub", context);
+        }
+        const iotHubConnectionString = await this.getIoTHubConnectionString(node.root.credentials,
+            node.root.subscriptionId, node.root.environment , node.iotHub);
+        await this.updateIoTHubConnectionString(iotHubConnectionString);
+        vscode.window.showInformationMessage("Set active iot hub: " + node.iotHub.name);
     }
 
     public async copyIoTHubConnectionString() {
@@ -258,9 +274,16 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         vscode.commands.executeCommand("azure-iot-toolkit.refresh");
     }
 
-    private async getIoTHubConnectionString(subscriptionItem: SubscriptionItem, iotHubDescription: IotHubDescription) {
+    private async getIoTHubConnectionString2(subscriptionItem: SubscriptionItem, iotHubDescription: IotHubDescription) {
         const { session, subscription } = subscriptionItem;
         const client = new IotHubClient(session.credentials, subscription.subscriptionId, session.environment.resourceManagerEndpointUrl);
+        return client.iotHubResource.getKeysForKeyName(Utility.getResourceGroupNameFromId(iotHubDescription.id), iotHubDescription.name, "iothubowner").then((result) => {
+            return `HostName=${iotHubDescription.properties.hostName};SharedAccessKeyName=${result.keyName};SharedAccessKey=${result.primaryKey}`;
+        });
+    }
+
+    private async getIoTHubConnectionString(credentials: ServiceClientCredentials, subscriptionId: string, environment: AzureEnvironment, iotHubDescription: IotHubDescription) {
+        const client = new IotHubClient(credentials, subscriptionId, environment.resourceManagerEndpointUrl);
         return client.iotHubResource.getKeysForKeyName(Utility.getResourceGroupNameFromId(iotHubDescription.id), iotHubDescription.name, "iothubowner").then((result) => {
             return `HostName=${iotHubDescription.properties.hostName};SharedAccessKeyName=${result.keyName};SharedAccessKey=${result.primaryKey}`;
         });

@@ -13,27 +13,33 @@ import { Constants, DistributedSettingUpdateType } from "./constants";
 import { DeviceTree } from "./deviceTree";
 import { Executor } from "./executor";
 import { DeviceNode } from "./Nodes/DeviceNode";
+import { DpsAccountTreeItem } from "./Nodes/DpsAccountTreeItem";
+import { DpsResourceTreeItem } from "./Nodes/DpsResourceTreeItem";
 import { EventHubItemNode } from "./Nodes/Endpoints/EventHubItemNode";
+import { IoTHubAccountTreeItem } from "./Nodes/IoTHub/IoTHubAccountTreeItem";
 import { ModuleItemNode } from "./Nodes/ModuleItemNode";
 import { ModuleLabelNode } from "./Nodes/ModuleLabelNode";
 import { DeviceTwinCodeLensProvider } from "./providers/deviceTwinCodeLensProvider";
 import { ModuleTwinCodeLensProvider } from "./providers/moduleTwinCodeLensProvider";
 import { TelemetryClient } from "./telemetryClient";
-import { DpsAccountTreeItem } from "./Nodes/DpsAccountTreeItem";
-import { DpsResourceTreeItem } from "./Nodes/DpsResourceTreeItem";
 import { TelemetryClientWrapper } from "./telemetryClientWrapper";
+import { IoTHubResourceTreeItem } from "./Nodes/IoTHub/IoTHubResourceTreeItem";
 
 export function activate(context: vscode.ExtensionContext) {
     Constants.initialize(context);
     TelemetryClient.initialize(context);
     TelemetryClient.sendEvent("extensionActivated");
 
-    activateDps(context);
+    let iotHubTreeItem = new IoTHubAccountTreeItem();
+    let iotHubExtTreeDataProvider = new AzExtTreeDataProvider(iotHubTreeItem, "azure-iot-hub.loadMore");
 
-    let azureIoTExplorer = new AzureIoTExplorer(context);
+    let azureIoTExplorer = new AzureIoTExplorer(context, iotHubExtTreeDataProvider);
     let deviceTree = new DeviceTree(context);
-
     vscode.window.registerTreeDataProvider("iotHubDevices", deviceTree);
+
+    activateDps(context);
+    activateIoTHub(context, azureIoTExplorer, iotHubTreeItem, iotHubExtTreeDataProvider);
+
     azureIoTExplorer.checkAndShowWelcomePage();
 
     context.subscriptions.push(vscode.languages.registerCodeLensProvider({ pattern: `**/${Constants.ModuleTwinJosnFileName}` }, new ModuleTwinCodeLensProvider()));
@@ -261,4 +267,28 @@ function activateDps(context: vscode.ExtensionContext) {
     registerCommand("azure-iot-dps.refresh", async (actionContext: IActionContext, node: AzureTreeItem) => {
         await azureDpsExplorer.refresh(actionContext, node);
     });
+}
+
+function activateIoTHub(context: vscode.ExtensionContext, azureIoTExplorer: AzureIoTExplorer, iotHubTreeItem: IoTHubAccountTreeItem, iotHubExtTreeDataProvider: AzExtTreeDataProvider) {
+
+    let outputChannel = createAzExtOutputChannel("aaa", "azure-iot-toolkit");
+
+    context.subscriptions.push(iotHubTreeItem);
+    context.subscriptions.push(vscode.window.createTreeView("iotHubExplorer", { treeDataProvider: iotHubExtTreeDataProvider, showCollapseAll: true }));
+
+    // let iotHubTreeDataProvider = new AzureDpsExplorer(outputChannel, iotHubExtTreeDataProvider);
+
+    registerCommand("azure-iot-toolkit.setIoTHub", async (actionContext: IActionContext, node?: IoTHubResourceTreeItem) => {
+        await azureIoTExplorer.setIoTHub(actionContext, node);
+    });
+
+    // registerCommand("azure-iot-dps.viewProperties", async (actionContext: IActionContext, node?: DpsResourceTreeItem) => {
+    //     await azureDpsExplorer.viewProperties(actionContext, node);
+    // });
+    // registerCommand("azure-iot-dps.loadMore", async (actionContext: IActionContext, node: AzureTreeItem) => {
+    //     await azureDpsExplorer.loadMore(actionContext, node);
+    // });
+    // registerCommand("azure-iot-dps.refresh", async (actionContext: IActionContext, node: AzureTreeItem) => {
+    //     await azureDpsExplorer.refresh(actionContext, node);
+    // });
 }
