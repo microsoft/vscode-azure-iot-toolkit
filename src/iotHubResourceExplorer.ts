@@ -115,7 +115,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
                     await this.updateIoTHubConnectionString(newIotHubConnectionString);
                     (iotHubDescription as any).iotHubConnectionString = newIotHubConnectionString;
                     TelemetryClient.sendEvent(Constants.IoTHubAICreateDoneEvent, { Result: "Success" }, newIotHubConnectionString);
-                    await Utility.storeIoTHubInfo(subscriptionItem, iotHubDescription);
+                    await Utility.storeIoTHubInfo(subscriptionItem.subscription.subscriptionId, iotHubDescription);
                     return iotHubDescription;
                 })
                 .catch((err) => {
@@ -156,18 +156,21 @@ export class IoTHubResourceExplorer extends BaseExplorer {
             await this.updateIoTHubConnectionString(iotHubConnectionString);
             (iotHubItem.iotHubDescription as any).iotHubConnectionString = iotHubConnectionString;
             TelemetryClient.sendEvent("AZ.Select.IoTHub.Done", undefined, iotHubConnectionString);
-            await Utility.storeIoTHubInfo(subscriptionItem, iotHubItem.iotHubDescription);
+            await Utility.storeIoTHubInfo(subscriptionItem.subscription.subscriptionId, iotHubItem.iotHubDescription);
             return iotHubItem.iotHubDescription;
         }
     }
 
     public async setIoTHub(context: IActionContext, node?: IoTHubResourceTreeItem) {
+        TelemetryClient.sendEvent("General.Set.IoTHub.Start");
         if (!node) {
             node = await this.iotHubTreeDataProvider.showTreeItemPicker<IoTHubResourceTreeItem>("IotHub", context);
         }
         const iotHubConnectionString = await this.getIoTHubConnectionString(node.root.credentials,
             node.root.subscriptionId, node.root.environment , node.iotHub);
         await this.updateIoTHubConnectionString(iotHubConnectionString);
+        TelemetryClient.sendEvent("AZ.Set.IoTHub.Done", undefined, iotHubConnectionString);
+        await Utility.storeIoTHubInfo(node.root.subscriptionId, node.iotHub);
         vscode.window.showInformationMessage("Set active iot hub: " + node.iotHub.name);
     }
 

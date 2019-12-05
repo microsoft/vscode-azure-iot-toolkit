@@ -412,8 +412,8 @@ export class Utility {
         return message.enqueuedTimeUtc ? `[${message.enqueuedTimeUtc.toLocaleTimeString("en-US")}] ` : "";
     }
 
-    public static async storeIoTHubInfo(subscriptionItem: SubscriptionItem, iotHubDescription: IotHubDescription) {
-        await Constants.ExtensionContext.globalState.update(Constants.StateKeySubsID, subscriptionItem.subscription.subscriptionId);
+    public static async storeIoTHubInfo(subscriptionId: string, iotHubDescription: IotHubDescription) {
+        await Constants.ExtensionContext.globalState.update(Constants.StateKeySubsID, subscriptionId);
         await Constants.ExtensionContext.globalState.update(Constants.StateKeyIoTHubID, iotHubDescription.id);
     }
 

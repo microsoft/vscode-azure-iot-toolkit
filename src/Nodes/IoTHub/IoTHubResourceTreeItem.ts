@@ -3,7 +3,7 @@
 
 import { IotHubModels } from "azure-arm-iothub";
 import { AzureParentTreeItem, AzureTreeItem, TreeItemIconPath } from "vscode-azureextensionui";
-// import { TreeUtils } from "../Utility/treeUtils";
+import { TreeUtils } from "../../Utility/treeUtils";
 
 // Represents a DPS resource
 export class IoTHubResourceTreeItem extends AzureTreeItem {
@@ -31,7 +31,7 @@ export class IoTHubResourceTreeItem extends AzureTreeItem {
         }
     }
 
-    // public get iconPath(): TreeItemIconPath {
-    //     return TreeUtils.getThemedIconPath("dps");
-    // }
+    public get iconPath(): TreeItemIconPath {
+        return TreeUtils.getThemedIconPath("iothub");
+    }
 }
