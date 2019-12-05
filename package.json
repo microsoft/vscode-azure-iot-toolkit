@@ -69,6 +69,9 @@
     "onCommand:azure-iot-toolkit.copyModuleConnectionString",
     "onCommand:azure-iot-toolkit.startMonitorCustomEventHubEndpoint",
     "onCommand:azure-iot-toolkit.stopMonitorCustomEventHubEndpoint",
+    "onCommand:azure-iot-hub.setIoTHub",
+    "onCommand:azure-iot-hub.loadMore",
+    "onCommand:azure-iot-hub.refresh",
     "onCommand:azure-iot-dps.viewProperties",
     "onCommand:azure-iot-dps.loadMore",
     "onCommand:azure-iot-dps.refresh"
@@ -304,13 +307,18 @@
       },
       {
         "command": "azure-iot-hub.setIoTHub",
-        "title": "%azure-iot-toolkit.command.setIoTHub.title%",
-        "category": "%azure-iot-toolkit.category%"
+        "title": "%azure-iot-hub.command.setIoTHub.title%",
+        "category": "%azure-iot-hub.category%"
+      },
+      {
+        "command": "azure-iot-hub.loadMore",
+        "title": "%azure-iot-hub.command.loadMore.title%",
+        "category": "%azure-iot-hub.category%"
       },
       {
         "command": "azure-iot-hub.refresh",
-        "title": "%azure-iot-toolkit.command.setIoTHub.title%",
-        "category": "%azure-iot-toolkit.category%",
+        "title": "%azure-iot-hub.command.refresh.title%",
+        "category": "%azure-iot-hub.category%",
         "icon": {
           "light": "resources/light/refresh.svg",
           "dark": "resources/dark/refresh.svg"
@@ -649,8 +657,12 @@
           "group": "inline"
         },
         {
-          "command": "azure-iot-hub.refresh",
+          "command": "azure-iot-hub.setIoTHub",
           "when": "view == iotHubExplorer && viewItem == IotHub"
+        },
+        {
+          "command": "azure-iot-hub.refresh",
+          "when": "view == iotHubExplorer && viewItem == azureextensionui.azureSubscription"
         },
         {
           "command": "azure-iot-dps.viewProperties",
@@ -735,6 +747,10 @@
         },
         {
           "command": "azure-iot-toolkit.startMonitorIoTHubMessageWithAbbreviation",
+          "when": "never"
+        },
+        {
+          "command": "azure-iot-hub.loadMore",
           "when": "never"
         },
         {

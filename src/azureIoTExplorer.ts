@@ -43,8 +43,7 @@ export class AzureIoTExplorer {
     private _eventHubManager: EventHubManager;
     private _simulator: Simulator;
 
-    constructor(private context: vscode.ExtensionContext, iotHubTreeDataProvider: AzExtTreeDataProvider) {
-        let outputChannel = vscode.window.createOutputChannel("Azure IoT Hub Toolkit");
+    constructor(outputChannel: vscode.OutputChannel, private context: vscode.ExtensionContext, iotHubTreeDataProvider: AzExtTreeDataProvider) {
         this._iotHubC2DMessageExplorer = new IotHubC2DMessageExplorer(outputChannel);
         this._iotHubMessageExplorer = new IoTHubMessageExplorer(outputChannel);
         this._deviceExplorer = new DeviceExplorer(outputChannel);
@@ -132,6 +131,10 @@ export class AzureIoTExplorer {
 
     public setIoTHub(context: IActionContext, node?: IoTHubResourceTreeItem) {
         return this._iotHubResourceExplorer.setIoTHub(context, node);
+    }
+
+    public async loadMore(actionContext: IActionContext, node: AzureTreeItem): Promise<void> {
+        return this._iotHubResourceExplorer.loadMore(actionContext, node);
     }
 
     public refresh(context: IActionContext, node?: AzureTreeItem) {
