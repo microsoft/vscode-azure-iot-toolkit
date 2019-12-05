@@ -4,8 +4,10 @@
 "use strict";
 import { IotHubClient } from "azure-arm-iothub";
 import { ResourceManagementClient, ResourceModels, SubscriptionClient } from "azure-arm-resource";
+import { ServiceClientCredentials } from "ms-rest";
+import { AzureEnvironment } from "ms-rest-azure";
 import * as vscode from "vscode";
-import { IActionContext, AzExtTreeDataProvider } from "vscode-azureextensionui";
+import { AzExtTreeDataProvider, AzureTreeItem, IActionContext } from "vscode-azureextensionui";
 import { IotHubDescription } from "../node_modules/azure-arm-iothub/lib/models";
 import { AzureAccount } from "./azure-account.api";
 import { BaseExplorer } from "./baseExplorer";
@@ -19,8 +21,6 @@ import { SubscriptionItem } from "./Model/SubscriptionItem";
 import { IoTHubResourceTreeItem } from "./Nodes/IoTHub/IoTHubResourceTreeItem";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
-import { ServiceClientCredentials } from "ms-rest";
-import { AzureEnvironment } from "ms-rest-azure";
 
 export class IoTHubResourceExplorer extends BaseExplorer {
     private readonly accountApi: AzureAccount;
@@ -161,7 +161,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         }
     }
 
-    public async setIoTHub(context: IActionContext, node?: IoTHubResourceTreeItem) {
+    public async setIoTHub(context: IActionContext, node?: IoTHubResourceTreeItem): Promise<void> {
         TelemetryClient.sendEvent("General.Set.IoTHub.Start");
         if (!node) {
             node = await this.iotHubTreeDataProvider.showTreeItemPicker<IoTHubResourceTreeItem>("IotHub", context);
@@ -172,6 +172,11 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         TelemetryClient.sendEvent("AZ.Set.IoTHub.Done", undefined, iotHubConnectionString);
         await Utility.storeIoTHubInfo(node.root.subscriptionId, node.iotHub);
         vscode.window.showInformationMessage("Set active iot hub: " + node.iotHub.name);
+    }
+
+    public async refresh(context: IActionContext, node?: AzureTreeItem): Promise<void> {
+
+        await this.iotHubTreeDataProvider.refresh(node);
     }
 
     public async copyIoTHubConnectionString() {

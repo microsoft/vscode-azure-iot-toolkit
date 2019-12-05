@@ -3,6 +3,7 @@
 
 "use strict";
 import * as vscode from "vscode";
+import { AzExtTreeDataProvider, AzureTreeItem, IActionContext } from "vscode-azureextensionui";
 import { CodeManager } from "./codeManager";
 import { Constants, DistributedSettingUpdateType } from "./constants";
 import { DeviceExplorer } from "./deviceExplorer";
@@ -19,13 +20,12 @@ import { DeviceItem } from "./Model/DeviceItem";
 import { EventHubItem } from "./Model/EventHubItem";
 import { ModuleItem } from "./Model/ModuleItem";
 import { DeviceNode } from "./Nodes/DeviceNode";
+import { IoTHubResourceTreeItem } from "./Nodes/IoTHub/IoTHubResourceTreeItem";
 import { ModuleItemNode } from "./Nodes/ModuleItemNode";
 import { Simulator } from "./simulator";
 import { SnippetManager } from "./snippetManager";
 import { Utility } from "./utility";
 import { WelcomePage } from "./welcomePage";
-import { IActionContext, AzExtTreeDataProvider } from "vscode-azureextensionui";
-import { IoTHubResourceTreeItem } from "./Nodes/IoTHub/IoTHubResourceTreeItem";
 
 export class AzureIoTExplorer {
     private _iotHubC2DMessageExplorer: IotHubC2DMessageExplorer;
@@ -132,6 +132,10 @@ export class AzureIoTExplorer {
 
     public setIoTHub(context: IActionContext, node?: IoTHubResourceTreeItem) {
         return this._iotHubResourceExplorer.setIoTHub(context, node);
+    }
+
+    public refresh(context: IActionContext, node?: AzureTreeItem) {
+        return this._iotHubResourceExplorer.refresh(context, node);
     }
 
     public async copyIoTHubConnectionString() {

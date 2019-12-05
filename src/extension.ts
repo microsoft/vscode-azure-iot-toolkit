@@ -278,8 +278,12 @@ function activateIoTHub(context: vscode.ExtensionContext, azureIoTExplorer: Azur
 
     // let iotHubTreeDataProvider = new AzureDpsExplorer(outputChannel, iotHubExtTreeDataProvider);
 
-    registerCommand("azure-iot-toolkit.setIoTHub", async (actionContext: IActionContext, node?: IoTHubResourceTreeItem) => {
+    registerCommand("azure-iot-hub.setIoTHub", async (actionContext: IActionContext, node?: IoTHubResourceTreeItem) => {
         await azureIoTExplorer.setIoTHub(actionContext, node);
+    });
+
+    registerCommand("azure-iot-hub.refresh", async (actionContext: IActionContext, node: AzureTreeItem) => {
+        await azureIoTExplorer.refresh(actionContext, node);
     });
 
     // registerCommand("azure-iot-dps.viewProperties", async (actionContext: IActionContext, node?: DpsResourceTreeItem) => {
@@ -287,8 +291,5 @@ function activateIoTHub(context: vscode.ExtensionContext, azureIoTExplorer: Azur
     // });
     // registerCommand("azure-iot-dps.loadMore", async (actionContext: IActionContext, node: AzureTreeItem) => {
     //     await azureDpsExplorer.loadMore(actionContext, node);
-    // });
-    // registerCommand("azure-iot-dps.refresh", async (actionContext: IActionContext, node: AzureTreeItem) => {
-    //     await azureDpsExplorer.refresh(actionContext, node);
     // });
 }

@@ -303,9 +303,18 @@
         "category": "%azure-iot-toolkit.category%"
       },
       {
-        "command": "azure-iot-toolkit.setIoTHub",
+        "command": "azure-iot-hub.setIoTHub",
         "title": "%azure-iot-toolkit.command.setIoTHub.title%",
         "category": "%azure-iot-toolkit.category%"
+      },
+      {
+        "command": "azure-iot-hub.refresh",
+        "title": "%azure-iot-toolkit.command.setIoTHub.title%",
+        "category": "%azure-iot-toolkit.category%",
+        "icon": {
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
+        }
       },
       {
         "command": "azure-iot-dps.viewProperties",
@@ -320,7 +329,11 @@
       {
         "command": "azure-iot-dps.refresh",
         "title": "%azure-iot-dps.command.refresh.title%",
-        "category": "%azure-iot-dps.category%"
+        "category": "%azure-iot-dps.category%",
+        "icon": {
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
+        }
       }
     ],
     "menus": {
@@ -391,8 +404,14 @@
           "group": "azure-iot-toolkit-0@1"
         },
         {
+          "command": "azure-iot-hub.refresh",
+          "when": "view == iotHubExplorer",
+          "group": "navigation"
+        },
+        {
           "command": "azure-iot-dps.refresh",
-          "when": "view == iotDpsExplorer"
+          "when": "view == iotDpsExplorer",
+          "group": "navigation"
         }
       ],
       "view/item/context": [
@@ -630,7 +649,7 @@
           "group": "inline"
         },
         {
-          "command": "azure-iot-toolkit.setIoTHub",
+          "command": "azure-iot-hub.refresh",
           "when": "view == iotHubExplorer && viewItem == IotHub"
         },
         {
