@@ -171,7 +171,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         await this.updateIoTHubConnectionString(iotHubConnectionString);
         TelemetryClient.sendEvent("AZ.Set.IoTHub.Done", undefined, iotHubConnectionString);
         await Utility.storeIoTHubInfo(node.root.subscriptionId, node.iotHub);
-        vscode.window.showInformationMessage(`'${node.iotHub.name}' is set as active iot hub: `);
+        vscode.window.showInformationMessage(`'${node.iotHub.name}' is set as active iot hub.`);
     }
 
     public async loadMore(actionContext: IActionContext, node: AzureTreeItem): Promise<void> {
