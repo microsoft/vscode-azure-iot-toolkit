@@ -129,16 +129,16 @@ export class AzureIoTExplorer {
         return this._iotHubResourceExplorer.selectIoTHub(outputChannel, subscriptionId);
     }
 
-    public setIoTHub(context: IActionContext, node?: IoTHubResourceTreeItem) {
-        return this._iotHubResourceExplorer.setIoTHub(context, node);
+    public async setIoTHub(context: IActionContext, node?: IoTHubResourceTreeItem) {
+        await this._iotHubResourceExplorer.setIoTHub(context, node);
     }
 
     public async loadMore(actionContext: IActionContext, node: AzureTreeItem): Promise<void> {
-        return this._iotHubResourceExplorer.loadMore(actionContext, node);
+        await this._iotHubResourceExplorer.loadMore(actionContext, node);
     }
 
-    public refresh(context: IActionContext, node?: AzureTreeItem) {
-        return this._iotHubResourceExplorer.refresh(context, node);
+    public async refresh(context: IActionContext, node?: AzureTreeItem) {
+        await this._iotHubResourceExplorer.refresh(context, node);
     }
 
     public async copyIoTHubConnectionString() {

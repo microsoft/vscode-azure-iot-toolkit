@@ -162,14 +162,12 @@ export class IoTHubResourceExplorer extends BaseExplorer {
     }
 
     public async setIoTHub(context: IActionContext, node?: IoTHubResourceTreeItem): Promise<void> {
-        TelemetryClient.sendEvent("General.Set.IoTHub.Start");
         if (!node) {
             node = await this.iotHubTreeDataProvider.showTreeItemPicker<IoTHubResourceTreeItem>("IotHub", context);
         }
         const iotHubConnectionString = await this.getIoTHubConnectionString(node.root.credentials,
             node.root.subscriptionId, node.root.environment , node.iotHub);
         await this.updateIoTHubConnectionString(iotHubConnectionString);
-        TelemetryClient.sendEvent("AZ.Set.IoTHub.Done", undefined, iotHubConnectionString);
         await Utility.storeIoTHubInfo(node.root.subscriptionId, node.iotHub);
         vscode.window.showInformationMessage(`'${node.iotHub.name}' is set as active iot hub.`);
     }
