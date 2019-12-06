@@ -165,11 +165,13 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         if (!node) {
             node = await this.iotHubTreeDataProvider.showTreeItemPicker<IoTHubResourceTreeItem>("IotHub", context);
         }
+        this._outputChannel.show();
+        this._outputChannel.appendLine(`IoT Hub selected: ${node.iotHub.name}`);
+        vscode.commands.executeCommand("iotHubDevices.focus");
         const iotHubConnectionString = await this.getIoTHubConnectionString(node.root.credentials,
             node.root.subscriptionId, node.root.environment , node.iotHub);
         await this.updateIoTHubConnectionString(iotHubConnectionString);
         await Utility.storeIoTHubInfo(node.root.subscriptionId, node.iotHub);
-        vscode.window.showInformationMessage(`'${node.iotHub.name}' is set as active iot hub.`);
     }
 
     public async loadMore(actionContext: IActionContext, node: AzureTreeItem): Promise<void> {
@@ -282,14 +284,6 @@ export class IoTHubResourceExplorer extends BaseExplorer {
     private async updateIoTHubConnectionString(iotHubConnectionString: string) {
         await CredentialStore.setPassword(Constants.IotHubConnectionStringKey, iotHubConnectionString);
         vscode.commands.executeCommand("azure-iot-toolkit.refresh");
-    }
-
-    private async getIoTHubConnectionString2(subscriptionItem: SubscriptionItem, iotHubDescription: IotHubDescription) {
-        const { session, subscription } = subscriptionItem;
-        const client = new IotHubClient(session.credentials, subscription.subscriptionId, session.environment.resourceManagerEndpointUrl);
-        return client.iotHubResource.getKeysForKeyName(Utility.getResourceGroupNameFromId(iotHubDescription.id), iotHubDescription.name, "iothubowner").then((result) => {
-            return `HostName=${iotHubDescription.properties.hostName};SharedAccessKeyName=${result.keyName};SharedAccessKey=${result.primaryKey}`;
-        });
     }
 
     private async getIoTHubConnectionString(credentials: ServiceClientCredentials, subscriptionId: string, environment: AzureEnvironment, iotHubDescription: IotHubDescription) {

@@ -95,6 +95,11 @@ export class Utility {
         return result ? result[1] : "";
     }
 
+    public static getIoTHubName(iotHubConnectionString: string): string {
+        let result = /^HostName=([^.]+)./.exec(iotHubConnectionString);
+        return result ? result[1] : "";
+    }
+
     public static getPostfixFromHostName(hostName: string): string {
         let result = /^[^.]+\.(.+)$/.exec(hostName);
         return result ? result[1] : "";

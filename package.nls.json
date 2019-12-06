@@ -53,7 +53,7 @@
   "azure-iot-toolkit.configuration.treeViewAutoRefreshEnable.description": "Whether to enable auto refresh of tree view.",
   "azure-iot-toolkit.configuration.treeViewAutoRefreshIntervalInSeconds.description": "Time interval in seconds for tree view auto refresh, auto refresh has to be enabled for it to work.",
   "azure-iot-hub.category": "Azure IoT Hub",
-  "azure-iot-hub.command.setIoTHub.title": "Set Active IoT Hub",
+  "azure-iot-hub.command.setIoTHub.title": "Scope this in Explorer",
   "azure-iot-hub.command.loadMore.title": "Load More",
   "azure-iot-hub.command.refresh.title": "Refresh",
   "azure-iot-dps.category": "Azure IoT Hub Device Provisioning Service",

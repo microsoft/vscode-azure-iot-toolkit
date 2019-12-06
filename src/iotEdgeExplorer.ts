@@ -341,11 +341,11 @@ export class IoTEdgeExplorer extends BaseExplorer {
         const registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
         registry.addConfiguration(deploymentConfiguration, (err) => {
             if (err) {
-                this.outputLine(label, `Deployment failed. ${err}`);
+                this.outputLine(label, `Deployment '${deploymentId}' failed. ${err}`);
                 TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployAtScaleDoneEvent, { Result: "Fail", Message: err.message });
 
             } else {
-                this.outputLine(label, "Deployment succeeded.");
+                this.outputLine(label, `Deployment '${deploymentId}' succeeded.`);
                 TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployAtScaleDoneEvent, { Result: "Success" });
             }
         });
