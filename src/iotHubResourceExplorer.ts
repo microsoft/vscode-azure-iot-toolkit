@@ -109,13 +109,11 @@ export class IoTHubResourceExplorer extends BaseExplorer {
                 .then(async (iotHubDescription) => {
                     clearInterval(intervalID);
                     outputChannel.appendLine("");
-                    const newIotHubConnectionString = await this.getIoTHubConnectionString(subscriptionItem.session.credentials,
+                    const newIotHubConnectionString = await this.updateAndStoreIoTHubInfo(subscriptionItem.session.credentials,
                         subscriptionItem.subscription.subscriptionId, subscriptionItem.session.environment , iotHubDescription);
                     outputChannel.appendLine(`IoT Hub '${name}' is created.`);
-                    await this.updateIoTHubConnectionString(newIotHubConnectionString);
                     (iotHubDescription as any).iotHubConnectionString = newIotHubConnectionString;
                     TelemetryClient.sendEvent(Constants.IoTHubAICreateDoneEvent, { Result: "Success" }, newIotHubConnectionString);
-                    await Utility.storeIoTHubInfo(subscriptionItem.subscription.subscriptionId, iotHubDescription);
                     return iotHubDescription;
                 })
                 .catch((err) => {
@@ -151,12 +149,10 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         if (iotHubItem) {
             outputChannel.show();
             outputChannel.appendLine(`IoT Hub selected: ${iotHubItem.label}`);
-            const iotHubConnectionString = await this.getIoTHubConnectionString(subscriptionItem.session.credentials,
+            const iotHubConnectionString = await this.updateAndStoreIoTHubInfo(subscriptionItem.session.credentials,
                 subscriptionItem.subscription.subscriptionId, subscriptionItem.session.environment , iotHubItem.iotHubDescription);
-            await this.updateIoTHubConnectionString(iotHubConnectionString);
             (iotHubItem.iotHubDescription as any).iotHubConnectionString = iotHubConnectionString;
             TelemetryClient.sendEvent("AZ.Select.IoTHub.Done", undefined, iotHubConnectionString);
-            await Utility.storeIoTHubInfo(subscriptionItem.subscription.subscriptionId, iotHubItem.iotHubDescription);
             return iotHubItem.iotHubDescription;
         }
     }
@@ -168,10 +164,8 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         this._outputChannel.show();
         this._outputChannel.appendLine(`IoT Hub selected: ${node.iotHub.name}`);
         vscode.commands.executeCommand("iotHubDevices.focus");
-        const iotHubConnectionString = await this.getIoTHubConnectionString(node.root.credentials,
+        await this.updateAndStoreIoTHubInfo(node.root.credentials,
             node.root.subscriptionId, node.root.environment , node.iotHub);
-        await this.updateIoTHubConnectionString(iotHubConnectionString);
-        await Utility.storeIoTHubInfo(node.root.subscriptionId, node.iotHub);
     }
 
     public async loadMore(actionContext: IActionContext, node: AzureTreeItem): Promise<void> {
@@ -279,6 +273,14 @@ export class IoTHubResourceExplorer extends BaseExplorer {
             }
         } while (retryCount > 0);
         return iotHubItem;
+    }
+
+    private async updateAndStoreIoTHubInfo(credentials: ServiceClientCredentials, subscriptionId: string, environment: AzureEnvironment, iotHubDescription: IotHubDescription): Promise<string> {
+        const iotHubConnectionString = await this.getIoTHubConnectionString(credentials,
+            subscriptionId, environment, iotHubDescription);
+        await this.updateIoTHubConnectionString(iotHubConnectionString);
+        await Utility.storeIoTHubInfo(subscriptionId, iotHubDescription);
+        return iotHubConnectionString;
     }
 
     private async updateIoTHubConnectionString(iotHubConnectionString: string) {
