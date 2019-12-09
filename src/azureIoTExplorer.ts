@@ -3,6 +3,7 @@
 
 "use strict";
 import * as vscode from "vscode";
+import { AzExtTreeDataProvider, AzureTreeItem, IActionContext } from "vscode-azureextensionui";
 import { CodeManager } from "./codeManager";
 import { Constants, DistributedSettingUpdateType } from "./constants";
 import { DeviceExplorer } from "./deviceExplorer";
@@ -19,6 +20,7 @@ import { DeviceItem } from "./Model/DeviceItem";
 import { EventHubItem } from "./Model/EventHubItem";
 import { ModuleItem } from "./Model/ModuleItem";
 import { DeviceNode } from "./Nodes/DeviceNode";
+import { IoTHubResourceTreeItem } from "./Nodes/IoTHub/IoTHubResourceTreeItem";
 import { ModuleItemNode } from "./Nodes/ModuleItemNode";
 import { Simulator } from "./simulator";
 import { SnippetManager } from "./snippetManager";
@@ -41,8 +43,7 @@ export class AzureIoTExplorer {
     private _eventHubManager: EventHubManager;
     private _simulator: Simulator;
 
-    constructor(private context: vscode.ExtensionContext) {
-        let outputChannel = vscode.window.createOutputChannel("Azure IoT Hub Toolkit");
+    constructor(outputChannel: vscode.OutputChannel, private context: vscode.ExtensionContext, iotHubTreeDataProvider: AzExtTreeDataProvider) {
         this._iotHubC2DMessageExplorer = new IotHubC2DMessageExplorer(outputChannel);
         this._iotHubMessageExplorer = new IoTHubMessageExplorer(outputChannel);
         this._deviceExplorer = new DeviceExplorer(outputChannel);
@@ -50,7 +51,7 @@ export class AzureIoTExplorer {
         this._snippetManager = new SnippetManager(outputChannel);
         this._iotHubDirectMethodExplorer = new IotHubDirectMethodExplorer(outputChannel);
         this._iotHubDeviceTwinExplorer = new IotHubDeviceTwinExplorer(outputChannel);
-        this._iotHubResourceExplorer = new IoTHubResourceExplorer(outputChannel);
+        this._iotHubResourceExplorer = new IoTHubResourceExplorer(outputChannel, iotHubTreeDataProvider);
         this._iotEdgeExplorer = new IoTEdgeExplorer(outputChannel);
         this._welcomePage = new WelcomePage(this.context);
         this._codeManager = new CodeManager(this.context);
@@ -126,6 +127,18 @@ export class AzureIoTExplorer {
 
     public selectIoTHub(outputChannel?: vscode.OutputChannel, subscriptionId?: string) {
         return this._iotHubResourceExplorer.selectIoTHub(outputChannel, subscriptionId);
+    }
+
+    public async setIoTHub(context: IActionContext, node?: IoTHubResourceTreeItem) {
+        await this._iotHubResourceExplorer.setIoTHub(context, node);
+    }
+
+    public async loadMore(actionContext: IActionContext, node: AzureTreeItem): Promise<void> {
+        await this._iotHubResourceExplorer.loadMore(actionContext, node);
+    }
+
+    public async refresh(context: IActionContext, node?: AzureTreeItem) {
+        await this._iotHubResourceExplorer.refresh(context, node);
     }
 
     public async copyIoTHubConnectionString() {

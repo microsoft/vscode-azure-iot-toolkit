@@ -34,6 +34,7 @@
     "*",
     "onView:iotHubDevices",
     "onView:iotDpsExplorer",
+    "onView:iotHubExplorer",
     "onCommand:azure-iot-toolkit.sendD2CMessage",
     "onCommand:azure-iot-toolkit.startMonitorIoTHubMessage",
     "onCommand:azure-iot-toolkit.sendC2DMessage",
@@ -68,6 +69,9 @@
     "onCommand:azure-iot-toolkit.copyModuleConnectionString",
     "onCommand:azure-iot-toolkit.startMonitorCustomEventHubEndpoint",
     "onCommand:azure-iot-toolkit.stopMonitorCustomEventHubEndpoint",
+    "onCommand:azure-iot-hub.setIoTHub",
+    "onCommand:azure-iot-hub.loadMore",
+    "onCommand:azure-iot-hub.refresh",
     "onCommand:azure-iot-dps.viewProperties",
     "onCommand:azure-iot-dps.loadMore",
     "onCommand:azure-iot-dps.refresh"
@@ -94,6 +98,10 @@
         {
           "id": "iotDpsExplorer",
           "name": "IoT Hub Device Provisioning Service"
+        },
+        {
+          "id": "iotHubExplorer",
+          "name": "IoT Hub"
         }
       ]
     },
@@ -298,6 +306,25 @@
         "category": "%azure-iot-toolkit.category%"
       },
       {
+        "command": "azure-iot-hub.setIoTHub",
+        "title": "%azure-iot-hub.command.setIoTHub.title%",
+        "category": "%azure-iot-hub.category%"
+      },
+      {
+        "command": "azure-iot-hub.loadMore",
+        "title": "%azure-iot-hub.command.loadMore.title%",
+        "category": "%azure-iot-hub.category%"
+      },
+      {
+        "command": "azure-iot-hub.refresh",
+        "title": "%azure-iot-hub.command.refresh.title%",
+        "category": "%azure-iot-hub.category%",
+        "icon": {
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
+        }
+      },
+      {
         "command": "azure-iot-dps.viewProperties",
         "title": "%azure-iot-dps.command.viewProperties.title%",
         "category": "%azure-iot-dps.category%"
@@ -310,7 +337,11 @@
       {
         "command": "azure-iot-dps.refresh",
         "title": "%azure-iot-dps.command.refresh.title%",
-        "category": "%azure-iot-dps.category%"
+        "category": "%azure-iot-dps.category%",
+        "icon": {
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
+        }
       }
     ],
     "menus": {
@@ -381,8 +412,14 @@
           "group": "azure-iot-toolkit-0@1"
         },
         {
+          "command": "azure-iot-hub.refresh",
+          "when": "view == iotHubExplorer",
+          "group": "navigation"
+        },
+        {
           "command": "azure-iot-dps.refresh",
-          "when": "view == iotDpsExplorer"
+          "when": "view == iotDpsExplorer",
+          "group": "navigation"
         }
       ],
       "view/item/context": [
@@ -620,6 +657,14 @@
           "group": "inline"
         },
         {
+          "command": "azure-iot-hub.setIoTHub",
+          "when": "view == iotHubExplorer && viewItem == IotHub"
+        },
+        {
+          "command": "azure-iot-hub.refresh",
+          "when": "view == iotHubExplorer && viewItem == azureextensionui.azureSubscription"
+        },
+        {
           "command": "azure-iot-dps.viewProperties",
           "when": "view == iotDpsExplorer && viewItem == IotDps"
         },
@@ -702,6 +747,14 @@
         },
         {
           "command": "azure-iot-toolkit.startMonitorIoTHubMessageWithAbbreviation",
+          "when": "never"
+        },
+        {
+          "command": "azure-iot-hub.setIoTHub",
+          "when": "never"
+        },
+        {
+          "command": "azure-iot-hub.loadMore",
           "when": "never"
         },
         {
@@ -792,12 +845,12 @@
     "@types/node": "^10.12.3",
     "@types/terser-webpack-plugin": "^1.2.0",
     "@types/webpack": "^4.4.24",
-    "copy-webpack-plugin": "^5.0.4",
+    "copy-webpack-plugin": "^5.0.5",
     "fail-on-errors-webpack-plugin": "^3.0.0",
     "mocha": "^5.1.1",
     "rimraf": "^2.6.2",
     "shebang-loader": "0.0.1",
-    "terser-webpack-plugin": "^1.2.1",
+    "terser-webpack-plugin": "^2.2.2",
     "ts-loader": "^5.3.1",
     "tslint": "^4.5.1",
     "typescript": "^3.0.0",

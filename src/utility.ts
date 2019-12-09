@@ -95,6 +95,11 @@ export class Utility {
         return result ? result[1] : "";
     }
 
+    public static getIoTHubName(iotHubConnectionString: string): string {
+        let result = /^HostName=([^.]+)./.exec(iotHubConnectionString);
+        return result ? result[1] : "";
+    }
+
     public static getPostfixFromHostName(hostName: string): string {
         let result = /^[^.]+\.(.+)$/.exec(hostName);
         return result ? result[1] : "";
@@ -412,8 +417,8 @@ export class Utility {
         return message.enqueuedTimeUtc ? `[${message.enqueuedTimeUtc.toLocaleTimeString("en-US")}] ` : "";
     }
 
-    public static async storeIoTHubInfo(subscriptionItem: SubscriptionItem, iotHubDescription: IotHubDescription) {
-        await Constants.ExtensionContext.globalState.update(Constants.StateKeySubsID, subscriptionItem.subscription.subscriptionId);
+    public static async storeIoTHubInfo(subscriptionId: string, iotHubDescription: IotHubDescription) {
+        await Constants.ExtensionContext.globalState.update(Constants.StateKeySubsID, subscriptionId);
         await Constants.ExtensionContext.globalState.update(Constants.StateKeyIoTHubID, iotHubDescription.id);
     }
 

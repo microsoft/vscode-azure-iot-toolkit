@@ -4,7 +4,7 @@
 import * as vscode from "vscode";
 import { AzExtTreeDataProvider, AzureTreeItem, IActionContext } from "vscode-azureextensionui";
 import { DpsResourceExplorer } from "./dpsResourceExplorer";
-import { DpsResourceTreeItem } from "./Nodes/DpsResourceTreeItem";
+import { DpsResourceTreeItem } from "./Nodes/DPS/DpsResourceTreeItem";
 
 export class AzureDpsExplorer {
     private _dpsResourceExplorer: DpsResourceExplorer;
