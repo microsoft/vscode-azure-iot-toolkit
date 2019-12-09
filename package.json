@@ -750,6 +750,10 @@
           "when": "never"
         },
         {
+          "command": "azure-iot-hub.setIoTHub",
+          "when": "never"
+        },
+        {
           "command": "azure-iot-hub.loadMore",
           "when": "never"
         },

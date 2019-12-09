@@ -5,9 +5,9 @@ import { IotHubModels } from "azure-arm-iothub";
 import { AzureParentTreeItem, AzureTreeItem, TreeItemIconPath } from "vscode-azureextensionui";
 import { TreeUtils } from "../../Utility/treeUtils";
 
-// Represents a DPS resource
+// Represents an IoT Hub resource
 export class IoTHubResourceTreeItem extends AzureTreeItem {
-    public static contextValue: string = "IotHub";
+    private static contextValue: string = "IotHub";
     public readonly contextValue: string = IoTHubResourceTreeItem.contextValue;
     public readonly iotHub: IotHubModels.IotHubDescription;
     constructor(parent: AzureParentTreeItem, iotHub: IotHubModels.IotHubDescription) {

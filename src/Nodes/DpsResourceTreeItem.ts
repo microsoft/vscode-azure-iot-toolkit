@@ -7,7 +7,7 @@ import { TreeUtils } from "../Utility/treeUtils";
 
 // Represents a DPS resource
 export class DpsResourceTreeItem extends AzureTreeItem {
-    public static contextValue: string = "IotDps";
+    private static contextValue: string = "IotDps";
     public readonly contextValue: string = DpsResourceTreeItem.contextValue;
     public readonly dps: IotDpsModels.ProvisioningServiceDescription;
     constructor(parent: AzureParentTreeItem, dps: IotDpsModels.ProvisioningServiceDescription) {

@@ -4,7 +4,7 @@
 import { AzureAccountTreeItemBase, ISubscriptionContext, SubscriptionTreeItemBase } from "vscode-azureextensionui";
 import { IoTHubSubscriptionTreeItem } from "./IoTHubSubscriptionTreeItem";
 
-// The root of DPS treeview, represents an Azure account
+// The root of IoT Hub treeview, represents an Azure account
 export class IoTHubAccountTreeItem extends AzureAccountTreeItemBase {
   // Creates the subscription item
   public async createSubscriptionTreeItem(root: ISubscriptionContext): Promise<SubscriptionTreeItemBase> {
