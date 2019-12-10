@@ -1,3 +1,8 @@
+## 2.14.0
+### Added
+* Add subscription and IoT Hub list into VS Code Azure Viewlet
+* Add deployment ID in output channel when deploying at scale for Azure IoT Edge
+
 ## 2.13.0 (2019-11-12)
 ### Changed
 * Rename 'Monitoring C2D' to 'Receiving C2D'

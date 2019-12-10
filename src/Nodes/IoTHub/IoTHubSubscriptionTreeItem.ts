@@ -14,6 +14,8 @@ export class IoTHubSubscriptionTreeItem extends SubscriptionTreeItemBase {
     }
 
     public async loadMoreChildrenImpl(clearCache: boolean, _context: IActionContext): Promise<IoTHubResourceTreeItem[]> {
+        _context.telemetry.properties.nodeType = "IotHub";
+
         if (clearCache) {
             this._nextLink = undefined;
         }

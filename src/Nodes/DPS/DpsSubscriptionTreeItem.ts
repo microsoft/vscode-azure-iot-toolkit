@@ -14,6 +14,8 @@ export class DpsSubscriptionTreeItem extends SubscriptionTreeItemBase {
     }
 
     public async loadMoreChildrenImpl(clearCache: boolean, _context: IActionContext): Promise<DpsResourceTreeItem[]> {
+        _context.telemetry.properties.nodeType = "IotDps";
+
         if (clearCache) {
             this._nextLink = undefined;
         }
