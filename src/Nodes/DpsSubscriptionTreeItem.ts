@@ -7,6 +7,7 @@ import { DpsResourceTreeItem } from "./DpsResourceTreeItem";
 
 // Represents an Azure sbuscription
 export class DpsSubscriptionTreeItem extends SubscriptionTreeItemBase {
+    public readonly childTypeLabel: string = 'Device Provisioning Service';
     private _nextLink: string | undefined;
 
     public hasMoreChildrenImpl(): boolean {
