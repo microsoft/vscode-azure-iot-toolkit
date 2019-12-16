@@ -1,4 +1,4 @@
-## 2.14.0
+## 2.14.0 (2019-12-16)
 ### Added
 * Add deployment ID in output channel when deploying at scale for Azure IoT Edge
 
