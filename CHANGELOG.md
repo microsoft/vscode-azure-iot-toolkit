@@ -1,6 +1,5 @@
-## 2.14.0
+## 2.14.0 (2019-12-16)
 ### Added
-* Add subscription and IoT Hub list into VS Code Azure Viewlet
 * Add deployment ID in output channel when deploying at scale for Azure IoT Edge
 
 ## 2.13.0 (2019-11-12)
