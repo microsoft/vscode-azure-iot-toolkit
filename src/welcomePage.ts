@@ -27,7 +27,7 @@ export class WelcomePage {
             const startTime = new Date();
             this.panel = vscode.window.createWebviewPanel(
                 "welcomePage",
-                "Welcome to Azure IoT Hub Toolkit",
+                "Welcome to Azure IoT Hub extension",
                 vscode.ViewColumn.One,
                 {
                     enableCommandUris: true,
