@@ -69,9 +69,6 @@
     "onCommand:azure-iot-toolkit.copyModuleConnectionString",
     "onCommand:azure-iot-toolkit.startMonitorCustomEventHubEndpoint",
     "onCommand:azure-iot-toolkit.stopMonitorCustomEventHubEndpoint",
-    "onCommand:azure-iot-hub.setIoTHub",
-    "onCommand:azure-iot-hub.loadMore",
-    "onCommand:azure-iot-hub.refresh",
     "onCommand:azure-iot-dps.viewProperties",
     "onCommand:azure-iot-dps.loadMore",
     "onCommand:azure-iot-dps.refresh"
@@ -389,11 +386,6 @@
           "group": "azure-iot-toolkit-0@1"
         },
         {
-          "command": "azure-iot-hub.refresh",
-          "when": "view == iotHubExplorer",
-          "group": "navigation"
-        },
-        {
           "command": "azure-iot-dps.refresh",
           "when": "view == iotDpsExplorer",
           "group": "navigation"
@@ -634,14 +626,6 @@
           "group": "inline"
         },
         {
-          "command": "azure-iot-hub.setIoTHub",
-          "when": "view == iotHubExplorer && viewItem == IotHub"
-        },
-        {
-          "command": "azure-iot-hub.refresh",
-          "when": "view == iotHubExplorer && viewItem == azureextensionui.azureSubscription"
-        },
-        {
           "command": "azure-iot-dps.viewProperties",
           "when": "view == iotDpsExplorer && viewItem == IotDps"
         },
@@ -724,18 +708,6 @@
         },
         {
           "command": "azure-iot-toolkit.startMonitorIoTHubMessageWithAbbreviation",
-          "when": "never"
-        },
-        {
-          "command": "azure-iot-hub.setIoTHub",
-          "when": "never"
-        },
-        {
-          "command": "azure-iot-hub.loadMore",
-          "when": "never"
-        },
-        {
-          "command": "azure-iot-dps.loadMore",
           "when": "never"
         }
       ]
