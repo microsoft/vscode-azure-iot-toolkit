@@ -274,6 +274,7 @@ function activateIoTHub(context: vscode.ExtensionContext, outputChannel: vscode.
 
     const azureIoTExplorer = new AzureIoTExplorer(outputChannel, context, iotHubExtTreeDataProvider);
 
+    // Note: Hide IoT Hub tree view from Azure viewlet
     // context.subscriptions.push(iotHubTreeItem);
     // context.subscriptions.push(vscode.window.createTreeView("iotHubExplorer", { treeDataProvider: iotHubExtTreeDataProvider, showCollapseAll: true }));
 

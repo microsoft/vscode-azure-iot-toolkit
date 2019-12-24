@@ -302,25 +302,6 @@
         "category": "%azure-iot-toolkit.category%"
       },
       {
-        "command": "azure-iot-hub.setIoTHub",
-        "title": "%azure-iot-hub.command.setIoTHub.title%",
-        "category": "%azure-iot-hub.category%"
-      },
-      {
-        "command": "azure-iot-hub.loadMore",
-        "title": "%azure-iot-hub.command.loadMore.title%",
-        "category": "%azure-iot-hub.category%"
-      },
-      {
-        "command": "azure-iot-hub.refresh",
-        "title": "%azure-iot-hub.command.refresh.title%",
-        "category": "%azure-iot-hub.category%",
-        "icon": {
-          "light": "resources/light/refresh.svg",
-          "dark": "resources/dark/refresh.svg"
-        }
-      },
-      {
         "command": "azure-iot-dps.viewProperties",
         "title": "%azure-iot-dps.command.viewProperties.title%",
         "category": "%azure-iot-dps.category%"
