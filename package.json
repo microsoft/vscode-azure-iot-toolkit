@@ -98,10 +98,6 @@
         {
           "id": "iotDpsExplorer",
           "name": "IoT Hub Device Provisioning Service"
-        },
-        {
-          "id": "iotHubExplorer",
-          "name": "IoT Hub"
         }
       ]
     },

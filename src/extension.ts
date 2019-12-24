@@ -274,20 +274,20 @@ function activateIoTHub(context: vscode.ExtensionContext, outputChannel: vscode.
 
     const azureIoTExplorer = new AzureIoTExplorer(outputChannel, context, iotHubExtTreeDataProvider);
 
-    context.subscriptions.push(iotHubTreeItem);
-    context.subscriptions.push(vscode.window.createTreeView("iotHubExplorer", { treeDataProvider: iotHubExtTreeDataProvider, showCollapseAll: true }));
+    // context.subscriptions.push(iotHubTreeItem);
+    // context.subscriptions.push(vscode.window.createTreeView("iotHubExplorer", { treeDataProvider: iotHubExtTreeDataProvider, showCollapseAll: true }));
 
-    registerCommand("azure-iot-hub.setIoTHub", async (actionContext: IActionContext, node?: IoTHubResourceTreeItem) => {
-        await azureIoTExplorer.setIoTHub(actionContext, node);
-    });
+    // registerCommand("azure-iot-hub.setIoTHub", async (actionContext: IActionContext, node?: IoTHubResourceTreeItem) => {
+    //     await azureIoTExplorer.setIoTHub(actionContext, node);
+    // });
 
-    registerCommand("azure-iot-hub.loadMore", async (actionContext: IActionContext, node: AzureTreeItem) => {
-        await azureIoTExplorer.loadMore(actionContext, node);
-    });
+    // registerCommand("azure-iot-hub.loadMore", async (actionContext: IActionContext, node: AzureTreeItem) => {
+    //     await azureIoTExplorer.loadMore(actionContext, node);
+    // });
 
-    registerCommand("azure-iot-hub.refresh", async (actionContext: IActionContext, node: AzureTreeItem) => {
-        await azureIoTExplorer.refresh(actionContext, node);
-    });
+    // registerCommand("azure-iot-hub.refresh", async (actionContext: IActionContext, node: AzureTreeItem) => {
+    //     await azureIoTExplorer.refresh(actionContext, node);
+    // });
 
     return azureIoTExplorer;
 }
