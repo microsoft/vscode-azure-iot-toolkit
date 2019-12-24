@@ -35,7 +35,7 @@
   "azure-iot-toolkit.command.copyModuleConnectionString.title": "モジュール接続文字列をコピー",
   "azure-iot-toolkit.command.startMonitorCustomEventHubEndpoint.title": "モニターを開始",
   "azure-iot-toolkit.command.stopMonitorCustomEventHubEndpoint.title": "カスタム Event Hub エンドポイントのモニターを停止",
-  "azure-iot-toolkit.configuration.title": "Azure IoT Hub Toolkit の設定",
+  "azure-iot-toolkit.configuration.title": "Azure IoT Hub の設定",
   "azure-iot-toolkit.configuration.deviceConnectionString.description": "デバイス接続文字列",
   "azure-iot-toolkit.configuration.iotHubConnectionString.description": "IoT Hub 接続文字列",
   "azure-iot-toolkit.configuration.iotHubConsumerGroup.description": "IoT Hub コンシューマーグループ"

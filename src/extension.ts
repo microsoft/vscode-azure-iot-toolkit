@@ -229,7 +229,7 @@ export function deactivate() {
 
 function initializeTreeView(context: vscode.ExtensionContext) {
     const telemetryReporter = new TelemetryClientWrapper("IoTHub.");
-    const outputChannel = createAzExtOutputChannel("Azure IoT Hub Toolkit", "azure-iot-toolkit");
+    const outputChannel = createAzExtOutputChannel("Azure IoT Hub", "azure-iot-toolkit");
 
     const uiExtensionVariables = {
         context,

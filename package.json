@@ -1,7 +1,7 @@
 {
   "name": "azure-iot-toolkit",
-  "displayName": "Azure IoT Hub Toolkit",
-  "description": "Interact with Azure IoT Hub, IoT Device Management, IoT Edge Management, IoT Hub Device Simulation, IoT Hub Code Generation and IoT Hub Device Provisioning Service (DPS)",
+  "displayName": "Azure IoT Hub",
+  "description": "This extension is now a part of Azure IoT Tools extension pack. We highly recommend installing Azure IoT Tools to get full capabilities for Azure IoT development. Interact with Azure IoT Hub, IoT Device Management, IoT Edge Management, IoT Hub Device Simulation, IoT Hub Code Generation and IoT Hub Device Provisioning Service (DPS).",
   "version": "2.14.0",
   "publisher": "vsciot-vscode",
   "aiKey": "0caaff90-cc1c-4def-b64c-3ef33615bc9b",
