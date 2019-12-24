@@ -69,9 +69,6 @@
     "onCommand:azure-iot-toolkit.copyModuleConnectionString",
     "onCommand:azure-iot-toolkit.startMonitorCustomEventHubEndpoint",
     "onCommand:azure-iot-toolkit.stopMonitorCustomEventHubEndpoint",
-    "onCommand:azure-iot-hub.setIoTHub",
-    "onCommand:azure-iot-hub.loadMore",
-    "onCommand:azure-iot-hub.refresh",
     "onCommand:azure-iot-dps.viewProperties",
     "onCommand:azure-iot-dps.loadMore",
     "onCommand:azure-iot-dps.refresh"
@@ -98,10 +95,6 @@
         {
           "id": "iotDpsExplorer",
           "name": "IoT Hub Device Provisioning Service"
-        },
-        {
-          "id": "iotHubExplorer",
-          "name": "IoT Hub"
         }
       ]
     },
@@ -306,25 +299,6 @@
         "category": "%azure-iot-toolkit.category%"
       },
       {
-        "command": "azure-iot-hub.setIoTHub",
-        "title": "%azure-iot-hub.command.setIoTHub.title%",
-        "category": "%azure-iot-hub.category%"
-      },
-      {
-        "command": "azure-iot-hub.loadMore",
-        "title": "%azure-iot-hub.command.loadMore.title%",
-        "category": "%azure-iot-hub.category%"
-      },
-      {
-        "command": "azure-iot-hub.refresh",
-        "title": "%azure-iot-hub.command.refresh.title%",
-        "category": "%azure-iot-hub.category%",
-        "icon": {
-          "light": "resources/light/refresh.svg",
-          "dark": "resources/dark/refresh.svg"
-        }
-      },
-      {
         "command": "azure-iot-dps.viewProperties",
         "title": "%azure-iot-dps.command.viewProperties.title%",
         "category": "%azure-iot-dps.category%"
@@ -410,11 +384,6 @@
           "command": "azure-iot-toolkit.sendD2CMessage",
           "when": "view == iotHubDevices",
           "group": "azure-iot-toolkit-0@1"
-        },
-        {
-          "command": "azure-iot-hub.refresh",
-          "when": "view == iotHubExplorer",
-          "group": "navigation"
         },
         {
           "command": "azure-iot-dps.refresh",
@@ -657,14 +626,6 @@
           "group": "inline"
         },
         {
-          "command": "azure-iot-hub.setIoTHub",
-          "when": "view == iotHubExplorer && viewItem == IotHub"
-        },
-        {
-          "command": "azure-iot-hub.refresh",
-          "when": "view == iotHubExplorer && viewItem == azureextensionui.azureSubscription"
-        },
-        {
           "command": "azure-iot-dps.viewProperties",
           "when": "view == iotDpsExplorer && viewItem == IotDps"
         },
@@ -747,18 +708,6 @@
         },
         {
           "command": "azure-iot-toolkit.startMonitorIoTHubMessageWithAbbreviation",
-          "when": "never"
-        },
-        {
-          "command": "azure-iot-hub.setIoTHub",
-          "when": "never"
-        },
-        {
-          "command": "azure-iot-hub.loadMore",
-          "when": "never"
-        },
-        {
-          "command": "azure-iot-dps.loadMore",
           "when": "never"
         }
       ]
