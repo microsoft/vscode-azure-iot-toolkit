@@ -1,6 +1,6 @@
 ## 2.15.0
 ### Added
-* Diplay Azure IoT Hub name in Azure IoT Hub tree view
+* Display Azure IoT Hub name in Azure IoT Hub tree view
 
 ### Changed
 * Rename from 'Azure IoT Hub Toolkit' to 'Azure IoT Hub'

@@ -175,7 +175,7 @@ Time interval in seconds for tree view auto refresh, auto refresh has to be enab
 - [Use Azure IoT Hub Toolkit to send and receive messages between your device and IoT Hub](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-vscode-iot-toolkit-cloud-device-messaging)
 - [Use Azure IoT Hub Toolkit for Azure IoT Hub device management](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-device-management-iot-toolkit)
 - [Quickly build your Azure IoT application with Node.js, Python or REST API](https://devblogs.microsoft.com/iotdev/azure-iot-toolkit-1-2-0-quickly-build-your-azure-iot-application-in-vs-code-with-node-js-python-or-rest-api/)
-- [Azure IoT Hub Toolkit supports C#, Go, Java, Node.js, PHP, Python and Ruby to develop Azure IoT application in VS Code](https://blogs.msdn.microsoft.com/iotdev/2018/08/31/c-go-java-node-js-php-python-or-ruby-choose-your-favorite-language-to-develop-azure-iot-application-in-vs-code/)
+- [Azure IoT Hub Toolkit supports C#, Go, Java, Node.js, PHP, Python and Ruby to develop Azure IoT application in VS Code](https://devblogs.microsoft.com/iotdev/azure-iot-toolkit-supports-c-go-java-node-js-php-python-and-ruby-to-develop-azure-iot-application-in-vs-code/)
 - [Use VS Code as IoT Hub Device Simulator](https://blogs.msdn.microsoft.com/iotdev/2018/07/12/use-vs-code-as-iot-hub-device-simulator-say-hello-to-azure-iot-hub-in-5-minutes/)
 - [Use VS Code to call Azure IoT Hub REST APIs](https://blogs.msdn.microsoft.com/iotdev/2018/07/19/call-azure-iot-hub-rest-apis-in-vs-code/)
 - [Create and control an IoT device connected to an IoT hub (Node.js)](https://github.com/Microsoft/vscode-azure-iot-toolkit/wiki/Quickstart-Node.js)
