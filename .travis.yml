@@ -24,7 +24,7 @@ script:
 - npm test --silent
 - |
   if [ $TRAVIS_OS_NAME == "linux" ]; then
-    docker run -ti --rm -v $PWD:/mnt:ro dkhamsing/awesome_bot --allow-dupe --allow-redirect --skip-save-results `ls *.md`
+    docker run -ti --rm -v $PWD:/mnt:ro dkhamsing/awesome_bot --allow-dupe --allow-redirect --skip-save-results `ls *.md` --white-list gitter.im
   fi
 deploy:
 - provider: releases
