@@ -1,4 +1,4 @@
-## 2.15.0
+## 2.15.0 (2019-12-30)
 ### Added
 * Display Azure IoT Hub name in Azure IoT Hub tree view
 
