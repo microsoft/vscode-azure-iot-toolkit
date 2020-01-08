@@ -710,9 +710,9 @@
           "command": "azure-iot-toolkit.startMonitorIoTHubMessageWithAbbreviation",
           "when": "never"
         },
-        {	
-          "command": "azure-iot-dps.loadMore",	
-          "when": "never"	
+        {
+          "command": "azure-iot-dps.loadMore",
+          "when": "never"
         }
       ]
     },
@@ -827,6 +827,7 @@
     "dummy-json": "^2.0.0",
     "express": "^4.16.3",
     "fs-extra": "^7.0.0",
+    "handlebars": "^4.3.0",
     "ms-rest": "^2.3.2",
     "ms-rest-azure": "^2.5.5",
     "replace-in-file": "^3.4.0",
