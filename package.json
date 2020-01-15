@@ -710,9 +710,9 @@
           "command": "azure-iot-toolkit.startMonitorIoTHubMessageWithAbbreviation",
           "when": "never"
         },
-        {	
-          "command": "azure-iot-dps.loadMore",	
-          "when": "never"	
+        {
+          "command": "azure-iot-dps.loadMore",
+          "when": "never"
         }
       ]
     },
@@ -824,12 +824,15 @@
     "azure-iot-device-mqtt": "^1.8.1",
     "azure-iothub": "^1.8.1",
     "body-parser": "^1.18.2",
-    "dummy-json": "^2.0.0",
     "express": "^4.16.3",
+    "fecha": "^1.1.0",
     "fs-extra": "^7.0.0",
+    "handlebars": "^4.3.0",
     "ms-rest": "^2.3.2",
     "ms-rest-azure": "^2.5.5",
+    "numbro": "^1.6.2",
     "replace-in-file": "^3.4.0",
+    "seedrandom": "^2.4.2",
     "strip-json-comments": "^2.0.1",
     "uuid": "^3.3.2",
     "vscode-azureextensionui": "^0.28.2",

@@ -95,6 +95,12 @@ const config = {
             false,
             /$^/
         ),
+        // Numbro
+        new webpack.ContextReplacementPlugin(
+            /numbro/,
+            false,
+            /$^/
+        ),
         // Copy required resources for Azure treeview
         new copyPlugin([
             path.join('node_modules', 'vscode-azureextensionui', 'resources', '**', '*.svg')

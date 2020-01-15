@@ -1,5 +1,5 @@
 import * as bodyParser from "body-parser";
-import * as dummyjson from "dummy-json";
+import * as dummyjson from "../../external_lib/dummy-json";
 import * as express from "express";
 import * as http from "http";
 import { AddressInfo } from "net";
