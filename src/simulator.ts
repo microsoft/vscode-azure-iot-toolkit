@@ -6,8 +6,8 @@ import { ConnectionString } from "azure-iot-common";
 import { Message } from "azure-iot-device";
 import { Client } from "azure-iot-device";
 import { clientFromConnectionString } from "azure-iot-device-mqtt";
-import * as dummyjson from "../external_lib/dummy-json";
 import * as vscode from "vscode";
+import * as dummyjson from "../external_lib/dummy-json";
 import { Constants } from "./constants";
 import { IoTHubResourceExplorer } from "./iotHubResourceExplorer";
 import { DeviceItem } from "./Model/DeviceItem";
@@ -157,7 +157,7 @@ export class Simulator {
       } else {
         // Exit when no connection string found or the connection string is invalid.
         if (!this.iotHubConnectionString) {
-          var errorMessage = "Failed to launch Send D2C Messages webview: No IoT Hub Connection String Found.";
+          let errorMessage = "Failed to launch Send D2C Messages webview: No IoT Hub Connection String Found.";
           vscode.window.showErrorMessage(errorMessage);
           this.telemetry(Constants.SimulatorLaunchEvent, false, {
             error: errorMessage,
