@@ -1,3 +1,7 @@
+## 2.16.0
+### Changed
+* Fix Handlebars vulnerability CVE-2019-19919 (npm [advisory](https://www.npmjs.com/advisories/1164))
+
 ## 2.15.0 (2019-12-30)
 ### Added
 * Display Azure IoT Hub name in Azure IoT Hub tree view
