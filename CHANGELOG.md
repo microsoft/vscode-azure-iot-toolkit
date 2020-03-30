@@ -1,3 +1,7 @@
+## 2.16.1
+### Changed
+* Update third party notice
+
 ## 2.16.0 (2020-02-14)
 ### Changed
 * Fix Handlebars vulnerability CVE-2019-19919 (npm [advisory](https://www.npmjs.com/advisories/1164))
