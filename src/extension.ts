@@ -98,6 +98,8 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     let updateDistributedTracingSetting = vscode.commands.registerCommand("azure-iot-toolkit.updateDistributedTracingSetting", (node) => {
+        // Todo: Determine why the parameter is not null when triggered from context menu of custom panel
+        // https://github.com/microsoft/vscode/issues/94872
         azureIoTExplorer.updateDistributedTracingSetting(node);
     });
 

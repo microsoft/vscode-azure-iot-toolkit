@@ -26,7 +26,7 @@ export class DistributedTracingManager extends BaseExplorer {
         TelemetryClient.sendEvent(Constants.IoTHubAIUpdateDistributedSettingStartEvent);
 
         let deviceIds: string[] = [];
-        if (!node) {
+        if (!node || !node.deviceNode) {
             let selectedDeviceIds: string[] = await vscode.window.showQuickPick(
                 Utility.getNoneEdgeDeviceIdList(iotHubConnectionString),
                 { placeHolder: "Select devices...", ignoreFocusOut: true, canPickMany: true },
