@@ -1,4 +1,4 @@
-## 2.16.1
+## 2.16.1 (2020-04-13)
 ### Changed
 * Update third party notice
 
