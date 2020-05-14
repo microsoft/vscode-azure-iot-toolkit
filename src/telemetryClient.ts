@@ -11,6 +11,7 @@ import { Utility } from "./utility";
 const packageJSON = vscode.extensions.getExtension(Constants.ExtensionId).packageJSON;
 const extensionVersion: string = packageJSON.version;
 const aiKey: string = packageJSON.aiKey;
+const errorProperties = ["Message", "error"];
 
 export class TelemetryClient {
     public static initialize(context: vscode.ExtensionContext) {
@@ -19,7 +20,11 @@ export class TelemetryClient {
 
     public static async sendEvent(eventName: string, properties?: { [key: string]: string; }, iotHubConnectionString?: string, measurements?: { [key: string]: number }) {
         properties = await this.addCommonProperties(properties, iotHubConnectionString);
-        this._client.sendTelemetryEvent(eventName, properties, measurements);
+        if (this.hasErrorProperties(properties)) {
+            this._client.sendTelemetryErrorEvent(eventName, properties, measurements, errorProperties);
+        } else {
+            this._client.sendTelemetryEvent(eventName, properties, measurements);
+        }
 
         if (eventName.startsWith("AZ.") && eventName !== Constants.IoTHubAILoadDeviceTreeEvent) {
             if (this._extensionContext) {
@@ -28,7 +33,7 @@ export class TelemetryClient {
         }
     }
 
-    private static _client = new TelemetryReporter(Constants.ExtensionId, extensionVersion, aiKey);
+    private static _client = new TelemetryReporter(Constants.ExtensionId, extensionVersion, aiKey, true);
     private static _extensionContext: vscode.ExtensionContext;
     private static _isInternal: boolean = TelemetryClient.isInternalUser();
 
@@ -57,5 +62,10 @@ export class TelemetryClient {
     private static isInternalUser(): boolean {
         const userDomain = process.env.USERDNSDOMAIN ? process.env.USERDNSDOMAIN.toLowerCase() : "";
         return userDomain.endsWith("microsoft.com");
+    }
+
+    private static hasErrorProperties(properties: { [key: string]: string; }): boolean {
+        const propertyKeys = Object.keys(properties);
+        return errorProperties.some((value) => propertyKeys.includes(value));
     }
 }
