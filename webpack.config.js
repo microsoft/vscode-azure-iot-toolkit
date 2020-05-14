@@ -68,6 +68,9 @@ const config = {
         new webpack.IgnorePlugin(/^\.\/locale$/, /[\/\\]moment$/),
         // Ignore the optional requirement of applicationinsights, which is not used in this extension
         new webpack.IgnorePlugin(/applicationinsights-native-metrics/),
+        // Ignore optional packages which used by vscode-extension-telemetry
+        new webpack.IgnorePlugin(/@opentelemetry\/tracing/),
+        new webpack.IgnorePlugin(/applicationinsights-native-metrics/),
         // Suppress warnings of known dynamic require
         new webpack.ContextReplacementPlugin(
             /applicationinsights[\/\\]out[\/\\]AutoCollection/,
