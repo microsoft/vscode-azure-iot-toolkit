@@ -11,7 +11,7 @@ import { Utility } from "./utility";
 const packageJSON = vscode.extensions.getExtension(Constants.ExtensionId).packageJSON;
 const extensionVersion: string = packageJSON.version;
 const aiKey: string = packageJSON.aiKey;
-const errorProperties = ["Message", "error"];
+const errorProperties = ["Message", "error", "detailedMessage"];
 
 export class TelemetryClient {
     public static initialize(context: vscode.ExtensionContext) {
