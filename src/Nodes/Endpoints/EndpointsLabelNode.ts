@@ -51,7 +51,7 @@ export class EndpointsLabelNode implements INode {
                 new CustomEndpointLabelNode("Service Bus topic", iothub.properties.routing.endpoints.serviceBusTopics),
                 new CustomEndpointLabelNode("Blob storage", iothub.properties.routing.endpoints.storageContainers)];
         } catch (err) {
-            TelemetryClient.sendEvent(Constants.IoTHubAILoadEndpointsTreeDoneEvent, { Result: "Fail", Message: err.message });
+            TelemetryClient.sendEvent(Constants.IoTHubAILoadEndpointsTreeDoneEvent, { Result: "Fail", [Constants.errorProperties.Message]: err.message });
             return Utility.getErrorMessageTreeItems("endpoints", err.message);
         }
     }

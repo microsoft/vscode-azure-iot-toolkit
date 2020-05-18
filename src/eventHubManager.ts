@@ -42,7 +42,7 @@ export class EventHubManager extends IoTHubMessageBaseExplorer {
         } catch (error) {
             this.updateMonitorStatus(false);
             this.outputLine(Constants.EventHubMonitorLabel, error);
-            TelemetryClient.sendEvent(Constants.IoTHubAIEHStartMonitorEvent, { Result: "Exception", Message: error });
+            TelemetryClient.sendEvent(Constants.IoTHubAIEHStartMonitorEvent, { Result: "Exception", [Constants.errorProperties.Message]: error });
         }
     }
 

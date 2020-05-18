@@ -33,7 +33,7 @@ export class IotHubModuleExplorer extends BaseExplorer {
         registry.getModule(moduleItem.deviceId, moduleItem.moduleId, (err: Error, module?: iothub.Module) => {
             if (err) {
                 this.outputLine(label, `Error: ${err.message}`);
-                TelemetryClient.sendEvent(Constants.IoTHubAIDGetModuleDoneEvent, { Result: "Fail", Message: err.message });
+                TelemetryClient.sendEvent(Constants.IoTHubAIDGetModuleDoneEvent, { Result: "Fail", [Constants.errorProperties.Message]: err.message });
             }
             if (module) {
                 this.outputLine(label, `Module info: ${JSON.stringify(module, null, 2)}`);
@@ -67,7 +67,7 @@ export class IotHubModuleExplorer extends BaseExplorer {
         registry.addModule({ deviceId: deviceItem.deviceId, moduleId }, (err, module) => {
             if (err) {
                 this.outputLine(label, `Error: ${err.message}`);
-                TelemetryClient.sendEvent(Constants.IoTHubAICreateModuleDoneEvent, { Result: "Fail", Message: err.message });
+                TelemetryClient.sendEvent(Constants.IoTHubAICreateModuleDoneEvent, { Result: "Fail", [Constants.errorProperties.Message]: err.message });
             } else {
                 this.outputLine(label, `Created: ${JSON.stringify(module, null, 2)}`);
                 vscode.commands.executeCommand("azure-iot-toolkit.refresh", deviceNode);
@@ -104,7 +104,7 @@ export class IotHubModuleExplorer extends BaseExplorer {
         registry.removeModule(moduleItemNode.moduleItem.deviceId, moduleItemNode.moduleItem.moduleId, (err) => {
             if (err) {
                 this.outputLine(label, `Error: ${err.message}`);
-                TelemetryClient.sendEvent(Constants.IoTHubAIDeleteModuleDoneEvent, { Result: "Fail", Message: err.message });
+                TelemetryClient.sendEvent(Constants.IoTHubAIDeleteModuleDoneEvent, { Result: "Fail", [Constants.errorProperties.Message]: err.message });
             } else {
                 this.outputLine(label, `Deleted '${moduleItemNode.moduleItem.moduleId}'`);
                 vscode.commands.executeCommand("azure-iot-toolkit.refresh", moduleItemNode.moduleLabelNode);

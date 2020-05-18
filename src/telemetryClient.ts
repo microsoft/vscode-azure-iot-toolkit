@@ -11,7 +11,6 @@ import { Utility } from "./utility";
 const packageJSON = vscode.extensions.getExtension(Constants.ExtensionId).packageJSON;
 const extensionVersion: string = packageJSON.version;
 const aiKey: string = packageJSON.aiKey;
-const errorProperties = ["Message", "error", "detailedMessage"];
 
 export class TelemetryClient {
     public static initialize(context: vscode.ExtensionContext) {
@@ -20,7 +19,8 @@ export class TelemetryClient {
 
     public static async sendEvent(eventName: string, properties?: { [key: string]: string; }, iotHubConnectionString?: string, measurements?: { [key: string]: number }) {
         properties = await this.addCommonProperties(properties, iotHubConnectionString);
-        if (this.hasErrorProperties(properties)) {
+        const errorProperties = Object.values(Constants.errorProperties);
+        if (this.hasErrorProperties(properties, errorProperties)) {
             this._client.sendTelemetryErrorEvent(eventName, properties, measurements, errorProperties);
         } else {
             this._client.sendTelemetryEvent(eventName, properties, measurements);
@@ -64,7 +64,7 @@ export class TelemetryClient {
         return userDomain.endsWith("microsoft.com");
     }
 
-    private static hasErrorProperties(properties: { [key: string]: string; }): boolean {
+    private static hasErrorProperties(properties: { [key: string]: string; }, errorProperties: string[]): boolean {
         const propertyKeys = Object.keys(properties);
         return errorProperties.some((value) => propertyKeys.includes(value));
     }

@@ -85,7 +85,7 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
         return (err) => {
             if (err) {
                 this.outputLine(Constants.IoTHubC2DMessageMonitorLabel, err);
-                TelemetryClient.sendEvent(Constants.IoTHubAIStartMonitorC2DEvent, { Result: "Exception", Message: err });
+                TelemetryClient.sendEvent(Constants.IoTHubAIStartMonitorC2DEvent, { Result: "Exception", [Constants.errorProperties.Message]: err });
             } else {
                 this.updateMonitorStatus(true);
                 let deviceId = ConnectionString.parse(deviceConnectionString).DeviceId;
