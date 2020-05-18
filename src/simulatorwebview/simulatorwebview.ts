@@ -55,7 +55,7 @@ export class SimulatorWebview {
             );
             let html = fs.readFileSync(this.context.asAbsolutePath(path.join("resources", "simulator", "index.html")), "utf8");
             html = html
-                .replace(/{{root}}/g, vscode.Uri.file(this.context.asAbsolutePath(".")).with({ scheme: "vscode-resource" }).toString())
+                .replace(/{{root}}/g, this.panel.webview.asWebviewUri(vscode.Uri.file(this.context.asAbsolutePath("."))).toString())
                 .replace(/{{endpoint}}/g, this.localServer.getServerUri());
             this.panel.webview.html = html;
             this.panel.onDidDispose(() => {
