@@ -38,7 +38,7 @@ export class ModuleLabelNode implements INode {
                 });
                 return moduleNodeList;
             } catch (err) {
-                TelemetryClient.sendEvent(Constants.IoTHubAILoadEdgeModuleTreeDoneEvent, { Result: "Fail", Message: err.message });
+                TelemetryClient.sendEvent(Constants.IoTHubAILoadEdgeModuleTreeDoneEvent, { Result: "Fail", [Constants.errorProperties.Message]: err.message });
                 return Utility.getErrorMessageTreeItems("modules", err.message);
             }
         } else if (this.deviceNode.deviceItem.contextValue === "device") {
@@ -56,7 +56,7 @@ export class ModuleLabelNode implements INode {
                 });
                 return moduleNodeList;
             } catch (err) {
-                TelemetryClient.sendEvent(Constants.IoTHubAILoadModuleTreeDoneEvent, { Result: "Fail", Message: err.message });
+                TelemetryClient.sendEvent(Constants.IoTHubAILoadModuleTreeDoneEvent, { Result: "Fail", [Constants.errorProperties.Message]: err.message });
                 return Utility.getErrorMessageTreeItems("modules", err.message);
             }
         }

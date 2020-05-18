@@ -65,7 +65,7 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
         } catch (e) {
             this.updateMonitorStatus(false);
             this.outputLine(Constants.IoTHubMonitorLabel, e);
-            TelemetryClient.sendEvent(Constants.IoTHubAIStartMonitorEvent, { Result: "Exception", Message: e });
+            TelemetryClient.sendEvent(Constants.IoTHubAIStartMonitorEvent, { Result: "Exception", [Constants.errorProperties.Message]: e });
         }
     }
 

@@ -44,7 +44,7 @@ export class InterfaceLabelNode implements INode {
             }
             return interfaceIds.map((name) => new InterfaceNode(name, context.asAbsolutePath(path.join("resources", `interface.svg`))));
         } catch (err) {
-            TelemetryClient.sendEvent(Constants.IoTHubAILoadInterfacesTreeDoneEvent, { Result: "Fail", Message: err.message });
+            TelemetryClient.sendEvent(Constants.IoTHubAILoadInterfacesTreeDoneEvent, { Result: "Fail", [Constants.errorProperties.Message]: err.message });
             if (err.response && err.response.status === 400) {
                 return [];
             }

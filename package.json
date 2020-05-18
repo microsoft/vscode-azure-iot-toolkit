@@ -836,7 +836,7 @@
     "strip-json-comments": "^2.0.1",
     "uuid": "^3.3.2",
     "vscode-azureextensionui": "^0.28.2",
-    "vscode-extension-telemetry": "0.0.18"
+    "vscode-extension-telemetry": "^0.1.6"
   },
   "extensionDependencies": [
     "ms-vscode.azure-account"

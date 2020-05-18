@@ -64,7 +64,7 @@ export class TwinNode implements INode {
             }
             TelemetryClient.sendEvent(Constants.IoTHubAILoadDistributedTracingSettingTreeDoneEvent, { Result: "Success" }, iotHubConnectionString);
         } catch (err) {
-            TelemetryClient.sendEvent(Constants.IoTHubAILoadDistributedTracingSettingTreeDoneEvent, { Result: "Fail", Message: err.message }, iotHubConnectionString);
+            TelemetryClient.sendEvent(Constants.IoTHubAILoadDistributedTracingSettingTreeDoneEvent, { Result: "Fail", [Constants.errorProperties.Message]: err.message }, iotHubConnectionString);
         }
 
         return items;

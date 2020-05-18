@@ -100,7 +100,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
             await this.getModuleTwinById(moduleTwinJson.deviceId, moduleTwinJson.moduleId);
         } catch (error) {
             this.outputLine(Constants.IoTHubModuleTwinLabel, `Failed to update Module Twin: ${error}`);
-            TelemetryClient.sendEvent(Constants.IoTHubAIUpdateModuleTwinDoneEvent, { Result: "Fail", Message: error });
+            TelemetryClient.sendEvent(Constants.IoTHubAIUpdateModuleTwinDoneEvent, { Result: "Fail", [Constants.errorProperties.Message]: error });
         }
     }
 
@@ -175,7 +175,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
         } catch (error) {
             this._outputChannel.show();
             this.outputLine(Constants.IoTHubModuleTwinLabel, `Failed to get Module Twin: ${error}`);
-            TelemetryClient.sendEvent(Constants.IoTHubAIGetModuleTwinDoneEvent, { Result: "Fail", Message: error });
+            TelemetryClient.sendEvent(Constants.IoTHubAIGetModuleTwinDoneEvent, { Result: "Fail", [Constants.errorProperties.Message]: error });
         }
     }
 
@@ -216,7 +216,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
                     return "";
                 }
             } catch (error) {
-                TelemetryClient.sendEvent(Constants.IoTHubAIValidateJsonSchemaEvent, { error: error.message });
+                TelemetryClient.sendEvent(Constants.IoTHubAIValidateJsonSchemaEvent, { [Constants.errorProperties.Message]: error.message });
             }
 
             content = JSON.stringify(contentJson, null, 2);
@@ -247,7 +247,8 @@ export class IoTEdgeExplorer extends BaseExplorer {
                 detailedMessage = err.responseBody;
                 this.outputLine(label, err.responseBody);
             }
-            TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployDoneEvent, { Result: "Fail", Message: err, detailedMessage, entry, from });
+            TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployDoneEvent,
+                { Result: "Fail", [Constants.errorProperties.Message]: err, [Constants.errorProperties.detailedMessage]: detailedMessage, entry, from });
         }
     }
 
@@ -342,7 +343,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
         registry.addConfiguration(deploymentConfiguration, (err) => {
             if (err) {
                 this.outputLine(label, `Deployment with deployment id [${deploymentId}] failed. ${err}`);
-                TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployAtScaleDoneEvent, { Result: "Fail", Message: err.message });
+                TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployAtScaleDoneEvent, { Result: "Fail", [Constants.errorProperties.Message]: err.message });
 
             } else {
                 this.outputLine(label, `Deployment with deployment id [${deploymentId}] succeeded.`);

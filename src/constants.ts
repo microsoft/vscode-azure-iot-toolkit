@@ -194,6 +194,11 @@ export class Constants {
         [TemplateLanguage.Ruby]: "ruby",
     };
 
+    public static errorProperties = {
+        Message: "Message",
+        detailedMessage: "detailedMessage",
+    };
+
     // Capture the {resource-group-name} in pattern /subscriptions/{subscription-id}/resourceGroups/{resource-group-name}/
     public static DpsResourceGroupNameRegex = /\/subscriptions\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/resourcegroups\/([^/]*)\//i;
     public static ResourcesFolderPath: string;

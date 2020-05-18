@@ -38,7 +38,7 @@ export class DeviceLabelNode implements INode {
 
             return deviceNode;
         } catch (err) {
-            TelemetryClient.sendEvent(Constants.IoTHubAILoadDeviceTreeEvent, { Result: "Fail", Message: err.message });
+            TelemetryClient.sendEvent(Constants.IoTHubAILoadDeviceTreeEvent, { Result: "Fail", [Constants.errorProperties.Message]: err.message });
             return Utility.getErrorMessageTreeItems("IoT Hub devices", err.message);
         }
     }
