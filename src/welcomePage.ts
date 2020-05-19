@@ -36,7 +36,7 @@ export class WelcomePage {
                 },
             );
             let html = fs.readFileSync(this.context.asAbsolutePath(path.join("resources", "welcome", "index.html")), "utf8");
-            html = html.replace(/{{root}}/g, vscode.Uri.file(this.context.asAbsolutePath(".")).with({ scheme: "vscode-resource" }).toString());
+            html = html.replace(/{{root}}/g, this.panel.webview.asWebviewUri(vscode.Uri.file(this.context.asAbsolutePath("."))).toString());
             this.panel.webview.html = html;
             this.panel.onDidDispose(() => {
                 this.panel = undefined;
