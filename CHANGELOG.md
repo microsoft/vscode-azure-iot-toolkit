@@ -1,3 +1,10 @@
+## 2.16.2
+### Added
+* Support monitoring Event Hub messages in different regions
+
+### Changed
+* Adopt VS Code's 'asWebviewUri' API
+
 ## 2.16.1 (2020-04-13)
 ### Changed
 * Update third party notice
