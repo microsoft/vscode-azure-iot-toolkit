@@ -99,7 +99,7 @@ export class Simulator {
     if (eventName === Constants.SimulatorLaunchEvent) {
       TelemetryClient.sendEvent(eventName, {
         Result: result ? "Success" : "Fail",
-        Error: result ? undefined : properties.error,
+        [Constants.errorProperties.Message]: result ? undefined : properties.error,
         QuitWhenProcessing: this.isProcessing() ? "True" : "False",
       }, this.iotHubConnectionString);
     } else if (eventName === Constants.SimulatorSendEvent) {

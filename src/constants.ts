@@ -194,9 +194,13 @@ export class Constants {
         [TemplateLanguage.Ruby]: "ruby",
     };
 
+    // 'error', 'errorMessage' and 'stack' are used in vscode-azureextensionui npm
     public static errorProperties = {
         Message: "Message",
         detailedMessage: "detailedMessage",
+        error: "error",
+        errorMessage: "errorMessage",
+        stack: "stack",
     };
 
     // Capture the {resource-group-name} in pattern /subscriptions/{subscription-id}/resourceGroups/{resource-group-name}/
