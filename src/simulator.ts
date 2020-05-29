@@ -114,7 +114,7 @@ export class Simulator {
       } else {
         TelemetryClient.sendEvent(eventName, {
           Result: "Fail",
-          Error: "" + properties.reason,
+          [Constants.errorProperties.Message]: "" + properties.reason,
         }, this.iotHubConnectionString);
       }
     } else if (eventName === Constants.SimulatorCloseEvent) {
