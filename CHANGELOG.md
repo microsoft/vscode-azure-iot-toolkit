@@ -1,4 +1,4 @@
-## 2.16.2
+## 2.16.2 (2020-06-03)
 ### Added
 * Support monitoring Event Hub messages in different regions
 
