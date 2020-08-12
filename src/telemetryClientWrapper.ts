@@ -17,6 +17,6 @@ export class TelemetryClientWrapper {
             eventName = this._eventNamePrefix + eventName;
         }
 
-        TelemetryClient.sendEvent(eventName, properties, undefined, measurements)
+        TelemetryClient.sendEvent(eventName, properties, undefined, measurements);
     }
 }
