@@ -295,8 +295,13 @@ export class Simulator {
     let stringify = Utility.getConfig<boolean>(
       Constants.IoTHubD2CMessageStringifyKey,
     );
+    let msg = new Message(stringify ? JSON.stringify(message) : message);
+    if (stringify) {
+      msg.contentType = "application/json";
+      msg.contentEncoding = "utf-8";
+    }
     await client.sendEvent(
-      new Message(stringify ? JSON.stringify(message) : message),
+      msg,
       this.sendEventDoneCallback(
         client,
         Constants.IoTHubAIMessageDoneEvent,
