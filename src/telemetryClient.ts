@@ -38,7 +38,7 @@ export class TelemetryClient {
     private static _isInternal: boolean = TelemetryClient.isInternalUser();
 
     private static async addCommonProperties(properties?: { [key: string]: string; }, iotHubConnectionString?: string) {
-        let newProperties = properties ? properties : {};
+        const newProperties = properties ? properties : {};
         if (!iotHubConnectionString) {
             iotHubConnectionString = await Utility.getConnectionStringWithId(Constants.IotHubConnectionStringKey);
             if (!iotHubConnectionString) {
@@ -47,7 +47,7 @@ export class TelemetryClient {
         }
 
         if (iotHubConnectionString) {
-            let iotHubHostName = Utility.getHostName(iotHubConnectionString);
+            const iotHubHostName = Utility.getHostName(iotHubConnectionString);
             if (iotHubHostName) {
                 newProperties.IoTHubHostName = Utility.hash(iotHubHostName);
                 newProperties.IoTHubHostNamePostfix = Utility.getPostfixFromHostName(iotHubHostName);

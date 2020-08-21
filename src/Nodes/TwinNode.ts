@@ -25,13 +25,13 @@ export class TwinNode implements INode {
     }
 
     public async getChildren(context: vscode.ExtensionContext, iotHubConnectionString: string): Promise<INode[]> {
-        let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
+        const registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
 
         TelemetryClient.sendEvent(Constants.IoTHubAILoadDistributedTracingSettingTreeStartEvent, null, iotHubConnectionString);
         const items: INode[] = [];
 
         try {
-            let twin = await Utility.getTwin(registry, this.deviceNode.deviceId);
+            const twin = await Utility.getTwin(registry, this.deviceNode.deviceId);
             let samplingRate = null;
             let enabled = null;
             if (this.twinItem.type === DeviceTwinPropertyType.Desired) {

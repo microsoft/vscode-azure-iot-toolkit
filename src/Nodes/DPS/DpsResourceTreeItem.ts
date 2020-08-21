@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import { IotDpsModels } from "azure-arm-deviceprovisioningservices";
+import { IotDpsModels } from "@azure/arm-deviceprovisioningservices";
 import { AzureParentTreeItem, AzureTreeItem, TreeItemIconPath } from "vscode-azureextensionui";
 import { TreeUtils } from "../../Utility/treeUtils";
 

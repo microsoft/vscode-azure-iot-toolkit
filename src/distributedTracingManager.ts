@@ -18,7 +18,7 @@ export class DistributedTracingManager extends BaseExplorer {
     }
 
     public async updateDistributedTracingSetting(node, updateType: DistributedSettingUpdateType) {
-        let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
+        const iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
             return;
         }
@@ -27,7 +27,7 @@ export class DistributedTracingManager extends BaseExplorer {
 
         let deviceIds: string[] = [];
         if (!node || !node.deviceNode) {
-            let selectedDeviceIds: string[] = await vscode.window.showQuickPick(
+            const selectedDeviceIds: string[] = await vscode.window.showQuickPick(
                 Utility.getNoneEdgeDeviceIdList(iotHubConnectionString),
                 { placeHolder: "Select devices...", ignoreFocusOut: true, canPickMany: true },
             );
@@ -47,10 +47,10 @@ export class DistributedTracingManager extends BaseExplorer {
     }
 
     public async updateDistributedTracingSettingForDevices(deviceIds: string[], iotHubConnectionString: string, updateType: DistributedSettingUpdateType, node) {
-        let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
+        const registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
 
-        let mode: boolean = undefined;
-        let samplingRate: number = undefined;
+        let mode: boolean;
+        let samplingRate: number;
         let twin;
 
         if (deviceIds.length === 1) {
@@ -76,7 +76,7 @@ export class DistributedTracingManager extends BaseExplorer {
         }
 
         if (updateType !== DistributedSettingUpdateType.OnlySamplingRate) {
-            let selectedItem: SamplingModeItem = await vscode.window.showQuickPick(
+            const selectedItem: SamplingModeItem = await vscode.window.showQuickPick(
                 this.getSamplingModePickupItems(),
                 { placeHolder: "Select whether to enable/disable the distributed tracing...", ignoreFocusOut: true },
             );
@@ -134,7 +134,7 @@ export class DistributedTracingManager extends BaseExplorer {
     }
 
     private async updateDeviceTwin(enable: boolean, samplingRate: number, iotHubConnectionString: string, deviceIds: string[]): Promise<any> {
-        let twinPatch = {
+        const twinPatch = {
             etag: "*",
             properties: {
                 desired: {},
@@ -158,7 +158,7 @@ export class DistributedTracingManager extends BaseExplorer {
         }
 
         if (deviceIds.length === 1) {
-            let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
+            const registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
             await registry.updateTwin(deviceIds[0], JSON.stringify(twinPatch), twinPatch.etag);
             return;
         }
@@ -167,12 +167,12 @@ export class DistributedTracingManager extends BaseExplorer {
     }
 
     private async scheduleTwinUpdate(twinPatch, iotHubConnectionString: string, deviceIds: string[]): Promise<any> {
-        let twinJobId = uuid.v4();
-        let jobClient = iothub.JobClient.fromConnectionString(iotHubConnectionString);
+        const twinJobId = uuid.v4();
+        const jobClient = iothub.JobClient.fromConnectionString(iotHubConnectionString);
 
-        let queryCondition = this.generateQureyCondition(deviceIds);
-        let startTime = new Date();
-        let maxExecutionTimeInSeconds = 300;
+        const queryCondition = this.generateQureyCondition(deviceIds);
+        const startTime = new Date();
+        const maxExecutionTimeInSeconds = 300;
 
         await jobClient.scheduleTwinUpdate(twinJobId, queryCondition, twinPatch, startTime, maxExecutionTimeInSeconds);
         return this.monitorJob(twinJobId, jobClient);
@@ -185,7 +185,7 @@ export class DistributedTracingManager extends BaseExplorer {
 
     private async monitorJob(jobId, jobClient): Promise<any> {
         return new Promise<any>(async (resolve, reject) => {
-            let jobMonitorInterval = setInterval(async () => {
+            const jobMonitorInterval = setInterval(async () => {
                 try {
                     const result = await jobClient.getJob(jobId);
                     if (result.jobStatus.status === "completed" || result.jobStatus.status === "failed" || result.jobStatus.status === "cancelled") {

@@ -10,7 +10,7 @@ import { TestConstants } from "./constants";
 suite("Utility Tests ", () => {
 
     test("should be able to get hostname", () => {
-        let hostname = Utility.getHostName(TestConstants.IotHubConnectionString);
+        const hostname = Utility.getHostName(TestConstants.IotHubConnectionString);
         assert.equal(hostname, TestConstants.IotHubHostName);
     });
 
@@ -19,27 +19,27 @@ suite("Utility Tests ", () => {
     });
 
     test("should be able to get config", () => {
-        let iotHubD2CMessageStringify = Utility.getConfig<boolean>(Constants.IoTHubD2CMessageStringifyKey);
+        const iotHubD2CMessageStringify = Utility.getConfig<boolean>(Constants.IoTHubD2CMessageStringifyKey);
         assert.equal(iotHubD2CMessageStringify, false);
     });
 
     test("should be able to get auto refresh enable flag", () => {
-        let autoRefreshEnable = Utility.getConfig<boolean>(Constants.TreeViewAutoRefreshEnableKey);
+        const autoRefreshEnable = Utility.getConfig<boolean>(Constants.TreeViewAutoRefreshEnableKey);
         assert.equal(autoRefreshEnable, false);
     });
 
     test("should be able to get auto refresh interval", () => {
-        let autoRefreshIntervalInSeconds = Utility.getConfig<boolean>(Constants.TreeViewAutoRefreshIntervalInSecondsKey);
+        const autoRefreshIntervalInSeconds = Utility.getConfig<boolean>(Constants.TreeViewAutoRefreshIntervalInSecondsKey);
         assert.equal(autoRefreshIntervalInSeconds, 60);
     });
 
     test("should be able to generate SAS Token for IoT Hub", () => {
-        let sasTokenForService = Utility.generateSasTokenForService(TestConstants.IotHubConnectionString, 10);
+        const sasTokenForService = Utility.generateSasTokenForService(TestConstants.IotHubConnectionString, 10);
         assert.equal(/^SharedAccessSignature sr=iot-hub-test.azure-devices.net&sig=.+&skn=iothubowner&se=.+$/.test(sasTokenForService), true);
     });
 
     test("should be able to generate SAS Token for Device", () => {
-        let sasTokenForDevice = Utility.generateSasTokenForDevice(TestConstants.DeviceConnectionString, 10);
+        const sasTokenForDevice = Utility.generateSasTokenForDevice(TestConstants.DeviceConnectionString, 10);
         assert.equal(/^SharedAccessSignature sr=iot-hub-test.azure-devices.net%2Fdevices%2Fdevice1&sig=.+&se=.+$/.test(sasTokenForDevice), true);
     });
 

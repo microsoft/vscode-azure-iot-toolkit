@@ -105,9 +105,13 @@ const config = {
             /$^/
         ),
         // Copy required resources for Azure treeview
-        new copyPlugin([
-            path.join('node_modules', 'vscode-azureextensionui', 'resources', '**', '*.svg')
-        ]),
+        new copyPlugin({
+            patterns: [
+                {
+                    from: 'node_modules/vscode-azureextensionui/resources/**/*.svg'
+                }
+            ]
+        }),
         // Fail on warnings so that CI can report new warnings which require attention
         new failOnErrorsPlugin({
             failOnErrors: true,
