@@ -801,6 +801,7 @@
     "@types/webpack": "^4.41.21",
     "copy-webpack-plugin": "^6.0.3",
     "fail-on-errors-webpack-plugin": "^3.0.0",
+    "keytar": "^6.0.1",
     "mocha": "^8.1.1",
     "rimraf": "^3.0.2",
     "shebang-loader": "0.0.1",
