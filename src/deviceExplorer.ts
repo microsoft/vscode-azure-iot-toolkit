@@ -17,13 +17,13 @@ export class DeviceExplorer extends BaseExplorer {
     }
 
     public async listDevice() {
-        let label = "Device";
-        let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
+        const label = "Device";
+        const iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
             return;
         }
 
-        let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
+        const registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
         this._outputChannel.show();
         this.outputLine(label, "Querying devices...");
         TelemetryClient.sendEvent(`AZ.${label}.List`);
@@ -36,7 +36,7 @@ export class DeviceExplorer extends BaseExplorer {
     }
 
     public async getDevice(deviceItem: DeviceItem, iotHubConnectionString?: string, outputChannel: vscode.OutputChannel = this._outputChannel) {
-        let label = "Device";
+        const label = "Device";
         if (!iotHubConnectionString) {
             iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
             if (!iotHubConnectionString) {
@@ -49,8 +49,8 @@ export class DeviceExplorer extends BaseExplorer {
             return;
         }
 
-        let hostName = Utility.getHostName(iotHubConnectionString);
-        let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
+        const hostName = Utility.getHostName(iotHubConnectionString);
+        const registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
         outputChannel.show();
         this.outputLine(label, `Querying device [${deviceItem.deviceId}]...`, outputChannel);
         return new Promise((resolve, reject) => {
@@ -92,12 +92,12 @@ export class DeviceExplorer extends BaseExplorer {
     }
 
     public async deleteDevice(deviceItem?: DeviceItem) {
-        let label = "Device";
-        let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
+        const label = "Device";
+        const iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
             return;
         }
-        let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
+        const registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
 
         deviceItem = await Utility.getInputDevice(deviceItem, "AZ.Device.Delete.Start");
         if (deviceItem && deviceItem.label) {

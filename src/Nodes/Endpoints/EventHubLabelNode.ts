@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import { RoutingEventHubProperties } from "azure-arm-iothub/lib/models";
+import { IotHubModels } from "@azure/arm-iothub";
 import * as vscode from "vscode";
 import { AzureSubscription } from "../../azure-account.api";
 import { EventHubItem } from "../../Model/EventHubItem";
@@ -9,7 +9,7 @@ import { INode } from "../INode";
 import { EventHubItemNode } from "./EventHubItemNode";
 
 export class EventHubLabelNode implements INode {
-    constructor(private azureSubscription: AzureSubscription, private eventHubProperties: RoutingEventHubProperties[]) {
+    constructor(private azureSubscription: AzureSubscription, private eventHubProperties: IotHubModels.RoutingEventHubProperties[]) {
     }
 
     public getTreeItem(): vscode.TreeItem {

@@ -3,8 +3,8 @@
 
 "use strict";
 import { Client as ServiceClient, DeviceMethodParams } from "azure-iothub";
-import { IncomingMessageCallback } from "azure-iothub/lib/interfaces";
 import * as vscode from "vscode";
+import { IncomingMessageCallback } from "azure-iothub/dist/interfaces";
 import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
 import { DeviceItem } from "./Model/DeviceItem";
@@ -18,7 +18,7 @@ export class IotHubDirectMethodExplorer extends BaseExplorer {
     }
 
     public async invokeDeviceDirectMethod(deviceItem: DeviceItem) {
-        let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
+        const iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
             return;
         }
@@ -32,7 +32,7 @@ export class IotHubDirectMethodExplorer extends BaseExplorer {
     }
 
     public async invokeModuleDirectMethod(moduleItem: ModuleItem) {
-        let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
+        const iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
             return;
         }
