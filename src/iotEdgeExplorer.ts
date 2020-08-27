@@ -2,12 +2,12 @@
 // Licensed under the MIT license.
 
 "use strict";
-import * as Ajv from "ajv";
+import Ajv from "ajv";
 import axios from "axios";
 import * as iothub from "azure-iothub";
 import * as fs from "fs";
 import * as path from "path";
-import * as stripJsonComments from "strip-json-comments";
+import stripJsonComments from "strip-json-comments";
 import * as vscode from "vscode";
 import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
@@ -24,7 +24,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
     public async createDeployment(input?: DeviceNode | vscode.Uri) {
         TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployStartEvent);
 
-        let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
+        const iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
             return;
         }
@@ -100,7 +100,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
             await this.getModuleTwinById(moduleTwinJson.deviceId, moduleTwinJson.moduleId);
         } catch (error) {
             this.outputLine(Constants.IoTHubModuleTwinLabel, `Failed to update Module Twin: ${error}`);
-            TelemetryClient.sendEvent(Constants.IoTHubAIUpdateModuleTwinDoneEvent, { Result: "Fail", Message: error });
+            TelemetryClient.sendEvent(Constants.IoTHubAIUpdateModuleTwinDoneEvent, { Result: "Fail", [Constants.errorProperties.Message]: error });
         }
     }
 
@@ -175,7 +175,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
         } catch (error) {
             this._outputChannel.show();
             this.outputLine(Constants.IoTHubModuleTwinLabel, `Failed to get Module Twin: ${error}`);
-            TelemetryClient.sendEvent(Constants.IoTHubAIGetModuleTwinDoneEvent, { Result: "Fail", Message: error });
+            TelemetryClient.sendEvent(Constants.IoTHubAIGetModuleTwinDoneEvent, { Result: "Fail", [Constants.errorProperties.Message]: error });
         }
     }
 
@@ -201,7 +201,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 
         let content = stripJsonComments(fs.readFileSync(filePath, "utf8"));
         try {
-            let contentJson = JSON.parse(content);
+            const contentJson = JSON.parse(content);
             // Backward compatibility for old schema using 'moduleContent'
             if (!contentJson.modulesContent && contentJson.moduleContent) {
                 contentJson.modulesContent = contentJson.moduleContent;
@@ -216,7 +216,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
                     return "";
                 }
             } catch (error) {
-                TelemetryClient.sendEvent(Constants.IoTHubAIValidateJsonSchemaEvent, { error: error.message });
+                TelemetryClient.sendEvent(Constants.IoTHubAIValidateJsonSchemaEvent, { [Constants.errorProperties.Message]: error.message });
             }
 
             content = JSON.stringify(contentJson, null, 2);
@@ -247,7 +247,8 @@ export class IoTEdgeExplorer extends BaseExplorer {
                 detailedMessage = err.responseBody;
                 this.outputLine(label, err.responseBody);
             }
-            TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployDoneEvent, { Result: "Fail", Message: err, detailedMessage, entry, from });
+            TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployDoneEvent,
+                { Result: "Fail", [Constants.errorProperties.Message]: err, [Constants.errorProperties.detailedMessage]: detailedMessage, entry, from });
         }
     }
 
@@ -341,11 +342,11 @@ export class IoTEdgeExplorer extends BaseExplorer {
         const registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
         registry.addConfiguration(deploymentConfiguration, (err) => {
             if (err) {
-                this.outputLine(label, `Deployment failed. ${err}`);
-                TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployAtScaleDoneEvent, { Result: "Fail", Message: err.message });
+                this.outputLine(label, `Deployment with deployment id [${deploymentId}] failed. ${err}`);
+                TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployAtScaleDoneEvent, { Result: "Fail", [Constants.errorProperties.Message]: err.message });
 
             } else {
-                this.outputLine(label, "Deployment succeeded.");
+                this.outputLine(label, `Deployment with deployment id [${deploymentId}] succeeded.`);
                 TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployAtScaleDoneEvent, { Result: "Success" });
             }
         });

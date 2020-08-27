@@ -1,9 +1,9 @@
 import * as bodyParser from "body-parser";
-import * as dummyjson from "dummy-json";
-import * as express from "express";
+import express from "express";
 import * as http from "http";
 import { AddressInfo } from "net";
 import * as vscode from "vscode";
+import * as dummyjson from "../../external_lib/dummy-json";
 import { Constants } from "../constants";
 import { DeviceItem } from "../Model/DeviceItem";
 import { SendStatus } from "../sendStatus";
@@ -234,7 +234,7 @@ export class LocalServer {
       const messageType = data.messageType;
       const messageBodyType = data.messageBodyType;
       const deviceConnectionStrings: string[] = data.deviceConnectionStrings;
-      let template: string = data.message;
+      const template: string = data.message;
       const numbers: number = Number(data.numbers);
       const interval: number = Number(data.interval);
       switch (messageType) {

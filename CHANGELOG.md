@@ -1,4 +1,34 @@
-## 2.12.0
+## 2.16.2 (2020-06-03)
+### Added
+* Support monitoring Event Hub messages in different regions
+
+### Changed
+* Adopt VS Code's 'asWebviewUri' API
+
+## 2.16.1 (2020-04-13)
+### Changed
+* Update third party notice
+
+## 2.16.0 (2020-02-14)
+### Changed
+* Fix Handlebars vulnerability CVE-2019-19919 (npm [advisory](https://www.npmjs.com/advisories/1164))
+
+## 2.15.0 (2019-12-30)
+### Added
+* Display Azure IoT Hub name in Azure IoT Hub tree view
+
+### Changed
+* Rename from 'Azure IoT Hub Toolkit' to 'Azure IoT Hub'
+
+## 2.14.0 (2019-12-16)
+### Added
+* Add deployment ID in output channel when deploying at scale for Azure IoT Edge
+
+## 2.13.0 (2019-11-12)
+### Changed
+* Rename 'Monitoring C2D' to 'Receiving C2D'
+
+## 2.12.0 (2019-10-28)
 ### Added
 * List IoT Hub Device Provisioning Service instances
 * Add C# code generation for device twin (Thanks [@tomaszbartoszewski](https://github.com/tomaszbartoszewski)!)

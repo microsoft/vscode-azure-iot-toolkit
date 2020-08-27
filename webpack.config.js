@@ -68,6 +68,9 @@ const config = {
         new webpack.IgnorePlugin(/^\.\/locale$/, /[\/\\]moment$/),
         // Ignore the optional requirement of applicationinsights, which is not used in this extension
         new webpack.IgnorePlugin(/applicationinsights-native-metrics/),
+        // Ignore optional packages which used by vscode-extension-telemetry
+        new webpack.IgnorePlugin(/@opentelemetry\/tracing/),
+        new webpack.IgnorePlugin(/applicationinsights-native-metrics/),
         // Suppress warnings of known dynamic require
         new webpack.ContextReplacementPlugin(
             /applicationinsights[\/\\]out[\/\\]AutoCollection/,
@@ -95,10 +98,20 @@ const config = {
             false,
             /$^/
         ),
+        // Numbro
+        new webpack.ContextReplacementPlugin(
+            /numbro/,
+            false,
+            /$^/
+        ),
         // Copy required resources for Azure treeview
-        new copyPlugin([
-            path.join('node_modules', 'vscode-azureextensionui', 'resources', '**', '*.svg')
-        ]),
+        new copyPlugin({
+            patterns: [
+                {
+                    from: 'node_modules/vscode-azureextensionui/resources/**/*.svg'
+                }
+            ]
+        }),
         // Fail on warnings so that CI can report new warnings which require attention
         new failOnErrorsPlugin({
             failOnErrors: true,

@@ -1,17 +1,18 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import { EventData, EventHubClient, EventPosition, MessagingError, OnError, OnMessage } from "@azure/event-hubs";
-import EventHubManagementClient from "azure-arm-eventhub";
+import { ReceivedEventData, EventHubConsumerClient, MessagingError } from "@azure/event-hubs";
+import { EventHubManagementClient } from "@azure/arm-eventhub";
 import * as vscode from "vscode";
 import { Constants } from "./constants";
 import { IoTHubMessageBaseExplorer } from "./iotHubMessageBaseExplorer";
 import { EventHubItem } from "./Model/EventHubItem";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
+import { createAzureClient } from "vscode-azureextensionui";
 
 export class EventHubManager extends IoTHubMessageBaseExplorer {
-    private _eventHubClient: EventHubClient;
+    private _eventHubClient: EventHubConsumerClient;
 
     constructor(outputChannel: vscode.OutputChannel) {
         super(outputChannel, "$(primitive-square) Stop Monitoring Custom Event Hub Endpoint", "azure-iot-toolkit.stopMonitorCustomEventHubEndpoint");
@@ -29,20 +30,33 @@ export class EventHubManager extends IoTHubMessageBaseExplorer {
             this._outputChannel.show();
             this.outputLine(Constants.EventHubMonitorLabel, `Start monitoring message arrived in custom Event Hub endpoint [${eventHubItem.eventHubProperty.name}] ...`);
 
-            const eventHubClient = new EventHubManagementClient(eventHubItem.azureSubscription.session.credentials, eventHubItem.azureSubscription.subscription.subscriptionId);
+            const eventHubClient = createAzureClient({
+                credentials: eventHubItem.azureSubscription.session.credentials2,
+                environment: eventHubItem.azureSubscription.session.environment,
+                subscriptionId: eventHubItem.azureSubscription.subscription.subscriptionId
+            }, EventHubManagementClient);
+
             const connectionString = (await eventHubClient.namespaces.listKeys(eventHubItem.eventHubProperty.resourceGroup,
                 this.getNamespacefromConnectionString(eventHubItem.eventHubProperty.connectionString), "RootManageSharedAccessKey")).primaryConnectionString;
-            this._eventHubClient = EventHubClient.createFromConnectionString(connectionString, this.getEntityPathfromConnectionString(eventHubItem.eventHubProperty.connectionString));
+            this._eventHubClient = new EventHubConsumerClient("$Default", connectionString, this.getEntityPathfromConnectionString(eventHubItem.eventHubProperty.connectionString));
             const partitionIds = await this._eventHubClient.getPartitionIds();
             this.updateMonitorStatus(true);
             partitionIds.forEach((partitionId) => {
                 this.outputLine(Constants.EventHubMonitorLabel, `Created partition receiver [${partitionId}]`);
-                this._eventHubClient.receive(partitionId, this.onMessage, this.onError, { eventPosition: EventPosition.fromEnqueuedTime(Date.now()) });
+                this._eventHubClient.subscribe(partitionId,
+                    {
+                        processEvents: this.onMessage,
+                        processError: this.onError
+                    },
+                    {
+                        startPosition: {enqueuedOn: Date.now()}
+                    }
+                );
             });
         } catch (error) {
             this.updateMonitorStatus(false);
             this.outputLine(Constants.EventHubMonitorLabel, error);
-            TelemetryClient.sendEvent(Constants.IoTHubAIEHStartMonitorEvent, { Result: "Exception", Message: error });
+            TelemetryClient.sendEvent(Constants.IoTHubAIEHStartMonitorEvent, { Result: "Exception", [Constants.errorProperties.Message]: error });
         }
     }
 
@@ -50,14 +64,17 @@ export class EventHubManager extends IoTHubMessageBaseExplorer {
         this.stopMonitorEventHubEndpoint(Constants.EventHubMonitorLabel, Constants.IoTHubAIEHStopMonitorEvent, this._eventHubClient, "custom Event Hub endpoint");
     }
 
-    private onMessage: OnMessage = (message: EventData) => {
-        const result = Utility.getMessageFromEventData(message);
-        const timeMessage = Utility.getTimeMessageFromEventData(message);
-        this.outputLine(Constants.EventHubMonitorLabel, `${timeMessage}Message received:`);
-        this._outputChannel.appendLine(JSON.stringify(result, null, 2));
+    private onMessage = async (messages: ReceivedEventData[]) => {
+        messages.forEach(message => {
+
+            const result = Utility.getMessageFromEventData(message);
+            const timeMessage = Utility.getTimeMessageFromEventData(message);
+            this.outputLine(Constants.EventHubMonitorLabel, `${timeMessage}Message received:`);
+            this._outputChannel.appendLine(JSON.stringify(result, null, 2));
+        });
     }
 
-    private onError: OnError = (error: MessagingError | Error) => {
+    private onError = async (error: MessagingError | Error) => {
         this.outputLine(Constants.EventHubMonitorLabel, error.message);
     }
 

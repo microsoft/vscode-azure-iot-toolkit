@@ -5,7 +5,7 @@
 import { ResultWithHttpResponse } from "azure-iot-common";
 import { ConnectionString as DeviceConnectionString, SharedAccessSignature as DeviceSharedAccessSignature } from "azure-iot-device";
 import { ConnectionString, Registry, SharedAccessSignature, Twin } from "azure-iothub";
-import { ResultWithIncomingMessage } from "azure-iothub/lib/interfaces";
+import { IotHubModels} from "@azure/arm-iothub";
 import * as crypto from "crypto";
 import * as fs from "fs";
 import * as os from "os";
@@ -18,13 +18,11 @@ import { CommandNode } from "./Nodes/CommandNode";
 import { InfoNode } from "./Nodes/InfoNode";
 import { INode } from "./Nodes/INode";
 import { TelemetryClient } from "./telemetryClient";
-import iothub = require("azure-iothub");
-import { EventData } from "@azure/event-hubs";
-import { AxiosRequestConfig } from "axios";
-import { IotHubDescription } from "azure-arm-iothub/lib/models";
+import { ReceivedEventData, EventData } from "@azure/event-hubs";
+import { AxiosRequestConfig, Method } from "axios";
 import { AzureAccount } from "./azure-account.api";
 import { CredentialStore } from "./credentialStore";
-import { SubscriptionItem } from "./Model/SubscriptionItem";
+import { ResultWithIncomingMessage } from "azure-iothub/dist/interfaces";
 
 export class Utility {
     public static getConfiguration(): vscode.WorkspaceConfiguration {
@@ -86,17 +84,22 @@ export class Utility {
     }
 
     public static getConfig<T>(id: string): T {
-        let config = Utility.getConfiguration();
+        const config = Utility.getConfiguration();
         return config.get<T>(id);
     }
 
     public static getHostName(iotHubConnectionString: string): string {
-        let result = /^HostName=([^=]+);/.exec(iotHubConnectionString);
+        const result = /^HostName=([^=]+);/.exec(iotHubConnectionString);
+        return result ? result[1] : "";
+    }
+
+    public static getIoTHubName(iotHubConnectionString: string): string {
+        const result = /^HostName=([^.]+)./.exec(iotHubConnectionString);
         return result ? result[1] : "";
     }
 
     public static getPostfixFromHostName(hostName: string): string {
-        let result = /^[^.]+\.(.+)$/.exec(hostName);
+        const result = /^[^.]+\.(.+)$/.exec(hostName);
         return result ? result[1] : "";
     }
 
@@ -132,7 +135,7 @@ export class Utility {
         if (terminalRoot) {
             return filePath.replace(/^([A-Za-z]):/, (match, p1) => `${terminalRoot}${p1.toLowerCase()}`).replace(/\\/g, "/");
         }
-        let winshellLowercase = windowsShell.toLowerCase();
+        const winshellLowercase = windowsShell.toLowerCase();
         if (winshellLowercase.indexOf("bash") > -1 && winshellLowercase.indexOf("git") > -1) {
             // Git Bash
             return filePath.replace(/^([A-Za-z]):/, (match, p1) => `/${p1.toLowerCase()}`).replace(/\\/g, "/");
@@ -322,7 +325,7 @@ export class Utility {
     }
 
     public static getResourceGroupNameFromId(resourceId: string): string {
-        let result = /resourceGroups\/([^/]+)\//.exec(resourceId);
+        const result = /resourceGroups\/([^/]+)\//.exec(resourceId);
         return result[1];
     }
 
@@ -376,7 +379,7 @@ export class Utility {
         return twin.properties.desired[Constants.DISTRIBUTED_TWIN_NAME].sampling_rate;
     }
 
-    public static async getTwin(registry: iothub.Registry, deviceId: string): Promise<any> {
+    public static async getTwin(registry: Registry, deviceId: string): Promise<any> {
         const result = await registry.getTwin(deviceId);
         return result.responseBody;
     }
@@ -385,7 +388,7 @@ export class Utility {
         return vscode.extensions.getExtension<AzureAccount>("ms-vscode.azure-account")!.exports;
     }
 
-    public static getMessageFromEventData(message: EventData): any {
+    public static getMessageFromEventData(message: any): any {
         const config = Utility.getConfiguration();
         const showVerboseMessage = config.get<boolean>("showVerboseMessage");
         let result;
@@ -408,12 +411,12 @@ export class Utility {
         return result;
     }
 
-    public static getTimeMessageFromEventData(message: EventData): string {
+    public static getTimeMessageFromEventData(message: ReceivedEventData): string {
         return message.enqueuedTimeUtc ? `[${message.enqueuedTimeUtc.toLocaleTimeString("en-US")}] ` : "";
     }
 
-    public static async storeIoTHubInfo(subscriptionItem: SubscriptionItem, iotHubDescription: IotHubDescription) {
-        await Constants.ExtensionContext.globalState.update(Constants.StateKeySubsID, subscriptionItem.subscription.subscriptionId);
+    public static async storeIoTHubInfo(subscriptionId: string, iotHubDescription: IotHubModels.IotHubDescription) {
+        await Constants.ExtensionContext.globalState.update(Constants.StateKeySubsID, subscriptionId);
         await Constants.ExtensionContext.globalState.update(Constants.StateKeyIoTHubID, iotHubDescription.id);
     }
 
@@ -431,7 +434,7 @@ export class Utility {
         }
     }
 
-    public static generateIoTHubAxiosRequestConfig(iotHubConnectionString: string, url: string, method: string, data?: any): AxiosRequestConfig {
+    public static generateIoTHubAxiosRequestConfig(iotHubConnectionString: string, url: string, method: Method, data?: any): AxiosRequestConfig {
         return {
             url,
             method,
@@ -514,8 +517,8 @@ export class Utility {
     }
 
     private static showIoTHubInformationMessage(): void {
-        let config = Utility.getConfiguration();
-        let showIoTHubInfo = config.get<boolean>(Constants.ShowIoTHubInfoKey);
+        const config = Utility.getConfiguration();
+        const showIoTHubInfo = config.get<boolean>(Constants.ShowIoTHubInfoKey);
         if (showIoTHubInfo) {
             const GoToAzureRegistrationPage = "Go to Azure registration page";
             const GoToAzureIoTHubPage = "Go to Azure IoT Hub page";

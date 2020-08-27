@@ -28,7 +28,7 @@ export class DeviceLabelNode implements INode {
         try {
             const deviceList: vscode.TreeItem[] = await Utility.getDeviceList(this.iotHubConnectionString, Constants.ExtensionContext);
 
-            let deviceNode: INode[] = deviceList.map((item) => new DeviceNode(item as DeviceItem));
+            const deviceNode: INode[] = deviceList.map((item) => new DeviceNode(item as DeviceItem));
 
             if (deviceNode.length === 0) {
                 deviceNode.push(new InfoNode(`No devices in ${Utility.getHostName(this.iotHubConnectionString)}`));
@@ -38,7 +38,7 @@ export class DeviceLabelNode implements INode {
 
             return deviceNode;
         } catch (err) {
-            TelemetryClient.sendEvent(Constants.IoTHubAILoadDeviceTreeEvent, { Result: "Fail", Message: err.message });
+            TelemetryClient.sendEvent(Constants.IoTHubAILoadDeviceTreeEvent, { Result: "Fail", [Constants.errorProperties.Message]: err.message });
             return Utility.getErrorMessageTreeItems("IoT Hub devices", err.message);
         }
     }

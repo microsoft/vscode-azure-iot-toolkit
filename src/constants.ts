@@ -152,7 +152,7 @@ export class Constants {
     public static CodeTemplates = {
         [TemplateLanguage.CSharp]: {
             [TemplateType.SendD2C]: "csharp/sendD2C",
-            [TemplateType.DeviceManageDeviceTwin]: "csharp/deviceManageDeviceTwin"
+            [TemplateType.DeviceManageDeviceTwin]: "csharp/deviceManageDeviceTwin",
         },
         [TemplateLanguage.FSharp]: {
             [TemplateType.SendD2C]: "fsharp/sendD2C",
@@ -193,6 +193,15 @@ export class Constants {
         [TemplateLanguage.PHP]: "php",
         [TemplateLanguage.Python]: "python",
         [TemplateLanguage.Ruby]: "ruby",
+    };
+
+    // 'error', 'errorMessage' and 'stack' are used in vscode-azureextensionui npm
+    public static errorProperties = {
+        Message: "Message",
+        detailedMessage: "detailedMessage",
+        error: "error",
+        errorMessage: "errorMessage",
+        stack: "stack",
     };
 
     // Capture the {resource-group-name} in pattern /subscriptions/{subscription-id}/resourceGroups/{resource-group-name}/

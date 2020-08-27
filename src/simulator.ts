@@ -6,8 +6,8 @@ import { ConnectionString } from "azure-iot-common";
 import { Message } from "azure-iot-device";
 import { Client } from "azure-iot-device";
 import { clientFromConnectionString } from "azure-iot-device-mqtt";
-import * as dummyjson from "dummy-json";
 import * as vscode from "vscode";
+import * as dummyjson from "../external_lib/dummy-json";
 import { Constants } from "./constants";
 import { IoTHubResourceExplorer } from "./iotHubResourceExplorer";
 import { DeviceItem } from "./Model/DeviceItem";
@@ -99,7 +99,7 @@ export class Simulator {
     if (eventName === Constants.SimulatorLaunchEvent) {
       TelemetryClient.sendEvent(eventName, {
         Result: result ? "Success" : "Fail",
-        Error: result ? undefined : properties.error,
+        [Constants.errorProperties.Message]: result ? undefined : properties.error,
         QuitWhenProcessing: this.isProcessing() ? "True" : "False",
       }, this.iotHubConnectionString);
     } else if (eventName === Constants.SimulatorSendEvent) {
@@ -114,7 +114,7 @@ export class Simulator {
       } else {
         TelemetryClient.sendEvent(eventName, {
           Result: "Fail",
-          Error: "" + properties.reason,
+          [Constants.errorProperties.Message]: "" + properties.reason,
         }, this.iotHubConnectionString);
       }
     } else if (eventName === Constants.SimulatorCloseEvent) {
@@ -127,7 +127,7 @@ export class Simulator {
   }
 
   public async launch(deviceItem: DeviceItem): Promise<void> {
-    let deviceConnectionStrings = [];
+    const deviceConnectionStrings = [];
     if (this.isProcessing()) {
       this.closeDuration = 3500;
       await this.showWebview(false);
@@ -157,7 +157,7 @@ export class Simulator {
       } else {
         // Exit when no connection string found or the connection string is invalid.
         if (!this.iotHubConnectionString) {
-          var errorMessage = "Failed to launch Send D2C Messages webview: No IoT Hub Connection String Found.";
+          const errorMessage = "Failed to launch Send D2C Messages webview: No IoT Hub Connection String Found.";
           vscode.window.showErrorMessage(errorMessage);
           this.telemetry(Constants.SimulatorLaunchEvent, false, {
             error: errorMessage,
@@ -292,11 +292,16 @@ export class Simulator {
     status: SendStatus,
     totalStatus: SendStatus,
   ) {
-    let stringify = Utility.getConfig<boolean>(
+    const stringify = Utility.getConfig<boolean>(
       Constants.IoTHubD2CMessageStringifyKey,
     );
+    let msg = new Message(stringify ? JSON.stringify(message) : message);
+    if (stringify) {
+      msg.contentType = "application/json";
+      msg.contentEncoding = "utf-8";
+    }
     await client.sendEvent(
-      new Message(stringify ? JSON.stringify(message) : message),
+      msg,
       this.sendEventDoneCallback(
         client,
         Constants.IoTHubAIMessageDoneEvent,
@@ -341,9 +346,9 @@ export class Simulator {
     this.output(
       `Start sending messages from ${deviceCount} device(s) to IoT Hub.`,
     );
-    let clients = [];
-    let statuses = [];
-    let ids = [];
+    const clients = [];
+    const statuses = [];
+    const ids = [];
     this.totalStatus = new SendStatus("Total", total);
     for (let i = 0; i < deviceCount; i++) {
       clients.push(

@@ -1,13 +1,13 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import { IotDpsModels } from "azure-arm-deviceprovisioningservices";
+import { IotDpsModels } from "@azure/arm-deviceprovisioningservices";
 import { AzureParentTreeItem, AzureTreeItem, TreeItemIconPath } from "vscode-azureextensionui";
-import { TreeUtils } from "../Utility/treeUtils";
+import { TreeUtils } from "../../Utility/treeUtils";
 
 // Represents a DPS resource
 export class DpsResourceTreeItem extends AzureTreeItem {
-    public static contextValue: string = "IotDps";
+    private static contextValue: string = "IotDps";
     public readonly contextValue: string = DpsResourceTreeItem.contextValue;
     public readonly dps: IotDpsModels.ProvisioningServiceDescription;
     constructor(parent: AzureParentTreeItem, dps: IotDpsModels.ProvisioningServiceDescription) {

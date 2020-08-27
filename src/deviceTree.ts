@@ -6,6 +6,7 @@ import { Constants } from "./constants";
 import { DeviceLabelNode } from "./Nodes/DeviceLabelNode";
 import { EndpointsLabelNode } from "./Nodes/Endpoints/EndpointsLabelNode";
 import { INode } from "./Nodes/INode";
+import { IoTHubLabelNode } from "./Nodes/IoTHubLabelNode";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
@@ -36,7 +37,7 @@ export class DeviceTree implements vscode.TreeDataProvider<INode> {
     }
 
     public async getChildren(element?: INode): Promise<INode[]> {
-        let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle, false);
+        const iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle, false);
         if (!iotHubConnectionString) {
             return Utility.getDefaultTreeItems();
         }
@@ -55,13 +56,13 @@ export class DeviceTree implements vscode.TreeDataProvider<INode> {
         }
         this.autoRefreshIntervalID = this.generateAutoRefreshInterval();
 
-        return [new DeviceLabelNode(iotHubConnectionString), new EndpointsLabelNode()];
+        return [new IoTHubLabelNode(iotHubConnectionString), new DeviceLabelNode(iotHubConnectionString), new EndpointsLabelNode()];
     }
 
     private generateAutoRefreshInterval(): NodeJS.Timer {
-        let treeViewAutoRefreshEnable = Utility.getConfig<boolean>(Constants.TreeViewAutoRefreshEnableKey);
+        const treeViewAutoRefreshEnable = Utility.getConfig<boolean>(Constants.TreeViewAutoRefreshEnableKey);
         if (treeViewAutoRefreshEnable) {
-            let treeViewAutoRefreshIntervalInSeconds = Utility.getConfig<number>(Constants.TreeViewAutoRefreshIntervalInSecondsKey);
+            const treeViewAutoRefreshIntervalInSeconds = Utility.getConfig<number>(Constants.TreeViewAutoRefreshIntervalInSecondsKey);
             return setInterval(() => {
                 this._onDidChangeTreeData.fire();
             }, treeViewAutoRefreshIntervalInSeconds * 1000);
