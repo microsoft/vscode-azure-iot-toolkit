@@ -24,13 +24,13 @@ export class IotHubDeviceTwinExplorer extends BaseExplorer {
     }
 
     public async getDeviceTwinById(deviceId: string) {
-        let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
+        const iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
             return;
         }
 
         TelemetryClient.sendEvent(Constants.IoTHubAIGetDeviceTwinDoneEvent);
-        let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
+        const registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
         this._outputChannel.show();
         this.outputLine(Constants.IoTHubDeviceTwinLabel, `Get Device Twin for [${deviceId}]...`);
         registry.getTwin(deviceId, (err, twin) => {
@@ -52,20 +52,20 @@ export class IotHubDeviceTwinExplorer extends BaseExplorer {
 
     public async updateDeviceTwin() {
         TelemetryClient.sendEvent(Constants.IoTHubAIUpdateDeviceTwinEvent);
-        let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
+        const iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
             return;
         }
 
         try {
             this._outputChannel.show();
-            let deviceTwinContent = await Utility.readFromActiveFile(Constants.DeviceTwinJosnFileName);
+            const deviceTwinContent = await Utility.readFromActiveFile(Constants.DeviceTwinJosnFileName);
             if (!deviceTwinContent) {
                 return;
             }
-            let deviceTwinJson = JSON.parse(deviceTwinContent);
+            const deviceTwinJson = JSON.parse(deviceTwinContent);
             this.outputLine(Constants.IoTHubDeviceTwinLabel, `Update Device Twin for [${deviceTwinJson.deviceId}]...`);
-            let registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
+            const registry = iothub.Registry.fromConnectionString(iotHubConnectionString);
             registry.updateTwin(deviceTwinJson.deviceId, deviceTwinContent, deviceTwinJson.etag, (err) => {
                 if (err) {
                     this.outputLine(Constants.IoTHubDeviceTwinLabel, `Failed to update Device Twin: ${err.message}`);

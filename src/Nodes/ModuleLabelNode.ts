@@ -32,7 +32,7 @@ export class ModuleLabelNode implements INode {
                 const moduleList: vscode.TreeItem[] = await Utility.getModuleItemsForEdge(iotHubConnectionString, this.deviceNode.deviceItem, context);
                 TelemetryClient.sendEvent(Constants.IoTHubAILoadEdgeModuleTreeDoneEvent, { Result: "Success" });
 
-                let moduleNodeList: INode[] = [];
+                const moduleNodeList: INode[] = [];
                 moduleList.forEach((item) => {
                     moduleNodeList.push(new ModuleItemNode(item as ModuleItem, this));
                 });
@@ -50,7 +50,7 @@ export class ModuleLabelNode implements INode {
                     moduleList.push(new vscode.TreeItem(`No Modules`));
                 }
 
-                let moduleNodeList: INode[] = [];
+                const moduleNodeList: INode[] = [];
                 moduleList.forEach((item) => {
                     moduleNodeList.push(new ModuleItemNode(item as ModuleItem, this));
                 });

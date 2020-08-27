@@ -2,12 +2,12 @@
 // Licensed under the MIT license.
 
 "use strict";
-import * as Ajv from "ajv";
+import Ajv from "ajv";
 import axios from "axios";
 import * as iothub from "azure-iothub";
 import * as fs from "fs";
 import * as path from "path";
-import * as stripJsonComments from "strip-json-comments";
+import stripJsonComments from "strip-json-comments";
 import * as vscode from "vscode";
 import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
@@ -24,7 +24,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
     public async createDeployment(input?: DeviceNode | vscode.Uri) {
         TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployStartEvent);
 
-        let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
+        const iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
             return;
         }
@@ -201,7 +201,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 
         let content = stripJsonComments(fs.readFileSync(filePath, "utf8"));
         try {
-            let contentJson = JSON.parse(content);
+            const contentJson = JSON.parse(content);
             // Backward compatibility for old schema using 'moduleContent'
             if (!contentJson.modulesContent && contentJson.moduleContent) {
                 contentJson.modulesContent = contentJson.moduleContent;

@@ -1,8 +1,9 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import IotHubClient from "azure-arm-iothub";
+import { IotHubClient } from "@azure/arm-iothub";
 import * as vscode from "vscode";
+import { createAzureClient} from "vscode-azureextensionui";
 import { Constants } from "../../constants";
 import { TelemetryClient } from "../../telemetryClient";
 import { Utility } from "../../utility";
@@ -35,7 +36,11 @@ export class EndpointsLabelNode implements INode {
             }
 
             const subscription = accountApi.subscriptions.find((element) => element.subscription.subscriptionId === subscriptionId);
-            const client = new IotHubClient(subscription.session.credentials, subscription.subscription.subscriptionId, subscription.session.environment.resourceManagerEndpointUrl);
+            const client = createAzureClient({
+                credentials: subscription.session.credentials2,
+                subscriptionId: subscription.subscription.subscriptionId,
+                environment: subscription.session.environment
+            }, IotHubClient);
             const iotHubs = await client.iotHubResource.listBySubscription();
             const iothub = iotHubs.find((element) =>
                 element.id === Constants.ExtensionContext.globalState.get(Constants.StateKeyIoTHubID));

@@ -22,7 +22,7 @@ export class DeviceNode implements INode {
     }
 
     public async getChildren(context: vscode.ExtensionContext, iotHubConnectionString: string): Promise<INode[]> {
-        let nodeList: INode[] = [];
+        const nodeList: INode[] = [];
         nodeList.push(new ModuleLabelNode(this));
         if (this.deviceItem.contextValue === "device" && iotHubConnectionString.toLowerCase().indexOf("azure-devices.cn;") < 0) {
             nodeList.push(new DistributedTracingLabelNode(this));

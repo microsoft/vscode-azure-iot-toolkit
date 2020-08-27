@@ -63,7 +63,7 @@ export class CodeManager {
             }
             const folder = folderUri[0].fsPath;
             await fs.copy(template, folder);
-            await replace({
+            await replace.replaceInFile({
                 files: `${folder}/**/*`,
                 from: [...replacements.keys()],
                 to: [...replacements.values()],

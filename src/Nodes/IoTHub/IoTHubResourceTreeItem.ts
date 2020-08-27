@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import { IotHubModels } from "azure-arm-iothub";
+import { IotHubModels } from "@azure/arm-iothub";
 import { AzureParentTreeItem, AzureTreeItem, TreeItemIconPath } from "vscode-azureextensionui";
 import { TreeUtils } from "../../Utility/treeUtils";
 

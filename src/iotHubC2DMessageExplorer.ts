@@ -21,7 +21,7 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
     }
 
     public async sendC2DMessage(deviceItem?: DeviceItem) {
-        let iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
+        const iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (!iotHubConnectionString) {
             return;
         }
@@ -66,13 +66,13 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
     private sendC2DMessageById(iotHubConnectionString: string, deviceId: string): void {
         vscode.window.showInputBox({ prompt: `Enter message to send to device` }).then((messageBody) => {
             if (messageBody !== undefined) {
-                let serviceClient = ServiceClient.fromConnectionString(iotHubConnectionString);
+                const serviceClient = ServiceClient.fromConnectionString(iotHubConnectionString);
                 this._outputChannel.show();
                 serviceClient.open((err) => {
                     if (err) {
                         this.outputLine(Constants.IoTHubC2DMessageLabel, err.message);
                     } else {
-                        let message = new Message(messageBody);
+                        const message = new Message(messageBody);
                         serviceClient.send(deviceId, message.getData(),
                             this.sendEventDone(serviceClient, Constants.IoTHubC2DMessageLabel, deviceId, Constants.IoTHubAIC2DMessageDoneEvent));
                     }
@@ -88,7 +88,7 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
                 TelemetryClient.sendEvent(Constants.IoTHubAIStartMonitorC2DEvent, { Result: "Exception", [Constants.errorProperties.Message]: err });
             } else {
                 this.updateMonitorStatus(true);
-                let deviceId = ConnectionString.parse(deviceConnectionString).DeviceId;
+                const deviceId = ConnectionString.parse(deviceConnectionString).DeviceId;
                 this.outputLine(Constants.IoTHubC2DMessageMonitorLabel, `Start receiving C2D message for [${deviceId}]...`);
                 TelemetryClient.sendEvent(Constants.IoTHubAIStartMonitorC2DEvent);
                 this._deviceClient.on("message", (msg) => {
