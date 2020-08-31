@@ -1,3 +1,12 @@
+## 2.16.3 (2020-08-31)
+### Fixed
+* Handling of JSON formatted D2C messages by adding contentType and contentEncoding (issue [440](https://github.com/microsoft/vscode-azure-iot-toolkit/issues/440))
+### Changed
+* Multiple NPM package updates for connecting to Azure resources.
+* Multiple NPM package updates to resolve vulnerabilities
+### Removed
+* Plug and Play interfaces node from device tree view
+
 ## 2.16.2 (2020-06-03)
 ### Added
 * Support monitoring Event Hub messages in different regions
@@ -192,12 +201,12 @@
 * Allow `*` for target condition of IoT Edge device deployment
 
 ## 1.1.1 (2018-08-01)
-### Changed 
-* Update vscode-extension-telemetry npm to latest version (0.0.18) 
+### Changed
+* Update vscode-extension-telemetry npm to latest version (0.0.18)
 
 ## 1.1.0 (2018-07-18)
-### Added 
-* Generate SAS Token for IoT Hub 
+### Added
+* Generate SAS Token for IoT Hub
 * Generate SAS Token for Device
 * Create Deployment for IoT Edge Device at Scale
 * Add welcome page
@@ -207,7 +216,7 @@
 * [#92](https://github.com/Microsoft/vscode-azure-iot-toolkit/issues/92): Invoke Direct Method will fail when device name contains’#’
 
 ## 1.0.0 (2018-06-27)
-### Added 
+### Added
 * Add CodeLens to update Device Twin and Module Twin
 * Show warning message when user selects deployment.template.json to do deployment
 
@@ -215,7 +224,7 @@
 * Remove iotedgectl related commands which are retired in IoT Edge GA
 
 ## 0.6.3 (2018-06-12)
-### Added 
+### Added
 * Add command for updating Module Twin
 
 ## 0.6.2 (2018-05-23)
@@ -232,7 +241,7 @@
 * Fix [#83](https://github.com/Microsoft/vscode-azure-iot-toolkit/issues/83): Add retry logic for listing IoT Hub to work around showQuickPick issue
 
 ## 0.6.0 (2018-03-09)
-### Added 
+### Added
 * Expose APIs for dependent extensions to use
     * Return IoT Hub Connection String in create/select IoT Hub APIs
     * Use Output Channel for showing output
@@ -342,7 +351,7 @@
 * Include device-discovery-cli into extension
 
 ## 0.0.4
-* Add instruction if device-discovery-cli is not installed 
+* Add instruction if device-discovery-cli is not installed
 
 ## 0.0.3
 * Discover Ethernet, USB serial, WiFi devices
