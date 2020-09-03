@@ -1,9 +1,15 @@
+## 2.16.4 (2020-09-04)
+### Fixed
+* Regression in handling of connecting to underlying Event Hub
+
 ## 2.16.3 (2020-08-31)
 ### Fixed
 * Handling of JSON formatted D2C messages by adding contentType and contentEncoding (issue [440](https://github.com/microsoft/vscode-azure-iot-toolkit/issues/440))
+
 ### Changed
 * Multiple NPM package updates for connecting to Azure resources.
 * Multiple NPM package updates to resolve vulnerabilities
+
 ### Removed
 * Plug and Play interfaces node from device tree view
 
