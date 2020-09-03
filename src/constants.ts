@@ -49,6 +49,8 @@ export class Constants {
     public static DeviceConnectionStringKey = "deviceConnectionString";
     public static IotHubConnectionStringKey = "iotHubConnectionString";
     public static IotHubConnectionStringTitle = "IoT Hub Connection String";
+    public static IotHubEventHubConnectionStringKey = "eventHubConnectionString";
+    public static IotHubEventHubConnectionStringTitle = "Event Hub compatible connection string";
     public static IoTHubConsumerGroup = "iotHubConsumerGroup";
     public static IoTHubD2CMessageStringifyKey = "iotHubD2CMessageStringify";
     public static IoTHubMonitorLabel = "IoTHubMonitor";
@@ -138,11 +140,13 @@ export class Constants {
     public static ConnectionStringFormat = {
         [Constants.IotHubConnectionStringKey]: "HostName=<my-hostname>;SharedAccessKeyName=<my-policy>;SharedAccessKey=<my-policy-key>",
         [Constants.DeviceConnectionStringKey]: "HostName=<my-hostname>;DeviceId=<known-device-id>;SharedAccessKey=<known-device-key>",
+        [Constants.IotHubEventHubConnectionStringKey]: "Endpoint=sb://<my-namespace>.servicebus.windows.net/;SharedAccessKeyName=<my-policy>;SharedAccessKey=<my-policy-key>;EntityPath=<eventHub-name>$",
     };
 
     public static ConnectionStringRegex = {
         [Constants.IotHubConnectionStringKey]: /^HostName=.+;SharedAccessKeyName=.+;SharedAccessKey=.+$/,
         [Constants.DeviceConnectionStringKey]: /^HostName=.+;DeviceId=.+;SharedAccessKey=.+$/,
+        [Constants.IotHubEventHubConnectionStringKey]: /^Endpoint=sb:\/\/.+;SharedAccessKeyName=.+;SharedAccessKey=.+;EntityPath=.+$/,
     };
 
     public static ShowIoTHubInfoKey = "showIoTHubInfo";
