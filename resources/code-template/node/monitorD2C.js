@@ -29,13 +29,13 @@ var printError = function (err) {
 // - The device can add arbitrary application properties to the message
 // - IoT Hub adds system properties, such as Device Id, to the message.
 var printMessage = function (message) {
-  if ("{{deviceId}}" === message.annotations["iothub-connection-device-id"]) {
+  if ("{{deviceId}}" === message.systemProperties["iothub-connection-device-id"]) {
     console.log('Telemetry received: ');
     console.log(JSON.stringify(message.body));
     console.log('Application properties (set by device): ')
     console.log(JSON.stringify(message.applicationProperties));
     console.log('System properties (set by IoT Hub): ')
-    console.log(JSON.stringify(message.annotations));
+    console.log(JSON.stringify( message.systemProperties));
     console.log('');
   }
 };

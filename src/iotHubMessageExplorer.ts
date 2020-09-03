@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 "use strict";
-import { EventHubConsumerClient, ReceivedEventData, EventPosition } from "@azure/event-hubs";
+import { EventHubConsumerClient, ReceivedEventData } from "@azure/event-hubs";
 import { Message } from "azure-iot-device";
 import { clientFromConnectionString } from "azure-iot-device-mqtt";
 import * as vscode from "vscode";
@@ -13,7 +13,7 @@ import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
 export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
-    private _iotHubConnectionString: string;
+    private _eventHubCompatibleEndpointConnectionString: string;
     private _eventHubClient: EventHubConsumerClient;
     constructor(outputChannel: vscode.OutputChannel) {
         super(outputChannel, "$(primitive-square) Stop Monitoring built-in event endpoint", "azure-iot-toolkit.stopMonitorIoTHubMessage");
@@ -47,15 +47,15 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
             return;
         }
 
-        const iotHubConnectionString = await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
-        if (!iotHubConnectionString) {
+        const connectionString = await Utility.getConnectionString(Constants.IotHubEventHubConnectionStringKey, Constants.IotHubEventHubConnectionStringTitle, true, "iot-hub-event-hub-connection-string.md");
+        if (!connectionString) {
             return;
         }
         const config = Utility.getConfiguration();
         const consumerGroup = config.get<string>(Constants.IoTHubConsumerGroup);
 
         try {
-            this._iotHubConnectionString = iotHubConnectionString
+            this._eventHubCompatibleEndpointConnectionString = connectionString
             this._outputChannel.show();
             const deviceLabel = deviceItem ? `device [${deviceItem.deviceId}]` : "all devices";
             this.outputLine(Constants.IoTHubMonitorLabel, `Start monitoring message arrived in built-in endpoint for ${deviceLabel} ...`);
@@ -74,8 +74,8 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
     }
 
     private async startMonitor(label: string, consumerGroup: string, deviceItem?: DeviceItem) {
-        if (this._iotHubConnectionString) {
-            this._eventHubClient = new EventHubConsumerClient(consumerGroup, this._iotHubConnectionString);
+        if (this._eventHubCompatibleEndpointConnectionString) {
+            this._eventHubClient = new EventHubConsumerClient(consumerGroup, this._eventHubCompatibleEndpointConnectionString);
             const monitorD2CBeforeNowInMinutes = Utility.getConfiguration().get<number>("monitorD2CBeforeNowInMinutes");
             const startAfterTime = new Date(Date.now() - 1000 * 60 * monitorD2CBeforeNowInMinutes);
             const partitionIds = await this._eventHubClient.getPartitionIds();
@@ -107,8 +107,8 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
     private printMessage(label: string, deviceItem?: DeviceItem) {
         return async (messages: ReceivedEventData[]) => {
             messages.forEach(message => {
-                const deviceId = (message as any).annotations["iothub-connection-device-id"];
-                const moduleId = (message as any).annotations["iothub-connection-module-id"];
+                const deviceId = message.systemProperties["iothub-connection-device-id"];
+                const moduleId = message.systemProperties["iothub-connection-module-id"];
                 if (deviceItem && deviceItem.deviceId !== deviceId) {
                     return;
                 }

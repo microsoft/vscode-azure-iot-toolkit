@@ -29,18 +29,18 @@ export class Utility {
         return vscode.workspace.getConfiguration("azure-iot-toolkit");
     }
 
-    public static async getConnectionString(id: string, name: string, askForConnectionString: boolean = true) {
+    public static async getConnectionString(id: string, name: string, askForConnectionString: boolean = true, helpfile: string = "iot-hub-connection-string.md") {
         const connectionString = await this.getConnectionStringWithId(id);
         if (!connectionString && askForConnectionString) {
-            return this.setConnectionString(id, name);
+            return this.setConnectionString(id, name, helpfile);
         }
         return connectionString;
     }
 
-    public static async setConnectionString(id: string, name: string) {
+    public static async setConnectionString(id: string, name: string, helpfile: string = "iot-hub-connection-string.md") {
         TelemetryClient.sendEvent("General.SetConfig.Popup");
-        return new Promise<string>((resolve, reject) => {
-            let value;
+        return new Promise<string>((resolve) => {
+            let value: string | PromiseLike<string>;
             const input = vscode.window.createInputBox();
             input.prompt = name;
             input.placeholder = Constants.ConnectionStringFormat[id];
@@ -51,13 +51,14 @@ export class Utility {
                     TelemetryClient.sendEvent("General.SetConfig.Done", { Result: "Success" });
                     await CredentialStore.setPassword(id, value);
                     if (id === Constants.IotHubConnectionStringKey) {
+                        await CredentialStore.setPassword(Constants.IotHubEventHubConnectionStringKey, undefined);
                         await Utility.deleteIoTHubInfo();
                     }
                     resolve(value);
                     input.dispose();
                 } else {
                     TelemetryClient.sendEvent("General.SetConfig.Done", { Result: "Fail" });
-                    vscode.commands.executeCommand("markdown.showPreview", vscode.Uri.file(Constants.ExtensionContext.asAbsolutePath(path.join("resources", "iot-hub-connection-string.md"))));
+                    vscode.commands.executeCommand("markdown.showPreview", vscode.Uri.file(Constants.ExtensionContext.asAbsolutePath(path.join("resources", helpfile))));
                     input.validationMessage = `The format should be "${Constants.ConnectionStringFormat[id]}"`;
                 }
             });
@@ -399,6 +400,7 @@ export class Utility {
                 applicationProperties: message.applicationProperties,
                 annotations: message.annotations,
                 properties: message.properties,
+                systemProperties: message.systemProperties
             };
         } else if (message.applicationProperties && Object.keys(message.applicationProperties).length > 0) {
             result = {

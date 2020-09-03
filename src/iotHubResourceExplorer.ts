@@ -290,14 +290,21 @@ export class IoTHubResourceExplorer extends BaseExplorer {
     {
         const iotHubConnectionString = await this.getIoTHubConnectionString(credentials,
             subscriptionId, environment, iotHubDescription);
+        const eventHubConnectionString = await this.getEventHubConnectionString(credentials,
+            subscriptionId, environment, iotHubDescription);
+        await this.updateIoTHubEventHubConnectionString(eventHubConnectionString);
         await this.updateIoTHubConnectionString(iotHubConnectionString);
+        vscode.commands.executeCommand("azure-iot-toolkit.refresh");
+
         await Utility.storeIoTHubInfo(subscriptionId, iotHubDescription);
         return iotHubConnectionString;
+    }
+    private async updateIoTHubEventHubConnectionString(eventHubConnectionString: string) {
+        await CredentialStore.setPassword(Constants.IotHubEventHubConnectionStringKey, eventHubConnectionString);
     }
 
     private async updateIoTHubConnectionString(iotHubConnectionString: string) {
         await CredentialStore.setPassword(Constants.IotHubConnectionStringKey, iotHubConnectionString);
-        vscode.commands.executeCommand("azure-iot-toolkit.refresh");
     }
 
     private async getIoTHubConnectionString(credentials: any, subscriptionId: string, environment: Environment, iotHubDescription: IotHubModels.IotHubDescription) {
@@ -308,6 +315,17 @@ export class IoTHubResourceExplorer extends BaseExplorer {
         }, IotHubClient);
         return client.iotHubResource.getKeysForKeyName(Utility.getResourceGroupNameFromId(iotHubDescription.id), iotHubDescription.name, "iothubowner").then((result) => {
             return `HostName=${iotHubDescription.properties.hostName};SharedAccessKeyName=${result.keyName};SharedAccessKey=${result.primaryKey}`;
+        });
+    }
+    private async getEventHubConnectionString(credentials: any, subscriptionId: string, environment: Environment, iotHubDescription: IotHubModels.IotHubDescription) {
+        const client = createAzureClient({
+            credentials,
+            subscriptionId,
+            environment
+        }, IotHubClient);
+
+        return client.iotHubResource.getKeysForKeyName(Utility.getResourceGroupNameFromId(iotHubDescription.id), iotHubDescription.name, "iothubowner").then((result) => {
+            return `Endpoint=${iotHubDescription.properties.eventHubEndpoints.events.endpoint};SharedAccessKeyName=${result.keyName};SharedAccessKey=${result.primaryKey};EntityPath=${iotHubDescription.properties.eventHubEndpoints.events.path}`;
         });
     }
 
