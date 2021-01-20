@@ -821,7 +821,7 @@
     "@azure/ms-rest-azure-env": "^2.0.0",
     "@azure/ms-rest-nodeauth": "^3.0.5",
     "ajv": "^6.12.4",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "azure-iot-device-mqtt": "^1.15.0",
     "azure-iothub": "^1.12.4",
     "body-parser": "^1.18.2",
