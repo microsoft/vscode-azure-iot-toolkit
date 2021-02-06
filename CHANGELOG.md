@@ -1,3 +1,7 @@
+## 2.16.5 (2021-01-26)
+### Changed
+* Updated package vulnerabilities
+
 ## 2.16.4 (2020-09-04)
 ### Fixed
 * Regression in handling of connecting to underlying Event Hub
