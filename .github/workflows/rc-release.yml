@@ -61,6 +61,7 @@ jobs:
     - run: |
         npm i
         npm i -g vsce
+        node scripts/genAiKey.js
         npm run compile
         vsce package
     - uses: actions/upload-artifact@v2
