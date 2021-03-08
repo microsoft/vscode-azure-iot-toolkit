@@ -1,3 +1,8 @@
+## 2.16.6 (2021-01-26)
+### Changed
+* Updated package vulnerabilities
+* Migrated testing framework from `vscode` -> `vscode-test`
+
 ## 2.16.5 (2021-01-26)
 ### Changed
 * Updated package vulnerabilities
