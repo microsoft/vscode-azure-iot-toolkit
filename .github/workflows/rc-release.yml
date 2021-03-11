@@ -1,0 +1,70 @@
+
+name: rc-release
+
+on:
+  workflow_dispatch:
+  push:
+    tags: # only checks for -rc tags
+      - 'v[0-9]+.[0-9]+.[0-9]+-rc'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2.1.4
+      with:
+        node-version: 12.x
+    - run: |
+        npm i
+        npm i -g vsce
+    - run: |
+        npm run compile
+        vsce package
+  
+  test:
+    runs-on: ${{ matrix.os }}
+    needs: build
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        node-version: [12.x]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2.1.4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm i
+      - run: npm run tslint
+      - run: npm run compile
+      - run: xvfb-run -a npm test
+        if: runner.os == 'Linux'
+      - run: npm test
+        if: runner.os != 'Linux'
+      - name: Set up Ruby 2.6
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: 2.6.x
+      - name: Check links with awesome_bot
+        run: |
+          gem install awesome_bot
+          awesome_bot --allow-dupe --allow-redirect --skip-save-results `ls *.md` --white-list gitter.im
+
+  release:
+    runs-on: ubuntu-latest
+    needs: [build, test]
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2.1.4
+      with:
+        node-version: 12.x
+    - run: |
+        npm i
+        npm i -g vsce
+        node scripts/genAiKey.js
+        npm run compile
+        vsce package
+    - uses: actions/upload-artifact@v2
+      with:
+        path: '*.vsix'
+    
