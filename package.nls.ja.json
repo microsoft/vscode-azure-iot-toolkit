@@ -30,6 +30,9 @@
   "azure-iot-toolkit.command.generateSasTokenForIotHub.title": "IoT Hub のSASトークンを生成",
   "azure-iot-toolkit.command.generateCode.title": "コードを生成",
   "azure-iot-toolkit.command.createModule.title": "モジュールを作成",
+  "azure-iot-toolkit.command.updateDistributedTracingSetting.title": "分散トレースの設定を変更(プレビュー)",
+  "azure-iot-toolkit.command.editDistributedTracingMode.title": "編集...",
+  "azure-iot-toolkit.command.editDistributedTracingSamplingRate.title": "編集...",
   "azure-iot-toolkit.command.deleteModule.title": "モジュールを削除",
   "azure-iot-toolkit.command.getModule.title": "モジュール情報を表示",
   "azure-iot-toolkit.command.copyModuleConnectionString.title": "モジュール接続文字列をコピー",
@@ -38,5 +41,15 @@
   "azure-iot-toolkit.configuration.title": "Azure IoT Hub の設定",
   "azure-iot-toolkit.configuration.deviceConnectionString.description": "デバイス接続文字列",
   "azure-iot-toolkit.configuration.iotHubConnectionString.description": "IoT Hub 接続文字列",
-  "azure-iot-toolkit.configuration.iotHubConsumerGroup.description": "IoT Hub コンシューマーグループ"
+  "azure-iot-toolkit.configuration.iotHubConsumerGroup.description": "IoT Hub コンシューマーグループ",
+  "azure-iot-toolkit.configuration.monitorD2CBeforeNowInMinutes.description": "現在より前のビルトインエンドポイントをモニターする時間（分）",
+  "azure-iot-toolkit.configuration.showVerboseMessage.description": "メッセージをモニターするときに詳細な情報を表示する",
+  "azure-iot-toolkit.configuration.iotHubD2CMessageStringify.description": "D2Cメッセージを文字列化",
+  "azure-iot-toolkit.configuration.showIoTHubInfo.description": "IoT Hub 接続文字列が設定されていないときに IoT Hub の情報を表示する",
+  "azure-iot-toolkit.configuration.terminalRoot.description": "(Windows のみ) Bash on WindowsやGit Bash、Cygwinなどのカスタムシェルを使用するときに、コマンドの Windows 形式のドライブ名を UNIX 形式に置き換える。例えば、「/mnt/」と設定すると「C:\\foo\\bar」を「/mnt/c/foo/bar」に置き換える。",
+  "azure-iot-toolkit.configuration.treeViewAutoRefreshEnable.description": "ツリービューの自動更新を有効化",
+  "azure-iot-toolkit.configuration.treeViewAutoRefreshIntervalInSeconds.description": "ツリービューを自動更新する時間間隔（秒）。ツリービューの自動更新を有効にすると機能します。",
+  "azure-iot-dps.command.viewProperties.title": "プロパティを表示",
+  "azure-iot-dps.command.loadMore.title": "もっと読み込む",
+  "azure-iot-dps.command.refresh.title": "更新"
 }
