@@ -1,0 +1,148 @@
+trigger:
+  tags:
+    include:
+      - 'v*'
+
+variables:
+- group: releaseVariables
+
+parameters:
+  - name: publishExt
+    displayName: Publish Extension
+    type: boolean
+    default: false
+
+stages:
+- stage: test
+  jobs:
+  - job: test
+    strategy:
+      matrix:
+        linux:
+          imageName: 'ubuntu-latest'
+        mac:
+          imageName: 'macos-latest'
+        windows:
+          imageName: 'windows-latest'
+    pool:
+      vmImage: $(imageName)
+
+    steps:
+     # install nodejs
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '14.x'
+      displayName: Install Node.js
+      # Install dependencies and run tslint and test
+    - script: |
+        npm install
+      displayName: Install dependencies
+    - script: |
+        npm run tslint
+      displayName: TSLint
+    - bash: |
+        xvfb-run -a npm test
+      displayName: Run Tests (Linux)
+      condition: and(succeeded(), eq(variables['Agent.OS'], 'Linux'))
+    - script: |
+        npm test
+      displayName: Run Tests
+      condition: and(succeeded(), ne(variables['Agent.OS'], 'Linux'))
+
+- stage: release
+  pool:
+    name: $(BuildAgentPool)
+    vmImage: $(BuildAgentImage)
+  jobs:
+  - job: release
+    steps:
+    # install nodejs and dependencies
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '14.x'
+      displayName: Install Node.js
+    
+    - script: |
+        npm install
+      displayName: Install dependencies
+    
+    - script: |
+        npm install -g vsce
+      displayName: Install vsce
+    
+    - task: PowerShell@2
+      condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/v')
+      displayName: Set the tag name as an environment variable
+      inputs:
+        targetType: inline
+        script: |
+          VERSION_TAG=`git describe --tags` && echo "##vso[task.setvariable variable=VERSION_TAG]$VERSION_TAG"
+    
+    # modify package.json for releases / release-candidates
+    - script: |
+        node scripts/modifyPackageJson.js name $(test_extension_name) displayName "$(test_display_name)" aiKey $ENV_AIKEY publisher $(test_publisher)
+      displayName: Modify package.json for release candidates
+      condition: and(succeeded(), contains(variables['VERSION_TAG'], 'rc'))
+      env:
+        ENV_AIKEY: $(TEST_AIKEY)
+  
+    - script: |
+        node scripts/modifyPackageJson.js aiKey $ENV_AIKEY
+      displayName: Modify package.json for releases
+      condition: and(succeeded(), not(contains(variables['VERSION_TAG'], 'rc')))
+      env:
+        ENV_AIKEY: $(PROD_AIKEY)
+
+    # build and package
+    - script: |
+        npm run compile
+        vsce package
+      displayName: Build and package VSIX
+
+    # Generate manifest and publish artifacts
+    - task: AzureArtifacts.manifest-generator-task.manifest-generator-task.ManifestGeneratorTask@0
+      displayName: 'Generate Software Manifest'
+      inputs:
+        BuildDropPath: '.'
+
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: '$(System.DefaultWorkingDirectory)'
+        Contents: |
+          **/*.vsix
+          **/_manifest/**
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+    - task: PublishBuildArtifacts@1
+      inputs:
+        pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        artifactName: drop
+        publishLocation: 'Container'
+    
+    # Publish release build on github (if parameter is set)
+    - task: GitHubRelease@1
+      condition: and(eq(${{ parameters.publishExt }}, 'true'), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'), not(contains(variables['VERSION_TAG'], 'rc')))
+      displayName: 'Publish release build on GitHub'
+      inputs:
+        gitHubConnection: $(GithubReleaseConnection)
+        repositoryName: '$(Build.Repository.Name)'
+        action: 'create'
+        target: '$(Build.SourceVersion)'
+        tagSource: 'gitTag'
+        tagPattern: '^v?[0-9]+\.[0-9]+\.[0-9]+$'
+        releaseNotesSource: 'inline'
+        assets: '$(Build.ArtifactStagingDirectory)/**/*.vsix'
+        isDraft: true
+        isPreRelease: false
+        changeLogCompareToRelease: 'lastFullRelease'
+        changeLogType: 'commitBased'
+      # publish vsix to marketplace for releases
+    
+    # Publish to marketplace (if parameter is set)
+    - bash: vsce publish -p $MARKETPLACE_TOKEN --packagePath *.vsix
+      workingDirectory: '$(Build.ArtifactStagingDirectory)'
+      displayName: Deploy releases to marketplace
+      condition: and(succeeded(),  eq(${{ parameters.publishExt }}, 'true'), not(contains(variables['VERSION_TAG'], 'rc')))
+      env:
+        MARKETPLACE_TOKEN: $(vsciot_marketplace_token)
+      
