@@ -3,6 +3,8 @@ trigger:
     include:
       - 'v*'
 
+pr: none
+
 variables:
 - group: releaseVariables
 
@@ -70,26 +72,18 @@ stages:
         npm install -g vsce
       displayName: Install vsce
     
-    - task: PowerShell@2
-      condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/v')
-      displayName: Set the tag name as an environment variable
-      inputs:
-        targetType: inline
-        script: |
-          VERSION_TAG=`git describe --tags` && echo "##vso[task.setvariable variable=VERSION_TAG]$VERSION_TAG"
-    
     # modify package.json for releases / release-candidates
     - script: |
         node scripts/modifyPackageJson.js name $(test_extension_name) displayName "$(test_display_name)" aiKey $ENV_AIKEY publisher $(test_publisher)
       displayName: Modify package.json for release candidates
-      condition: and(succeeded(), contains(variables['VERSION_TAG'], 'rc'))
+      condition: and(succeeded(), contains(variables['Build.SourceBranchName'], 'rc'))
       env:
         ENV_AIKEY: $(TEST_AIKEY)
   
     - script: |
         node scripts/modifyPackageJson.js aiKey $ENV_AIKEY
       displayName: Modify package.json for releases
-      condition: and(succeeded(), not(contains(variables['VERSION_TAG'], 'rc')))
+      condition: and(succeeded(), not(contains(variables['Build.SourceBranchName'], 'rc')))
       env:
         ENV_AIKEY: $(PROD_AIKEY)
 
@@ -119,30 +113,29 @@ stages:
         artifactName: drop
         publishLocation: 'Container'
     
-    # Publish release build on github (if parameter is set)
+    # Publish release build on github (if parameter is set and commit tagged)
     - task: GitHubRelease@1
-      condition: and(eq(${{ parameters.publishExt }}, 'true'), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'), not(contains(variables['VERSION_TAG'], 'rc')))
+      condition: and(eq(${{ parameters.publishExt }}, 'true'), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
       displayName: 'Publish release build on GitHub'
       inputs:
         gitHubConnection: $(GithubReleaseConnection)
         repositoryName: '$(Build.Repository.Name)'
         action: 'create'
         target: '$(Build.SourceVersion)'
-        tagSource: 'gitTag'
-        tagPattern: '^v?[0-9]+\.[0-9]+\.[0-9]+$'
+        tagSource: userSpecifiedTag
+        tag: $(Build.SourceBranchName)
         releaseNotesSource: 'inline'
         assets: '$(Build.ArtifactStagingDirectory)/**/*.vsix'
         isDraft: true
         isPreRelease: false
         changeLogCompareToRelease: 'lastFullRelease'
         changeLogType: 'commitBased'
-      # publish vsix to marketplace for releases
     
     # Publish to marketplace (if parameter is set)
     - bash: vsce publish -p $MARKETPLACE_TOKEN --packagePath *.vsix
       workingDirectory: '$(Build.ArtifactStagingDirectory)'
       displayName: Deploy releases to marketplace
-      condition: and(succeeded(),  eq(${{ parameters.publishExt }}, 'true'), not(contains(variables['VERSION_TAG'], 'rc')))
+      condition: and(succeeded(),  eq(${{ parameters.publishExt }}, 'true'), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
       env:
         MARKETPLACE_TOKEN: $(vsciot_marketplace_token)
       
