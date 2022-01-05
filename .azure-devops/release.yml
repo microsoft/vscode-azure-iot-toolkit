@@ -1,18 +1,35 @@
-trigger:
-  tags:
-    include:
-      - 'v*'
-
+# Manual trigger only
+trigger: none
 pr: none
 
-variables:
-- group: releaseVariables
-
 parameters:
-  - name: publishExt
-    displayName: Publish Extension
-    type: boolean
-    default: false
+- name: variableGroup
+  displayName: 'Pipeline variable group'
+  type: string
+  default: 'releaseVariables'
+- name: buildAgentPoolVar
+  displayName: 'Build agent pool'
+  type: string
+  default: 'BuildAgentPool'
+- name: buildAgentVmImageVar
+  displayName: 'Build agent image'
+  type: string
+  default: 'BuildAgentImage'
+- name: ghRelease
+  displayName: 'Draft github release'
+  type: boolean
+  default: false
+- name: isPreRelease
+  displayName: 'PreRelease / release candidate build'
+  type: boolean
+  default: false
+- name: publishExt
+  displayName: 'Publish Extension to Marketplace'
+  type: boolean
+  default: false
+
+variables:
+  - group: ${{ parameters.variableGroup }}
 
 stages:
 - stage: test
@@ -53,8 +70,9 @@ stages:
 
 - stage: release
   pool:
-    name: $(BuildAgentPool)
-    vmImage: $(BuildAgentImage)
+    name: $[variables.${{ parameters.buildAgentPoolVar }}]
+    vmImage: $[variables.${{ parameters.buildAgentVmImageVar }}]
+
   jobs:
   - job: release
     steps:
@@ -76,14 +94,14 @@ stages:
     - script: |
         node scripts/modifyPackageJson.js name $(test_extension_name) displayName "$(test_display_name)" aiKey $ENV_AIKEY publisher $(test_publisher)
       displayName: Modify package.json for release candidates
-      condition: and(succeeded(), contains(variables['Build.SourceBranchName'], 'rc'))
+      condition: and(succeeded(), eq(${{ parameters.isPreRelease }}, true), eq(${{ parameters.publishExt }}, false))
       env:
         ENV_AIKEY: $(TEST_AIKEY)
   
     - script: |
         node scripts/modifyPackageJson.js aiKey $ENV_AIKEY
       displayName: Modify package.json for releases
-      condition: and(succeeded(), not(contains(variables['Build.SourceBranchName'], 'rc')))
+      condition: and(succeeded(), eq(${{ parameters.isPreRelease }}, false), eq(${{ parameters.publishExt }}, true))
       env:
         ENV_AIKEY: $(PROD_AIKEY)
 
@@ -112,10 +130,19 @@ stages:
         pathtoPublish: '$(Build.ArtifactStagingDirectory)'
         artifactName: drop
         publishLocation: 'Container'
-    
+
+    - task: PowerShell@2
+      condition: eq(${{ parameters.ghRelease }}, true)
+      displayName: Scrape tag from package.json
+      inputs:
+        targetType: inline
+        script: |
+          $packageVersion = npm version | ConvertFrom-Json | Select-Object -ExpandProperty {azure-iot-toolkit}
+          echo "##vso[task.setvariable variable=versionTag]v$packageVersion"
+
     # Publish release build on github (if parameter is set and commit tagged)
     - task: GitHubRelease@1
-      condition: and(eq(${{ parameters.publishExt }}, 'true'), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
+      condition: eq(${{ parameters.ghRelease }}, true)
       displayName: 'Publish release build on GitHub'
       inputs:
         gitHubConnection: $(GithubReleaseConnection)
@@ -123,11 +150,12 @@ stages:
         action: 'create'
         target: '$(Build.SourceVersion)'
         tagSource: userSpecifiedTag
-        tag: $(Build.SourceBranchName)
+        tag: $(versionTag)
         releaseNotesSource: 'inline'
+        title: 'Release $(versionTag)'
         assets: '$(Build.ArtifactStagingDirectory)/**/*.vsix'
         isDraft: true
-        isPreRelease: false
+        isPreRelease: ${{ parameters.isPreRelease }}
         changeLogCompareToRelease: 'lastFullRelease'
         changeLogType: 'commitBased'
     
@@ -135,7 +163,7 @@ stages:
     - bash: vsce publish -p $MARKETPLACE_TOKEN --packagePath *.vsix
       workingDirectory: '$(Build.ArtifactStagingDirectory)'
       displayName: Deploy releases to marketplace
-      condition: and(succeeded(),  eq(${{ parameters.publishExt }}, 'true'), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
+      condition: and(succeeded(),  eq(${{ parameters.publishExt }}, true),  eq(${{ parameters.isPreRelease }}, false))
       env:
         MARKETPLACE_TOKEN: $(vsciot_marketplace_token)
       

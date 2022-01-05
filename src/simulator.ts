@@ -295,7 +295,7 @@ export class Simulator {
     const stringify = Utility.getConfig<boolean>(
       Constants.IoTHubD2CMessageStringifyKey,
     );
-    let msg = new Message(stringify ? JSON.stringify(message) : message);
+    const msg = new Message(stringify ? JSON.stringify(message) : message);
     if (stringify) {
       msg.contentType = "application/json";
       msg.contentEncoding = "utf-8";
