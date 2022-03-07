@@ -1,0 +1,39 @@
+parameters:
+- name: productionRelease
+  displayName: 'Build package for a production release (non-preview)'
+  type: boolean
+  default: false
+
+steps:
+  - script: |
+      npm install -g vsce
+    displayName: 'Install VSCE tool'
+
+  - ${{ if eq(parameters.productionRelease, false) }}:
+    - script: |
+        vsce package --pre-release
+      displayName: 'Build pre-release VSIX Package'
+
+  - ${{ if eq(parameters.productionRelease, true) }}:
+    - script: |
+        vsce package
+      displayName: 'Build VSIX Package'
+
+  - task: CopyFiles@2
+    displayName: 'Copy VSIX to artifact staging'
+    inputs:
+      SourceFolder: '$(System.DefaultWorkingDirectory)'
+      Contents: '**/*.vsix'
+      TargetFolder: '$(Build.ArtifactStagingDirectory)'
+  
+  - task: AzureArtifacts.manifest-generator-task.manifest-generator-task.ManifestGeneratorTask@0
+    displayName: 'Generate software manifest'
+    inputs:
+      BuildDropPath: '$(Build.ArtifactStagingDirectory)'
+
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish build artifacts'
+    inputs:
+      targetPath: '$(Build.ArtifactStagingDirectory)'
+      artifactType: 'pipeline'
+      artifactName: vscode-azure-iot-toolkit

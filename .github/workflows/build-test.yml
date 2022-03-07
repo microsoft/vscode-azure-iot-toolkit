@@ -53,11 +53,3 @@ jobs:
         if: runner.os == 'Linux'
       - run: npm test
         if: runner.os != 'Linux'
-      - name: Set up Ruby 2.6
-        uses: actions/setup-ruby@v1
-        with:
-          ruby-version: 2.6.x
-      - name: Check links with awesome_bot
-        run: |
-          gem install awesome_bot
-          awesome_bot --allow-dupe --allow-redirect --skip-save-results `ls *.md` --white-list gitter.im
