@@ -2,12 +2,12 @@
   "name": "azure-iot-toolkit",
   "displayName": "Azure IoT Hub",
   "description": "This extension is now a part of Azure IoT Tools extension pack. We highly recommend installing Azure IoT Tools to get full capabilities for Azure IoT development. Interact with Azure IoT Hub, IoT Device Management, IoT Edge Management, IoT Hub Device Simulation, IoT Hub Code Generation and IoT Hub Device Provisioning Service (DPS).",
-  "version": "2.16.6",
+  "version": "2.16.7",
   "publisher": "vsciot-vscode",
   "aiKey": "0caaff90-cc1c-4def-b64c-3ef33615bc9b",
   "icon": "logo.png",
   "engines": {
-    "vscode": "^1.40.0"
+    "vscode": "^1.65.1"
   },
   "license": "SEE LICENSE IN LICENSE.txt",
   "repository": {
@@ -801,7 +801,7 @@
     "@types/vscode": "^1.40.0",
     "copy-webpack-plugin": "^6.0.3",
     "fail-on-errors-webpack-plugin": "^3.0.0",
-    "mocha": "^8.2.1",
+    "mocha": "^9.2.2",
     "rimraf": "^3.0.2",
     "shebang-loader": "0.0.1",
     "terser-webpack-plugin": "^5.1.1",
@@ -809,7 +809,7 @@
     "tslint": "^6.1.3",
     "typescript": "^3.9.7",
     "webpack": "^5.30.0",
-    "webpack-cli": "^3.3.12"
+    "webpack-cli": "^4.9.2"
   },
   "dependencies": {
     "@azure/arm-deviceprovisioningservices": "^2.1.0",
@@ -829,6 +829,7 @@
     "fs-extra": "^9.0.1",
     "glob": "^7.1.6",
     "handlebars": "^4.7.7",
+    "keytar": "^7.9.0",
     "numbro": "^2.3.1",
     "replace-in-file": "^6.1.0",
     "seedrandom": "^3.0.5",
