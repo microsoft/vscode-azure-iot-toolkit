@@ -7,7 +7,7 @@ import { Message } from "azure-iot-device";
 import { Client } from "azure-iot-device";
 import { clientFromConnectionString } from "azure-iot-device-mqtt";
 import * as vscode from "vscode";
-import * as dummyjson from "../external_lib/dummy-json";
+import * as dummyjson from "dummy-json";
 import { Constants } from "./constants";
 import { IoTHubResourceExplorer } from "./iotHubResourceExplorer";
 import { DeviceItem } from "./Model/DeviceItem";
@@ -296,10 +296,11 @@ export class Simulator {
       Constants.IoTHubD2CMessageStringifyKey,
     );
     const msg = new Message(stringify ? JSON.stringify(message) : message);
-    if (stringify) {
-      msg.contentType = "application/json";
-      msg.contentEncoding = "utf-8";
-    }
+    // default to utf-8 encoding
+    msg.contentEncoding = "utf-8";
+    // msg.contentType must either be `undefined` or `application/json`
+    msg.contentType = "application/json";
+
     await client.sendEvent(
       msg,
       this.sendEventDoneCallback(
