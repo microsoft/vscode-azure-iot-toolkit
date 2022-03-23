@@ -36,7 +36,8 @@ const config = {
         extensions: ['.ts', '.js'],
         // suppress warning: webpack + require handlebars error
         alias: {
-            handlebars: 'handlebars/dist/handlebars.min.js'
+            handlebars: 'handlebars/dist/handlebars.min.js',
+            fecha: 'fecha/dist/fecha.min.js'
         }
     },
     module: {
@@ -131,4 +132,30 @@ const config = {
     }
 }
 
-module.exports = config;
+const simulatorConfig = {
+    entry: './resources/simulator/main.js', 
+    output: {
+        path: path.resolve(__dirname, 'resources', 'simulator'),
+        filename: 'simulator.js',
+    },
+    devtool: 'source-map',
+    resolve: { // support reading TypeScript and JavaScript files, 📖 -> https://github.com/TypeStrong/ts-loader
+        extensions: ['.js'],
+        alias: {
+            vue: 'vue/dist/vue.js'
+        },
+    },
+    optimization: {
+        splitChunks: {
+          cacheGroups: {
+            commons: {
+              test: /[\\/]node_modules[\\/]/,
+              name: "vendor",
+              chunks: "initial",
+              filename: 'vendor/vendor.js'
+            },
+          },
+        },
+      },
+}
+module.exports = [config, simulatorConfig];

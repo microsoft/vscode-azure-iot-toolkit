@@ -6,13 +6,8 @@
         otherwise webview may show in blank because some variable cannot get the initial data
         (e.g. axios.js is missing so that we can't do POST in main.js ) -->
     <link rel="stylesheet" href="{{root}}/resources/simulator/main.css">
-    <link rel="stylesheet" href="./main.css">
     <link rel="stylesheet" href="{{root}}/resources/simulator/iview.css">
-    <link rel="stylesheet" href="./iview.css">
-    <script type="text/javascript" src="{{root}}/resources/simulator/axios.min.js"></script>
-    <script type="text/javascript" src="./axios.min.js"></script>
-    <script type="text/javascript" src="{{root}}/resources/simulator/vue.min.js"></script>
-    <script type="text/javascript" src="./vue.min.js"></script>
+    <script type="text/javascript" src="{{root}}/resources/simulator/vendor/vendor.js"></script>
     <!-- v-cloak will remain on the element until the associated Vue instance finishes compilation.
         Combined with CSS rules, this directive can be used to hide un-compiled mustache bindings until the Vue instance is ready.  -->
     <style type="text/css">
@@ -155,12 +150,7 @@
             </div>
         </Modal>
     </div>
-    <!-- The loading sequence is critical, iview.js must be executed before main.js,
-        otherwise unexpected placeholder will show on the page before they get properly rendered -->
-    <script type="text/javascript" src="{{root}}/resources/simulator/iview.min.js"></script>
-    <script type="text/javascript" src="./iview.min.js"></script>
-    <script type="text/javascript" src="{{root}}/resources/simulator/main.js"></script>
-    <script type="text/javascript" src="./main.js"></script>
+    <script type="text/javascript" src="{{root}}/resources/simulator/simulator.js"></script>
 </body>
 
 </html>

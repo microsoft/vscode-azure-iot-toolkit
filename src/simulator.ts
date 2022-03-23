@@ -7,7 +7,7 @@ import { Message } from "azure-iot-device";
 import { Client } from "azure-iot-device";
 import { clientFromConnectionString } from "azure-iot-device-mqtt";
 import * as vscode from "vscode";
-import * as dummyjson from "dummy-json";
+import dummyjson from "dummy-json";
 import { Constants } from "./constants";
 import { IoTHubResourceExplorer } from "./iotHubResourceExplorer";
 import { DeviceItem } from "./Model/DeviceItem";

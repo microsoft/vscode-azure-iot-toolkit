@@ -3,7 +3,7 @@ import express from "express";
 import * as http from "http";
 import { AddressInfo } from "net";
 import * as vscode from "vscode";
-import * as dummyjson from "dummy-json";
+import dummyjson from "dummy-json";
 import { Constants } from "../constants";
 import { DeviceItem } from "../Model/DeviceItem";
 import { SendStatus } from "../sendStatus";

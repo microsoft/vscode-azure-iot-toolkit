@@ -1,3 +1,7 @@
+import iView from 'iview';
+import Vue from 'vue';
+import axios from 'axios';
+
 let vscode;
 try {
   vscode = acquireVsCodeApi();
@@ -54,6 +58,8 @@ const defaultValue = {
   plainTextArea: plainTextTemplate,
   dummyJsonArea: dummyJsonTemplate
 };
+
+Vue.use(iView);
 
 const app = new Vue({
   el: "#app",

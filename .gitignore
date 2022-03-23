@@ -3,3 +3,6 @@ node_modules
 npm-debug.log
 dist
 .vscode-test
+# output of simulator bundling
+resources/simulator/**/*.js
+resources/simulator/**/*.map
