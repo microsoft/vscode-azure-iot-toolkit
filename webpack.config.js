@@ -139,7 +139,7 @@ const simulatorConfig = {
         filename: 'simulator.js',
     },
     devtool: 'source-map',
-    resolve: { // support reading TypeScript and JavaScript files, 📖 -> https://github.com/TypeStrong/ts-loader
+    resolve: {
         extensions: ['.js'],
         alias: {
             vue: 'vue/dist/vue.js'
@@ -166,7 +166,7 @@ const welcomeConfig = {
         filename: 'welcome.js',
     },
     devtool: 'source-map',
-    resolve: { // support reading TypeScript and JavaScript files, 📖 -> https://github.com/TypeStrong/ts-loader
+    resolve: {
         extensions: ['.js'],
     },
     optimization: {
