@@ -135,7 +135,7 @@ const config = {
 const simulatorConfig = {
     entry: './resources/simulator/main.js', 
     output: {
-        path: path.resolve(__dirname, 'resources', 'simulator'),
+        path: path.resolve(__dirname, 'resources', 'simulator', 'scripts'),
         filename: 'simulator.js',
     },
     devtool: 'source-map',
@@ -152,7 +152,7 @@ const simulatorConfig = {
               test: /[\\/]node_modules[\\/]/,
               name: "vendor",
               chunks: "initial",
-              filename: 'vendor/vendor.js'
+              filename: 'vendor.js'
             },
           },
         },
