@@ -4,5 +4,5 @@ npm-debug.log
 dist
 .vscode-test
 # output of simulator bundling
-resources/simulator/scripts/**/*.js
-resources/simulator/scripts/**/*.map
+resources/simulator/scripts/**/*
+resources/welcome/scripts/**/*

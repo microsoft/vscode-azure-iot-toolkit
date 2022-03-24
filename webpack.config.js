@@ -14,7 +14,7 @@ const path = require('path');
 const webpack = require('webpack');
 
 /**@type {import('webpack').Configuration}*/
-const config = {
+const extensionConfig = {
     target: 'node', // vscode extensions run in a Node.js-context 📖 -> https://webpack.js.org/configuration/node/
     node: {
         __dirname: false
@@ -158,4 +158,28 @@ const simulatorConfig = {
         },
       },
 }
-module.exports = [config, simulatorConfig];
+
+const welcomeConfig = {
+    entry: './resources/welcome/main.js', 
+    output: {
+        path: path.resolve(__dirname, 'resources', 'welcome', 'scripts'),
+        filename: 'welcome.js',
+    },
+    devtool: 'source-map',
+    resolve: { // support reading TypeScript and JavaScript files, 📖 -> https://github.com/TypeStrong/ts-loader
+        extensions: ['.js'],
+    },
+    optimization: {
+        splitChunks: {
+          cacheGroups: {
+            commons: {
+              test: /[\\/]node_modules[\\/]/,
+              name: "vendor",
+              chunks: "initial",
+              filename: 'vendor.js'
+            },
+          },
+        },
+      },
+}
+module.exports = [extensionConfig, simulatorConfig, welcomeConfig];

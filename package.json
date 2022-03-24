@@ -780,14 +780,16 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "rimraf dist && npm run simulator:clean && webpack --mode production",
+    "vscode:prepublish": "rimraf dist && npm run resources:clean && webpack --mode production",
     "compile": "tsc -p ./",
     "tslint": "tslint -t verbose src/**/*.ts test/**/*.ts --exclude src/**/*.d.ts",
     "version": "tsc -v",
     "test": "npm run compile && node ./out/test/runTests.js",
     "simulator:clean": "rimraf resources/simulator/scripts",
-    "webpack": "rimraf dist && npm run simulator:clean && webpack --mode development",
-    "webpack-dev": "rimraf dist && npm run simulator:clean && webpack --mode development --watch"
+    "welcome:clean": "rimraf resources/welcome/scripts",
+    "resources:clean": "npm run simulator:clean && npm run welcome:clean",
+    "webpack": "rimraf dist && npm run resources:clean && webpack --mode development",
+    "webpack-dev": "rimraf dist && npm run resources:clean && webpack --mode development --watch"
   },
   "devDependencies": {
     "@opentelemetry/tracing": "^0.18.2",
@@ -830,6 +832,7 @@
     "fs-extra": "^9.0.1",
     "glob": "^7.1.6",
     "iview": "^3.5.4",
+    "jquery": "^3.3.1",
     "keytar": "^7.9.0",
     "replace-in-file": "^6.1.0",
     "strip-json-comments": "^3.1.1",
