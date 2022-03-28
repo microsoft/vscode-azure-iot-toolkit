@@ -109,7 +109,7 @@ stages:
       # install Node
       - task: NodeTool@0
         inputs:
-          versionSpec: '16.x'
+          versionSpec: '14.x'
         displayName: 'Install Node.js'
 
       - script: |

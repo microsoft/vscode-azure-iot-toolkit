@@ -2,6 +2,7 @@ steps:
   - script: |
         npm run tslint
     displayName: 'TSLint'
+  # Inits a virtualized x-server instance for running extension tests on headless linux
   - bash: |
       xvfb-run -a npm test
     displayName: 'Run Tests (Linux)'
