@@ -1,0 +1,136 @@
+# Manual trigger only
+trigger: none
+pr: none
+
+parameters:
+- name: buildAgentPoolVar
+  displayName: 'Build agent pool'
+  type: string
+  default: 'BuildAgentPool'
+- name: buildAgentVmImageVar
+  displayName: 'Build agent image'
+  type: string
+  default: 'BuildAgentImage'
+- name: aiKeyVar
+  displayName: 'AI Key Variable'
+  type: string
+  default: 'TestAIKey'
+- name: publishExt
+  displayName: 'Publish to Marketplace'
+  type: boolean
+  default: false
+- name: productionRelease
+  displayName: 'Publish to marketplace as public (non-preview)'
+  type: boolean
+  default: false
+
+variables:
+- name: vmImage
+  value: $[variables.${{ parameters.buildAgentVmImageVar }}]
+- name: buildPool
+  value: $[variables.${{ parameters.buildAgentPoolVar }}]
+- name: aiKey
+  value: $[variables.${{ parameters.aiKeyVar }}]
+
+stages:
+- stage: test
+  jobs:
+  - job: test
+    strategy:
+      matrix:
+        linux:
+          imageName: 'ubuntu-latest'
+        mac:
+          imageName: 'macos-latest'
+        windows:
+          imageName: 'windows-latest'
+    pool:
+      vmImage: $(imageName)
+
+    steps:
+    - template: common/setup_steps.yml
+    - template: common/test_steps.yml
+
+- stage: build
+  dependsOn: [test]
+  jobs:
+  - job: SDLTools
+    displayName: 'SDL checks'
+    pool:
+      vmImage: windows-latest
+    steps:
+    - template: common/sdl_steps.yml
+
+  - job: build_and_package
+    displayName: 'Build and Publish Artifacts'
+    pool:
+      name: $(buildPool)
+      vmImage: $(vmImage)
+      demands:
+        - ImageOverride -equals $(vmImage)
+    dependsOn: SDLTools
+    steps:
+      - template: common/setup_steps.yml
+      - template: common/compile_steps.yml
+
+      # modify application insights key for releases only
+      - script: |
+          node scripts/modifyPackageJson.js aiKey $(aiKey)
+        displayName: 'Inject App Insights key'
+        condition: and(succeeded(), ${{ parameters.publishExt }})
+
+      - template: common/package_steps.yml
+        parameters:
+          productionRelease: ${{ eq(parameters.productionRelease, true) }}
+   
+- stage: release
+  displayName: 'Release to VS Marketplace'
+  dependsOn: [test, build]
+  condition: and(succeeded(), ${{ parameters.publishExt }})
+  pool:
+    name: $(buildPool)
+    vmImage: $(vmImage)
+    demands:
+      - ImageOverride -equals $(vmImage)
+  jobs:
+  - deployment: 'StageRelease'
+    displayName: 'Stage Release for deployment'
+    environment: 'production'
+  - job: 'release'
+    displayName: 'Release package'
+    steps:
+      - task: DownloadPipelineArtifact@2
+        displayName : 'Download VSIX Build Artifacts'
+        inputs:
+          source: 'current'
+          artifact: 'vscode-azure-iot-toolkit'
+          path: '$(System.ArtifactsDirectory)/vsix'
+
+      # install Node
+      - task: NodeTool@0
+        inputs:
+          versionSpec: '14.x'
+        displayName: 'Install Node.js'
+
+      - script: |
+          npm install -g vsce
+        displayName: 'Install VSCE tool'
+
+      # publish pre-release vsix to marketplace
+      - bash: |
+          vsce publish -p $MARKETPLACE_TOKEN --packagePath *.vsix --pre-release
+        workingDirectory: '$(System.ArtifactsDirectory)/vsix'
+        displayName: 'Deploy pre-release VSIX to marketplace'
+        condition: and(succeeded(), not(${{ parameters.productionRelease }}))
+        env:
+          MARKETPLACE_TOKEN: $(vsciot_marketplace_token)
+
+      # publish vsix to marketplace
+      - bash: |
+          vsce publish -p $MARKETPLACE_TOKEN --packagePath *.vsix
+        workingDirectory: '$(System.ArtifactsDirectory)/vsix'
+        displayName: 'Deploy release VSIX to marketplace'
+        condition: and(succeeded(), ${{ parameters.productionRelease }})
+        env:
+          MARKETPLACE_TOKEN: $(vsciot_marketplace_token)
+      

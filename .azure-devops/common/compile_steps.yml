@@ -1,0 +1,5 @@
+steps:
+  # Typescript Compile
+  - script: |
+      npm run compile
+    displayName: 'Typescript compile'

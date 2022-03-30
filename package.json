@@ -2,12 +2,12 @@
   "name": "azure-iot-toolkit",
   "displayName": "Azure IoT Hub",
   "description": "This extension is now a part of Azure IoT Tools extension pack. We highly recommend installing Azure IoT Tools to get full capabilities for Azure IoT development. Interact with Azure IoT Hub, IoT Device Management, IoT Edge Management, IoT Hub Device Simulation, IoT Hub Code Generation and IoT Hub Device Provisioning Service (DPS).",
-  "version": "2.16.6",
+  "version": "2.16.7",
   "publisher": "vsciot-vscode",
   "aiKey": "0caaff90-cc1c-4def-b64c-3ef33615bc9b",
   "icon": "logo.png",
   "engines": {
-    "vscode": "^1.40.0"
+    "vscode": "^1.65.1"
   },
   "license": "SEE LICENSE IN LICENSE.txt",
   "repository": {
@@ -780,13 +780,16 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "rimraf dist && webpack --mode production",
+    "vscode:prepublish": "rimraf dist && npm run resources:clean && webpack --mode production",
     "compile": "tsc -p ./",
     "tslint": "tslint -t verbose src/**/*.ts test/**/*.ts --exclude src/**/*.d.ts",
     "version": "tsc -v",
     "test": "npm run compile && node ./out/test/runTests.js",
-    "webpack": "rimraf dist && webpack --mode development",
-    "webpack-dev": "rimraf dist && webpack --mode development --watch"
+    "simulator:clean": "rimraf resources/simulator/scripts",
+    "welcome:clean": "rimraf resources/welcome/scripts",
+    "resources:clean": "npm run simulator:clean && npm run welcome:clean",
+    "webpack": "rimraf dist && npm run resources:clean && webpack --mode development",
+    "webpack-dev": "rimraf dist && npm run resources:clean && webpack --mode development --watch"
   },
   "devDependencies": {
     "@opentelemetry/tracing": "^0.18.2",
@@ -801,7 +804,7 @@
     "@types/vscode": "^1.40.0",
     "copy-webpack-plugin": "^6.0.3",
     "fail-on-errors-webpack-plugin": "^3.0.0",
-    "mocha": "^8.2.1",
+    "mocha": "^9.2.2",
     "rimraf": "^3.0.2",
     "shebang-loader": "0.0.1",
     "terser-webpack-plugin": "^5.1.1",
@@ -809,7 +812,7 @@
     "tslint": "^6.1.3",
     "typescript": "^3.9.7",
     "webpack": "^5.30.0",
-    "webpack-cli": "^3.3.12"
+    "webpack-cli": "^4.9.2"
   },
   "dependencies": {
     "@azure/arm-deviceprovisioningservices": "^2.1.0",
@@ -820,23 +823,24 @@
     "@azure/ms-rest-azure-env": "^2.0.0",
     "@azure/ms-rest-nodeauth": "^3.0.5",
     "ajv": "^6.12.4",
-    "axios": "^0.21.1",
+    "axios": "^0.21.4",
     "azure-iot-device-mqtt": "^1.15.0",
     "azure-iothub": "^1.12.4",
     "body-parser": "^1.18.2",
+    "dummy-json": "^3.0.4",
     "express": "^4.16.3",
-    "fecha": "^4.2.0",
     "fs-extra": "^9.0.1",
     "glob": "^7.1.6",
-    "handlebars": "^4.7.7",
-    "numbro": "^2.3.1",
+    "iview": "^3.5.4",
+    "jquery": "^3.3.1",
+    "keytar": "^7.9.0",
     "replace-in-file": "^6.1.0",
-    "seedrandom": "^3.0.5",
     "strip-json-comments": "^3.1.1",
     "uuid": "^8.3.0",
     "vscode-azureextensionui": "^0.35.0",
     "vscode-extension-telemetry": "^0.1.6",
-    "vscode-test": "^1.4.1"
+    "vscode-test": "^1.4.1",
+    "vue": "^2.6.14"
   },
   "extensionDependencies": [
     "ms-vscode.azure-account"

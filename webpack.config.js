@@ -14,7 +14,7 @@ const path = require('path');
 const webpack = require('webpack');
 
 /**@type {import('webpack').Configuration}*/
-const config = {
+const extensionConfig = {
     target: 'node', // vscode extensions run in a Node.js-context 📖 -> https://webpack.js.org/configuration/node/
     node: {
         __dirname: false
@@ -36,7 +36,8 @@ const config = {
         extensions: ['.ts', '.js'],
         // suppress warning: webpack + require handlebars error
         alias: {
-            handlebars: 'handlebars/dist/handlebars.min.js'
+            handlebars: 'handlebars/dist/handlebars.min.js',
+            fecha: 'fecha/dist/fecha.min.js'
         }
     },
     module: {
@@ -131,4 +132,54 @@ const config = {
     }
 }
 
-module.exports = config;
+const simulatorConfig = {
+    entry: './resources/simulator/main.js', 
+    output: {
+        path: path.resolve(__dirname, 'resources', 'simulator', 'scripts'),
+        filename: 'simulator.js',
+    },
+    devtool: 'source-map',
+    resolve: {
+        extensions: ['.js'],
+        alias: {
+            vue: 'vue/dist/vue.js'
+        },
+    },
+    optimization: {
+        splitChunks: {
+          cacheGroups: {
+            commons: {
+              test: /[\\/]node_modules[\\/]/,
+              name: "vendor",
+              chunks: "initial",
+              filename: 'vendor.js'
+            },
+          },
+        },
+      },
+}
+
+const welcomeConfig = {
+    entry: './resources/welcome/main.js', 
+    output: {
+        path: path.resolve(__dirname, 'resources', 'welcome', 'scripts'),
+        filename: 'welcome.js',
+    },
+    devtool: 'source-map',
+    resolve: {
+        extensions: ['.js'],
+    },
+    optimization: {
+        splitChunks: {
+          cacheGroups: {
+            commons: {
+              test: /[\\/]node_modules[\\/]/,
+              name: "vendor",
+              chunks: "initial",
+              filename: 'vendor.js'
+            },
+          },
+        },
+      },
+}
+module.exports = [extensionConfig, simulatorConfig, welcomeConfig];

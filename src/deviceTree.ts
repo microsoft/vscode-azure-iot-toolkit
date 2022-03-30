@@ -28,7 +28,7 @@ export class DeviceTree implements vscode.TreeDataProvider<INode> {
         const iotHubConnectionString = await Utility.setConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
         if (iotHubConnectionString) {
             vscode.window.showInformationMessage(`${Constants.IotHubConnectionStringTitle} is updated.`);
-            this._onDidChangeTreeData.fire();
+            this._onDidChangeTreeData.fire(undefined);
         }
     }
 
@@ -64,7 +64,7 @@ export class DeviceTree implements vscode.TreeDataProvider<INode> {
         if (treeViewAutoRefreshEnable) {
             const treeViewAutoRefreshIntervalInSeconds = Utility.getConfig<number>(Constants.TreeViewAutoRefreshIntervalInSecondsKey);
             return setInterval(() => {
-                this._onDidChangeTreeData.fire();
+                this._onDidChangeTreeData.fire(undefined);
             }, treeViewAutoRefreshIntervalInSeconds * 1000);
         }
         return undefined;
