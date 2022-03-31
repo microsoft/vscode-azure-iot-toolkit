@@ -11,6 +11,14 @@ steps:
     displayName: 'Run PoliCheck'
     inputs:
       targetType: F
+  
+  - task: ComponentGovernanceComponentDetection@0
+    displayName: 'Component Governance Detection'
+    inputs:
+      scanType: 'Register'
+      verbosity: 'Verbose'
+      alertWarningLevel: 'High'
+      failOnAlert: true
 
   - task: PostAnalysis@1
     inputs:
