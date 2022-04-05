@@ -8,6 +8,8 @@ import uuid
 # Using the Python Device SDK for IoT Hub:
 #   https://github.com/Azure/azure-iot-sdk-python
 #   Run 'pip install azure-iot-device' to install the required libraries for this application
+#   Note: Requires Python 3.6+
+
 # The sample connects to a device-specific MQTT endpoint on your IoT Hub.
 from azure.iot.device.aio import IoTHubDeviceClient
 from azure.iot.device import Message

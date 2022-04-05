@@ -97,6 +97,9 @@ public class SimulatedDevice {
 
     // Connect to the IoT hub.
     client = new DeviceClient(connString, protocol);
+    
+    // Open a connection from the device client.
+    // Boolean parameter configures retry behavior (false => no retry).
     client.open(false);
 
     // Create new thread and start sending messages 
