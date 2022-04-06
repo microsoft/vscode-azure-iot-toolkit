@@ -7,6 +7,7 @@
 package com.microsoft.docs.iothub.samples;
 
 import com.microsoft.azure.sdk.iot.device.*;
+import com.microsoft.azure.sdk.iot.device.exceptions.IotHubClientException;
 import com.google.gson.Gson;
 
 import java.io.*;
@@ -36,15 +37,16 @@ public class SimulatedDevice {
   }
 
   // Print the acknowledgement received from IoT Hub for the telemetry message sent.
-  private static class EventCallback implements IotHubEventCallback {
-    public void execute(IotHubStatusCode status, Object context) {
-      System.out.println("IoT Hub responded to message with status: " + status.name());
-
-      if (context != null) {
-        synchronized (context) {
-          context.notify();
+  private static class EventCallback implements MessageSentCallback {
+    @Override
+    public void onMessageSent(Message sentMessage, IotHubClientException exception, Object callbackContext) {
+      System.out.println("IoT Hub responded to message with status: " + (exception == null ? IotHubStatusCode.OK.toString()
+          : exception.getStatusCode()));
+        if (callbackContext != null) {
+          synchronized (callbackContext) {
+            callbackContext.notify();
+          }
         }
-      }
     }
   }
 
@@ -91,11 +93,14 @@ public class SimulatedDevice {
     }
   }
 
-  public static void main(String[] args) throws IOException, URISyntaxException {
+  public static void main(String[] args) throws IOException, URISyntaxException, IotHubClientException {
 
     // Connect to the IoT hub.
     client = new DeviceClient(connString, protocol);
-    client.open();
+    
+    // Open a connection from the device client.
+    // Boolean parameter configures retry behavior (false => no retry).
+    client.open(false);
 
     // Create new thread and start sending messages 
     MessageSender sender = new MessageSender();
@@ -106,6 +111,6 @@ public class SimulatedDevice {
     System.out.println("Press ENTER to exit.");
     System.in.read();
     executor.shutdownNow();
-    client.closeNow();
+    client.close();
   }
 }

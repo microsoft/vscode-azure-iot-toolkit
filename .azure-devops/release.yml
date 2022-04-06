@@ -33,9 +33,22 @@ variables:
   value: $[variables.${{ parameters.aiKeyVar }}]
 
 stages:
-- stage: test
+- stage: SDL
+  displayName: 'SDL Stage'
   jobs:
-  - job: test
+  - job: SDL_checks
+    displayName: 'SDL checks'
+    pool:
+      vmImage: windows-latest
+    steps:
+    - template: common/sdl_steps.yml
+
+- stage: test
+  displayName: 'Test Stage'
+  dependsOn: [SDL]
+  jobs:
+  - job: run_tests
+    displayName: 'Test'
     strategy:
       matrix:
         linux:
@@ -52,15 +65,9 @@ stages:
     - template: common/test_steps.yml
 
 - stage: build
+  displayName: 'Build Stage'
   dependsOn: [test]
   jobs:
-  - job: SDLTools
-    displayName: 'SDL checks'
-    pool:
-      vmImage: windows-latest
-    steps:
-    - template: common/sdl_steps.yml
-
   - job: build_and_package
     displayName: 'Build and Publish Artifacts'
     pool:
@@ -68,7 +75,6 @@ stages:
       vmImage: $(vmImage)
       demands:
         - ImageOverride -equals $(vmImage)
-    dependsOn: SDLTools
     steps:
       - template: common/setup_steps.yml
       - template: common/compile_steps.yml
@@ -84,8 +90,8 @@ stages:
           productionRelease: ${{ eq(parameters.productionRelease, true) }}
    
 - stage: release
-  displayName: 'Release to VS Marketplace'
-  dependsOn: [test, build]
+  displayName: 'Release to Marketplace'
+  dependsOn: [SDL, test, build]
   condition: and(succeeded(), ${{ parameters.publishExt }})
   pool:
     name: $(buildPool)
