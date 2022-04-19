@@ -30,7 +30,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: |
-            npm i
+            npm ci
             npm i -g vsce
     - run: |
         npm run compile
@@ -46,7 +46,7 @@ jobs:
       - uses: actions/setup-node@v2.1.4
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm i
+      - run: npm ci
       - run: npm run tslint
       - run: npm run compile
       - run: xvfb-run -a npm test
