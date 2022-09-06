@@ -61,6 +61,13 @@ stages:
       vmImage: $(imageName)
 
     steps:
+    # Run component governance before testing (testing leaves artifacts)
+    - task: ComponentGovernanceComponentDetection@0
+      displayName: 'Component Governance Detection'
+      inputs:
+        scanType: 'LogOnly'
+        verbosity: 'Verbose'
+        alertWarningLevel: 'Medium'
     - template: common/setup_steps.yml
     - template: common/test_steps.yml
 

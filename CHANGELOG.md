@@ -1,4 +1,8 @@
-## 2.16.7 (2022-03-23)
+## 2.17.0 (2022-05-24)
+### Changed
+* Version bump for non-preview release.
+
+## 2.16.7 (2022-04-21)
 ### Changed
 * Changed D2C messages to always declare message content-type as `application/json` and encoding as `utf-8`
 * Updated package vulnerabilities
