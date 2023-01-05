@@ -85,13 +85,11 @@
       ]
     },
     "views": {
-      "explorer": [
+      "azure": [
         {
           "id": "iotHubDevices",
           "name": "%azure-iot-toolkit.name%"
-        }
-      ],
-      "azure": [
+        },
         {
           "id": "iotDpsExplorer",
           "name": "IoT Hub Device Provisioning Service"
@@ -843,6 +841,6 @@
     "vue": "^2.6.14"
   },
   "extensionDependencies": [
-    "ms-vscode.azure-account"
+    "ms-azuretools.vscode-azureresourcegroups"
   ]
 }
