@@ -825,7 +825,7 @@
     "ajv": "^6.12.4",
     "axios": "^0.21.4",
     "azure-iot-device-mqtt": "^1.15.0",
-    "azure-iothub": "^1.12.4",
+    "azure-iothub": "^1.16.1",
     "body-parser": "^1.18.2",
     "dummy-json": "^3.0.4",
     "express": "^4.16.3",
