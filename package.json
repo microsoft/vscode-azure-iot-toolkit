@@ -815,9 +815,9 @@
     "webpack-cli": "^4.9.2"
   },
   "dependencies": {
-    "@azure/arm-deviceprovisioningservices": "^2.1.0",
-    "@azure/arm-eventhub": "^3.2.0",
-    "@azure/arm-iothub": "^3.0.0",
+    "@azure/arm-deviceprovisioningservices": "^5.1.0",
+    "@azure/arm-eventhub": "^5.1.0",
+    "@azure/arm-iothub": "^6.2.0",
     "@azure/arm-subscriptions": "^2.0.0",
     "@azure/event-hubs": "^5.2.2",
     "@azure/ms-rest-azure-env": "^2.0.0",
