@@ -28,7 +28,7 @@ export class LocalServer {
   }
 
   public startServer(): void {
-    const { port } = this.server.listen(0).address() as AddressInfo;
+    const { port } = this.server.listen(0, "127.0.0.1").address() as AddressInfo;
     this.serverPort = port;
     // tslint:disable-next-line:no-console
     console.log("serverPort:" + this.serverPort);
@@ -39,7 +39,7 @@ export class LocalServer {
   }
 
   public getServerUri(): string {
-    return `http://localhost:${this.serverPort}`;
+    return `http://127.0.0.1:${this.serverPort}`;
   }
 
   public setPreSelectedDevice(deviceItem: DeviceItem) {
@@ -85,7 +85,10 @@ export class LocalServer {
   private initApp() {
     this.app = express();
     this.app.all("*", (req, res, next) => {
-      res.setHeader("Access-Control-Allow-Origin", "*");
+      const origin = req.headers.origin;
+      if (origin && origin.startsWith("vscode-webview://")) {
+        res.setHeader("Access-Control-Allow-Origin", origin);
+      }
       res.setHeader(
         "Access-Control-Allow-Methods",
         "GET, PUT, POST, DELETE, PATCH, OPTIONS",

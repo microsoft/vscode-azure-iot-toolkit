@@ -44,6 +44,10 @@ export class CodeManager {
         }
         const template = this.context.asAbsolutePath(path.join("resources", "code-template", Constants.CodeTemplates[language][type]));
         const hostName = Utility.getHostName(iotHubConnectionString);
+        if (!/^[A-Za-z0-9.-]+$/.test(hostName || "")) {
+            vscode.window.showErrorMessage("IoT Hub host name contains invalid characters.");
+            return;
+        }
         let sasToken = "";
         try {
             if (deviceItem.connectionString && !deviceItem.connectionString.includes("x509=true")) {
@@ -55,7 +59,7 @@ export class CodeManager {
         const replacements = new Map(
             [[/{{deviceConnectionString}}/g, deviceItem.connectionString || ""],
             [/{{iotHubConnectionString}}/g, iotHubConnectionString],
-            [/{{deviceId}}/g, deviceItem.deviceId],
+            [/{{deviceId}}/g, language === "Ruby" ? encodeURIComponent(deviceItem.deviceId) : deviceItem.deviceId],
             [/{{iotHubHostName}}/g, hostName],
             [/{{deviceSasToken}}/g, sasToken],
             ]);
