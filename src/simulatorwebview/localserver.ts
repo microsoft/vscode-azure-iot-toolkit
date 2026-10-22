@@ -86,7 +86,11 @@ export class LocalServer {
     this.app = express();
     this.app.all("*", (req, res, next) => {
       const origin = req.headers.origin;
-      if (origin && origin.startsWith("vscode-webview://")) {
+      if (origin !== undefined && !origin.startsWith("vscode-webview://")) {
+        res.status(403).json({ error: "Forbidden" });
+        return;
+      }
+      if (origin) {
         res.setHeader("Access-Control-Allow-Origin", origin);
       }
       res.setHeader(
