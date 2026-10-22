@@ -27,11 +27,17 @@ export class LocalServer {
     this.preSelectedDevice = undefined;
   }
 
-  public startServer(): void {
-    const { port } = this.server.listen(0, "127.0.0.1").address() as AddressInfo;
-    this.serverPort = port;
-    // tslint:disable-next-line:no-console
-    console.log("serverPort:" + this.serverPort);
+  public startServer(): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      this.server.once("error", reject);
+      this.server.listen(0, "127.0.0.1", () => {
+        this.server.removeListener("error", reject);
+        this.serverPort = (this.server.address() as AddressInfo).port;
+        // tslint:disable-next-line:no-console
+        console.log("serverPort:" + this.serverPort);
+        resolve();
+      });
+    });
   }
 
   public stopServer(): void {
