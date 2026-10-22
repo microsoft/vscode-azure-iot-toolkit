@@ -19,7 +19,7 @@ export class CodeManager {
 
     // Generated SAS tokens look like: SharedAccessSignature sr=...&sig=...&se=...[&skn=...]
     public static isSafeSasToken(token: string): boolean {
-        return token === "" || /^SharedAccessSignature [A-Za-z0-9%&=._~+\-\/]+$/.test(token);
+        return token === "" || /^SharedAccessSignature [A-Za-z0-9%&=._~+\-/]+$/.test(token);
     }
 
     constructor(private context: vscode.ExtensionContext) {
