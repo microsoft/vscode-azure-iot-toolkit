@@ -78,7 +78,7 @@ export class Simulator {
     await _IoTHubResourceExplorer.selectIoTHub();
   }
 
-  public async getInputDeviceList(): Promise<{ deviceId: string }[]> {
+  public async getInputDeviceList(): Promise<{ deviceId: string; label: string }[]> {
     this.iotHubConnectionString = await Utility.getConnectionString(
       Constants.IotHubConnectionStringKey,
       Constants.IotHubConnectionStringTitle,
@@ -88,7 +88,10 @@ export class Simulator {
       this.iotHubConnectionString,
       false,
     );
-    return devices.map((device) => ({ deviceId: device.deviceId }));
+    return devices.map((device) => ({
+      deviceId: device.deviceId,
+      label: device.label,
+    }));
   }
 
   public isProcessing(): boolean {

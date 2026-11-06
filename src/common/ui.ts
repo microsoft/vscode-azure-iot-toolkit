@@ -67,11 +67,6 @@ export async function pickOne<T extends vscode.QuickPickItem>(
     return requireInput(picked);
 }
 
-export async function pickMany<T extends vscode.QuickPickItem>(items: T[], placeHolder: string): Promise<T[]> {
-    const picked = await vscode.window.showQuickPick(items, { placeHolder, ignoreFocusOut: true, canPickMany: true });
-    return requireInput(picked);
-}
-
 export async function confirmDestructiveAction(message: string, confirmLabel: string, detail?: string): Promise<void> {
     const choice = await vscode.window.showWarningMessage(message, { modal: true, detail }, confirmLabel);
     if (choice !== confirmLabel) {

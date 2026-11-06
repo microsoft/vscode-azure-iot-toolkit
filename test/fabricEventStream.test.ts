@@ -10,7 +10,7 @@ import {
     validateEndpointUri,
     validateGuid,
 } from "../src/messageEndpoint/fabricEventStreamCommands";
-import { getCustomEndpointNames } from "../src/messageEndpoint/hubRouting";
+import { getCustomEndpointNames, refreshSelectedHub } from "../src/messageEndpoint/hubRouting";
 
 suite("Fabric Event Stream Tests", () => {
 
@@ -58,6 +58,31 @@ suite("Fabric Event Stream Tests", () => {
         } as any;
         assert.deepStrictEqual(getCustomEndpointNames(hub),
             ["event-hub", "queue", "topic", "storage", "cosmos", "event-stream"]);
+    });
+
+    test("should refresh the original hub for follow-up routing changes", async () => {
+        const latestHub = { etag: "new-etag" } as any;
+        const calls: string[][] = [];
+        const client = {
+            iotHubResource: {
+                get: async (resourceGroupName: string, hubName: string) => {
+                    calls.push([resourceGroupName, hubName]);
+                    return latestHub;
+                },
+            },
+        } as any;
+        const selected = {
+            client,
+            hub: { etag: "old-etag" } as any,
+            resourceGroupName: "resource-group",
+            hubName: "original-hub",
+        };
+
+        const refreshed = await refreshSelectedHub(selected);
+
+        assert.deepStrictEqual(calls, [["resource-group", "original-hub"]]);
+        assert.strictEqual(refreshed.client, client);
+        assert.strictEqual(refreshed.hub, latestHub);
     });
 
     test("should require the sb:// protocol on the endpoint URI", () => {

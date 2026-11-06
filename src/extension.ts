@@ -27,7 +27,11 @@ import { DeviceTwinCodeLensProvider } from "./providers/deviceTwinCodeLensProvid
 import { ModuleTwinCodeLensProvider } from "./providers/moduleTwinCodeLensProvider";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
-import { createFabricEventStreamEndpoint, updateFabricEventStreamEndpoint } from "./messageEndpoint/fabricEventStreamCommands";
+import {
+    createFabricEventStreamEndpoint,
+    ICreatedFabricEventStreamEndpoint,
+    updateFabricEventStreamEndpoint,
+} from "./messageEndpoint/fabricEventStreamCommands";
 import { createMessageRoute, deleteMessageRoute, offerRouteForEndpoint, updateMessageRoute } from "./messageRoute/messageRouteCommands";
 import { RouteItemNode } from "./Nodes/Routes/RouteItemNode";
 
@@ -345,16 +349,16 @@ function activateIoTHub(context: vscode.ExtensionContext, outputChannel: vscode.
     });
 
     registerCommand("azure-iot-hub.createFabricEventStreamEndpoint", async () => {
-        let createdName: string;
+        let createdEndpoint: ICreatedFabricEventStreamEndpoint;
         try {
-            createdName = await createFabricEventStreamEndpoint(outputChannel);
+            createdEndpoint = await createFabricEventStreamEndpoint(outputChannel);
             TelemetryClient.sendOutcome(Constants.IoTHubAICreateFabricEventStreamEndpointEvent);
         } catch (error) {
             TelemetryClient.sendOutcome(Constants.IoTHubAICreateFabricEventStreamEndpointEvent, error);
             throw error;
         }
         vscode.commands.executeCommand("azure-iot-toolkit.refresh");
-        await offerRouteForEndpoint(outputChannel, createdName);
+        await offerRouteForEndpoint(outputChannel, createdEndpoint.endpointName, createdEndpoint.selectedHub);
         vscode.commands.executeCommand("azure-iot-toolkit.refresh");
     });
 

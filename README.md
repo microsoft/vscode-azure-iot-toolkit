@@ -108,7 +108,8 @@ Create a route for the endpoint so it can receive messages.
 ## Message Routes
 
 Create, update, or delete routes under **Routes** in the IoT Hub device tree. A route selects a
-message source, one or more endpoints, and an optional condition. Use `true` to route all messages.
+message source, one endpoint, and an optional condition. Use `true` to route all messages. Create
+separate routes to send messages to multiple endpoints.
 
 
 ## Code Generation

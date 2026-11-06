@@ -51,6 +51,11 @@ export async function getSelectedHub(): Promise<ISelectedHub> {
     return { client, hub, resourceGroupName, hubName };
 }
 
+export async function refreshSelectedHub(selected: ISelectedHub): Promise<ISelectedHub> {
+    const hub = await selected.client.iotHubResource.get(selected.resourceGroupName, selected.hubName);
+    return { ...selected, hub };
+}
+
 /** Uses the latest hub etag to reject concurrent routing updates. */
 export async function updateHubRouting(
     selected: ISelectedHub,

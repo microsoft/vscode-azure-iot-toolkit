@@ -3,11 +3,13 @@
 
 import { IotHubDescription, RouteProperties, RoutingProperties } from "@azure/arm-iothub";
 import * as vscode from "vscode";
-import { confirmDestructiveAction, pickMany, pickOne, promptRequired, requireInput } from "../common/ui";
+import { confirmDestructiveAction, pickOne, promptRequired, requireInput } from "../common/ui";
 import {
     equalsIgnoreCase,
     getCustomEndpointNames,
     getSelectedHub,
+    ISelectedHub,
+    refreshSelectedHub,
     updateHubRouting,
     validateRoutingName,
 } from "../messageEndpoint/hubRouting";
@@ -38,9 +40,15 @@ function getRoutableEndpointNames(hub: IotHubDescription): string[] {
 export async function createMessageRoute(
     outputChannel: vscode.OutputChannel,
     presetEndpointName?: string,
+    selectedHub?: ISelectedHub,
 ): Promise<void> {
-    const selected = await getSelectedHub();
+    const selected = selectedHub ? await refreshSelectedHub(selectedHub) : await getSelectedHub();
     const existing = getRoutes(selected.hub);
+
+    if (presetEndpointName &&
+        !getRoutableEndpointNames(selected.hub).some((name) => equalsIgnoreCase(name, presetEndpointName))) {
+        throw new Error(`Endpoint '${presetEndpointName}' was not found on IoT Hub '${selected.hubName}'.`);
+    }
 
     const name = await promptRequired({
         prompt: "Route name",
@@ -48,12 +56,10 @@ export async function createMessageRoute(
         value: presetEndpointName ? suggestRouteName(presetEndpointName, existing) : undefined,
         validateInput: (value) => validateRouteName(value, existing),
     });
-
     const source = await pickSourceType();
 
-    const endpointNames = presetEndpointName
-        ? [presetEndpointName]
-        : await pickEndpointNames(selected.hub);
+    const endpointName = presetEndpointName ?? await pickEndpointName(selected.hub);
+    const endpointNames = [endpointName];
 
     const condition = await promptCondition(DEFAULT_CONDITION);
     const isEnabled = await pickEnabled(true);
@@ -90,7 +96,8 @@ export async function updateMessageRoute(
     const current = existing[index];
 
     const source = await pickSourceType(current.source);
-    const endpointNames = await pickEndpointNames(selected.hub, current.endpointNames);
+    const endpointName = await pickEndpointName(selected.hub, current.endpointNames?.[0]);
+    const endpointNames = [endpointName];
     const condition = await promptCondition(current.condition ?? DEFAULT_CONDITION);
     const isEnabled = await pickEnabled(current.isEnabled !== false);
 
@@ -143,7 +150,11 @@ export async function deleteMessageRoute(
     vscode.window.showInformationMessage(`Route '${targetName}' deleted.`);
 }
 
-export async function offerRouteForEndpoint(outputChannel: vscode.OutputChannel, endpointName: string): Promise<void> {
+export async function offerRouteForEndpoint(
+    outputChannel: vscode.OutputChannel,
+    endpointName: string,
+    selectedHub: ISelectedHub,
+): Promise<void> {
     const choice = await vscode.window.showInformationMessage(
         `Endpoint '${endpointName}' needs a route to receive messages. Create one now?`,
         "Create Route",
@@ -152,7 +163,7 @@ export async function offerRouteForEndpoint(outputChannel: vscode.OutputChannel,
     if (choice !== "Create Route") {
         return;
     }
-    await createMessageRoute(outputChannel, endpointName);
+    await createMessageRoute(outputChannel, endpointName, selectedHub);
 }
 
 function ensureRoutes(routing: RoutingProperties): RouteProperties[] {
@@ -206,22 +217,24 @@ async function pickSourceType(currentValue?: string): Promise<string> {
     return picked.label;
 }
 
-async function pickEndpointNames(hub: IotHubDescription, currentValue?: string[]): Promise<string[]> {
-    const current = new Set((currentValue ?? []).map((name) => name.toLowerCase()));
-
-    const picked = await pickMany(
-        getRoutableEndpointNames(hub).map((name) => ({
-            label: name,
-            description: name === BUILT_IN_ENDPOINT_NAME ? "built-in endpoint" : undefined,
-            picked: current.has(name.toLowerCase()),
-        })),
-        "Select one or more endpoints",
+async function pickEndpointName(hub: IotHubDescription, currentValue?: string): Promise<string> {
+    const picked = await pickOne(
+        getRoutableEndpointNames(hub).map((name) => {
+            const description = [];
+            if (name === BUILT_IN_ENDPOINT_NAME) {
+                description.push("built-in endpoint");
+            }
+            if (equalsIgnoreCase(name, currentValue)) {
+                description.push("current");
+            }
+            return {
+                label: name,
+                description: description.length > 0 ? description.join(", ") : undefined,
+            };
+        }),
+        "Select an endpoint",
     );
-
-    if (picked.length === 0) {
-        throw new Error("Select at least one endpoint.");
-    }
-    return picked.map((item) => item.label);
+    return picked.label;
 }
 
 async function pickEnabled(currentValue: boolean): Promise<boolean> {

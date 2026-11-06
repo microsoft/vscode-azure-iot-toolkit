@@ -20,6 +20,7 @@ import {
     equalsIgnoreCase,
     getCustomEndpointNames,
     getSelectedHub,
+    ISelectedHub,
     updateHubRouting,
     validateRoutingName,
 } from "./hubRouting";
@@ -30,6 +31,11 @@ export const SYSTEM_ASSIGNED_IDENTITY = "[system]";
 const RESERVED_ENDPOINT_NAMES = ["events", "fileNotifications", "$default"];
 
 const IDENTITY_REQUIRED_MSG = `Enter '${SYSTEM_ASSIGNED_IDENTITY}' or a user-assigned identity resource ID.`;
+
+export interface ICreatedFabricEventStreamEndpoint {
+    endpointName: string;
+    selectedHub: ISelectedHub;
+}
 
 export { validateGuid };
 
@@ -43,7 +49,9 @@ function ensureEventStreams(routing: RoutingProperties): RoutingEventStreamPrope
     return routing.endpoints.eventStreams;
 }
 
-export async function createFabricEventStreamEndpoint(outputChannel: vscode.OutputChannel): Promise<string> {
+export async function createFabricEventStreamEndpoint(
+    outputChannel: vscode.OutputChannel,
+): Promise<ICreatedFabricEventStreamEndpoint> {
     const selected = await getSelectedHub();
     const existingNames = getCustomEndpointNames(selected.hub);
 
@@ -93,7 +101,7 @@ export async function createFabricEventStreamEndpoint(outputChannel: vscode.Outp
     });
 
     outputChannel.appendLine(`[FabricEventStream] Created endpoint '${name}' on IoT Hub '${selected.hubName}'.`);
-    return name;
+    return { endpointName: name, selectedHub: selected };
 }
 
 export async function updateFabricEventStreamEndpoint(
