@@ -229,59 +229,52 @@ export class LocalServer {
   ) {
     try {
       // Since we do not support C2D yet, here is just one call on sendD2C()
-      await this.sendD2C(req, res, next);
+      await this.sendD2C(req);
       // Must return a status here. If no success or failure returned, the webview may retry and cause unexpected re-send behavior.
       res.sendStatus(200);
     } catch (err) {
       next(err);
     }
   }
-
-  private async sendD2C(
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction,
-  ) {
-    try {
-      const data = req.body;
-      const messageType = data.messageType;
-      const messageBodyType = data.messageBodyType;
-      const deviceConnectionStrings: string[] = data.deviceConnectionStrings;
-      const template: string = data.message;
-      const numbers: number = Number(data.numbers);
-      const interval: number = Number(data.interval);
-      switch (messageType) {
-        case "File Upload":
-          // TODO: File Upload
-          break;
-        case "Text Content":
-          switch (messageBodyType) {
-            case "Dummy Json":
-              await this._simulator.sendD2CMessage(
-                deviceConnectionStrings,
-                template,
-                true,
-                numbers,
-                interval,
-              );
-              break;
-            case "Plain Text":
-              await this._simulator.sendD2CMessage(
-                deviceConnectionStrings,
-                template,
-                false,
-                numbers,
-                interval,
-              );
-            default:
-              break;
-          }
-          break;
-        default:
-          break;
-      }
-    } catch (err) {
-      next(err);
+  // Let send() own the shared response and error propagation.
+  private async sendD2C(req: express.Request) {
+    const data = req.body;
+    const messageType = data.messageType;
+    const messageBodyType = data.messageBodyType;
+    const deviceIds: string[] = data.deviceIds;
+    const template: string = data.message;
+    const numbers: number = Number(data.numbers);
+    const interval: number = Number(data.interval);
+    switch (messageType) {
+      case "File Upload":
+        // TODO: File Upload
+        break;
+      case "Text Content":
+        switch (messageBodyType) {
+          case "Dummy Json":
+            await this._simulator.sendD2CMessage(
+              deviceIds,
+              template,
+              true,
+              numbers,
+              interval,
+            );
+            break;
+          case "Plain Text":
+            await this._simulator.sendD2CMessage(
+              deviceIds,
+              template,
+              false,
+              numbers,
+              interval,
+            );
+            break;
+          default:
+            break;
+        }
+        break;
+      default:
+        break;
     }
   }
 

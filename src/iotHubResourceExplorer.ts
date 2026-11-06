@@ -183,6 +183,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 
     public async copyDeviceConnectionString(deviceItem: DeviceItem) {
         deviceItem = await Utility.getInputDevice(deviceItem, "AZ.Copy.DeviceConnectionString");
+        deviceItem = await Utility.ensureDeviceConnectionString(deviceItem);
         if (deviceItem && deviceItem.connectionString) {
             await vscode.env.clipboard.writeText(deviceItem.connectionString);
         }
@@ -198,6 +199,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 
     public async generateSasTokenForDevice(deviceItem: DeviceItem) {
         deviceItem = await Utility.getInputDevice(deviceItem, "AZ.Generate.SasToken.Device");
+        deviceItem = await Utility.ensureDeviceConnectionString(deviceItem);
         if (deviceItem && deviceItem.connectionString) {
             this.generateSasToken(Utility.generateSasTokenForDevice, deviceItem.connectionString, deviceItem.deviceId);
         }
@@ -467,4 +469,3 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 interface IPartialList<T> extends Array<T> {
     nextLink?: string;
 }
-

@@ -8,7 +8,7 @@ export class DeviceItem extends TreeItem {
     public readonly label: string;
     constructor(
         public readonly deviceId: string,
-        public readonly connectionString: string,
+        public connectionString: string,
         public iconPath: string | vscode.Uri | { light: vscode.Uri; dark: vscode.Uri },
         public readonly connectionState: string,
         public description: string) {

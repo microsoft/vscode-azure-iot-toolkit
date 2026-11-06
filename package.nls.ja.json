@@ -51,5 +51,10 @@
   "azure-iot-toolkit.configuration.treeViewAutoRefreshIntervalInSeconds.description": "ツリービューを自動更新する時間間隔（秒）。ツリービューの自動更新を有効にすると機能します。",
   "azure-iot-dps.command.viewProperties.title": "プロパティを表示",
   "azure-iot-dps.command.loadMore.title": "もっと読み込む",
-  "azure-iot-dps.command.refresh.title": "更新"
+  "azure-iot-dps.command.refresh.title": "更新",
+  "azure-iot-hub.command.createFabricEventStreamEndpoint.title": "Fabric イベント ストリーム エンドポイントの作成",
+  "azure-iot-hub.command.updateFabricEventStreamEndpoint.title": "Fabric イベント ストリーム エンドポイントの更新",
+  "azure-iot-hub.command.createMessageRoute.title": "メッセージ ルートの作成",
+  "azure-iot-hub.command.updateMessageRoute.title": "メッセージ ルートの更新",
+  "azure-iot-hub.command.deleteMessageRoute.title": "メッセージ ルートの削除"
 }

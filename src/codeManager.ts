@@ -30,6 +30,7 @@ export class CodeManager {
         if (!deviceItem) {
             return;
         }
+        deviceItem = await Utility.ensureDeviceConnectionString(deviceItem);
 
         const language = await vscode.window.showQuickPick(
             Object.keys(Constants.CodeTemplates),

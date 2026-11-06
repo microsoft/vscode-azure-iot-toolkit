@@ -39,7 +39,7 @@ export class Simulator {
   private closeDuration: number;
   private persistedInputs: {
     hostName: string;
-    deviceConnectionStrings: string[];
+    deviceIds: string[];
     numbers: string;
     interval: string;
     intervalUnit: string;
@@ -60,7 +60,7 @@ export class Simulator {
     this.iotHubConnectionString = undefined;
     this.persistedInputs = {
       hostName: "",
-      deviceConnectionStrings: [],
+      deviceIds: [],
       numbers: "",
       interval: "",
       intervalUnit: "",
@@ -78,13 +78,17 @@ export class Simulator {
     await _IoTHubResourceExplorer.selectIoTHub();
   }
 
-  public async getInputDeviceList(): Promise<DeviceItem[]> {
+  public async getInputDeviceList(): Promise<{ deviceId: string }[]> {
     this.iotHubConnectionString = await Utility.getConnectionString(
       Constants.IotHubConnectionStringKey,
       Constants.IotHubConnectionStringTitle,
       false,
     );
-    return await Utility.getFilteredDeviceList(this.iotHubConnectionString, false);
+    const devices = await Utility.getFilteredDeviceList(
+      this.iotHubConnectionString,
+      false,
+    );
+    return devices.map((device) => ({ deviceId: device.deviceId }));
   }
 
   public isProcessing(): boolean {
@@ -106,7 +110,7 @@ export class Simulator {
       if (result) {
         TelemetryClient.sendEvent(eventName, {
           Result: "Success",
-          DeviceNumber: "" + properties.deviceConnectionStrings.length,
+          DeviceNumber: "" + properties.deviceIds.length,
           IterationsPerDevice: "" + properties.numbers,
           Interval: "" + properties.interval,
           MessageBodyType: "" + properties.messageBodyType,
@@ -127,7 +131,7 @@ export class Simulator {
   }
 
   public async launch(deviceItem: DeviceItem): Promise<void> {
-    const deviceConnectionStrings = [];
+    const deviceIds = [];
     if (this.isProcessing()) {
       this.closeDuration = 3500;
       await this.showWebview(false);
@@ -144,14 +148,13 @@ export class Simulator {
         const hostName = ConnectionString.parse(this.iotHubConnectionString)
           .HostName;
         const hostNamePersisted = this.persistedInputs.hostName;
-        deviceConnectionStrings.push(deviceItem.connectionString);
-        const deviceConnectionStringsPersisted = this.persistedInputs
-          .deviceConnectionStrings;
+        deviceIds.push(deviceItem.deviceId);
+        const deviceIdsPersisted = this.persistedInputs.deviceIds;
         await this.showWebview(
           hostName !== hostNamePersisted ||
-            deviceConnectionStrings !== deviceConnectionStringsPersisted,
+            deviceIds !== deviceIdsPersisted,
           hostName,
-          deviceConnectionStrings,
+          deviceIds,
         );
         this.telemetry(Constants.SimulatorLaunchEvent, true);
       } else {
@@ -177,13 +180,12 @@ export class Simulator {
         const hostName = ConnectionString.parse(this.iotHubConnectionString)
           .HostName;
         const hostNamePersisted = this.persistedInputs.hostName;
-        const deviceConnectionStringsPersisted = this.persistedInputs
-          .deviceConnectionStrings;
+        const deviceIdsPersisted = this.persistedInputs.deviceIds;
         await this.showWebview(
           hostName !== hostNamePersisted ||
-            deviceConnectionStringsPersisted.length !== 0,
+            deviceIdsPersisted.length !== 0,
           hostName,
-          deviceConnectionStrings,
+          deviceIds,
         );
         this.telemetry(Constants.SimulatorLaunchEvent, true);
       }
@@ -192,7 +194,7 @@ export class Simulator {
   }
 
   public async sendD2CMessage(
-    deviceConnectionStrings: string[],
+    deviceIds: string[],
     template: string,
     isTemplate: boolean,
     numbers: number,
@@ -200,16 +202,32 @@ export class Simulator {
   ) {
     if (!this.processing) {
       this.processing = true;
-      await this.sendD2CMessageFromMultipleDevicesRepeatedly(
-        deviceConnectionStrings,
-        template,
-        isTemplate,
-        numbers,
-        interval,
-      );
-      this.processing = false;
-      // The cancel token can only be re-initialized out of any send() or delay() functions.
-      this.cancelToken = false;
+      try {
+        const deviceConnectionStrings = await Promise.all(
+          deviceIds.map((deviceId) =>
+            Utility.getDeviceConnectionString(
+              this.iotHubConnectionString,
+              deviceId,
+            ),
+          ),
+        );
+        await this.sendD2CMessageFromMultipleDevicesRepeatedly(
+          deviceConnectionStrings,
+          template,
+          isTemplate,
+          numbers,
+          interval,
+        );
+      } catch (error) {
+        this.output(`Failed to send messages: ${error.message}`);
+        vscode.window.showErrorMessage(
+          `Failed to send D2C messages: ${error.message}`,
+        );
+        throw error;
+      } finally {
+        this.processing = false;
+        this.cancelToken = false;
+      }
     } else {
       vscode.window.showErrorMessage(
         "A previous sending D2C messages operation is in progress, please wait or cancel it.",
@@ -233,23 +251,21 @@ export class Simulator {
     this.persistedInputs.hostName = hostName;
   }
 
-  private setPreSelectedDeviceConnectionStrings(
-    deviceConnectionStrings: string[],
-  ) {
-    this.persistedInputs.deviceConnectionStrings = deviceConnectionStrings;
+  private setPreSelectedDeviceIds(deviceIds: string[]) {
+    this.persistedInputs.deviceIds = deviceIds;
   }
 
   private async showWebview(
     forceReload: boolean,
     hostName?: string,
-    deviceConnectionStrings?: string[],
+    deviceIds?: string[],
   ): Promise<void> {
     const simulatorwebview = SimulatorWebview.getInstance(this.context);
     if (hostName) {
       await this.setPreSelectedHostName(hostName);
     }
-    if (deviceConnectionStrings) {
-      await this.setPreSelectedDeviceConnectionStrings(deviceConnectionStrings);
+    if (deviceIds) {
+      await this.setPreSelectedDeviceIds(deviceIds);
     }
     await simulatorwebview.showWebview(forceReload);
     return;
@@ -295,11 +311,14 @@ export class Simulator {
     const stringify = Utility.getConfig<boolean>(
       Constants.IoTHubD2CMessageStringifyKey,
     );
-    const msg = new Message(stringify ? JSON.stringify(message) : message);
+    const payload = stringify ? JSON.stringify(message) : message;
+    const msg = new Message(payload);
     // default to utf-8 encoding
     msg.contentEncoding = "utf-8";
-    // msg.contentType must either be `undefined` or `application/json`
-    msg.contentType = "application/json";
+    // Routing endpoints parse the body according to this content type.
+    if (Utility.isJsonString(payload)) {
+      msg.contentType = "application/json";
+    }
 
     await client.sendEvent(
       msg,
@@ -342,6 +361,12 @@ export class Simulator {
     if (total <= 0) {
       this.output(`Invalid Operation.`);
       return;
+    }
+    if (deviceConnectionStrings.some((connectionString) =>
+      !connectionString || !ConnectionString.parse(connectionString).SharedAccessKey)) {
+      throw new Error(
+        "D2C simulation requires a device with a symmetric key.",
+      );
     }
     const startTime = new Date();
     this.output(
