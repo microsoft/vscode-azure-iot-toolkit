@@ -17,6 +17,8 @@ import { SimulatorWebview } from "./simulatorwebview/simulatorwebview";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
+const DEVICE_IDENTITY_LOOKUP_BATCH_SIZE = 10;
+
 export class Simulator {
   public static getInstance(context?: vscode.ExtensionContext) {
     if (!Simulator.instance) {
@@ -99,35 +101,37 @@ export class Simulator {
   }
 
   public async cancel() {
-    this.cancelToken = true;
+    if (this.processing) {
+      this.cancelToken = true;
+    }
   }
 
-  public async telemetry(eventName: string, result: boolean, properties?: { [key: string]: string; }) {
+  public async telemetry(eventName: string, result: boolean, properties?: { [key: string]: string | number; }) {
     if (eventName === Constants.SimulatorLaunchEvent) {
-      TelemetryClient.sendEvent(eventName, {
+      await TelemetryClient.sendEvent(eventName, {
         Result: result ? "Success" : "Fail",
-        [Constants.errorProperties.Message]: result ? undefined : properties.error,
+        [Constants.errorProperties.Message]: result ? undefined : String(properties.error),
         QuitWhenProcessing: this.isProcessing() ? "True" : "False",
       }, this.iotHubConnectionString);
     } else if (eventName === Constants.SimulatorSendEvent) {
       if (result) {
-        TelemetryClient.sendEvent(eventName, {
+        await TelemetryClient.sendEvent(eventName, {
           Result: "Success",
-          DeviceNumber: "" + properties.deviceIds.length,
+          DeviceNumber: String(properties.devices),
           IterationsPerDevice: "" + properties.numbers,
           Interval: "" + properties.interval,
           MessageBodyType: "" + properties.messageBodyType,
         }, this.iotHubConnectionString);
       } else {
-        TelemetryClient.sendEvent(eventName, {
+        await TelemetryClient.sendEvent(eventName, {
           Result: "Fail",
           [Constants.errorProperties.Message]: "" + properties.reason,
         }, this.iotHubConnectionString);
       }
     } else if (eventName === Constants.SimulatorCloseEvent) {
-        TelemetryClient.sendEvent(eventName, {
+        await TelemetryClient.sendEvent(eventName, {
           Result: result ? "Success" : "Fail",
-          IsReload: properties.reload,
+          IsReload: String(properties.reload),
           QuitWhenProcessing: this.isProcessing() ? "True" : "False",
         }, this.iotHubConnectionString);
     }
@@ -206,14 +210,36 @@ export class Simulator {
     if (!this.processing) {
       this.processing = true;
       try {
-        const deviceConnectionStrings = await Promise.all(
-          deviceIds.map((deviceId) =>
-            Utility.getDeviceConnectionString(
-              this.iotHubConnectionString,
-              deviceId,
+        if (!Array.isArray(deviceIds) ||
+          deviceIds.length === 0 ||
+          !Number.isInteger(numbers) ||
+          numbers <= 0 ||
+          !Number.isFinite(interval) ||
+          interval < 0) {
+          this.output("Invalid Operation.");
+          return;
+        }
+        const total = deviceIds.length * numbers;
+        this.totalStatus = new SendStatus("Total", total);
+        const deviceConnectionStrings: string[] = [];
+        for (let i = 0; i < deviceIds.length; i += DEVICE_IDENTITY_LOOKUP_BATCH_SIZE) {
+          const batch = await Promise.all(
+            deviceIds.slice(i, i + DEVICE_IDENTITY_LOOKUP_BATCH_SIZE).map((deviceId) =>
+              Utility.getDeviceConnectionString(
+                this.iotHubConnectionString,
+                deviceId,
+              ),
             ),
-          ),
-        );
+          );
+          deviceConnectionStrings.push(...batch);
+          if (this.cancelToken) {
+            break;
+          }
+        }
+        if (this.cancelToken) {
+          this.output("User aborted.");
+          return;
+        }
         await this.sendD2CMessageFromMultipleDevicesRepeatedly(
           deviceConnectionStrings,
           template,
@@ -281,31 +307,21 @@ export class Simulator {
   }
 
   private sendEventDoneCallback(
-    client,
-    aiEventName: string,
     status: SendStatus,
     totalStatus: SendStatus,
   ) {
-    return async (err, result) => {
-      const total = await status.getTotal();
+    return async (err) => {
       if (err) {
         await status.addFailed();
         await totalStatus.addFailed();
-      }
-      if (result) {
+      } else {
         await status.addSucceed();
         await totalStatus.addSucceed();
-      }
-      const sum = await status.sum();
-      if (sum === total) {
-        client.close(() => {
-          return;
-        });
       }
     };
   }
 
-  private async sendD2CMessageCore(
+  private sendD2CMessageCore(
     client: Client,
     message: any,
     status: SendStatus,
@@ -323,11 +339,9 @@ export class Simulator {
       msg.contentType = "application/json";
     }
 
-    await client.sendEvent(
+    client.sendEvent(
       msg,
       this.sendEventDoneCallback(
-        client,
-        Constants.IoTHubAIMessageDoneEvent,
         status,
         totalStatus,
       ),
@@ -360,13 +374,8 @@ export class Simulator {
     interval: number,
   ) {
     const deviceCount = deviceConnectionStrings.length;
-    const total = deviceCount * numbers;
-    if (total <= 0) {
-      this.output(`Invalid Operation.`);
-      return;
-    }
     if (deviceConnectionStrings.some((connectionString) =>
-      !connectionString || !ConnectionString.parse(connectionString).SharedAccessKey)) {
+      !connectionString || !Utility.hasDeviceSharedAccessKey(connectionString))) {
       throw new Error(
         "D2C simulation requires a device with a symmetric key.",
       );
@@ -375,55 +384,58 @@ export class Simulator {
     this.output(
       `Start sending messages from ${deviceCount} device(s) to IoT Hub.`,
     );
-    const clients = [];
-    const statuses = [];
-    const ids = [];
-    this.totalStatus = new SendStatus("Total", total);
-    for (let i = 0; i < deviceCount; i++) {
-      clients.push(
-        await clientFromConnectionString(deviceConnectionStrings[i]),
-      );
-      statuses.push(
-        new SendStatus(
-          ConnectionString.parse(deviceConnectionStrings[i]).DeviceId,
-          numbers,
-        ),
-      );
-      ids.push(i);
-    }
-    for (let i = 0; i < numbers; i++) {
-      // No await here, beacause the interval should begin as soon as it called send(), not after it sent.
-      ids.map((j) => {
-        // We use a template so that each time the message can be randomly generated.
-        const generatedMessage = isTemplate
-        ? dummyjson.parse(template)
-        : template;
-        this.sendD2CMessageCore(
-          clients[j],
-          generatedMessage,
-          statuses[j],
-          this.totalStatus,
+    const clients: Client[] = [];
+    const statuses: SendStatus[] = [];
+    const ids: number[] = [];
+    try {
+      for (let i = 0; i < deviceCount; i++) {
+        if (this.cancelToken) {
+          break;
+        }
+        clients.push(
+          await clientFromConnectionString(deviceConnectionStrings[i]),
         );
-      });
-      this.totalStatus.addSent(deviceCount);
-      if (this.cancelToken) {
-        break;
+        statuses.push(
+          new SendStatus(
+            ConnectionString.parse(deviceConnectionStrings[i]).DeviceId,
+            numbers,
+          ),
+        );
+        ids.push(i);
       }
-      if (i < numbers - 1) {
-        // There won"t be a delay after the last iteration.
-        await this.cancellableDelay(interval);
+      for (let i = 0; i < numbers; i++) {
+        if (this.cancelToken) {
+          break;
+        }
+        for (const j of ids) {
+          const generatedMessage = isTemplate
+            ? dummyjson.parse(template)
+            : template;
+          this.sendD2CMessageCore(
+            clients[j],
+            generatedMessage,
+            statuses[j],
+            this.totalStatus,
+          );
+        }
+        await this.totalStatus.addSent(deviceCount);
+        if (i < numbers - 1) {
+          await this.cancellableDelay(interval);
+        }
       }
-    }
-    const endTime = new Date();
-    this.output(
-      this.cancelToken ? `User aborted.` : `All device(s) finished sending in ${(endTime.getTime() - startTime.getTime()) /
-      1000} second(s).`,
-    );
-    while (
-      !this.cancelToken &&
-      await this.totalStatus.sum() !== await this.totalStatus.getTotal()
-    ) {
-      await this.delay(500);
+      const endTime = new Date();
+      this.output(
+        this.cancelToken ? `User aborted.` : `All device(s) finished sending in ${(endTime.getTime() - startTime.getTime()) /
+        1000} second(s).`,
+      );
+      while (
+        !this.cancelToken &&
+        await this.totalStatus.sum() !== await this.totalStatus.getTotal()
+      ) {
+        await this.delay(500);
+      }
+    } finally {
+      await Promise.all(clients.map((client) => client.close()));
     }
     this.output(
       `${await this.totalStatus.getSucceed()} succeeded, and ${await this.totalStatus.getFailed()} failed.`,

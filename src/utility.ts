@@ -115,8 +115,15 @@ export class Utility {
 
     public static generateSasTokenForDevice(deviceConnectionString: string, expiryInHours = 1): string {
         const connectionString = DeviceConnectionString.parse(deviceConnectionString);
+        if (!connectionString.SharedAccessKey) {
+            throw new Error("SAS tokens require a device with a symmetric key.");
+        }
         const expiry = Math.floor(Date.now() / 1000) + expiryInHours * 60 * 60;
         return DeviceSharedAccessSignature.create(connectionString.HostName, connectionString.DeviceId, connectionString.SharedAccessKey, expiry).toString();
+    }
+
+    public static hasDeviceSharedAccessKey(deviceConnectionString: string): boolean {
+        return !!DeviceConnectionString.parse(deviceConnectionString).SharedAccessKey;
     }
 
     public static adjustTerminalCommand(command: string): string {
@@ -537,8 +544,12 @@ export class Utility {
         if (symmetricKey) {
             return DeviceConnectionString.createWithSharedAccessKey(hostName, device.deviceId, symmetricKey);
         }
-        // Twins expose the thumbprint at the top level, identities nest it under authentication.
-        if (device.x509Thumbprint?.primaryThumbprint != null || device.authentication?.x509Thumbprint?.primaryThumbprint != null) {
+        const authenticationType = device.authentication?.type ?? device.authenticationType;
+        const x509Thumbprint = device.authentication?.x509Thumbprint ?? device.x509Thumbprint;
+        if (authenticationType === "selfSigned" ||
+            authenticationType === "certificateAuthority" ||
+            x509Thumbprint?.primaryThumbprint != null ||
+            x509Thumbprint?.secondaryThumbprint != null) {
             return DeviceConnectionString.createWithX509Certificate(hostName, device.deviceId);
         }
         return "";

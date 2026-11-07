@@ -43,13 +43,14 @@ export class TelemetryClient {
         if (!error) {
             return this.sendEvent(eventName, { ...properties, Result: "Success" });
         }
-        if (parseError(error).isUserCancelledError) {
+        const parsedError = parseError(error);
+        if (parsedError.isUserCancelledError) {
             return this.sendEvent(eventName, { ...properties, Result: "Canceled" });
         }
         return this.sendEvent(eventName, {
             ...properties,
             Result: "Fail",
-            [Constants.errorProperties.Message]: error?.message,
+            [Constants.errorProperties.Message]: parsedError.message,
         });
     }
 

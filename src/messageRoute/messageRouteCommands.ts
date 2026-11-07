@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import { IotHubDescription, RouteProperties, RoutingProperties } from "@azure/arm-iothub";
+import { IotHubDescription, KnownRoutingSource, RouteProperties, RoutingProperties } from "@azure/arm-iothub";
 import * as vscode from "vscode";
 import { confirmDestructiveAction, pickOne, promptRequired, requireInput } from "../common/ui";
 import {
@@ -14,15 +14,8 @@ import {
     validateRoutingName,
 } from "../messageEndpoint/hubRouting";
 
-// Keep route source choices aligned with the Azure CLI.
-const ROUTE_SOURCE_TYPES = [
-    "DeviceMessages",
-    "TwinChangeEvents",
-    "DeviceLifecycleEvents",
-    "DeviceJobLifecycleEvents",
-    "DigitalTwinChangeEvents",
-    "DeviceConnectionStateEvents",
-];
+const ROUTE_SOURCE_TYPES = Object.values(KnownRoutingSource)
+    .filter((source) => source !== KnownRoutingSource.Invalid);
 
 /** The built-in endpoint is always a valid route target but is not listed under `routing.endpoints`. */
 const BUILT_IN_ENDPOINT_NAME = "events";
@@ -208,7 +201,7 @@ async function promptCondition(currentValue: string): Promise<string> {
 
 async function pickSourceType(currentValue?: string): Promise<string> {
     const picked = await pickOne(
-        ROUTE_SOURCE_TYPES.map((source) => ({
+        moveCurrentFirst(ROUTE_SOURCE_TYPES, currentValue).map((source) => ({
             label: source,
             description: equalsIgnoreCase(source, currentValue) ? "current" : undefined,
         })),
@@ -219,7 +212,7 @@ async function pickSourceType(currentValue?: string): Promise<string> {
 
 async function pickEndpointName(hub: IotHubDescription, currentValue?: string): Promise<string> {
     const picked = await pickOne(
-        getRoutableEndpointNames(hub).map((name) => {
+        moveCurrentFirst(getRoutableEndpointNames(hub), currentValue).map((name) => {
             const description = [];
             if (name === BUILT_IN_ENDPOINT_NAME) {
                 description.push("built-in endpoint");
@@ -239,14 +232,27 @@ async function pickEndpointName(hub: IotHubDescription, currentValue?: string): 
 
 async function pickEnabled(currentValue: boolean): Promise<boolean> {
     const enabledLabel = "Enabled";
+    const labels = currentValue ? [enabledLabel, "Disabled"] : ["Disabled", enabledLabel];
     const picked = await pickOne(
-        [
-            { label: enabledLabel, description: currentValue ? "current" : undefined },
-            { label: "Disabled", description: currentValue ? undefined : "current" },
-        ],
+        labels.map((label, index) => ({
+            label,
+            description: index === 0 ? "current" : undefined,
+        })),
         "Enable this route?",
     );
     return picked.label === enabledLabel;
+}
+
+function moveCurrentFirst(values: readonly string[], currentValue?: string): string[] {
+    const currentIndex = values.findIndex((value) => equalsIgnoreCase(value, currentValue));
+    if (currentIndex <= 0) {
+        return [...values];
+    }
+    return [
+        values[currentIndex],
+        ...values.slice(0, currentIndex),
+        ...values.slice(currentIndex + 1),
+    ];
 }
 
 async function pickRouteName(routes: RouteProperties[], placeHolder: string): Promise<string> {

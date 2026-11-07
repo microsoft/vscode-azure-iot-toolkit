@@ -108,8 +108,8 @@ export function activate(context: vscode.ExtensionContext) {
         azureIoTExplorer.sendC2DMessage(deviceNode ? deviceNode.deviceItem : undefined);
     });
 
-    const startMonitorC2DMessage = vscode.commands.registerCommand("azure-iot-toolkit.startMonitorC2DMessage", (deviceNode: DeviceNode) => {
-        azureIoTExplorer.startMonitorC2DMessage(deviceNode ? deviceNode.deviceItem : undefined);
+    const startMonitorC2DMessage = vscode.commands.registerCommand("azure-iot-toolkit.startMonitorC2DMessage", async (deviceNode: DeviceNode) => {
+        await azureIoTExplorer.startMonitorC2DMessage(deviceNode ? deviceNode.deviceItem : undefined);
     });
 
     const stopMonitorC2DMessage = vscode.commands.registerCommand("azure-iot-toolkit.stopMonitorC2DMessage", () => {
@@ -207,8 +207,8 @@ export function activate(context: vscode.ExtensionContext) {
         azureIoTExplorer.generateSasTokenForIotHub();
     }));
 
-    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.generateSasTokenForDevice", (deviceNode: DeviceNode) => {
-        azureIoTExplorer.generateSasTokenForDevice(deviceNode ? deviceNode.deviceItem : undefined);
+    context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.generateSasTokenForDevice", async (deviceNode: DeviceNode) => {
+        await azureIoTExplorer.generateSasTokenForDevice(deviceNode ? deviceNode.deviceItem : undefined);
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand("azure-iot-toolkit.showWelcomePage", () => {

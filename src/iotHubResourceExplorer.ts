@@ -200,9 +200,14 @@ export class IoTHubResourceExplorer extends BaseExplorer {
     public async generateSasTokenForDevice(deviceItem: DeviceItem) {
         deviceItem = await Utility.getInputDevice(deviceItem, "AZ.Generate.SasToken.Device");
         deviceItem = await Utility.ensureDeviceConnectionString(deviceItem);
-        if (deviceItem && deviceItem.connectionString) {
-            this.generateSasToken(Utility.generateSasTokenForDevice, deviceItem.connectionString, deviceItem.deviceId);
+        if (!deviceItem) {
+            return;
         }
+        if (!deviceItem.connectionString || !Utility.hasDeviceSharedAccessKey(deviceItem.connectionString)) {
+            vscode.window.showErrorMessage("SAS tokens require a device with a symmetric key.");
+            return;
+        }
+        await this.generateSasToken(Utility.generateSasTokenForDevice, deviceItem.connectionString, deviceItem.deviceId);
     }
 
     private async generateSasToken(sasTokenFunction: (connectionString: string, expiryInHours: number) => string, connectionString: string, target: string) {
@@ -214,6 +219,9 @@ export class IoTHubResourceExplorer extends BaseExplorer {
                     return "Provided expiration time is not a number, enter correct expiration time (hours).";
                 }
             }});
+        if (expiryInHours === undefined) {
+            return;
+        }
 
         const sasToken = sasTokenFunction(connectionString, parseFloat(expiryInHours));
         await vscode.env.clipboard.writeText(sasToken);

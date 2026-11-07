@@ -43,6 +43,15 @@ suite("Utility Tests ", () => {
         assert.equal(/^SharedAccessSignature sr=iot-hub-test.azure-devices.net%2Fdevices%2Fdevice1&sig=.+&se=.+$/.test(sasTokenForDevice), true);
     });
 
+    test("should reject SAS tokens for X.509 devices", () => {
+        const connectionString = `HostName=${TestConstants.IotHubHostName};DeviceId=device1;x509=true`;
+        assert.equal(Utility.hasDeviceSharedAccessKey(connectionString), false);
+        assert.throws(
+            () => Utility.generateSasTokenForDevice(connectionString, 10),
+            /symmetric key/,
+        );
+    });
+
     test("should be able to validate target condition", () => {
         assert.equal(Utility.isValidTargetCondition("*"), true);
 
@@ -90,6 +99,15 @@ suite("Utility Tests ", () => {
             const connectionString = build({
                 deviceId: "device1",
                 authentication: { x509Thumbprint: { primaryThumbprint: "AB12" } },
+            });
+            assert.equal(connectionString,
+                `HostName=${TestConstants.IotHubHostName};DeviceId=device1;x509=true`);
+        });
+
+        test("recognises certificate authority authentication without a thumbprint", () => {
+            const connectionString = build({
+                deviceId: "device1",
+                authentication: { type: "certificateAuthority" },
             });
             assert.equal(connectionString,
                 `HostName=${TestConstants.IotHubHostName};DeviceId=device1;x509=true`);
