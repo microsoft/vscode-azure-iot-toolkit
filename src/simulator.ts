@@ -220,13 +220,14 @@ export class Simulator {
           return;
         }
         const total = deviceIds.length * numbers;
+        const iotHubConnectionString = this.iotHubConnectionString;
         this.totalStatus = new SendStatus("Total", total);
         const deviceConnectionStrings: string[] = [];
         for (let i = 0; i < deviceIds.length; i += DEVICE_IDENTITY_LOOKUP_BATCH_SIZE) {
           const batch = await Promise.all(
             deviceIds.slice(i, i + DEVICE_IDENTITY_LOOKUP_BATCH_SIZE).map((deviceId) =>
               Utility.getDeviceConnectionString(
-                this.iotHubConnectionString,
+                iotHubConnectionString,
                 deviceId,
               ),
             ),

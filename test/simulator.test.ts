@@ -89,14 +89,23 @@ suite("Simulator Tests", () => {
         }
     });
 
-    test("limits concurrent device identity lookups", async () => {
+    test("limits device identity lookups to batches on one hub", async () => {
         const simulator = Simulator.getInstance({} as any);
         const originalGetDeviceConnectionString = Utility.getDeviceConnectionString;
+        const originalHubConnectionString = (simulator as any).iotHubConnectionString;
+        const selectedHubConnectionString = "HostName=hub-a.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=a2V5";
+        const lookupConnectionStrings: string[] = [];
         let activeLookups = 0;
         let maxActiveLookups = 0;
 
         try {
-            (Utility as any).getDeviceConnectionString = async () => {
+            (simulator as any).iotHubConnectionString = selectedHubConnectionString;
+            (Utility as any).getDeviceConnectionString = async (connectionString: string) => {
+                lookupConnectionStrings.push(connectionString);
+                if (lookupConnectionStrings.length === 10) {
+                    (simulator as any).iotHubConnectionString =
+                        "HostName=hub-b.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=a2V5";
+                }
                 activeLookups++;
                 maxActiveLookups = Math.max(maxActiveLookups, activeLookups);
                 await new Promise((resolve) => setTimeout(resolve, 5));
@@ -115,8 +124,13 @@ suite("Simulator Tests", () => {
                 /symmetric key/,
             );
             assert.ok(maxActiveLookups <= 10);
+            assert.deepStrictEqual(
+                [...new Set(lookupConnectionStrings)],
+                [selectedHubConnectionString],
+            );
         } finally {
             (Utility as any).getDeviceConnectionString = originalGetDeviceConnectionString;
+            (simulator as any).iotHubConnectionString = originalHubConnectionString;
         }
     });
 });
