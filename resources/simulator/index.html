@@ -33,16 +33,16 @@
                         </i-col>
                     </Row>
                     <i-form ref="formItem" :model="formItem" :rules="ruleValidation">
-                        <form-item prop="deviceConnectionStrings" label="Device(s) to send messages from">
+                        <form-item prop="deviceIds" label="Devices">
                             <Row>
                                 <i-col span="24">
-                                    <i-select v-model="formItem.deviceConnectionStrings" multiple filterable
+                                    <i-select v-model="formItem.deviceIds" multiple filterable
                                         remote :remote-method="deviceSelectFilter"
                                         @on-open-change="resetFilter"
-                                        placeholder="Please select the device(s) you want to send message from..."
-                                        not-found-text="No Device Found" @on-change="persistInputs">
-                                        <i-option v-for="item in filteredInputDeviceList" :value="item.connectionString"
-                                            :key="item.connectionString">
+                                        placeholder="Select one or more devices"
+                                        not-found-text="No devices found" @on-change="persistInputs">
+                                        <i-option v-for="item in filteredInputDeviceList" :value="item.deviceId"
+                                            :key="item.deviceId">
                                             {{item.label}}
                                         </i-option>
                                     </i-select>

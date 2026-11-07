@@ -4,6 +4,7 @@
 "use strict";
 import * as vscode from "vscode";
 import { TelemetryReporter } from "@vscode/extension-telemetry";
+import { parseError } from "@microsoft/vscode-azext-utils";
 import { Constants } from "./constants";
 import { NSAT } from "./nsat";
 import { Utility } from "./utility";
@@ -36,6 +37,21 @@ export class TelemetryClient {
                 NSAT.takeSurvey(this._extensionContext);
             }
         }
+    }
+
+    public static async sendOutcome(eventName: string, error?: any, properties?: { [key: string]: string; }) {
+        if (!error) {
+            return this.sendEvent(eventName, { ...properties, Result: "Success" });
+        }
+        const parsedError = parseError(error);
+        if (parsedError.isUserCancelledError) {
+            return this.sendEvent(eventName, { ...properties, Result: "Canceled" });
+        }
+        return this.sendEvent(eventName, {
+            ...properties,
+            Result: "Fail",
+            [Constants.errorProperties.Message]: parsedError.message,
+        });
     }
 
     private static _client: TelemetryReporter | undefined;

@@ -115,8 +115,15 @@ export class Utility {
 
     public static generateSasTokenForDevice(deviceConnectionString: string, expiryInHours = 1): string {
         const connectionString = DeviceConnectionString.parse(deviceConnectionString);
+        if (!connectionString.SharedAccessKey) {
+            throw new Error("SAS tokens require a device with a symmetric key.");
+        }
         const expiry = Math.floor(Date.now() / 1000) + expiryInHours * 60 * 60;
         return DeviceSharedAccessSignature.create(connectionString.HostName, connectionString.DeviceId, connectionString.SharedAccessKey, expiry).toString();
+    }
+
+    public static hasDeviceSharedAccessKey(deviceConnectionString: string): boolean {
+        return !!DeviceConnectionString.parse(deviceConnectionString).SharedAccessKey;
     }
 
     public static adjustTerminalCommand(command: string): string {
@@ -310,6 +317,27 @@ export class Utility {
         });
     }
 
+    public static async ensureDeviceConnectionString(
+        deviceItem: DeviceItem,
+        iotHubConnectionString?: string,
+    ): Promise<DeviceItem> {
+        if (!deviceItem || deviceItem.connectionString) {
+            return deviceItem;
+        }
+        iotHubConnectionString = iotHubConnectionString
+            ?? await Utility.getConnectionString(Constants.IotHubConnectionStringKey, Constants.IotHubConnectionStringTitle);
+        if (iotHubConnectionString) {
+            deviceItem.connectionString = await Utility.getDeviceConnectionString(iotHubConnectionString, deviceItem.deviceId);
+        }
+        return deviceItem;
+    }
+
+    public static async getDeviceConnectionString(iotHubConnectionString: string, deviceId: string): Promise<string> {
+        const registry = Registry.fromConnectionString(iotHubConnectionString);
+        const identity = (await registry.get(deviceId)).responseBody;
+        return Utility.buildDeviceConnectionString(Utility.getHostName(iotHubConnectionString), identity);
+    }
+
     public static async getNoneEdgeDeviceIdList(iotHubConnectionString: string): Promise<string[]> {
         const noneEdgeDevices = await this.queryDeviceTwins(iotHubConnectionString, false);
         const deviceIdList = [];
@@ -324,9 +352,25 @@ export class Utility {
         return /^(\*|((deviceId|tags\..+|properties\.reported\..+).*=.+))$/.test(value);
     }
 
+    public static isJsonString(payload: any): boolean {
+        if (typeof payload !== "string") {
+            return false;
+        }
+        const trimmed = payload.trim();
+        if (!trimmed) {
+            return false;
+        }
+        try {
+            JSON.parse(trimmed);
+            return true;
+        } catch {
+            return false;
+        }
+    }
+
     public static getResourceGroupNameFromId(resourceId: string): string {
-        const result = /resourceGroups\/([^/]+)\//.exec(resourceId);
-        return result[1];
+        const result = /\/resourceGroups\/([^/]+)\//i.exec(resourceId ?? "");
+        return result ? result[1] : undefined;
     }
 
     public static createModuleConnectionString(hostName: string, deviceId: string, moduleId: string, sharedAccessKey: string): string {
@@ -485,21 +529,30 @@ export class Utility {
         while (query.hasMoreResults) {
             const page = (await query.next()) as ResultWithIncomingMessage<any[]>;
             for (const device of page.result) {
-                let deviceConnectionString: string = "";
-                if (device.authentication?.symmetricKey?.primaryKey != null) {
-                    deviceConnectionString = DeviceConnectionString.createWithSharedAccessKey(hostName, device.deviceId,
-                        device.authentication.symmetricKey.primaryKey);
-                } else if (device.authentication?.x509Thumbprint?.primaryThumbprint != null) {
-                    deviceConnectionString = DeviceConnectionString.createWithX509Certificate(hostName, device.deviceId);
-                }
                 devices.push(new DeviceItem(device.deviceId,
-                    deviceConnectionString,
+                    Utility.buildDeviceConnectionString(hostName, device),
                     null,
                     (device.connectionState || "Disconnected").toString(),
                     null));
             }
         }
         return devices.sort((a: DeviceItem, b: DeviceItem) => a.deviceId.localeCompare(b.deviceId));
+    }
+
+    private static buildDeviceConnectionString(hostName: string, device: any): string {
+        const symmetricKey = device.authentication?.symmetricKey?.primaryKey;
+        if (symmetricKey) {
+            return DeviceConnectionString.createWithSharedAccessKey(hostName, device.deviceId, symmetricKey);
+        }
+        const authenticationType = device.authentication?.type ?? device.authenticationType;
+        const x509Thumbprint = device.authentication?.x509Thumbprint ?? device.x509Thumbprint;
+        if (authenticationType === "selfSigned" ||
+            authenticationType === "certificateAuthority" ||
+            x509Thumbprint?.primaryThumbprint != null ||
+            x509Thumbprint?.secondaryThumbprint != null) {
+            return DeviceConnectionString.createWithX509Certificate(hostName, device.deviceId);
+        }
+        return "";
     }
 
     private static async getEdgeDeviceIdSet(iotHubConnectionString: string): Promise<Set<string>> {

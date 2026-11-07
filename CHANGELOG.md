@@ -1,3 +1,11 @@
+## 2.18.0 (Unreleased)
+### Added
+* Commands to create and update Fabric event stream endpoints under "Endpoints > Event Streams (Preview)".
+* Commands to create, update, and delete message routes under "Routes".
+
+### Changed
+* Updated `@azure/arm-iothub` to 7.0.0-beta.3 and raised the minimum supported VS Code version to 1.101 for Node.js 22 support.
+
 ## 2.17.1 (2022-09-20)
 ### Changed
 * Updated dependencies / package vulnerabilities.

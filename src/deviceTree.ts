@@ -7,6 +7,7 @@ import { DeviceLabelNode } from "./Nodes/DeviceLabelNode";
 import { EndpointsLabelNode } from "./Nodes/Endpoints/EndpointsLabelNode";
 import { INode } from "./Nodes/INode";
 import { IoTHubLabelNode } from "./Nodes/IoTHubLabelNode";
+import { RoutesLabelNode } from "./Nodes/Routes/RoutesLabelNode";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
@@ -56,7 +57,7 @@ export class DeviceTree implements vscode.TreeDataProvider<INode> {
         }
         this.autoRefreshIntervalID = this.generateAutoRefreshInterval();
 
-        return [new IoTHubLabelNode(iotHubConnectionString), new DeviceLabelNode(iotHubConnectionString), new EndpointsLabelNode()];
+        return [new IoTHubLabelNode(iotHubConnectionString), new DeviceLabelNode(iotHubConnectionString), new EndpointsLabelNode(), new RoutesLabelNode()];
     }
 
     private generateAutoRefreshInterval(): ReturnType<typeof setInterval> {

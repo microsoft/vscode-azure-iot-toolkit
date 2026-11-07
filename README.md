@@ -90,6 +90,28 @@ Instead of copying and pasting to set IoT Hub Connection String, you could sign 
 3. Expand one subscription to start exploring your device provisioning services.
 
 
+## Fabric Event Stream Endpoints (Preview)
+
+Create or update a Fabric event stream endpoint from the IoT Hub device tree:
+
+1. Select an IoT Hub and expand **Endpoints > Event Streams (Preview)**.
+2. Use the context menu to create or update an endpoint.
+
+Fabric event stream endpoints use identity-based authentication. Use `[system]` for the hub's
+system-assigned identity, or enter a user-assigned identity resource ID. Copy the endpoint URI,
+entity path, workspace ID, event stream ID, and source ID from the Fabric Custom Endpoint source
+connection details.
+
+Create a route for the endpoint so it can receive messages.
+
+
+## Message Routes
+
+Create, update, or delete routes under **Routes** in the IoT Hub device tree. A route selects a
+message source, one endpoint, and an optional condition. Use `true` to route all messages. Create
+separate routes to send messages to multiple endpoints.
+
+
 ## Code Generation
 
 ![Code Generation](images/code-generation.gif)
