@@ -1,0 +1,145 @@
+name: pre-release
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish from the matching vX.Y.Z-preview tag for an odd minor version
+        required: true
+        type: boolean
+        default: false
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+-preview'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pre-release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  NODE_VERSION: 22.x
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate release ref
+        env:
+          PUBLISH_REQUESTED: ${{ github.event_name == 'push' || inputs.publish }}
+        run: |
+          node <<'NODE'
+          const { version } = require("./package.json");
+          const versionMatch = /^(\d+)\.(\d+)\.(\d+)$/.exec(version);
+          const expectedTag = `v${version}-preview`;
+          const publishRequested = process.env.PUBLISH_REQUESTED === "true";
+
+          if (!versionMatch) {
+              throw new Error(`Package version ${version} must use major.minor.patch.`);
+          }
+          if (process.env.GITHUB_REF_TYPE === "tag" && process.env.GITHUB_REF_NAME !== expectedTag) {
+              throw new Error(`Tag ${process.env.GITHUB_REF_NAME} does not match package version ${expectedTag}.`);
+          }
+          if (publishRequested && process.env.GITHUB_REF_TYPE !== "tag") {
+              throw new Error("Publishing requires running the workflow from the matching preview tag.");
+          }
+          if (publishRequested && Number(versionMatch[2]) % 2 !== 1) {
+              throw new Error(`Preview releases require an odd minor version, but package version is ${version}.`);
+          }
+          NODE
+
+  test:
+    needs: validate
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: xvfb-run -a npm test
+        if: runner.os == 'Linux'
+      - run: npm test
+        if: runner.os != 'Linux'
+
+  minimum-vscode:
+    needs: validate
+    runs-on: ubuntu-latest
+    env:
+      VSCODE_TEST_VERSION: 1.105.0
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: xvfb-run -a npm test
+
+  package:
+    needs: [test, minimum-vscode]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - name: Package pre-release VSIX
+        run: |
+          mkdir release
+          version="$(node -p "require('./package.json').version")"
+          vsix="azure-iot-toolkit-${version}-pre-release.vsix"
+          npm run package:vsix -- --pre-release --out "release/${vsix}"
+          cd release
+          sha256sum "${vsix}" > "${vsix}.sha256"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vsix-pre-release
+          path: release/*
+          if-no-files-found: error
+          compression-level: 0
+
+  publish:
+    if: github.event_name == 'push' || inputs.publish
+    needs: package
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Verify Marketplace publishing is enabled
+        env:
+          MARKETPLACE_PUBLISH_ENABLED: ${{ vars.MARKETPLACE_PUBLISH_ENABLED }}
+        run: |
+          if [ "${MARKETPLACE_PUBLISH_ENABLED}" != "true" ]; then
+            echo "::error::Set MARKETPLACE_PUBLISH_ENABLED=true in the production environment."
+            exit 1
+          fi
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - uses: actions/download-artifact@v4
+        with:
+          name: vsix-pre-release
+          path: release
+      - name: Verify and publish pre-release VSIX
+        run: |
+          cd release
+          sha256sum --check *.sha256
+          mapfile -t vsix_files < <(find . -maxdepth 1 -type f -name '*.vsix' -print)
+          test "${#vsix_files[@]}" -eq 1
+          npx --no-install vsce publish --oidc --pre-release --packagePath "${vsix_files[0]}"

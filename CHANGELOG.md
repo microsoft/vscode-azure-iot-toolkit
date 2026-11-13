@@ -1,3 +1,9 @@
+## 2.18.0 (Unreleased)
+### Changed
+* Modernized Azure authentication, dependencies, the frontend, and build/release tooling; the minimum supported VS Code version is now 1.105.0.
+* Added a command to clear stored IoT Hub connection strings and a configurable device query page size.
+* Improved device listing, messaging, the simulator, and code generation reliability and security.
+
 ## 2.17.1 (2022-09-20)
 ### Changed
 * Updated dependencies / package vulnerabilities.
