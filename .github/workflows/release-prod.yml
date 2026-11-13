@@ -21,7 +21,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  NODE_VERSION: 22.x
+  NODE_VERSION: 24.x
 
 jobs:
   validate:
@@ -34,9 +34,16 @@ jobs:
         run: |
           node <<'NODE'
           const { version } = require("./package.json");
+          const versionMatch = /^(\d+)\.(\d+)\.(\d+)$/.exec(version);
           const expectedTag = `v${version}`;
           const publishRequested = process.env.PUBLISH_REQUESTED === "true";
 
+          if (!versionMatch) {
+              throw new Error(`Package version ${version} must use major.minor.patch.`);
+          }
+          if (publishRequested && Number(versionMatch[2]) % 2 !== 0) {
+              throw new Error(`Stable releases require an even minor version, but package version is ${version}.`);
+          }
           if (process.env.GITHUB_REF_TYPE === "tag" && process.env.GITHUB_REF_NAME !== expectedTag) {
               throw new Error(`Tag ${process.env.GITHUB_REF_NAME} does not match package version ${expectedTag}.`);
           }
@@ -125,7 +132,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
-      - run: npm ci
+      - run: npm ci --ignore-scripts
       - uses: actions/download-artifact@v4
         with:
           name: vsix-release
