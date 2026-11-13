@@ -16,11 +16,12 @@ async function main() {
         // The path to the extension test script
         // Passed to --extensionTestsPath
         const extensionTestsPath = resolve(__dirname, ".");
+        const version = process.env.VSCODE_TEST_VERSION ?? (process.platform === "darwin" ? "1.109.5" : undefined);
 
         // Download VS Code, unzip it and run the integration test
         // Pinned below 1.110 on macOS: @vscode/test-electron 2.x can't launch the renamed binary in newer builds.
         await runTests({
-            version: process.platform === "darwin" ? "1.109.5" : undefined,
+            version,
             extensionDevelopmentPath,
             extensionTestsPath,
             launchArgs: ["--disable-extensions"],
