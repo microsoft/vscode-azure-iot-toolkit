@@ -846,7 +846,7 @@
     "lint": "eslint src/**/*.ts test/**/*.ts",
     "package:vsix": "vsce package --no-dependencies",
     "version": "tsc -v",
-    "test": "rimraf out && npm run compile && node ./out/test/runTests.js",
+    "test": "rimraf out && npm run compile && npm run vscode:prepublish && node ./out/test/runTests.js",
     "simulator:clean": "rimraf resources/simulator/scripts",
     "welcome:clean": "rimraf resources/welcome/scripts",
     "resources:clean": "npm run simulator:clean && npm run welcome:clean",
