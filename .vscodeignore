@@ -1,4 +1,6 @@
 .vscode/**
+.github/**
+.azure-devops/**
 typings/**
 out/test/**
 test/**

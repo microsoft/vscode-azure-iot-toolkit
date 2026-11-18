@@ -15,8 +15,13 @@ export class TelemetryClient {
         // Lazy-initialize TelemetryReporter after extension context is ready
         if (!this._client) {
             const packageJSON = vscode.extensions.getExtension(Constants.ExtensionId)?.packageJSON;
-            const aiKey: string = packageJSON?.aiKey || "";
-            this._client = new TelemetryReporter(`InstrumentationKey=${aiKey}`);
+            const connectionString: string = packageJSON?.applicationInsightsConnectionString ||
+                (packageJSON?.aiKey ? `InstrumentationKey=${packageJSON.aiKey}` : "");
+            if (!connectionString) {
+                return;
+            }
+            this._client = new TelemetryReporter(connectionString);
+            context.subscriptions.push(this._client);
         }
     }
 

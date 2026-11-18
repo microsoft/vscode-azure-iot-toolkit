@@ -4,7 +4,10 @@
 * Commands to create, update, and delete message routes under "Routes".
 
 ### Changed
-* Updated `@azure/arm-iothub` to 7.0.0-beta.3 and raised the minimum supported VS Code version to 1.101 for Node.js 22 support.
+* Modernized Azure authentication, dependencies, the frontend, and build/release tooling; the minimum supported VS Code version is now 1.105.0.
+* Added a command to clear stored IoT Hub connection strings and a configurable device query page size.
+* Improved device listing, messaging, the simulator, and code generation reliability and security.
+* Updated `@azure/arm-iothub` to 7.0.0-beta.3 for Fabric event stream endpoint support.
 
 ## 2.17.1 (2022-09-20)
 ### Changed
