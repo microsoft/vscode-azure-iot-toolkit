@@ -32,20 +32,31 @@ export class RoutesLabelNode implements INode {
                 return [this.getSelectIoTHubCommandNode()];
             }
 
-            const client = new IotHubClient(getCredential(), subscriptionId);
             const targetId = Constants.ExtensionContext.globalState.get<string>(Constants.StateKeyIoTHubID);
-            let iothub;
-            for await (const element of client.iotHubResource.listBySubscription()) {
-                if (element.id === targetId) {
-                    iothub = element;
-                    break;
-                }
-            }
-            TelemetryClient.sendEvent(Constants.IoTHubAILoadRoutesTreeDoneEvent, { Result: "Success" });
-
-            if (!iothub) {
+            if (!targetId) {
                 return [this.getSelectIoTHubCommandNode()];
             }
+
+            const resourceGroupName = Utility.getResourceGroupNameFromId(targetId);
+            const hubName = targetId.split("/").pop();
+            if (!resourceGroupName || !hubName) {
+                return [this.getSelectIoTHubCommandNode()];
+            }
+
+            const client = new IotHubClient(getCredential(), subscriptionId);
+            let iothub;
+            try {
+                iothub = await client.iotHubResource.get(resourceGroupName, hubName);
+            } catch (err) {
+                const statusCode = typeof err === "object" && err !== null && "statusCode" in err
+                    ? (err as { statusCode?: number }).statusCode
+                    : undefined;
+                if (statusCode === 404) {
+                    return [this.getSelectIoTHubCommandNode()];
+                }
+                throw err;
+            }
+            TelemetryClient.sendEvent(Constants.IoTHubAILoadRoutesTreeDoneEvent, { Result: "Success" });
 
             const routes = iothub.properties?.routing?.routes ?? [];
             if (routes.length === 0) {
