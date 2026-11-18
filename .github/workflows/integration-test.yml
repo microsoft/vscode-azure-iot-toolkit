@@ -1,0 +1,89 @@
+name: Integration Test
+
+on:
+  workflow_call:
+  workflow_dispatch:
+  # Temporary bootstrap trigger. Remove after the first successful smoke run.
+  push:
+    branches:
+      - 'yuelinzhao/add-smoke-int-test'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: integration-test
+  cancel-in-progress: false
+
+jobs:
+  azure-smoke:
+    name: Azure OIDC and IoT Hub lifecycle
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: integration-test
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      AZURE_CORE_OUTPUT: none
+      AZURE_RESOURCE_GROUP: vscode-iot-int-test-rg
+      AZURE_LOCATION: westus2
+      IOTHUB_NAME: vsciot-it-${{ github.run_id }}-${{ github.run_attempt }}
+
+    steps:
+      - name: Sign in to Azure with OIDC
+        id: azure_login
+        uses: azure/login@v3
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Verify Azure identity
+        run: |
+          az account show \
+            --query '{subscription:id, tenant:tenantId}' \
+            --output table
+
+      - name: Create S1 IoT Hub
+        run: |
+          az iot hub create \
+            --name "$IOTHUB_NAME" \
+            --resource-group "$AZURE_RESOURCE_GROUP" \
+            --location "$AZURE_LOCATION" \
+            --sku S1 \
+            --unit 1 \
+            --only-show-errors
+
+      - name: Verify IoT Hub
+        run: |
+          az iot hub show \
+            --name "$IOTHUB_NAME" \
+            --resource-group "$AZURE_RESOURCE_GROUP" \
+            --query '{name:name, state:properties.state, sku:sku.name}' \
+            --output table
+
+      - name: Delete IoT Hub
+        if: always() && steps.azure_login.outcome == 'success'
+        shell: bash
+        run: |
+          set -euo pipefail
+          error_file="$(mktemp)"
+          trap 'rm -f "$error_file"' EXIT
+
+          if hub_id="$(az iot hub show \
+              --name "$IOTHUB_NAME" \
+              --resource-group "$AZURE_RESOURCE_GROUP" \
+              --query id \
+              --output tsv 2>"$error_file")"; then
+            echo "Deleting $hub_id"
+            az iot hub delete \
+              --name "$IOTHUB_NAME" \
+              --resource-group "$AZURE_RESOURCE_GROUP" \
+              --only-show-errors
+          elif grep -q 'ResourceNotFound' "$error_file"; then
+            echo "IoT Hub was not created; nothing to delete."
+          else
+            cat "$error_file" >&2
+            exit 1
+          fi
