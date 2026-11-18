@@ -41,6 +41,7 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
         }
 
         deviceItem = await Utility.getInputDevice(deviceItem, Constants.IoTHubAIStartMonitorC2DEvent);
+        deviceItem = await Utility.ensureDeviceConnectionString(deviceItem);
         if (!deviceItem || !deviceItem.connectionString) {
             return;
         }

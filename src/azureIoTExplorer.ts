@@ -77,8 +77,8 @@ export class AzureIoTExplorer {
         this._iotHubC2DMessageExplorer.sendC2DMessage(deviceItem);
     }
 
-    public startMonitorC2DMessage(deviceItem?: DeviceItem): void {
-        this._iotHubC2DMessageExplorer.startMonitorC2DMessage(deviceItem);
+    public async startMonitorC2DMessage(deviceItem?: DeviceItem): Promise<void> {
+        await this._iotHubC2DMessageExplorer.startMonitorC2DMessage(deviceItem);
     }
 
     public stopMonitorC2DMessage(): void {
@@ -173,8 +173,8 @@ export class AzureIoTExplorer {
         this._iotHubResourceExplorer.generateSasTokenForIotHub();
     }
 
-    public generateSasTokenForDevice(deviceItem: DeviceItem): void {
-        this._iotHubResourceExplorer.generateSasTokenForDevice(deviceItem);
+    public async generateSasTokenForDevice(deviceItem: DeviceItem): Promise<void> {
+        await this._iotHubResourceExplorer.generateSasTokenForDevice(deviceItem);
     }
 
     public checkAndShowWelcomePage(): void {

@@ -106,7 +106,7 @@ const app = createApp({
       inputDeviceList: [],
       filteredInputDeviceList: [],
       formItem: {
-        deviceConnectionStrings: [],
+        deviceIds: [],
         message: "",
         numbers: "10",
         interval: "1"
@@ -136,7 +136,7 @@ const app = createApp({
           { required: true, message: 'Required', trigger: "blur" },
           { validator: messageParseValidator, trigger: "blur" }
         ],
-        deviceConnectionStrings: [
+        deviceIds: [
           {
             required: true,
             type: "array",
@@ -179,7 +179,7 @@ const app = createApp({
           const data = res.data;
           this.hostName = data.hostName;
           this.inputDeviceList = data.inputDeviceList;
-          this.formItem.deviceConnectionStrings = data.deviceConnectionStrings;
+          this.formItem.deviceIds = data.deviceIds;
           this.formItem.numbers =
             data.numbers && data.numbers !== ""
               ? data.numbers
@@ -208,9 +208,11 @@ const app = createApp({
         });
     },
     async polling() {
-      await axios.get(`${this.endpoint}/api/polling`).then(res => {
+      try {
+        const res = await axios.get(`${this.endpoint}/api/polling`);
         this.status = res.data;
-      });
+      } catch (error) {
+      }
       setTimeout(this.polling, 500);
     },
     async getInputDeviceList() {
@@ -218,7 +220,6 @@ const app = createApp({
         .data;
       this.inputDeviceList = [];
       for (const device of list) {
-        device.key = device.connectionString;
         this.inputDeviceList.push(device);
       }
       this.resetFilter(true);
@@ -239,7 +240,7 @@ const app = createApp({
               break;
           }
           const data = {
-            deviceConnectionStrings: this.formItem.deviceConnectionStrings,
+            deviceIds: this.formItem.deviceIds,
             message: this.formItem.message,
             numbers: this.formItem.numbers,
             interval: intervalInMilliSecond,
@@ -249,7 +250,7 @@ const app = createApp({
           this.cancelRequested = false;
           await axios.post(`${this.endpoint}/api/telemetry`, {
             status: "Succeeded",
-            devices: data.deviceConnectionStrings.length,
+            devices: data.deviceIds.length,
             numbers: data.numbers,
             interval: data.interval,
             messageBodyType: data.messageBodyType,
@@ -304,18 +305,22 @@ const app = createApp({
     },
     async progressCancel() {
       this.cancelRequested = true;
-      await axios.post(`${this.endpoint}/api/cancel`, {
-        cancel: true
-      });
-      await axios.post(`${this.endpoint}/api/telemetry`, {
-        status: "Failed",
-        reason: "User Canceled"
-      });
+      try {
+        await axios.post(`${this.endpoint}/api/cancel`, {
+          cancel: true
+        });
+        await axios.post(`${this.endpoint}/api/telemetry`, {
+          status: "Failed",
+          reason: "User Canceled"
+        });
+      } catch (error) {
+        this.cancelRequested = false;
+      }
     },
     async persistInputs() {
       const inputs = {
         hostName: this.hostName,
-        deviceConnectionStrings: this.formItem.deviceConnectionStrings,
+        deviceIds: this.formItem.deviceIds,
         numbers: this.formItem.numbers,
         interval: this.formItem.interval,
         intervalUnit: this.intervalUnit,

@@ -12,6 +12,7 @@ import { INode } from "../INode";
 import { BuiltInEndpointLabelNode } from "./BuiltInEndpointLabelNode";
 import { CustomEndpointLabelNode } from "./CustomEndpointLabelNode";
 import { EventHubLabelNode } from "./EventHubLabelNode";
+import { EventStreamLabelNode } from "./EventStreamLabelNode";
 
 export class EndpointsLabelNode implements INode {
     constructor() {
@@ -55,7 +56,8 @@ export class EndpointsLabelNode implements INode {
                 new EventHubLabelNode(credential, subscriptionId, iothub.properties.routing.endpoints.eventHubs),
                 new CustomEndpointLabelNode("Service Bus queue", iothub.properties.routing.endpoints.serviceBusQueues),
                 new CustomEndpointLabelNode("Service Bus topic", iothub.properties.routing.endpoints.serviceBusTopics),
-                new CustomEndpointLabelNode("Blob storage", iothub.properties.routing.endpoints.storageContainers)];
+                new CustomEndpointLabelNode("Blob storage", iothub.properties.routing.endpoints.storageContainers),
+                new EventStreamLabelNode(iothub.properties.routing.endpoints.eventStreams)];
         } catch (err) {
             const message = err instanceof Error ? err.message : String(err);
             TelemetryClient.sendEvent(Constants.IoTHubAILoadEndpointsTreeDoneEvent, { Result: "Fail", [Constants.errorProperties.Message]: message });

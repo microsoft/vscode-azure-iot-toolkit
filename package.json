@@ -336,6 +336,31 @@
         "category": "Azure IoT Hub"
       },
       {
+        "command": "azure-iot-hub.createFabricEventStreamEndpoint",
+        "title": "%azure-iot-hub.command.createFabricEventStreamEndpoint.title%",
+        "category": "%azure-iot-hub.category%"
+      },
+      {
+        "command": "azure-iot-hub.createMessageRoute",
+        "title": "%azure-iot-hub.command.createMessageRoute.title%",
+        "category": "%azure-iot-hub.category%"
+      },
+      {
+        "command": "azure-iot-hub.updateMessageRoute",
+        "title": "%azure-iot-hub.command.updateMessageRoute.title%",
+        "category": "%azure-iot-hub.category%"
+      },
+      {
+        "command": "azure-iot-hub.deleteMessageRoute",
+        "title": "%azure-iot-hub.command.deleteMessageRoute.title%",
+        "category": "%azure-iot-hub.category%"
+      },
+      {
+        "command": "azure-iot-hub.updateFabricEventStreamEndpoint",
+        "title": "%azure-iot-hub.command.updateFabricEventStreamEndpoint.title%",
+        "category": "%azure-iot-hub.category%"
+      },
+      {
         "command": "azure-iot-hub.loadMore",
         "title": "Load More",
         "category": "Azure IoT Hub"
@@ -659,6 +684,16 @@
           "when": "view == iotHubDevices && viewItem == event-hub"
         },
         {
+          "command": "azure-iot-hub.createFabricEventStreamEndpoint",
+          "when": "view == iotHubDevices && viewItem == event-stream-label",
+          "group": "azure-iot-hub@1"
+        },
+        {
+          "command": "azure-iot-hub.updateFabricEventStreamEndpoint",
+          "when": "view == iotHubDevices && viewItem == event-stream",
+          "group": "azure-iot-hub@1"
+        },
+        {
           "command": "azure-iot-toolkit.startMonitorIoTHubMessageWithAbbreviation",
           "when": "view == iotHubDevices && viewItem == events"
         },
@@ -682,6 +717,21 @@
         {
           "command": "azure-iot-hub.refresh",
           "when": "view == iotHubExplorer && viewItem == azureextensionui.azureSubscription"
+        },
+        {
+          "command": "azure-iot-hub.createMessageRoute",
+          "when": "view == iotHubDevices && viewItem == message-routes-label",
+          "group": "azure-iot-hub@1"
+        },
+        {
+          "command": "azure-iot-hub.updateMessageRoute",
+          "when": "view == iotHubDevices && viewItem == message-route",
+          "group": "azure-iot-hub@1"
+        },
+        {
+          "command": "azure-iot-hub.deleteMessageRoute",
+          "when": "view == iotHubDevices && viewItem == message-route",
+          "group": "azure-iot-hub@2"
         }
       ],
       "editor/context": [
@@ -882,7 +932,7 @@
   "dependencies": {
     "@azure/arm-deviceprovisioningservices": "^5.1.0",
     "@azure/arm-eventhub": "^5.2.0",
-    "@azure/arm-iothub": "^6.3.0",
+    "@azure/arm-iothub": "^7.0.0-beta.3",
     "@azure/arm-resources": "^7.0.0",
     "@azure/arm-subscriptions": "^5.1.1",
     "@azure/core-auth": "^1.10.1",

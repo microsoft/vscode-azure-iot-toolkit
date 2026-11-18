@@ -115,8 +115,16 @@ export class Constants {
     public static IoTHubAIValidateJsonSchemaEvent = "General.ValidateJsonSchema.Done";
     public static IoTHubAILoadEndpointsTreeStartEvent = "AZ.LoadEndpointsTree.Start";
     public static IoTHubAILoadEndpointsTreeDoneEvent = "AZ.LoadEndpointsTree.Done";
+    public static IoTHubAICreateFabricEventStreamEndpointEvent = "AZ.MessageEndpoint.FabricEventStream.Create";
+    public static IoTHubAIUpdateFabricEventStreamEndpointEvent = "AZ.MessageEndpoint.FabricEventStream.Update";
+    public static IoTHubAILoadRoutesTreeStartEvent = "AZ.LoadRoutesTree.Start";
+    public static IoTHubAILoadRoutesTreeDoneEvent = "AZ.LoadRoutesTree.Done";
+    public static IoTHubAICreateMessageRouteEvent = "AZ.MessageRoute.Create";
+    public static IoTHubAIUpdateMessageRouteEvent = "AZ.MessageRoute.Update";
+    public static IoTHubAIDeleteMessageRouteEvent = "AZ.MessageRoute.Delete";
     public static IoTHubAIEHStartMonitorEvent = "AZ.EventHub.startMonitoring";
     public static IoTHubAIEHStopMonitorEvent = "AZ.EventHub.stopMonitoring";
+    public static IoTHubAIRefreshTreeAfterSignInFailedEvent = "AZ.SignIn.RefreshTree.Failed";
     public static PercentageLabel = "(%)";
     public static NotSetLabel = "Not Set";
     public static DisabledLabel = "Disabled";

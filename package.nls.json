@@ -59,5 +59,10 @@
   "azure-iot-dps.category": "Azure IoT Hub Device Provisioning Service",
   "azure-iot-dps.command.viewProperties.title": "View Properties",
   "azure-iot-dps.command.loadMore.title": "Load More",
-  "azure-iot-dps.command.refresh.title": "Refresh"
+  "azure-iot-dps.command.refresh.title": "Refresh",
+  "azure-iot-hub.command.createFabricEventStreamEndpoint.title": "Create Fabric Event Stream Endpoint",
+  "azure-iot-hub.command.updateFabricEventStreamEndpoint.title": "Update Fabric Event Stream Endpoint",
+  "azure-iot-hub.command.createMessageRoute.title": "Create Message Route",
+  "azure-iot-hub.command.updateMessageRoute.title": "Update Message Route",
+  "azure-iot-hub.command.deleteMessageRoute.title": "Delete Message Route"
 }
