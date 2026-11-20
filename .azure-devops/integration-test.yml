@@ -1,0 +1,84 @@
+# Copyright (c) Microsoft Corporation. All rights reserved.
+
+# Manual trigger only.
+trigger: none
+pr: none
+
+variables:
+  - group: 'vscode-iot-toolkit-integration-config'
+
+stages:
+  - stage: infrastructureSmoke
+    displayName: 'Infrastructure Smoke Test'
+    jobs:
+      - job: hubLifecycle
+        displayName: 'Temporary IoT Hub Lifecycle'
+        cancelTimeoutInMinutes: 10
+        pool:
+          vmImage: 'ubuntu-24.04'
+        steps:
+          - checkout: none
+
+          - task: AzureCLI@2
+            displayName: 'Create and verify temporary IoT Hub'
+            inputs:
+              azureSubscription: $(azureServiceConnection)
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                set -euo pipefail
+
+                HUB_NAME="vscode-iot-it-${PIPELINE_ID}-${BUILD_ID}"
+
+                az extension add \
+                  --name azure-iot \
+                  --upgrade \
+                  --only-show-errors
+
+                az iot hub create \
+                  --name "$HUB_NAME" \
+                  --resource-group "$RESOURCE_GROUP" \
+                  --output none
+
+                az iot hub show \
+                  --name "$HUB_NAME" \
+                  --resource-group "$RESOURCE_GROUP" \
+                  --output none
+
+                echo "Verified temporary IoT Hub $HUB_NAME."
+            env:
+              BUILD_ID: $(Build.BuildId)
+              PIPELINE_ID: $(System.DefinitionId)
+              RESOURCE_GROUP: $(resourceGroup)
+
+          - task: AzureCLI@2
+            displayName: 'Delete temporary IoT Hub'
+            condition: always()
+            inputs:
+              azureSubscription: $(azureServiceConnection)
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                set -euo pipefail
+
+                HUB_NAME="vscode-iot-it-${PIPELINE_ID}-${BUILD_ID}"
+
+                hub_id="$(az resource list \
+                  --name "$HUB_NAME" \
+                  --resource-group "$RESOURCE_GROUP" \
+                  --resource-type Microsoft.Devices/IotHubs \
+                  --query '[0].id' \
+                  --output tsv)"
+
+                if [[ -n "$hub_id" ]]; then
+                  az resource delete \
+                    --ids "$hub_id" \
+                    --output none
+                  echo "Deleted temporary IoT Hub $HUB_NAME."
+                else
+                  echo "Temporary IoT Hub $HUB_NAME does not exist; no cleanup is required."
+                fi
+            env:
+              BUILD_ID: $(Build.BuildId)
+              PIPELINE_ID: $(System.DefinitionId)
+              RESOURCE_GROUP: $(resourceGroup)
