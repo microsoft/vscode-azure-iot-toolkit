@@ -156,11 +156,11 @@ export class DeviceExplorer extends BaseExplorer {
                 this.outputLine(label, `[${op}][${result}] status: ${res.statusCode} ${res.statusMessage}`, outputChannel);
             }
             if (deviceInfo) {
-                if (deviceInfo.authentication.SymmetricKey.primaryKey != null) {
+                if (deviceInfo.authentication?.symmetricKey?.primaryKey != null) {
                     deviceInfo.connectionString = ConnectionString.createWithSharedAccessKey(hostName,
-                        deviceInfo.deviceId, deviceInfo.authentication.SymmetricKey.primaryKey);
+                        deviceInfo.deviceId, deviceInfo.authentication.symmetricKey.primaryKey);
                 }
-                if (deviceInfo.authentication.x509Thumbprint.primaryThumbprint != null) {
+                if (deviceInfo.authentication?.x509Thumbprint?.primaryThumbprint != null) {
                     deviceInfo.connectionString = ConnectionString.createWithX509Certificate(hostName, deviceInfo.deviceId);
                 }
                 this.outputLine(label, `[${op}] device info: ${JSON.stringify(deviceInfo, null, 2)}`, outputChannel);

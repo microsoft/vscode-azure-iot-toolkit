@@ -6,21 +6,75 @@ pr: none
 
 variables:
   - group: 'vscode-iot-toolkit-integration-config'
+  - name: nodeVersion
+    value: '22.x'
 
 stages:
-  - stage: infrastructureSmoke
-    displayName: 'Infrastructure Smoke Test'
+  - stage: build
+    displayName: 'Build VSIX'
     jobs:
-      - job: hubLifecycle
-        displayName: 'Temporary IoT Hub Lifecycle'
+      - job: package
+        displayName: 'Package VSIX'
+        pool:
+          vmImage: 'ubuntu-24.04'
+        steps:
+          - checkout: self
+
+          - task: NodeTool@0
+            displayName: 'Install Node.js'
+            inputs:
+              versionSpec: $(nodeVersion)
+
+          - script: npm ci
+            displayName: 'Install dependencies'
+
+          - bash: |
+              set -euo pipefail
+
+              mkdir -p "$(Build.ArtifactStagingDirectory)/vsix"
+              npm run package:vsix -- \
+                --out "$(Build.ArtifactStagingDirectory)/vsix/azure-iot-toolkit.vsix"
+            displayName: 'Build VSIX'
+
+          - task: PublishPipelineArtifact@1
+            displayName: 'Publish VSIX artifact'
+            inputs:
+              targetPath: '$(Build.ArtifactStagingDirectory)/vsix'
+              artifactType: pipeline
+              artifactName: vsix
+
+  - stage: integration
+    displayName: 'Packaged VSIX UI E2E Test'
+    dependsOn: build
+    jobs:
+      - job: packagedVsix
+        displayName: 'Test packaged VSIX'
         cancelTimeoutInMinutes: 10
         pool:
           vmImage: 'ubuntu-24.04'
         steps:
-          - checkout: none
+          - checkout: self
+
+          - task: NodeTool@0
+            displayName: 'Install Node.js'
+            inputs:
+              versionSpec: $(nodeVersion)
+
+          - script: npm ci
+            displayName: 'Install dependencies'
+
+          - script: npm run compile
+            displayName: 'Compile integration test'
+
+          - task: DownloadPipelineArtifact@2
+            displayName: 'Download VSIX artifact'
+            inputs:
+              buildType: current
+              artifactName: vsix
+              targetPath: '$(Pipeline.Workspace)/vsix'
 
           - task: AzureCLI@2
-            displayName: 'Create and verify temporary IoT Hub'
+            displayName: 'Test VSIX UI against fresh IoT Hub'
             inputs:
               azureSubscription: $(azureServiceConnection)
               scriptType: bash
@@ -29,6 +83,13 @@ stages:
                 set -euo pipefail
 
                 HUB_NAME="vscode-iot-it-${PIPELINE_ID}-${BUILD_ID}"
+                DEVICE_ID="integration-device-${BUILD_ID}"
+
+                VSIX_PATH="$VSIX_DIR/azure-iot-toolkit.vsix"
+                if [[ ! -f "$VSIX_PATH" ]]; then
+                  echo "VSIX artifact was not found at $VSIX_PATH." >&2
+                  exit 1
+                fi
 
                 az extension add \
                   --name azure-iot \
@@ -38,18 +99,35 @@ stages:
                 az iot hub create \
                   --name "$HUB_NAME" \
                   --resource-group "$RESOURCE_GROUP" \
+                  --disable-local-auth false \
                   --output none
 
-                az iot hub show \
-                  --name "$HUB_NAME" \
+                az iot hub device-identity create \
+                  --hub-name "$HUB_NAME" \
+                  --device-id "$DEVICE_ID" \
                   --resource-group "$RESOURCE_GROUP" \
                   --output none
 
-                echo "Verified temporary IoT Hub $HUB_NAME."
+                connection_string="$(az iot hub connection-string show \
+                  --hub-name "$HUB_NAME" \
+                  --resource-group "$RESOURCE_GROUP" \
+                  --hostname-type service \
+                  --query connectionString \
+                  --output tsv)"
+                if [[ -z "$connection_string" ]]; then
+                  echo "IoT Hub connection string was not returned." >&2
+                  exit 1
+                fi
+
+                IOT_DEVICE_ID="$DEVICE_ID" \
+                IOT_HUB_CONNECTION_STRING="$connection_string" \
+                VSIX_PATH="$VSIX_PATH" \
+                  xvfb-run -a npm run test:integration:vsix
             env:
               BUILD_ID: $(Build.BuildId)
               PIPELINE_ID: $(System.DefinitionId)
               RESOURCE_GROUP: $(resourceGroup)
+              VSIX_DIR: $(Pipeline.Workspace)/vsix
 
           - task: AzureCLI@2
             displayName: 'Delete temporary IoT Hub'

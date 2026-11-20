@@ -847,6 +847,7 @@
     "package:vsix": "vsce package --no-dependencies",
     "version": "tsc -v",
     "test": "rimraf out && npm run compile && npm run vscode:prepublish && node ./out/test/runTests.js",
+    "test:integration:vsix": "node ./out/test/integration/runTests.js",
     "simulator:clean": "rimraf resources/simulator/scripts",
     "welcome:clean": "rimraf resources/welcome/scripts",
     "resources:clean": "npm run simulator:clean && npm run welcome:clean",
@@ -876,6 +877,7 @@
     "terser-webpack-plugin": "^5.1.1",
     "ts-loader": "^9.5.7",
     "typescript": "~5.5",
+    "vscode-extension-tester": "^8.29.0",
     "webpack": "^5.30.0",
     "webpack-cli": "^5.1.4"
   },
