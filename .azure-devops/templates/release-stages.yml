@@ -8,10 +8,10 @@ parameters:
   - name: testTargets
     type: object
     default:
-      Linux: { os: linux, image: ubuntu-24.04 }
-      Windows: { os: windows, image: windows-2025 }
-      MacOS: { os: macOS, image: macOS-15 }
-      MinimumVSCode: { os: linux, image: ubuntu-24.04, vscodeVersion: 1.105.0 }
+      Linux: { pool: iotupx-vscode-release, os: linux, image: iotupx-1espt-ubuntu2404 }
+      Windows: { pool: iotupx-vscode-release, os: windows, image: iotupx-1espt-windows2025 }
+      MacOS: { pool: Azure Pipelines, os: macOS, image: macOS-15 }
+      MinimumVSCode: { pool: iotupx-vscode-release, os: linux, image: iotupx-1espt-ubuntu2404, vscodeVersion: 1.105.0 }
 
 stages:
   - stage: Resolve
@@ -64,7 +64,7 @@ stages:
           - job: ${{ target.key }}
             displayName: '${{ target.key }} tests'
             pool:
-              name: Azure Pipelines
+              name: ${{ target.value.pool }}
               image: ${{ target.value.image }}
               os: ${{ target.value.os }}
             steps:
@@ -172,8 +172,8 @@ stages:
           useReleaseSource: true
           vsixArtifactName: release-candidate
           pool:
-            name: Azure Pipelines
-            image: ubuntu-24.04
+            name: iotupx-vscode-release
+            image: iotupx-1espt-ubuntu2404
             os: linux
 
   - ${{ if in(parameters.mode, 'Preview', 'GA') }}:
@@ -216,8 +216,8 @@ stages:
           - job: PublishMarketplace
             displayName: 'Publish approved VSIX'
             pool:
-              name: Azure Pipelines
-              image: ubuntu-24.04
+              name: iotupx-vscode-release
+              image: iotupx-1espt-ubuntu2404
               os: linux
             templateContext:
               type: releaseJob
@@ -269,8 +269,8 @@ stages:
           - job: DraftGitHubRelease
             displayName: 'Create release draft'
             pool:
-              name: Azure Pipelines
-              image: ubuntu-24.04
+              name: iotupx-vscode-release
+              image: iotupx-1espt-ubuntu2404
               os: linux
             templateContext:
               type: releaseJob

@@ -37,13 +37,13 @@ extends:
   template: v1/1ES.Official.PipelineTemplate.yml@governedTemplates
   parameters:
     pool:
-      name: Azure Pipelines
-      image: ubuntu-24.04
+      name: iotupx-vscode-release
+      image: iotupx-1espt-ubuntu2404
       os: linux
     sdl:
       sourceAnalysisPool:
-        name: Azure Pipelines
-        image: windows-2025
+        name: iotupx-vscode-release
+        image: iotupx-1espt-windows2025
         os: windows
     stages:
       - template: templates/release-stages.yml
