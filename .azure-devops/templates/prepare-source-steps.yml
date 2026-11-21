@@ -8,10 +8,10 @@ parameters:
 steps:
   - checkout: ${{ iif(parameters.useReleaseSource, 'none', 'self') }}
 
-  - task: NodeTool@0
+  - task: UseNode@1
     displayName: 'Install Node.js'
     inputs:
-      versionSpec: $(nodeVersion)
+      version: $(nodeVersion)
 
   - ${{ if parameters.useReleaseSource }}:
       - download: current
@@ -28,3 +28,5 @@ steps:
   - script: npm ci
     displayName: 'Install dependencies'
     workingDirectory: $(extensionSourceDirectory)
+    env:
+      NODE_OPTIONS: --no-network-family-autoselection
