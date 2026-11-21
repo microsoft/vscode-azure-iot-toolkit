@@ -69,6 +69,8 @@ stages:
               os: ${{ target.value.os }}
             steps:
               - template: prepare-source-steps.yml
+                parameters:
+                  authenticateNpm: true
 
               - ${{ if eq(target.key, 'Linux') }}:
                   - script: npm run lint
@@ -100,6 +102,8 @@ stages:
                   artifact: release-tooling
         steps:
           - template: prepare-source-steps.yml
+            parameters:
+              authenticateNpm: true
 
           - ${{ if ne(parameters.mode, 'Dry run') }}:
               - bash: |
@@ -161,6 +165,8 @@ stages:
                   --omit=dev --save-exact --no-audit --no-fund @vscode/vsce@4.1.1
                 displayName: 'Freeze Marketplace publishing tooling'
                 workingDirectory: $(Agent.TempDirectory)
+                env:
+                  NPM_CONFIG_USERCONFIG: $(npmConfigPath)
 
   - stage: PackagedVsixUiE2E
     displayName: 'Packaged VSIX UI E2E'
@@ -170,6 +176,7 @@ stages:
       - template: vsix-ui-e2e-job.yml
         parameters:
           useReleaseSource: true
+          authenticateNpm: true
           vsixArtifactName: release-candidate
           pool:
             name: iotupx-vscode-release

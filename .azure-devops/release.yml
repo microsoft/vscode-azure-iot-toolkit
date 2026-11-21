@@ -21,6 +21,10 @@ variables:
   - group: 'vscode-iot-toolkit-integration-config'
   - name: nodeVersion
     value: '24.x'
+  - name: npmRegistryUrl
+    value: https://pkgs.dev.azure.com/azureiotdevxp/_packaging/vs-dtdl-extension-feed/npm/registry/
+  - name: npmConfigPath
+    value: $(Agent.TempDirectory)/release.npmrc
   - name: extensionSourceDirectory
     value: $(Agent.TempDirectory)/release-source
   - ${{ if ne(parameters.mode, 'Dry run') }}:

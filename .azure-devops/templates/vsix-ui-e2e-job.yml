@@ -6,6 +6,9 @@ parameters:
   - name: useReleaseSource
     type: boolean
     default: false
+  - name: authenticateNpm
+    type: boolean
+    default: false
   - name: vsixArtifactName
     type: string
     default: vsix
@@ -19,6 +22,7 @@ jobs:
       - template: prepare-source-steps.yml
         parameters:
           useReleaseSource: ${{ parameters.useReleaseSource }}
+          authenticateNpm: ${{ parameters.authenticateNpm }}
 
       - script: npm run compile
         displayName: 'Compile integration test'
