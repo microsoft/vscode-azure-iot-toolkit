@@ -1,0 +1,308 @@
+# Copyright (c) Microsoft Corporation. All rights reserved.
+
+parameters:
+  - name: mode
+    type: string
+  - name: sourceRef
+    type: string
+  - name: testTargets
+    type: object
+    default:
+      Linux: { os: linux, image: ubuntu-24.04 }
+      Windows: { os: windows, image: windows-2025 }
+      MacOS: { os: macOS, image: macOS-15 }
+      MinimumVSCode: { os: linux, image: ubuntu-24.04, vscodeVersion: 1.105.0 }
+
+stages:
+  - stage: Resolve
+    displayName: 'Resolve exact source'
+    jobs:
+      - job: Resolve
+        displayName: 'Resolve and snapshot source'
+        templateContext:
+          outputs:
+            - output: pipelineArtifact
+              path: $(Build.ArtifactStagingDirectory)/release-source
+              artifact: release-source
+        steps:
+          - checkout: self
+            fetchDepth: 1
+
+          - task: NodeTool@0
+            displayName: 'Install Node.js'
+            inputs:
+              versionSpec: $(nodeVersion)
+
+          - script: node --test test/releasePipeline.test.js
+            displayName: 'Check release mode and tag rules'
+
+          - bash: |
+              set -euo pipefail
+
+              if [[ "$MODE" != "Dry run" && "$PIPELINE_DEFINITION_REF" != "refs/heads/master" ]]; then
+                echo "Preview and GA releases must run the pipeline definition from refs/heads/master." >&2
+                exit 1
+              fi
+
+              node scripts/releasePipeline.js resolve \
+                --mode "$MODE" \
+                --source-ref "$SOURCE_REF" \
+                --repository "$(Build.SourcesDirectory)" \
+                --output "$(Build.ArtifactStagingDirectory)/release-source"
+            name: release
+            displayName: 'Resolve and archive source'
+            env:
+              MODE: ${{ parameters.mode }}
+              SOURCE_REF: ${{ parameters.sourceRef }}
+              PIPELINE_DEFINITION_REF: $(Build.SourceBranch)
+
+  - stage: Quality
+    displayName: 'Quality gates'
+    dependsOn: Resolve
+    jobs:
+      - ${{ each target in parameters.testTargets }}:
+          - job: ${{ target.key }}
+            displayName: '${{ target.key }} tests'
+            pool:
+              name: Azure Pipelines
+              image: ${{ target.value.image }}
+              os: ${{ target.value.os }}
+            steps:
+              - template: prepare-source-steps.yml
+
+              - ${{ if eq(target.key, 'Linux') }}:
+                  - script: npm run lint
+                    displayName: 'Lint'
+                    workingDirectory: $(extensionSourceDirectory)
+
+              - script: ${{ iif(eq(target.value.os, 'linux'), 'xvfb-run -a npm test', 'npm test') }}
+                displayName: 'Run extension tests'
+                workingDirectory: $(extensionSourceDirectory)
+                ${{ if target.value.vscodeVersion }}:
+                  env:
+                    VSCODE_TEST_VERSION: ${{ target.value.vscodeVersion }}
+
+  - stage: Package
+    displayName: 'Build immutable VSIX'
+    dependsOn: Quality
+    jobs:
+      - job: Package
+        displayName: 'Package release candidate'
+        templateContext:
+          outputs:
+            - output: pipelineArtifact
+              path: $(Build.ArtifactStagingDirectory)/release-candidate
+              artifact: release-candidate
+              isProduction: true
+            - ${{ if ne(parameters.mode, 'Dry run') }}:
+                - output: pipelineArtifact
+                  path: $(Build.ArtifactStagingDirectory)/release-tooling
+                  artifact: release-tooling
+        steps:
+          - template: prepare-source-steps.yml
+
+          - ${{ if ne(parameters.mode, 'Dry run') }}:
+              - bash: |
+                  set -euo pipefail
+
+                  connection_string="${APPLICATION_INSIGHTS_CONNECTION_STRING:-}"
+                  if [[ -z "${connection_string//[[:space:]]/}" || "$connection_string" == *'$('*')'* ]]; then
+                    echo "applicationInsightsConnectionString is empty or unresolved. Set it in vscode-iot-toolkit-release-config." >&2
+                    exit 1
+                  fi
+
+                  node scripts/modifyPackageJson.js \
+                    applicationInsightsConnectionString \
+                    "$connection_string"
+                displayName: 'Inject production telemetry connection string'
+                workingDirectory: $(extensionSourceDirectory)
+                env:
+                  APPLICATION_INSIGHTS_CONNECTION_STRING: $(applicationInsightsConnectionString)
+
+          - bash: |
+              set -euo pipefail
+
+              SOURCE_METADATA="$(Pipeline.Workspace)/release-source/source-metadata.json"
+              CANDIDATE_DIRECTORY="$(Build.ArtifactStagingDirectory)/release-candidate"
+              VSIX_FILE_NAME="$(node -p "require(process.argv[1]).vsixFileName" "$SOURCE_METADATA")"
+              IS_PRE_RELEASE="$(node -p "require(process.argv[1]).isPreRelease" "$SOURCE_METADATA")"
+              PACKAGE_VERSION="$(node -p "require(process.argv[1]).packageVersion" "$SOURCE_METADATA")"
+
+              mkdir -p "$CANDIDATE_DIRECTORY"
+              package_arguments=(--out "$CANDIDATE_DIRECTORY/$VSIX_FILE_NAME")
+              if [[ "$IS_PRE_RELEASE" == "true" ]]; then
+                package_arguments=(--pre-release "${package_arguments[@]}")
+              fi
+
+              npm run package:vsix -- "${package_arguments[@]}"
+
+              packaged_identity="$(python3 -c \
+                'import json,sys,zipfile; p=json.loads(zipfile.ZipFile(sys.argv[1]).read("extension/package.json")); print("{publisher}.{name}@{version}".format(**p))' \
+                "$CANDIDATE_DIRECTORY/$VSIX_FILE_NAME")"
+              expected_identity="vsciot-vscode.azure-iot-toolkit@$PACKAGE_VERSION"
+              if [[ "$packaged_identity" != "$expected_identity" ]]; then
+                echo "Packaged extension identity $packaged_identity does not match $expected_identity." >&2
+                exit 1
+              fi
+
+              node "$(Pipeline.Workspace)/release-source/releasePipeline.js" create-candidate \
+                --source-metadata "$SOURCE_METADATA" \
+                --candidate-directory "$CANDIDATE_DIRECTORY"
+
+              cp \
+                "$(Pipeline.Workspace)/release-source/releasePipeline.js" \
+                "$CANDIDATE_DIRECTORY/releasePipeline.js"
+            displayName: 'Package release candidate'
+            workingDirectory: $(extensionSourceDirectory)
+
+          - ${{ if ne(parameters.mode, 'Dry run') }}:
+              - script: >-
+                  npm install --prefix "$(Build.ArtifactStagingDirectory)/release-tooling"
+                  --omit=dev --save-exact --no-audit --no-fund @vscode/vsce@4.1.1
+                displayName: 'Freeze Marketplace publishing tooling'
+                workingDirectory: $(Agent.TempDirectory)
+
+  - stage: PackagedVsixUiE2E
+    displayName: 'Packaged VSIX UI E2E'
+    isSkippable: false
+    dependsOn: Package
+    jobs:
+      - template: vsix-ui-e2e-job.yml
+        parameters:
+          useReleaseSource: true
+          vsixArtifactName: release-candidate
+          pool:
+            name: Azure Pipelines
+            image: ubuntu-24.04
+            os: linux
+
+  - ${{ if in(parameters.mode, 'Preview', 'GA') }}:
+      - stage: ApproveRelease
+        displayName: 'Approve ${{ parameters.mode }} release'
+        isSkippable: false
+        dependsOn:
+          - Resolve
+          - PackagedVsixUiE2E
+        variables:
+          sourceCommit: $[ stageDependencies.Resolve.Resolve.outputs['release.sourceCommit'] ]
+          releaseTag: $[ stageDependencies.Resolve.Resolve.outputs['release.releaseTag'] ]
+        jobs:
+          - job: AwaitApproval
+            displayName: 'Wait for a release administrator'
+            pool: server
+            timeoutInMinutes: 4320
+            steps:
+              - task: ManualValidation@1
+                timeoutInMinutes: 2880
+                inputs:
+                  notifyUsers: '[azure-iot-vscode-extension]\Release Administrators'
+                  approvers: '[azure-iot-vscode-extension]\Release Administrators'
+                  allowApproversToApproveTheirOwnRuns: false
+                  instructions: >-
+                    Review the tested VSIX and UI integration results for $(releaseTag)
+                    at commit $(sourceCommit). Approve to publish to Marketplace and
+                    then create a draft GitHub Release with the same VSIX.
+                  onTimeout: reject
+
+      - stage: PublishMarketplace
+        displayName: 'Publish to VS Code Marketplace'
+        isSkippable: false
+        dependsOn:
+          - Resolve
+          - ApproveRelease
+        variables:
+          sourceCommit: $[ stageDependencies.Resolve.Resolve.outputs['release.sourceCommit'] ]
+        jobs:
+          - job: PublishMarketplace
+            displayName: 'Publish approved VSIX'
+            pool:
+              name: Azure Pipelines
+              image: ubuntu-24.04
+              os: linux
+            templateContext:
+              type: releaseJob
+              isProduction: true
+              inputs:
+                - input: pipelineArtifact
+                  artifactName: release-candidate
+                  targetPath: $(Pipeline.Workspace)/release-candidate
+                - input: pipelineArtifact
+                  artifactName: release-tooling
+                  targetPath: $(Pipeline.Workspace)/release-tooling
+            steps:
+              - template: verify-release-candidate-steps.yml
+                parameters:
+                  mode: ${{ parameters.mode }}
+                  sourceRef: ${{ parameters.sourceRef }}
+
+              - task: AzureCLI@2
+                displayName: 'Publish verified VSIX'
+                inputs:
+                  azureSubscription: vscode-iot-toolkit-marketplace-release
+                  scriptType: bash
+                  scriptLocation: inlineScript
+                  visibleAzLogin: false
+                  inlineScript: |
+                    set -euo pipefail
+
+                    publish_arguments=(publish --azure-credential --packagePath "$VSIX_PATH")
+                    if [[ "$MODE" == "Preview" ]]; then
+                      publish_arguments+=(--pre-release)
+                    fi
+
+                    node "$VSCE_PATH" "${publish_arguments[@]}"
+                env:
+                  VSIX_PATH: $(verify.vsixPath)
+                  MODE: ${{ parameters.mode }}
+                  VSCE_PATH: $(Pipeline.Workspace)/release-tooling/node_modules/@vscode/vsce/vsce
+
+      - stage: DraftGitHubRelease
+        displayName: 'Create draft GitHub Release'
+        isSkippable: false
+        dependsOn:
+          - Resolve
+          - PublishMarketplace
+        variables:
+          sourceCommit: $[ stageDependencies.Resolve.Resolve.outputs['release.sourceCommit'] ]
+          releaseTag: $[ stageDependencies.Resolve.Resolve.outputs['release.releaseTag'] ]
+        jobs:
+          - job: DraftGitHubRelease
+            displayName: 'Create release draft'
+            pool:
+              name: Azure Pipelines
+              image: ubuntu-24.04
+              os: linux
+            templateContext:
+              type: releaseJob
+              isProduction: true
+              inputs:
+                - input: pipelineArtifact
+                  artifactName: release-candidate
+                  targetPath: $(Pipeline.Workspace)/release-candidate
+            steps:
+              - template: verify-release-candidate-steps.yml
+                parameters:
+                  mode: ${{ parameters.mode }}
+                  sourceRef: ${{ parameters.sourceRef }}
+
+              - task: GitHubRelease@1
+                displayName: 'Draft ${{ parameters.mode }} GitHub Release'
+                inputs:
+                  gitHubConnection: vscode-iot-toolkit-github
+                  repositoryName: microsoft/vscode-azure-iot-toolkit
+                  action: create
+                  target: $(sourceCommit)
+                  tagSource: userSpecifiedTag
+                  tag: $(releaseTag)
+                  title: $(releaseTag)
+                  releaseNotesSource: inline
+                  releaseNotesInline: '${{ parameters.mode }} release for $(releaseTag).'
+                  addChangeLog: true
+                  changeLogCompareToRelease: lastFullRelease
+                  changeLogType: issueBased
+                  assets: |
+                    $(verify.vsixPath)
+                    $(verify.vsixPath).sha256
+                  isDraft: true
+                  isPreRelease: ${{ eq(parameters.mode, 'Preview') }}
+                  makeLatest: 'false'

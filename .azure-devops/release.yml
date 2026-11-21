@@ -1,149 +1,52 @@
-# Manual trigger only
+# Copyright (c) Microsoft Corporation. All rights reserved.
+
 trigger: none
 pr: none
 
 parameters:
-- name: buildAgentPoolVar
-  displayName: 'Build agent pool'
-  type: string
-  default: 'BuildAgentPool'
-- name: buildAgentVmImageVar
-  displayName: 'Build agent image'
-  type: string
-  default: 'BuildAgentImage'
-- name: aiKeyVar
-  displayName: 'AI Key Variable'
-  type: string
-  default: 'TestAIKey'
-- name: publishExt
-  displayName: 'Publish to Marketplace'
-  type: boolean
-  default: false
-- name: productionRelease
-  displayName: 'Publish to marketplace as public (non-preview)'
-  type: boolean
-  default: false
+  - name: mode
+    displayName: Release mode
+    type: string
+    default: 'Dry run'
+    values:
+      - 'Dry run'
+      - Preview
+      - GA
+  - name: sourceRef
+    displayName: 'Source ref (Dry run: branch or tag; Preview/GA: tag)'
+    type: string
+    default: refs/heads/master
 
 variables:
-- name: vmImage
-  value: $[variables.${{ parameters.buildAgentVmImageVar }}]
-- name: buildPool
-  value: $[variables.${{ parameters.buildAgentPoolVar }}]
-- name: aiKey
-  value: $[variables.${{ parameters.aiKeyVar }}]
+  - group: 'vscode-iot-toolkit-integration-config'
+  - name: nodeVersion
+    value: '24.x'
+  - name: extensionSourceDirectory
+    value: $(Agent.TempDirectory)/release-source
+  - ${{ if ne(parameters.mode, 'Dry run') }}:
+      - group: 'vscode-iot-toolkit-release-config'
 
-stages:
-- stage: SDL
-  displayName: 'SDL Stage'
-  jobs:
-  - job: SDL_checks
-    displayName: 'SDL checks'
+resources:
+  repositories:
+    - repository: governedTemplates
+      type: git
+      name: 1ESPipelineTemplates/1ESPipelineTemplates
+      ref: refs/tags/stable
+
+extends:
+  template: v1/1ES.Official.PipelineTemplate.yml@governedTemplates
+  parameters:
     pool:
-      vmImage: windows-latest
-    steps:
-    - template: common/sdl_steps.yml
-
-- stage: test
-  displayName: 'Test Stage'
-  dependsOn: [SDL]
-  jobs:
-  - job: run_tests
-    displayName: 'Test'
-    strategy:
-      matrix:
-        linux:
-          imageName: 'ubuntu-latest'
-        mac:
-          imageName: 'macos-latest'
-        windows:
-          imageName: 'windows-latest'
-    pool:
-      vmImage: $(imageName)
-
-    steps:
-    # Run component governance before testing (testing leaves artifacts)
-    - task: ComponentGovernanceComponentDetection@0
-      displayName: 'Component Governance Detection'
-      inputs:
-        scanType: 'LogOnly'
-        verbosity: 'Verbose'
-        alertWarningLevel: 'Medium'
-    - template: common/setup_steps.yml
-    - template: common/test_steps.yml
-
-- stage: build
-  displayName: 'Build Stage'
-  dependsOn: [test]
-  jobs:
-  - job: build_and_package
-    displayName: 'Build and Publish Artifacts'
-    pool:
-      name: $(buildPool)
-      vmImage: $(vmImage)
-      demands:
-        - ImageOverride -equals $(vmImage)
-    steps:
-      - template: common/setup_steps.yml
-      - template: common/compile_steps.yml
-
-      # modify application insights key for releases only
-      - script: |
-          node scripts/modifyPackageJson.js aiKey $(aiKey)
-        displayName: 'Inject App Insights key'
-        condition: and(succeeded(), ${{ parameters.publishExt }})
-
-      - template: common/package_steps.yml
+      name: Azure Pipelines
+      image: ubuntu-24.04
+      os: linux
+    sdl:
+      sourceAnalysisPool:
+        name: Azure Pipelines
+        image: windows-2025
+        os: windows
+    stages:
+      - template: templates/release-stages.yml
         parameters:
-          productionRelease: ${{ eq(parameters.productionRelease, true) }}
-   
-- stage: release
-  displayName: 'Release to Marketplace'
-  dependsOn: [SDL, test, build]
-  condition: and(succeeded(), ${{ parameters.publishExt }})
-  pool:
-    name: $(buildPool)
-    vmImage: $(vmImage)
-    demands:
-      - ImageOverride -equals $(vmImage)
-  jobs:
-  - deployment: 'StageRelease'
-    displayName: 'Stage Release for deployment'
-    environment: 'production'
-  - job: 'release'
-    displayName: 'Release package'
-    steps:
-      - task: DownloadPipelineArtifact@2
-        displayName : 'Download VSIX Build Artifacts'
-        inputs:
-          source: 'current'
-          artifact: 'vscode-azure-iot-toolkit'
-          path: '$(System.ArtifactsDirectory)/vsix'
-
-      # install Node
-      - task: NodeTool@0
-        inputs:
-          versionSpec: '14.x'
-        displayName: 'Install Node.js'
-
-      - script: |
-          npm install -g vsce
-        displayName: 'Install VSCE tool'
-
-      # publish pre-release vsix to marketplace
-      - bash: |
-          vsce publish -p $MARKETPLACE_TOKEN --packagePath *.vsix --pre-release
-        workingDirectory: '$(System.ArtifactsDirectory)/vsix'
-        displayName: 'Deploy pre-release VSIX to marketplace'
-        condition: and(succeeded(), not(${{ parameters.productionRelease }}))
-        env:
-          MARKETPLACE_TOKEN: $(vsciot_marketplace_token)
-
-      # publish vsix to marketplace
-      - bash: |
-          vsce publish -p $MARKETPLACE_TOKEN --packagePath *.vsix
-        workingDirectory: '$(System.ArtifactsDirectory)/vsix'
-        displayName: 'Deploy release VSIX to marketplace'
-        condition: and(succeeded(), ${{ parameters.productionRelease }})
-        env:
-          MARKETPLACE_TOKEN: $(vsciot_marketplace_token)
-      
+          mode: ${{ parameters.mode }}
+          sourceRef: ${{ parameters.sourceRef }}

@@ -1,0 +1,30 @@
+# Copyright (c) Microsoft Corporation. All rights reserved.
+
+parameters:
+  - name: useReleaseSource
+    type: boolean
+    default: true
+
+steps:
+  - checkout: ${{ iif(parameters.useReleaseSource, 'none', 'self') }}
+
+  - task: NodeTool@0
+    displayName: 'Install Node.js'
+    inputs:
+      versionSpec: $(nodeVersion)
+
+  - ${{ if parameters.useReleaseSource }}:
+      - download: current
+        displayName: 'Download resolved source'
+        artifact: release-source
+
+      - script: >-
+          node "$(Pipeline.Workspace)/release-source/releasePipeline.js"
+          extract-source
+          --artifact-directory "$(Pipeline.Workspace)/release-source"
+          --destination "$(extensionSourceDirectory)"
+        displayName: 'Verify and extract resolved source'
+
+  - script: npm ci
+    displayName: 'Install dependencies'
+    workingDirectory: $(extensionSourceDirectory)

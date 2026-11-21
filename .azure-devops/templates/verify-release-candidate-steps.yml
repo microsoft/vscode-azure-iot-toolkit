@@ -1,0 +1,26 @@
+# Copyright (c) Microsoft Corporation. All rights reserved.
+
+parameters:
+  - name: mode
+    type: string
+  - name: sourceRef
+    type: string
+
+steps:
+  - checkout: none
+
+  - task: NodeTool@0
+    displayName: 'Install Node.js'
+    inputs:
+      versionSpec: $(nodeVersion)
+
+  - script: >-
+      node "$(Pipeline.Workspace)/release-candidate/releasePipeline.js" verify-candidate
+      --candidate-directory "$(Pipeline.Workspace)/release-candidate"
+      --mode "$MODE" --source-ref "$SOURCE_REF" --source-commit "$SOURCE_COMMIT"
+    name: verify
+    displayName: 'Verify release candidate'
+    env:
+      MODE: ${{ parameters.mode }}
+      SOURCE_REF: ${{ parameters.sourceRef }}
+      SOURCE_COMMIT: $(sourceCommit)

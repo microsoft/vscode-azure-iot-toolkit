@@ -1,0 +1,122 @@
+# Copyright (c) Microsoft Corporation. All rights reserved.
+
+parameters:
+  - name: pool
+    type: object
+  - name: useReleaseSource
+    type: boolean
+    default: false
+  - name: vsixArtifactName
+    type: string
+    default: vsix
+
+jobs:
+  - job: packagedVsix
+    displayName: 'Test packaged VSIX'
+    cancelTimeoutInMinutes: 10
+    pool: ${{ parameters.pool }}
+    steps:
+      - template: prepare-source-steps.yml
+        parameters:
+          useReleaseSource: ${{ parameters.useReleaseSource }}
+
+      - script: npm run compile
+        displayName: 'Compile integration test'
+        workingDirectory: $(extensionSourceDirectory)
+
+      - task: DownloadPipelineArtifact@2
+        displayName: 'Download VSIX artifact'
+        inputs:
+          buildType: current
+          artifactName: ${{ parameters.vsixArtifactName }}
+          targetPath: '$(Pipeline.Workspace)/vsix'
+
+      - task: AzureCLI@2
+        displayName: 'Test VSIX UI against fresh IoT Hub'
+        inputs:
+          azureSubscription: $(azureServiceConnection)
+          scriptType: bash
+          scriptLocation: inlineScript
+          workingDirectory: $(extensionSourceDirectory)
+          inlineScript: |
+            set -euo pipefail
+
+            HUB_NAME="vscode-iot-it-${PIPELINE_ID}-${BUILD_ID}"
+            DEVICE_ID="integration-device-${BUILD_ID}"
+
+            mapfile -t vsix_files < <(find "$VSIX_DIR" -maxdepth 1 -type f -name '*.vsix' -print)
+            if [[ "${#vsix_files[@]}" -ne 1 ]]; then
+              echo "Expected exactly one VSIX in $VSIX_DIR, found ${#vsix_files[@]}." >&2
+              exit 1
+            fi
+            VSIX_PATH="${vsix_files[0]}"
+
+            az extension add \
+              --name azure-iot \
+              --upgrade \
+              --only-show-errors
+
+            az iot hub create \
+              --name "$HUB_NAME" \
+              --resource-group "$RESOURCE_GROUP" \
+              --disable-local-auth false \
+              --output none
+
+            az iot hub device-identity create \
+              --hub-name "$HUB_NAME" \
+              --device-id "$DEVICE_ID" \
+              --resource-group "$RESOURCE_GROUP" \
+              --output none
+
+            connection_string="$(az iot hub connection-string show \
+              --hub-name "$HUB_NAME" \
+              --resource-group "$RESOURCE_GROUP" \
+              --hostname-type service \
+              --query connectionString \
+              --output tsv)"
+            if [[ -z "$connection_string" ]]; then
+              echo "IoT Hub connection string was not returned." >&2
+              exit 1
+            fi
+
+            IOT_DEVICE_ID="$DEVICE_ID" \
+            IOT_HUB_CONNECTION_STRING="$connection_string" \
+            VSIX_PATH="$VSIX_PATH" \
+              xvfb-run -a npm run test:integration:vsix
+        env:
+          BUILD_ID: $(Build.BuildId)
+          PIPELINE_ID: $(System.DefinitionId)
+          RESOURCE_GROUP: $(resourceGroup)
+          VSIX_DIR: $(Pipeline.Workspace)/vsix
+
+      - task: AzureCLI@2
+        displayName: 'Delete temporary IoT Hub'
+        condition: always()
+        inputs:
+          azureSubscription: $(azureServiceConnection)
+          scriptType: bash
+          scriptLocation: inlineScript
+          inlineScript: |
+            set -euo pipefail
+
+            HUB_NAME="vscode-iot-it-${PIPELINE_ID}-${BUILD_ID}"
+
+            hub_id="$(az resource list \
+              --name "$HUB_NAME" \
+              --resource-group "$RESOURCE_GROUP" \
+              --resource-type Microsoft.Devices/IotHubs \
+              --query '[0].id' \
+              --output tsv)"
+
+            if [[ -n "$hub_id" ]]; then
+              az resource delete \
+                --ids "$hub_id" \
+                --output none
+              echo "Deleted temporary IoT Hub $HUB_NAME."
+            else
+              echo "Temporary IoT Hub $HUB_NAME does not exist; no cleanup is required."
+            fi
+        env:
+          BUILD_ID: $(Build.BuildId)
+          PIPELINE_ID: $(System.DefinitionId)
+          RESOURCE_GROUP: $(resourceGroup)
