@@ -180,6 +180,7 @@ stages:
         parameters:
           useReleaseSource: true
           authenticateNpm: true
+          authenticatePip: true
           vsixArtifactName: release-candidate
           pool:
             name: iotupx-vscode-release

@@ -9,6 +9,9 @@ parameters:
   - name: authenticateNpm
     type: boolean
     default: false
+  - name: authenticatePip
+    type: boolean
+    default: false
   - name: vsixArtifactName
     type: string
     default: vsix
@@ -34,6 +37,12 @@ jobs:
           buildType: current
           artifactName: ${{ parameters.vsixArtifactName }}
           targetPath: '$(Pipeline.Workspace)/vsix'
+
+      - ${{ if parameters.authenticatePip }}:
+          - task: PipAuthenticate@1
+            displayName: 'Authenticate Python package feed'
+            inputs:
+              artifactFeeds: $(pythonArtifactFeed)
 
       - task: AzureCLI@2
         displayName: 'Test VSIX UI against fresh IoT Hub'

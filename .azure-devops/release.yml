@@ -23,6 +23,8 @@ variables:
     value: '24.x'
   - name: npmRegistryUrl
     value: https://pkgs.dev.azure.com/azureiotdevxp/azure-iot-vscode-extension/_packaging/azure-iot-vscode-extension-packages/npm/registry/
+  - name: pythonArtifactFeed
+    value: azure-iot-vscode-extension-packages
   - name: npmConfigPath
     value: $(Agent.TempDirectory)/release.npmrc
   - name: extensionSourceDirectory
