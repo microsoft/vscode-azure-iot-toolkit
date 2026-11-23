@@ -22,7 +22,7 @@ variables:
   - name: nodeVersion
     value: '24.x'
   - name: npmRegistryUrl
-    value: https://pkgs.dev.azure.com/azureiotdevxp/_packaging/vs-dtdl-extension-feed/npm/registry/
+    value: https://pkgs.dev.azure.com/azureiotdevxp/azure-iot-vscode-extension/_packaging/azure-iot-vscode-extension-packages/npm/registry/
   - name: npmConfigPath
     value: $(Agent.TempDirectory)/release.npmrc
   - name: extensionSourceDirectory

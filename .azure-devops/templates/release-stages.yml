@@ -115,10 +115,13 @@ stages:
                     exit 1
                   fi
 
+                  # azext-utils reads aiKey but passes it directly to TelemetryReporter, which accepts a connection string.
                   node scripts/modifyPackageJson.js \
                     applicationInsightsConnectionString \
+                    "$connection_string" \
+                    aiKey \
                     "$connection_string"
-                displayName: 'Inject production telemetry connection string'
+                displayName: 'Inject production telemetry configuration'
                 workingDirectory: $(extensionSourceDirectory)
                 env:
                   APPLICATION_INSIGHTS_CONNECTION_STRING: $(applicationInsightsConnectionString)
