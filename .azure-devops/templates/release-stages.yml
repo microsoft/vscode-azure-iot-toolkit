@@ -58,6 +58,7 @@ stages:
 
   - stage: Quality
     displayName: 'Quality gates'
+    isSkippable: false
     dependsOn: Resolve
     jobs:
       - ${{ each target in parameters.testTargets }}:

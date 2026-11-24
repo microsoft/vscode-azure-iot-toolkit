@@ -24,3 +24,21 @@ steps:
       MODE: ${{ parameters.mode }}
       SOURCE_REF: ${{ parameters.sourceRef }}
       SOURCE_COMMIT: $(sourceCommit)
+
+  - bash: |
+      set -euo pipefail
+
+      repository_url=https://github.com/microsoft/vscode-azure-iot-toolkit.git
+      current_tag_commit="$(git ls-remote "$repository_url" "${SOURCE_REF}^{}" | cut -f1)"
+      if [[ -z "$current_tag_commit" ]]; then
+        current_tag_commit="$(git ls-remote --exit-code "$repository_url" "$SOURCE_REF" | cut -f1)"
+      fi
+
+      if [[ "$current_tag_commit" != "$SOURCE_COMMIT" ]]; then
+        echo "$SOURCE_REF now resolves to $current_tag_commit instead of $SOURCE_COMMIT." >&2
+        exit 1
+      fi
+    displayName: 'Verify release tag has not moved'
+    env:
+      SOURCE_REF: ${{ parameters.sourceRef }}
+      SOURCE_COMMIT: $(sourceCommit)
