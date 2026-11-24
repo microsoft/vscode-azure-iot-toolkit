@@ -64,10 +64,13 @@ jobs:
             fi
             VSIX_PATH="${vsix_files[0]}"
 
-            az extension add \
+            if ! extension_install_output="$(az extension add \
               --name azure-iot \
               --upgrade \
-              --only-show-errors
+              --debug 2>&1)"; then
+              printf '%s\n' "$extension_install_output" >&2
+              exit 1
+            fi
 
             az iot hub create \
               --name "$HUB_NAME" \
