@@ -37,6 +37,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: npm ci
       - run: npm run lint
+      - run: node --test test/releasePipeline.test.js
+        if: runner.os == 'Linux'
       - run: xvfb-run -a npm test
         if: runner.os == 'Linux'
       - run: npm test
