@@ -42,7 +42,7 @@ export class SimulatorWebview {
 
     private async openSimulatorWebviewPage(): Promise<any> {
         if (!this.panel) {
-            this.localServer.startServer();
+            await this.localServer.startServer();
             this.panel = vscode.window.createWebviewPanel(
                 simulatorWebviewPanelViewType,
                 simulatorWebviewPanelViewTitle,

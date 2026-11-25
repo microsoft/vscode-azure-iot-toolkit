@@ -1,0 +1,49 @@
+# Copyright (c) Microsoft Corporation. All rights reserved.
+
+# Manual trigger only.
+trigger: none
+pr: none
+
+variables:
+  - group: 'vscode-iot-toolkit-integration-config'
+  - name: nodeVersion
+    value: '22.x'
+  - name: extensionSourceDirectory
+    value: $(Build.SourcesDirectory)
+
+stages:
+  - stage: build
+    displayName: 'Build VSIX'
+    jobs:
+      - job: package
+        displayName: 'Package VSIX'
+        pool:
+          vmImage: 'ubuntu-24.04'
+        steps:
+          - template: templates/prepare-source-steps.yml
+            parameters:
+              useReleaseSource: false
+
+          - bash: |
+              set -euo pipefail
+
+              mkdir -p "$(Build.ArtifactStagingDirectory)/vsix"
+              npm run package:vsix -- \
+                --out "$(Build.ArtifactStagingDirectory)/vsix/azure-iot-toolkit.vsix"
+            displayName: 'Build VSIX'
+
+          - task: PublishPipelineArtifact@1
+            displayName: 'Publish VSIX artifact'
+            inputs:
+              targetPath: '$(Build.ArtifactStagingDirectory)/vsix'
+              artifactType: pipeline
+              artifactName: vsix
+
+  - stage: integration
+    displayName: 'Packaged VSIX UI E2E Test'
+    dependsOn: build
+    jobs:
+      - template: templates/vsix-ui-e2e-job.yml
+        parameters:
+          pool:
+            vmImage: 'ubuntu-24.04'

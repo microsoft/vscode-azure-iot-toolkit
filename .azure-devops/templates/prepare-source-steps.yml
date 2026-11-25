@@ -1,0 +1,49 @@
+# Copyright (c) Microsoft Corporation. All rights reserved.
+
+parameters:
+  - name: useReleaseSource
+    type: boolean
+    default: true
+  - name: authenticateNpm
+    type: boolean
+    default: false
+
+steps:
+  - checkout: ${{ iif(parameters.useReleaseSource, 'none', 'self') }}
+
+  - task: UseNode@1
+    displayName: 'Install Node.js'
+    inputs:
+      version: $(nodeVersion)
+
+  - ${{ if parameters.useReleaseSource }}:
+      - download: current
+        displayName: 'Download resolved source'
+        artifact: release-source
+
+      - script: >-
+          node "$(Pipeline.Workspace)/release-source/releasePipeline.js"
+          extract-source
+          --artifact-directory "$(Pipeline.Workspace)/release-source"
+          --destination "$(extensionSourceDirectory)"
+        displayName: 'Verify and extract resolved source'
+
+  - ${{ if parameters.authenticateNpm }}:
+      - pwsh: |
+          @(
+            'registry=$(npmRegistryUrl)'
+            'always-auth=true'
+          ) | Set-Content -Path '$(npmConfigPath)'
+        displayName: 'Configure internal npm registry'
+
+      - task: npmAuthenticate@0
+        displayName: 'Authenticate npm registry'
+        inputs:
+          workingFile: $(npmConfigPath)
+
+  - script: npm ci
+    displayName: 'Install dependencies'
+    workingDirectory: $(extensionSourceDirectory)
+    ${{ if parameters.authenticateNpm }}:
+      env:
+        NPM_CONFIG_USERCONFIG: $(npmConfigPath)

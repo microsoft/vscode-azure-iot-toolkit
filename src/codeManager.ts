@@ -12,6 +12,16 @@ import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
 export class CodeManager {
+    // Ruby single-quoted literals treat only backslash and single quote as special.
+    public static escapeRubySingleQuoted(value: string): string {
+        return value.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+    }
+
+    // Generated SAS tokens look like: SharedAccessSignature sr=...&sig=...&se=...[&skn=...]
+    public static isSafeSasToken(token: string): boolean {
+        return token === "" || /^SharedAccessSignature [A-Za-z0-9%&=._~+\-/]+$/.test(token);
+    }
+
     constructor(private context: vscode.ExtensionContext) {
     }
 
@@ -44,6 +54,10 @@ export class CodeManager {
         }
         const template = this.context.asAbsolutePath(path.join("resources", "code-template", Constants.CodeTemplates[language][type]));
         const hostName = Utility.getHostName(iotHubConnectionString);
+        if (!/^[A-Za-z0-9.-]+$/.test(hostName || "")) {
+            vscode.window.showErrorMessage("IoT Hub host name contains invalid characters.");
+            return;
+        }
         let sasToken = "";
         try {
             if (deviceItem.connectionString && !deviceItem.connectionString.includes("x509=true")) {
@@ -52,12 +66,16 @@ export class CodeManager {
         } catch {
             // x509 or cert-based devices don't support SAS tokens
         }
+        if (!CodeManager.isSafeSasToken(sasToken)) {
+            vscode.window.showErrorMessage("Generated SAS token contains unexpected characters.");
+            return;
+        }
         const replacements = new Map(
             [[/{{deviceConnectionString}}/g, deviceItem.connectionString || ""],
             [/{{iotHubConnectionString}}/g, iotHubConnectionString],
-            [/{{deviceId}}/g, deviceItem.deviceId],
+            [/{{deviceId}}/g, language === "Ruby" ? encodeURIComponent(deviceItem.deviceId) : deviceItem.deviceId],
             [/{{iotHubHostName}}/g, hostName],
-            [/{{deviceSasToken}}/g, sasToken],
+            [/{{deviceSasToken}}/g, language === "Ruby" ? CodeManager.escapeRubySingleQuoted(sasToken) : sasToken],
             ]);
         if ((await fs.stat(template)).isFile()) {
             let content = await fs.readFile(template, "utf8");
